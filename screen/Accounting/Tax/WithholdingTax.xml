@@ -176,9 +176,11 @@ Grant of Patent License.
                     <field name="organizationPartyId" from="organizationPartyId">
                         <default-field title="Organization">
                             <drop-down allow-empty="false">
-                                <entity-find entity-name="mantle.party.Organization">
-                                    <order-by field-name="organizationName"/>
-                                </entity-find>
+                                <entity-options key="${partyId}" text="${organizationName}">
+                                    <entity-find entity-name="mantle.party.Organization">
+                                        <order-by field-name="organizationName"/>
+                                    </entity-find>
+                                </entity-options>
                             </drop-down>
                         </default-field>
                     </field>

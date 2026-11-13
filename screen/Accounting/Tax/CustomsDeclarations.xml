@@ -23,7 +23,7 @@ Grant of Patent License.
     </transition>
 
     <actions>
-        <entity-find entity-name="mantle.shipment.customs.CustomsDeclaration" list="records" paginate="true">
+        <entity-find entity-name="mantle.shipment.customs.CustomsDeclaration" list="records">
             <econdition field-name="organizationPartyId" from="organizationPartyId" ignore="!organizationPartyId"/>
             <econdition field-name="statusId" from="statusId" ignore="!statusId"/>
             <order-by field-name="-declarationDate,-customsDeclarationId"/>
@@ -41,9 +41,11 @@ Grant of Patent License.
                         <field name="organizationPartyId" from="organizationPartyId">
                             <default-field title="Importing company">
                                 <drop-down allow-empty="false">
-                                    <entity-find entity-name="mantle.party.Organization">
-                                        <order-by field-name="organizationName"/>
-                                    </entity-find>
+                                    <entity-options key="${partyId}" text="${organizationName}">
+                                        <entity-find entity-name="mantle.party.Organization">
+                                            <order-by field-name="organizationName"/>
+                                        </entity-find>
+                                    </entity-options>
                                 </drop-down>
                             </default-field>
                         </field>
@@ -65,30 +67,36 @@ Grant of Patent License.
                         <field name="declarationTypeEnumId" from="'H1'">
                             <default-field title="EUCDM message">
                                 <drop-down allow-empty="false">
-                                    <entity-find entity-name="moqui.basic.Enumeration">
-                                        <econdition field-name="enumTypeId" value="CustomsDeclarationType"/>
-                                        <order-by field-name="sequenceNum,description"/>
-                                    </entity-find>
+                                    <entity-options key="${enumId}" text="${description}">
+                                        <entity-find entity-name="moqui.basic.Enumeration">
+                                            <econdition field-name="enumTypeId" value="CustomsDeclarationType"/>
+                                            <order-by field-name="sequenceNum,description"/>
+                                        </entity-find>
+                                    </entity-options>
                                 </drop-down>
                             </default-field>
                         </field>
                         <field name="customsBrokerPartyId">
                             <default-field title="Customs broker">
                                 <drop-down allow-empty="true">
-                                    <entity-find entity-name="mantle.party.PartyDetailAndRole">
-                                        <econdition field-name="roleTypeId" value="Supplier"/>
-                                        <order-by field-name="organizationName,firstName"/>
-                                    </entity-find>
+                                    <entity-options key="${partyId}" text="${organizationName || (firstName + ' ' + lastName)}">
+                                        <entity-find entity-name="mantle.party.PartyDetailAndRole">
+                                            <econdition field-name="roleTypeId" value="Supplier"/>
+                                            <order-by field-name="organizationName,firstName"/>
+                                        </entity-find>
+                                    </entity-options>
                                 </drop-down>
                             </default-field>
                         </field>
                         <field name="foreignSupplierPartyId">
                             <default-field title="Foreign supplier (Sender)">
                                 <drop-down allow-empty="true">
-                                    <entity-find entity-name="mantle.party.PartyDetailAndRole">
-                                        <econdition field-name="roleTypeId" value="Supplier"/>
-                                        <order-by field-name="organizationName,firstName"/>
-                                    </entity-find>
+                                    <entity-options key="${partyId}" text="${organizationName || (firstName + ' ' + lastName)}">
+                                        <entity-find entity-name="mantle.party.PartyDetailAndRole">
+                                            <econdition field-name="roleTypeId" value="Supplier"/>
+                                            <order-by field-name="organizationName,firstName"/>
+                                        </entity-find>
+                                    </entity-options>
                                 </drop-down>
                             </default-field>
                         </field>
