@@ -41,8 +41,8 @@ Grant of Patent License.
                         @page {
                             size: A4 landscape;
                             margin: 12mm 10mm 15mm 10mm;
-                            @top-right { content: "Certificazione Unica / Modello 770 - Esercizio ${yr}"; font-size: 8pt; font-family: sans-serif; color: #555; }
-                            @bottom-right { content: "Pagina " counter(page); font-size: 8pt; font-family: sans-serif; color: #555; }
+                            @top-right { content: "Withholding Tax Statement / Model 770 - Fiscal Year ${yr}"; font-size: 8pt; font-family: sans-serif; color: #555; }
+                            @bottom-right { content: "Page " counter(page); font-size: 8pt; font-family: sans-serif; color: #555; }
                         }
                         body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 8.5pt; color: #222; margin: 0; padding: 0; background: #fff; }
                         .report-container { padding: 10px; }
@@ -63,38 +63,38 @@ Grant of Patent License.
                             <div>
                                 <div class="company-name">${org.organizationName || organizationPartyId}</div>
                                 <div class="fiscal-info">
-                                    Partita IVA: <strong>${org.taxIdNumber || '—'}</strong> |
-                                    Codice Fiscale: <strong>${org.socialSecurityNumber || '—'}</strong> |
+                                    VAT ID: <strong>${org.taxIdNumber || '—'}</strong> |
+                                    Fiscal Code / SSN: <strong>${org.socialSecurityNumber || '—'}</strong> |
                                     R.E.A.: <strong>${org.reaNumber || '—'}</strong>
                                 </div>
-                                <div class="doc-title">PROSPETTO RITENUTE D'ACCONTO / CERTIFICAZIONE UNICA (Art. 4 D.P.R. 322/98 - Mod. 770)</div>
+                                <div class="doc-title">WITHHOLDING TAX STATEMENT / SINGLE CERTIFICATION (Model 770)</div>
                             </div>
                             <div style="text-align: right;">
-                                <div style="font-size: 10pt; font-weight: bold;">ANNO FISCALE: ${yr}</div>
-                                <div style="font-size: 8pt; color: #666; margin-top: 4px;">Data emissione: ${nowFmt}</div>
+                                <div style="font-size: 10pt; font-weight: bold;">FISCAL YEAR: ${yr}</div>
+                                <div style="font-size: 8pt; color: #666; margin-top: 4px;">Issue date: ${nowFmt}</div>
                             </div>
                         </div>
 
                         <table class="rep-table">
                             <thead>
                                 <tr>
-                                    <th>Percipiente (Professionista / Agente)</th>
-                                    <th style="width: 110px;">Codice Fiscale</th>
-                                    <th style="width: 95px;">Partita IVA</th>
-                                    <th style="width: 55px;" class="text-center">Caus.</th>
-                                    <th style="width: 60px;" class="text-center">Trib. F24</th>
-                                    <th style="width: 85px;" class="text-right">Compenso Lordo</th>
-                                    <th style="width: 75px;" class="text-right">Non Impon.</th>
-                                    <th style="width: 85px;" class="text-right">Imponibile</th>
-                                    <th style="width: 85px;" class="text-right">Ritenuta (20%)</th>
-                                    <th style="width: 85px;" class="text-right">Netto Versato</th>
+                                    <th>Beneficiary (Professional / Agent)</th>
+                                    <th style="width: 110px;">Fiscal Code</th>
+                                    <th style="width: 95px;">VAT ID</th>
+                                    <th style="width: 55px;" class="text-center">Reason</th>
+                                    <th style="width: 60px;" class="text-center">F24 Code</th>
+                                    <th style="width: 85px;" class="text-right">Gross Amount</th>
+                                    <th style="width: 75px;" class="text-right">Non-Taxable</th>
+                                    <th style="width: 85px;" class="text-right">Taxable Base</th>
+                                    <th style="width: 85px;" class="text-right">Withholding Tax</th>
+                                    <th style="width: 85px;" class="text-right">Net Paid</th>
                                 </tr>
                             </thead>
                             <tbody>`;
 
                     if (bens.length === 0) {
                         h += `<tr><td colspan="10" style="text-align: center; padding: 25px; color: #666;">
-                            Nessuna fattura con ritenuta d'acconto (professionisti, provvigioni) registrata per l'anno fiscale ${yr}.
+                            No invoices with withholding tax registered for fiscal year ${yr}.
                         </td></tr>`;
                     }
 
@@ -114,7 +114,7 @@ Grant of Patent License.
                     }
 
                     h += `<tr class="totals-row">
-                        <td colspan="5" class="text-right">TOTALI GENERALI:</td>
+                        <td colspan="5" class="text-right">GENERAL TOTALS:</td>
                         <td class="text-right">${fmt(context.totalGrossAmount)}</td>
                         <td class="text-right">${fmt(context.totalNonTaxableAmount)}</td>
                         <td class="text-right">${fmt(context.totalTaxableAmount)}</td>
@@ -126,11 +126,11 @@ Grant of Patent License.
 
                     <div class="sign-box">
                         <div>
-                            Totale Percipienti Certificati: <strong>${bens.length}</strong> |
-                            Totale Fatture/Parcelle: <strong>${context.totalInvoicesCount || 0}</strong>
+                            Total Certified Beneficiaries: <strong>${bens.length}</strong> |
+                            Total Invoices/Parcels: <strong>${context.totalInvoicesCount || 0}</strong>
                         </div>
                         <div style="text-align: right;">
-                            <div>Firma del Sostituto d'Imposta: ___________________________</div>
+                            <div>Signature of Withholding Agent: ___________________________</div>
                         </div>
                     </div>
                     </div>`;
@@ -160,12 +160,12 @@ Grant of Patent License.
             <widgets>
                 <container style="row items-center q-col-gutter-sm q-mb-md">
                     <container style="col">
-                        <label text="Withholding tax (Modello 770 / Certificazione Unica)" type="h5"/>
+                        <label text="Withholding tax (Model 770 / Single Certification)" type="h5"/>
                     </container>
                     <container style="col-auto row q-gutter-sm">
                         <link url="${printUrl}"
                                 url-type="plain"
-                                text="Print / Prospetto CU-770"
+                                text="Print / Statement (770/CU)"
                                 icon="sym_o_print"
                                 target-window="_blank"
                                 condition="organizationPartyId"/>
@@ -192,62 +192,62 @@ Grant of Patent License.
                 </form-single>
 
                 <dashboard min-width="170" style="q-my-md" condition="organizationPartyId">
-                    <number-card title="Compensi Lordi" value="${ec.l10n.format(totalGrossAmount || 0, '#,##0.00')} €"/>
-                    <number-card title="Base Imponibile" value="${ec.l10n.format(totalTaxableAmount || 0, '#,##0.00')} €"/>
-                    <number-card title="Ritenute Trattenute (F24)" value="${ec.l10n.format(totalWithheldAmount || 0, '#,##0.00')} €" color="negative"/>
-                    <number-card title="Netto Pagato" value="${ec.l10n.format(totalNetAmount || 0, '#,##0.00')} €" color="positive"/>
-                    <number-card title="Percipienti" value="${beneficiaries ? beneficiaries.length : 0}"/>
+                    <number-card title="Gross Compensation" value="${ec.l10n.format(totalGrossAmount || 0, '#,##0.00')} €"/>
+                    <number-card title="Taxable Base" value="${ec.l10n.format(totalTaxableAmount || 0, '#,##0.00')} €"/>
+                    <number-card title="Withheld Tax (F24)" value="${ec.l10n.format(totalWithheldAmount || 0, '#,##0.00')} €" color="negative"/>
+                    <number-card title="Net Paid" value="${ec.l10n.format(totalNetAmount || 0, '#,##0.00')} €" color="positive"/>
+                    <number-card title="Beneficiaries" value="${beneficiaries ? beneficiaries.length : 0}"/>
                 </dashboard>
 
                 <form-list name="BeneficiaryList" list="beneficiaries" skip-form="true">
                     <field name="beneficiaryName">
-                        <default-field title="Percipiente">
+                        <default-field title="Beneficiary">
                             <display text="${beneficiaryName}"/>
                         </default-field>
                     </field>
                     <field name="fiscalCode">
-                        <default-field title="Codice Fiscale">
+                        <default-field title="Fiscal Code">
                             <display text="${fiscalCode || '—'}"/>
                         </default-field>
                     </field>
                     <field name="vatNumber">
-                        <default-field title="Partita IVA">
+                        <default-field title="VAT ID">
                             <display text="${vatNumber || '—'}"/>
                         </default-field>
                     </field>
                     <field name="paymentReason">
-                        <default-field title="Causale">
+                        <default-field title="Payment Reason">
                             <display text="${paymentReason}"/>
                         </default-field>
                     </field>
                     <field name="f24TaxCode">
-                        <default-field title="Codice Tributo">
+                        <default-field title="Tax Code (F24)">
                             <display text="${f24TaxCode}"/>
                         </default-field>
                     </field>
                     <field name="grossAmount">
-                        <default-field title="Lordo">
+                        <default-field title="Gross Amount">
                             <display text="${ec.l10n.format(grossAmount, '#,##0.00')} €"/>
                         </default-field>
                     </field>
                     <field name="taxableAmount">
-                        <default-field title="Imponibile">
+                        <default-field title="Taxable Base">
                             <display text="${ec.l10n.format(taxableAmount, '#,##0.00')} €"/>
                         </default-field>
                     </field>
                     <field name="withheldAmount">
-                        <default-field title="Ritenuta d'acconto">
+                        <default-field title="Withholding Tax">
                             <display text="${ec.l10n.format(withheldAmount, '#,##0.00')} €"/>
                         </default-field>
                     </field>
                     <field name="netAmount">
-                        <default-field title="Netto corrisposto">
+                        <default-field title="Net Amount Paid">
                             <display text="${ec.l10n.format(netAmount, '#,##0.00')} €"/>
                         </default-field>
                     </field>
                 </form-list>
 
-                <label text="Nessun percipiente o compenso con ritenuta d'acconto trovato per l'anno fiscale selezionato."
+                <label text="No beneficiaries or compensation with withholding tax found for the selected fiscal year."
                         type="p"
                         condition="organizationPartyId &amp;&amp; (!beneficiaries || beneficiaries.length == 0)"/>
             </widgets>

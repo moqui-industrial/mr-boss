@@ -91,8 +91,8 @@ along with this software (see the LICENSE.md file). If not, see
 
                 if (pages.length === 0) {
                     h += `<div style="padding: 40px; text-align: center; color: #666;">
-                        <h2>LIBRO GIORNALE DI CONTABILITA' (Art. 2216 C.C.)</h2>
-                        <p>Nessuna scrittura contabile confermata (posted) trovata per l'organizzazione <strong>${organizationPartyId}</strong> nell'esercizio ${yr}.</p>
+                        <h2>GENERAL JOURNAL (General Ledger Book)</h2>
+                        <p>No posted accounting transactions found for organization <strong>${organizationPartyId}</strong> in fiscal year ${yr}.</p>
                     </div>`;
                 }
 
@@ -105,16 +105,16 @@ along with this software (see the LICENSE.md file). If not, see
                                         <td style="border: none; padding: 0;">
                                             <div class="company-name">${org.organizationName || organizationPartyId}</div>
                                             <div class="fiscal-info">
-                                                Partita IVA: <strong>${org.taxIdNumber || '—'}</strong> |
-                                                Codice Fiscale: <strong>${org.socialSecurityNumber || '—'}</strong> |
+                                                VAT ID: <strong>${org.taxIdNumber || '—'}</strong> |
+                                                Fiscal Code / SSN: <strong>${org.socialSecurityNumber || '—'}</strong> |
                                                 R.E.A.: <strong>${org.reaNumber || '—'}</strong>
                                             </div>
-                                            <div class="doc-title">LIBRO GIORNALE DI CONTABILITA' (Art. 2216 C.C. - Art. 16 D.P.R. 600/73)</div>
+                                            <div class="doc-title">GENERAL JOURNAL (General Ledger Book)</div>
                                         </td>
                                         <td style="border: none; padding: 0; text-align: right; vertical-align: top;">
-                                            <div class="page-meta">ANNO FISCALE: ${yr}</div>
-                                            <div class="page-meta" style="font-size: 11pt; color: #0277bd;">PAGINA: ${p.pageLabel}</div>
-                                            <div style="font-size: 7.5pt; color: #666; margin-top: 4px;">Stampato il: ${nowFmt}</div>
+                                            <div class="page-meta">FISCAL YEAR: ${yr}</div>
+                                            <div class="page-meta" style="font-size: 11pt; color: #0277bd;">PAGE: ${p.pageLabel}</div>
+                                            <div style="font-size: 7.5pt; color: #666; margin-top: 4px;">Printed on: ${nowFmt}</div>
                                         </td>
                                     </tr>
                                 </table>
@@ -123,19 +123,19 @@ along with this software (see the LICENSE.md file). If not, see
                             <table class="journal-table">
                                 <thead>
                                     <tr>
-                                        <th style="width: 65px;" class="text-center">Data</th>
-                                        <th style="width: 75px;" class="text-center">N. Reg.</th>
-                                        <th style="width: 80px;">Cod. Conto</th>
-                                        <th>Descrizione Operazione / Conto</th>
-                                        <th style="width: 95px;" class="text-right">Dare (EUR)</th>
-                                        <th style="width: 95px;" class="text-right">Avere (EUR)</th>
+                                        <th style="width: 65px;" class="text-center">Date</th>
+                                        <th style="width: 75px;" class="text-center">Entry No.</th>
+                                        <th style="width: 80px;">Account Code</th>
+                                        <th>Transaction / Account Description</th>
+                                        <th style="width: 95px;" class="text-right">Debit</th>
+                                        <th style="width: 95px;" class="text-right">Credit</th>
                                     </tr>
                                 </thead>
                                 <tbody>`;
 
                     if (p.pageNumber > 1) {
                         h += `<tr class="carry-over">
-                            <td colspan="4" class="text-right">TOTALE RIPORTATO DALLA PAGINA PRECEDENTE:</td>
+                            <td colspan="4" class="text-right">TOTAL BROUGHT FORWARD FROM PREVIOUS PAGE:</td>
                             <td class="text-right">${fmt(p.broughtForwardDebit)}</td>
                             <td class="text-right">${fmt(p.broughtForwardCredit)}</td>
                         </tr>`;
@@ -146,9 +146,9 @@ along with this software (see the LICENSE.md file). If not, see
                             <td class="text-center"><code>${fmtDt(tx.transactionDate)}</code></td>
                             <td class="text-center"><strong>${yr} / ${tx.journalSequenceNum}</strong></td>
                             <td colspan="4">
-                                <strong>${tx.txDescription || 'Registrazione prima nota ' + tx.acctgTransId}</strong>
-                                ${tx.invoiceId ? (' [Fattura: ' + tx.invoiceId + ']') : ''}
-                                ${tx.paymentId ? (' [Pagamento: ' + tx.paymentId + ']') : ''}
+                                <strong>${tx.txDescription || 'Journal entry ' + tx.acctgTransId}</strong>
+                                ${tx.invoiceId ? (' [Invoice: ' + tx.invoiceId + ']') : ''}
+                                ${tx.paymentId ? (' [Payment: ' + tx.paymentId + ']') : ''}
                             </td>
                         </tr>`;
 
@@ -165,7 +165,7 @@ along with this software (see the LICENSE.md file). If not, see
                     }
 
                     h += `<tr class="carry-over">
-                        <td colspan="4" class="text-right">TOTALE DA RIPORTARE A PAGINA SUCCESSIVA:</td>
+                        <td colspan="4" class="text-right">TOTAL TO CARRY FORWARD TO NEXT PAGE:</td>
                         <td class="text-right">${fmt(p.carriedForwardDebit)}</td>
                         <td class="text-right">${fmt(p.carriedForwardCredit)}</td>
                     </tr>
@@ -176,13 +176,13 @@ along with this software (see the LICENSE.md file). If not, see
                     if (p.pageNumber === res.endPageNumber) {
                         h += `<div class="sign-box">
                             <div>
-                                Totale Scritture Esercizio: <strong>${res.totalTransactions}</strong> |
-                                Totale Righe Movimentate: <strong>${res.totalEntries}</strong> |
-                                Pagine Complessive: <strong>${res.endPageNumber}</strong>
+                                Total Transactions: <strong>${res.totalTransactions}</strong> |
+                                Total Entries: <strong>${res.totalEntries}</strong> |
+                                Total Pages: <strong>${res.endPageNumber}</strong>
                             </div>
                             <div style="text-align: right;">
-                                <strong>Quadratura Contabile: DARE = ${fmt(res.totalDebit)} EUR | AVERE = ${fmt(res.totalCredit)} EUR</strong>
-                                <div style="margin-top: 15px;">Firma del Legale Rappresentante: ___________________________</div>
+                                <strong>Accounting Balance: DEBIT = ${fmt(res.totalDebit)} | CREDIT = ${fmt(res.totalCredit)}</strong>
+                                <div style="margin-top: 15px;">Signature of Legal Representative: ___________________________</div>
                             </div>
                         </div>`;
                     }

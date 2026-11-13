@@ -35,6 +35,16 @@ along with this software (see the LICENSE.md file). If not, see
         <default-response url="."/>
         <error-response url="."/>
     </transition>
+    <transition name="calculateInvoiceTax">
+        <actions>
+            <service-call name="mantle.other.TaxServices.calculate#InvoiceSalesTax" in-map="{invoiceId:invoiceId}" out-map="taxResult"/>
+            <if condition="taxResult.reasonCode">
+                <message type="info">Tax calculation status: ${taxResult.reasonCode}</message>
+            </if>
+        </actions>
+        <default-response url="."/>
+        <error-response url="."/>
+    </transition>
     <transition-include name="choices" location="component://mr-boss/template/AccountingParts.xml"/>
     <actions>
         <!-- InvoiceDetail's actions read the invoice when it renders with the tab -->
@@ -52,6 +62,10 @@ along with this software (see the LICENSE.md file). If not, see
                 <container-box>
                     <box-header title="Items and taxes"/>
                     <box-toolbar>
+                        <link url="calculateInvoiceTax" text="Calculate tax"
+                                link-type="hidden-form"
+                                condition="receivable.canEdit"
+                                parameter-map="{invoiceId:invoiceId, organizationPartyId:organizationPartyId}"/>
                         <container-dialog id="AddReceivableLine"
                                 button-text="Add line"
                                 title="Add invoice line"

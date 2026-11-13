@@ -200,7 +200,12 @@ along with this software (see the LICENSE.md file). If not, see
                                         <drop-down allow-empty="true">
                                             <entity-options key="${enumId}" text="${description}">
                                                 <entity-find entity-name="moqui.basic.Enumeration">
-                                                    <econdition field-name="enumTypeId" value="TermType"/>
+                                                    <econditions combine="or">
+                                                        <econdition field-name="parentEnumId" value="TtInco"/>
+                                                        <econdition field-name="parentEnumId" value="ItemVatTax"/>
+                                                        <econdition field-name="enumId" operator="in" value="ItemShipping,ItemShippingOther,TtOther"/>
+                                                    </econditions>
+                                                    <econdition field-name="enumId" operator="not-equals" value="ItemVatTaxTotal"/>
                                                     <order-by field-name="description"/>
                                                 </entity-find>
                                             </entity-options>
