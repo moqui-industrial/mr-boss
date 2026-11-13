@@ -20,8 +20,8 @@ Grant of Patent License.
     <transition name="finalizeJournal">
         <actions>
             <service-call name="mantle.ledger.FiscalRegisterServices.finalize#GeneralJournalPeriod"
-                    in-map="[organizationPartyId:organizationPartyId, fiscalYear:fiscalYear,
-                        timePeriodId:timePeriodId, fromDate:fromDate, thruDate:thruDate]"/>
+                    in-map="{organizationPartyId:organizationPartyId, fiscalYear:fiscalYear,
+                        timePeriodId:timePeriodId, fromDate:fromDate, thruDate:thruDate}"/>
         </actions>
         <default-response url="."/>
         <error-response url="."/>
@@ -33,15 +33,15 @@ Grant of Patent License.
             <set field="organizationPartyId" from="ec.user.getPreference('OrganizationPartyId') || 'ORG_ZIZI_CORP'"/>
         </if>
         <if condition="!fiscalYear">
-            <set field="fiscalYear" from="String.format('%tY', new Date())"/>
+            <set field="fiscalYear" from="String(new Date().getFullYear())"/>
         </if>
 
-        <set field="journalData" from="[:]"/>
+        <set field="journalData" from="{}"/>
         <if condition="organizationPartyId">
             <service-call name="mantle.ledger.FiscalRegisterServices.get#GeneralJournalData"
-                    in-map="[organizationPartyId:organizationPartyId, fiscalYear:fiscalYear,
+                    in-map="{organizationPartyId:organizationPartyId, fiscalYear:fiscalYear,
                         timePeriodId:timePeriodId, fromDate:fromDate, thruDate:thruDate,
-                        pageStartingNumber:(pageStartingNumber ? Integer.parseInt(pageStartingNumber) : null)]"
+                        pageStartingNumber:(pageStartingNumber ? parseInt(pageStartingNumber, 10) : null)}"
                     out-map="journalData"/>
         </if>
 
@@ -287,14 +287,14 @@ Grant of Patent License.
                                 </default-field>
                             </field>
                             <field name="fiscalYear">
-                                <default-field title="Esercizio (Anno)">
+                                <default-field title="Fiscal year">
                                     <text-line size="6"/>
                                 </default-field>
                             </field>
                             <field name="timePeriodId">
-                                <default-field title="Periodo fiscale">
+                                <default-field title="Fiscal period">
                                     <drop-down allow-empty="true">
-                                        <entity-options key="${timePeriodId}" text="${periodName ?: timePeriodId}">
+                                        <entity-options key="${timePeriodId}" text="${periodName || timePeriodId}">
                                             <entity-find entity-name="mantle.party.time.TimePeriod">
                                                 <econdition field-name="partyId" from="organizationPartyId"/>
                                                 <order-by field-name="-fromDate"/>
