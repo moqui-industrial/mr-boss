@@ -32,9 +32,9 @@ plan; they do not establish Accounting review outcomes. This task does not start
   [Purchasing](ui-review-purchasing.md) and [Customer Service](ui-review-customer-service.md);
   [Products review](ui-review-products.md), [Projects review](ui-review-projects.md),
   [drawers, Commons and Comms review](ui-review-drawers-commons.md),
-  [framework UI review guide](../../../../docs/dev/UI-Review.md) and
-  [framework review](../../../../plans/archive/UI-Refinement.md): activity/evidence method and established refinements.
-- [Application practices](../../../../docs/dev/Practices-App-Dev.md), [style guide](style-guide.md),
+  [framework UI review guide](../../../../../docs/dev/UI-Review.md) and
+  [framework review](../../../../../plans/archive/UI-Refinement.md): activity/evidence method and established refinements.
+- [Application practices](../../../../../docs/dev/Practices-App-Dev.md), [style guide](style-guide.md),
   [crosscut design](design-crosscut.md), and current Manufacturing, Purchasing, Warehouse, Projects, Customer Service,
   Commerce and PASS contracts where they hand records to Accounting.
 - Current `screen/Accounting.xml`, `screen/Accounting/`, mounted `screen/Shared/` sources, the ten
@@ -81,10 +81,10 @@ not review fixtures.
 
 ## 2. Review method and refinement criteria
 
-The generic method is the [UI review guide](../../../../docs/dev/UI-Review.md):
-[preparing an isolated review](../../../../docs/dev/UI-Review.md#prepare-an-isolated-review), activities and coverage,
-[judging the result](../../../../docs/dev/UI-Review.md#judge-the-result) (viewports, themes, keyboard, contrast,
-terminal) and [recording, fixing and verifying](../../../../docs/dev/UI-Review.md#record-fix-and-verify). Products
+The generic method is the [UI review guide](../../../../../docs/dev/UI-Review.md):
+[preparing an isolated review](../../../../../docs/dev/UI-Review.md#prepare-an-isolated-review), activities and coverage,
+[judging the result](../../../../../docs/dev/UI-Review.md#judge-the-result) (viewports, themes, keyboard, contrast,
+terminal) and [recording, fixing and verifying](../../../../../docs/dev/UI-Review.md#record-fix-and-verify). Products
 shows it executed: its [§2](ui-review-products.md#2-review-method-and-refinement-criteria) and
 [execution setup dispositions](ui-review-products.md#execution-setup-dispositions). This section keeps only what is
 specific to Accounting.
@@ -288,7 +288,7 @@ and serializes shared settings, locks, fixture mutations and runtime lifecycle.
 
 ### Review and refinement phases
 
-Execution runs as the guide's [two separate passes](../../../../docs/dev/UI-Review.md#record-fix-and-verify)
+Execution runs as the guide's [two separate passes](../../../../../docs/dev/UI-Review.md#record-fix-and-verify)
 (user decision, 2026-11-11):
 
 1. **Review pass.** Concurrent review agents under one coordinating agent execute every activity in the waves above
@@ -1007,14 +1007,14 @@ This is an available-test map, not a results ledger. Paths are relative to the n
 | mr-boss regression `test/Accounting/` | AccountingPeriodClose, AccountingFixedAssets, AccountingValuation, AccountingProductionCostClose | ACC-21–24; blockers, per-asset outcomes, valuation/landed cost; cost close with spec-local Retail `boss_pcc_*` users |
 | mr-boss regression `test/Accounting/` | AccountingTax, AccountingBudgets, AccountingReporting | ACC-25–27; tax context/output, budget revisions/commitments, report/print/drill and Home |
 | mr-boss regression `test/client/Accounting/` | AccountingReceivablesWalk | The golden path: AR create/finalize/send an invoice; reuse it |
-| mr-boss acceptance `acceptance/Accounting/` | AccountingScreens | The app's sweep: every route with `routeFixtures` in qvt and tui, as john.doe with authz off; not browser or terminal interaction |
-| mr-boss acceptance `acceptance/Accounting/` | AccountingAccessWalk, AccountingServerStatic | Access/isolation walk (creates `BOSS_P21_OTHER`) and server-static qvt; acceptance despite their `./moq test` run comments |
-| mr-boss acceptance `acceptance/client/Accounting/` | AccountingLedgerWalk, AccountingSettingsWalk, AccountingSetupWalk, AccountingCurrencyWalk | ACC-02–06 |
-| mr-boss acceptance `acceptance/client/Accounting/` | AccountingSettlementWalk, AccountingPaymentsWalk, AccountingPaymentGatewayWalk | ACC-09–10 |
-| mr-boss acceptance `acceptance/client/Accounting/` | AccountingPayablesWalk, AccountingMatchingWalk, AccountingPaymentRunsWalk | ACC-11–14; AP → approver → treasury handoffs |
-| mr-boss acceptance `acceptance/client/Accounting/` | AccountingBankingWalk, AccountingCollectionsWalk | ACC-15–19 |
-| mr-boss acceptance `acceptance/client/Accounting/` | AccountingCloseWalk, AccountingFixedAssetsWalk, AccountingValuationWalk | ACC-21–23 |
-| mr-boss acceptance `acceptance/client/Accounting/` | AccountingTaxWalk, AccountingBudgetsWalk, AccountingReportsWalk, AccountingReturnsWalk | ACC-25–28 |
+| mr-boss acceptance `test/acceptance/Accounting/` | AccountingScreens | The app's sweep: every route with `routeFixtures` in qvt and tui, as john.doe with authz off; not browser or terminal interaction |
+| mr-boss acceptance `test/acceptance/Accounting/` | AccountingAccessWalk, AccountingServerStatic | Access/isolation walk (creates `BOSS_P21_OTHER`) and server-static qvt; acceptance despite their `./moq test` run comments |
+| mr-boss acceptance `test/acceptance/client/Accounting/` | AccountingLedgerWalk, AccountingSettingsWalk, AccountingSetupWalk, AccountingCurrencyWalk | ACC-02–06 |
+| mr-boss acceptance `test/acceptance/client/Accounting/` | AccountingSettlementWalk, AccountingPaymentsWalk, AccountingPaymentGatewayWalk | ACC-09–10 |
+| mr-boss acceptance `test/acceptance/client/Accounting/` | AccountingPayablesWalk, AccountingMatchingWalk, AccountingPaymentRunsWalk | ACC-11–14; AP → approver → treasury handoffs |
+| mr-boss acceptance `test/acceptance/client/Accounting/` | AccountingBankingWalk, AccountingCollectionsWalk | ACC-15–19 |
+| mr-boss acceptance `test/acceptance/client/Accounting/` | AccountingCloseWalk, AccountingFixedAssetsWalk, AccountingValuationWalk | ACC-21–23 |
+| mr-boss acceptance `test/acceptance/client/Accounting/` | AccountingTaxWalk, AccountingBudgetsWalk, AccountingReportsWalk, AccountingReturnsWalk | ACC-25–28 |
 | mr-boss regression `test/Shared/`, `test/Commons/` | Chatter, RecordFiles; QuickCreate, TodayPanel, Notifications | ACC-01, 29, 32; only for an affected shared surface |
 | mr-boss acceptance root | AppStructure, ServerStatic, TuiRender | Suite-wide structure/render checks; reconcile overlap before changing AccountingScreens |
 | mr-mantle regression `test/ledger/` | AccountingApplicationRules, AccountingControls, AccountingBookDates, AccountingFiscalPeriodDays, AccountingSetup, AccountingCurrency | ACC-02–06, 21, 31 |
@@ -1027,11 +1027,11 @@ This is an available-test map, not a results ledger. Paths are relative to the n
 | mr-mantle regression `test/other/`, `test/order/`, `test/sales/` | AccountingTax, TaxStatementServices, AccountingBudgets, BudgetServices; AccountingReturns; AccountingStatements | ACC-08, 25–28 |
 | mr-pass regression `test/Billing/`, `test/client/` | Portals, PortalFixtures; PortalHttp | ACC-30's PASS side (pay link and BillUpload pages and refusals) |
 | webroot regression `test/client/` | WebrootVue.qvt, WebrootVue.qvt.shell, WebrootVue.qvt.layout, WebrootVue.qvt.records, WebrootVue.qvt.static, WebrootVue.qvt.views, WebrootTerminal, QvtKeys, Keys | Only for affected shared-widget/shell/renderer behavior |
-| webroot acceptance `acceptance/client/` | ThemeLayout | Offline theme/geometry coverage; no implied authorization to run it |
+| webroot acceptance `test/acceptance/client/` | ThemeLayout | Offline theme/geometry coverage; no implied authorization to run it |
 
 Counts: 23 server regression specs in `test/Accounting/` (with AccountingSpecLib), one browser golden path
 (registered in `test/client/suite.js` with captured mail), three server acceptance specs and 19 browser walks
-registered in `acceptance/client/suite.js`, whose server also loads Products, Warehouse, Manufacturing and Insights
+registered in `test/acceptance/client/suite.js`, whose server also loads Products, Warehouse, Manufacturing and Insights
 fixture specs; inspect a selection's `dependsOn` and fixtures before a run. AccountingSpecLib is the shared
 identity/route-fixture source (`ids`, `asUser`, `routeFixtures`, the tab lists and generated-ID lookups); its fixture
 functions are not an instruction to add route-fixture specs.
@@ -1045,9 +1045,9 @@ jobs, phone, access, isolation and terminal walks in acceptance.
 ### Verification rules for later refinements
 
 These rules govern the refinement pass, and the commit rule applies in both; the review pass corrects nothing and
-commits no source (§2). The suite rules are the [testing skill](../../../../.agents/skills/testing/SKILL.md) and
-[Build-Test](../../../../docs/Build-Test.md#the-two-suites) with [rendering screens in
-tests](../../../../docs/Build-Test.md#rendering-screens-in-tests). Accounting specifics:
+commits no source (§2). The suite rules are the [testing skill](../../../../../.agents/skills/testing/SKILL.md) and
+[Build-Test](../../../../../docs/Build-Test.md#the-two-suites) with [rendering screens in
+tests](../../../../../docs/Build-Test.md#rendering-screens-in-tests). Accounting specifics:
 
 - **While working.** From the mr-moqui root on a built binary: `./moq test mr-boss --spec AccountingSettlement
   --nobuild`, the owning Mantle spec when its rule changes, and the golden path
@@ -1125,7 +1125,7 @@ research and document review do not advance this ledger; record actual modes and
 
 No runtime/UI defect has been established by this planning work. The review pass records findings with Owner /
 correction / retest empty; the refinement pass fills them in. Number later findings **ACC-UI-001** onward with the
-guide's fields and severities ([record, fix and verify](../../../../docs/dev/UI-Review.md#record-fix-and-verify)): P1
+guide's fields and severities ([record, fix and verify](../../../../../docs/dev/UI-Review.md#record-fix-and-verify)): P1
 blocks work or makes essential information unusable, P2 causes substantial friction or misleading presentation, P3 is
 a localized refinement. Distinguish observed failures, source suspicions and design judgments. Financial data or
 access corruption takes priority regardless of whether the screen looks correct.

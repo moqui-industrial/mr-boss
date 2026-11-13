@@ -29,9 +29,9 @@ establish this pass's coverage. The planning-only records below remain historica
 
 - [Projects design](design-projects.md), [implementation](impl-projects.md) and [research](research-projects.md):
   intended workflows, delivered phases, findings and historical deferrals.
-- [Prior UI review](ui-review-drawers-commons.md), [framework UI review guide](../../../../docs/dev/UI-Review.md)
-  and [framework review](../../../../plans/archive/UI-Refinement.md): activity/evidence method and established refinements.
-- [Application practices](../../../../docs/dev/Practices-App-Dev.md), [style guide](style-guide.md),
+- [Prior UI review](ui-review-drawers-commons.md), [framework UI review guide](../../../../../docs/dev/UI-Review.md)
+  and [framework review](../../../../../plans/archive/UI-Refinement.md): activity/evidence method and established refinements.
+- [Application practices](../../../../../docs/dev/Practices-App-Dev.md), [style guide](style-guide.md),
   [crosscut design](design-crosscut.md) and [Commons design](design-drawers-commons.md): archetypes, shared records,
   calendar, knowledge, Chatter, approvals, files and shell contracts.
 - Current `screen/Projects.xml`, `screen/Projects/`, mounted `screen/Shared/` and `screen/Commons/` screens,
@@ -40,7 +40,7 @@ establish this pass's coverage. The planning-only records below remain historica
   the demo accounts themselves in mr-mantle `data/ZbaOrganizationDemoData.xml` and webroot
   `data/WebrootSecurityDemoData.xml`. Current mounts and capabilities take precedence over historical tables when
   deciding what can be exercised.
-- [Git hosting](../../../../docs/interfaces/Git-Hosting.md), [revision management](../../../../docs/data/Revision-Management.md)
+- [Git hosting](../../../../../docs/interfaces/Git-Hosting.md), [revision management](../../../../../docs/data/Revision-Management.md)
   and the existing Projects specs: local code fixtures, resource storage, rule boundaries and available checks.
 
 Use the existing research as a comparison lens: OpenProject for planning and capacity, Redmine for compact queries
@@ -80,7 +80,7 @@ or shared-fix retest. Real customer mail, production repositories and financial 
 
 ### Environment and fixtures
 
-Follow the [review guide](../../../../docs/dev/UI-Review.md) and repository building/testing skills. Use an isolated
+Follow the [review guide](../../../../../docs/dev/UI-Review.md) and repository building/testing skills. Use an isolated
 runtime and fresh disposable database. The guide's framework-only bootstrap leaves `component/` empty; Projects
 also needs `mr-mantle` and `mr-boss` linked individually. Copy mutable configuration and keep database, uploads,
 wiki resources, Git storage and scratch repositories separate from working data. A different HTTP port alone is not
@@ -711,10 +711,10 @@ test breadth is not a reason to add duplicate rules, renders or scenarios.
 | mr-boss regression `test/Projects/` | ProjectsAccess, ClientBilling | PR-24–25; selected rule refusals are not the complete access walk |
 | mr-boss regression `test/Shared/`, `test/Commons/` | Chatter, RecordFiles; Knowledge, KnowledgeReview, Calendar, QuickCreate, TodayPanel, Notifications | PR-01, 04, 06, 08, 11, 16–17, 25; reuse affected shared-rule checks without duplicating the Commons review |
 | mr-boss regression `test/Commons/` | Tasks, Requests | PR-05–06, 11–12; the Commons consumers of Shared WorkItemDetail (as TaskDetail) and RequestDetail, for the shared-fix retest |
-| mr-boss acceptance `acceptance/Projects/` | SprintWalk, TimelineWalk, ReleaseWalk | PR-07–10, 14; TimelineWalk includes import mapping/options/preview and row failure; server scenarios, not browser/terminal interaction evidence |
-| mr-boss acceptance `acceptance/Projects/` | RequestWalk, CodeReviewWalk | PR-11–14; server scenarios with their own fixture/prerequisite scope |
-| mr-boss acceptance `acceptance/Projects/` | TimeWalk, ResourceWalk, BillingWalk, MilestoneBillingWalk | PR-16–21; existing scenarios to reuse if execution is requested |
-| mr-boss acceptance `acceptance/Projects/` | ProjectsServerStatic, ProjectsTui | Supporting render coverage; ProjectsTui also exercises selected transitions, not a live keyboard terminal walk |
+| mr-boss acceptance `test/acceptance/Projects/` | SprintWalk, TimelineWalk, ReleaseWalk | PR-07–10, 14; TimelineWalk includes import mapping/options/preview and row failure; server scenarios, not browser/terminal interaction evidence |
+| mr-boss acceptance `test/acceptance/Projects/` | RequestWalk, CodeReviewWalk | PR-11–14; server scenarios with their own fixture/prerequisite scope |
+| mr-boss acceptance `test/acceptance/Projects/` | TimeWalk, ResourceWalk, BillingWalk, MilestoneBillingWalk | PR-16–21; existing scenarios to reuse if execution is requested |
+| mr-boss acceptance `test/acceptance/Projects/` | ProjectsServerStatic, ProjectsTui | Supporting render coverage; ProjectsTui also exercises selected transitions, not a live keyboard terminal walk |
 | mr-boss acceptance root | AppStructure, ServerStatic, TuiRender | Structural/shared coverage; do not add another sweep of the same app/mode |
 | mr-mantle regression `test/work/` | WorkProjectFoundation, WorkProjectServices, WorkProjectHub, WorkProjectItems | PR-01–06; business rules belong here |
 | mr-mantle regression `test/work/` | WorkProjectSprints, WorkProjectPlan, WorkProjectMilestones, WorkProjectReleases, BusinessTime | PR-07–09; planning/gates/releases/business dates |
@@ -723,10 +723,10 @@ test breadth is not a reason to add duplicate rules, renders or scenarios.
 | mr-mantle regression `test/work/` | WorkProjectBilling, WorkProjectReports, WorkProjectClients | PR-20–25; billing/projections/client visibility |
 | mr-mantle regression `test/work/` | WorkPlanToCashBasicFlow, CommonsToday | PR-16–21 plan-to-cash time/expense invoicing; PR-01, 16–17 Today rows and shell counts |
 | webroot regression `test/client/` | WebrootVue.qvt, WebrootVue.qvt.shell, WebrootVue.qvt.layout, WebrootVue.qvt.records, WebrootVue.qvt.static, WebrootVue.qvt.views, WebrootVue.qvt.markdown, WebrootTerminal, QvtKeys, Keys | Shared widget/shell/render fixes only; use existing focused assertions for the affected control |
-| webroot acceptance `acceptance/client/` | ThemeLayout | Existing offline theme/geometry acceptance home for a reusable contrast/layout check; not a reason to run it during plan writing |
+| webroot acceptance `test/acceptance/client/` | ThemeLayout | Existing offline theme/geometry acceptance home for a reusable contrast/layout check; not a reason to run it during plan writing |
 
 All eleven Projects acceptance files listed above are **server specs**. Neither BOSS `test/client/suite.js` nor
-`acceptance/client/suite.js` currently includes a Projects browser walk. There is no `ProjectsClientFixtures` or
+`test/acceptance/client/suite.js` currently includes a Projects browser walk. There is no `ProjectsClientFixtures` or
 Projects golden-path browser spec. Record this as a coverage gap, not a plan-writing requirement to create tests.
 If later automation is requested, name the activity and spec first, retain at most one regression golden-path client
 walk for Projects and place additional complete journeys, phone/access walks and sweeps in acceptance. The old
@@ -734,7 +734,7 @@ walk for Projects and place additional complete journeys, phone/access walks and
 
 ### Verification rules for later refinements
 
-- Read the [testing skill](../../../../.agents/skills/testing/SKILL.md) before writing/running tests. Commands run
+- Read the [testing skill](../../../../../.agents/skills/testing/SKILL.md) before writing/running tests. Commands run
   from the mr-moqui root. Use affected regression specs while working, for example
   `./moq test mr-boss --spec WorkItemDetail --nobuild` or
   `./moq test mr-mantle --spec WorkProjectItems --nobuild`, with a suitable existing binary. Client specs run through

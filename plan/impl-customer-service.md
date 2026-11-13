@@ -82,8 +82,8 @@ before it provide. Customer Service is the last of the six core apps, built afte
   design §10 **Designed in** paths.
 - mr-moqui: `plans/Remaining-Work.md` and `docs/Build-Test.md`.
 
-Framework paths are under the mr-moqui checkout (`crates/`, `runtime/base-component/`), Mantle paths under
-`runtime/component/mr-mantle/`, PASS paths under `runtime/component/mr-pass/`.
+Framework paths are under the mr-moqui checkout (`crates/`, `runtime/components/base/`), Mantle paths under
+`runtime/components/addon/mr-mantle/`, PASS paths under `runtime/components/addon/mr-pass/`.
 
 Sections: [1 scope](#1-scope-and-order) · [2 rules](#2-ground-rules) · [3 phases](#3-phases) ·
 [4 decisions](#4-decisions) · [5 open](#5-open-questions) · [6 findings](#6-findings) · [7 later](#7-later) ·
@@ -94,12 +94,12 @@ Sections: [1 scope](#1-scope-and-order) · [2 rules](#2-ground-rules) · [3 phas
 ## 1. Scope and order
 
 - **Repositories.** Each is its own git repo:
-  - `mr-moqui` (`crates/`, `runtime/base-component`)
-  - `runtime/component/mr-mantle`
-  - `runtime/component/mr-boss`, the internal app
-  - `runtime/component/mr-pass`, the customer pages as its Support app (§4)
+  - `mr-moqui` (`crates/`, `runtime/components/base`)
+  - `runtime/components/addon/mr-mantle`
+  - `runtime/components/addon/mr-boss`, the internal app
+  - `runtime/components/addon/mr-pass`, the customer pages as its Support app (§4)
 
-  `runtime/component/mr-marble` is read only, for the baseline Request, Return, Customer, Order and Survey screens that
+  `runtime/components/addon/mr-marble` is read only, for the baseline Request, Return, Customer, Order and Survey screens that
   design §10 maps. Framework work is limited to what P0 finds CS-FORM-ELEMENTS needs (P5, P7), DbForm's dated, audit-logged
   fields (P7), and a record viewers topic if P0 finds it cheap (P5).
 - **Scope.**
@@ -279,9 +279,9 @@ Sections: [1 scope](#1-scope-and-order) · [2 rules](#2-ground-rules) · [3 phas
   - its row and **Built** note here.
 
   No route fixtures: a screen sweep is an acceptance test, one per app per mode (F20). The phase's "usable when" and
-  its §8 scenario are acceptance tests to write (`acceptance/CustomerService/`, `acceptance/client/CustomerService/`;
+  its §8 scenario are acceptance tests to write (`test/acceptance/CustomerService/`, `test/acceptance/client/CustomerService/`;
   for the Support app, the remote pair on RemoteFixtures' pattern and a browser walk on ForumHttp's and RemoteHttp's in
-  mr-pass `acceptance/`), named in the phase; running them is not part of Done.
+  mr-pass `test/acceptance/`), named in the phase; running them is not part of Done.
 
 ## 3. Phases
 
@@ -465,7 +465,7 @@ were made in the Oct 28 design sweep. The Support app's are made when P0 closes:
   providers and launcher per group; Home's one qvt render; the capabilities per group; customer scope in choices and the
   palette; the record check with another organization's and forged ids and a capability on a record; record links; the
   guarded areas, REST and raw mutators refused). No separate Shell spec (impl-purchasing F44). Acceptance:
-  `acceptance/CustomerService/CustomerServiceFoundationWalk` (the usable-when: every area per group, the palette and
+  `test/acceptance/CustomerService/CustomerServiceFoundationWalk` (the usable-when: every area per group, the palette and
   record links of the agent and the other organization, forged ids on check#Record and Home's lookup, a Projects client
   refused the root and every `ironstone.customerservice` service; the demo orders' state), and `AppStructure` renders
   Customer Service's built screens (CustomerServiceSpecLib.routeFixtures; the placeholder count is now 54, the floor stays
@@ -691,7 +691,7 @@ StatusCategories and ServiceDefaults; CS-QUEUE, CS-SETTINGS, CX-REQUEST, CS-STAC
   the case's scope, a holder, a non-holder, another organization's and the restricted queue's; menu rows with quick create
   and topics, the administrator's queues, the manager's Settings) and `CustomerServiceCases` (7 features, about 2 s: the
   demo cases, find#Cases and the counts by scope, the batch with Forbidden and a retry, Today, the paths around a case,
-  the settings reads, CaseDetail's and NewCase's one qvt render). Acceptance `acceptance/CustomerService/CustomerServiceCasesWalk`
+  the settings reads, CaseDetail's and NewCase's one qvt render). Acceptance `test/acceptance/CustomerService/CustomerServiceCasesWalk`
   (the usable-when, 7 features), `CustomerServiceFoundationWalk` (quick create now offers a case to its groups; the client
   refused the case services) and `AppStructure` (the case and settings routes, the placeholder floor 52).
 - Tests run (all pass): Mantle SupportCases, WorkProjectRequests, RecordVisibility, RecordLinks, WorkProjectClients,
@@ -875,7 +875,7 @@ Design §4 and §6's Availability mounts; CS-SHARED. Customer Service's context 
   Customer360 of the shared ORG_ACME per organization, F74; the §2 audience; CaseDetail's linked order; Products' Customer
   Service context; OrderDetail's and Customer360's one qvt render) and `CustomerServiceAccess` (+1 feature: the shipment,
   invoice and contact checks and the resend's capability; the palette and record-link features now expect OrderDetail and
-  Customer360, F77). Acceptance `acceptance/CustomerService/CustomerServiceOrdersWalk` (the usable-when, 6 features),
+  Customer360, F77). Acceptance `test/acceptance/CustomerService/CustomerServiceOrdersWalk` (the usable-when, 6 features),
   `CustomerServiceFoundationWalk` (customers open Customer360; the client refused the P3 services) and `AppStructure` (the P3
   routes and mounts, the placeholder floor 49).
 - Tests run (all pass): Mantle OrderConfirmations, OrderToCashBasicFlow, ReturnToResponseBasicFlow, ShipmentReturnMisc,
@@ -1071,7 +1071,7 @@ Design §3 CaseDetail's clocks, §7 CaseAnalytics, §9 ServiceLevelPolicies; CS-
   and warning once). BOSS `CustomerServiceAccess` (+1 feature: save#Policy for the administrator, not the manager; another
   organization's policies and case clocks refused; ServiceLevelPolicies' one qvt render) and `CustomerServiceCases` (the
   team's hours and the levels readiness on the settings feature; the clocks and tab on CaseDetail's one render). Acceptance
-  `acceptance/CustomerService/CustomerServiceSlaWalk` (the usable-when, 7 features, all pass), and `AppStructure`'s fixtures
+  `test/acceptance/CustomerService/CustomerServiceSlaWalk` (the usable-when, 7 features, all pass), and `AppStructure`'s fixtures
   for ServiceLevelPolicies and CaseAnalytics (the placeholder count unchanged: Reports' placeholder moved to ReportsHome).
 - Tests run (all pass): Mantle BusinessTime, SupportSla, SupportCases, WorkCenters, ProductionSchedule, ProductionReports,
   CalendarServices, SupplyPlanning, ProductionShopFloor, ProductionSubcontract, WorkResources, Dav, CalendarChanges,
@@ -1257,7 +1257,7 @@ later, §4 Nov 5).
   BOSS `CustomerServiceAccess` (+1: rules the administrator's, previews and replies a case editor's of the organization, a reply's
   change its owner's) and `CustomerServiceAssignment` (4 features, 1.2 s: the reads and each user's replies, the save through
   Comms, the bulk preview, and the one qvt render of AssignmentRules, SavedReplies, AgentTeams and BulkReply). Acceptance
-  `acceptance/CustomerService/CustomerServiceAssignmentWalk` (the usable-when, 4 features, pass) and AppStructure's fixtures for the
+  `test/acceptance/CustomerService/CustomerServiceAssignmentWalk` (the usable-when, 4 features, pass) and AppStructure's fixtures for the
   three new screens.
 - Tests run (all pass): Mantle SupportAssignment, SupportReplies, SupportCases, SupportSla, SupportKnowledge, BusinessTime,
   OrderConfirmations, WorkProjectRequests, RecordVisibility, RecordLinks, WorkProjectClients, CommonsToday, OrderToCashBasicFlow,
@@ -1438,7 +1438,7 @@ hooks).
   internal one not; the forum route). BOSS `CustomerService/CustomerServiceChannels` (4 features, about 0.6 s: ChannelRouting's
   read, a case from a mail and staff's refused, ChannelSessions with its one qvt render, the call-context provider),
   `CustomerServiceAccess` (+1: route save and reads, another organization's refused, ChannelRouting's one qvt render),
-  `CustomerServiceCases` (CaseDetail's render shows Log a call). Acceptance `acceptance/CustomerService/CustomerServiceChannelsWalk`
+  `CustomerServiceCases` (CaseDetail's render shows Log a call). Acceptance `test/acceptance/CustomerService/CustomerServiceChannelsWalk`
   (the usable-when, 5 features, all pass) and `AppStructure` (the two routes in the fixtures; 18 features pass).
 - Tests run (all pass): Mantle SupportChannels, SupportCases, SupportSla, SupportKnowledge, WorkProjectRequests,
   RecordVisibility, RecordLinks, WorkProjectClients, CommonsToday, OrderToCashBasicFlow, ReturnToResponseBasicFlow,
@@ -1614,7 +1614,7 @@ Design §3 NewCase's CaseDescription, §9 CaseTemplates; CS-TEMPLATES, CS-FORM-E
   0.3 s: find#Templates and NewCase's choice; TemplateEdit's one qvt render with the preview's check), `CustomerServiceAccess`
   (+1 feature: the administrator saves a template and the manager may not; another organization's template and case values
   refused; NewCase offers another organization's template to no one) and `CustomerServiceCases` (NewCase's one render shows the
-  template step). Acceptance `acceptance/CustomerService/CustomerServiceTemplatesWalk` (the usable-when, 5 features: the
+  template step). Acceptance `test/acceptance/CustomerService/CustomerServiceTemplatesWalk` (the usable-when, 5 features: the
   serial refused and the values kept and shown on CaseDetail's Overview; no internal field in the customer's projections; a
   template built in CaseTemplates with its cycle refused; a change from a date leaving the earlier case's values with the old
   label and options; TemplatePreview in qvt and tui), all pass, and `AppStructure` (the CaseTemplates route), passing.
@@ -1769,7 +1769,7 @@ CS-JOBS.
   `CustomerService/CustomerServiceRelations` (2 features, about 0.3 s: CaseDetail's merge and split by capability; MergeCases'
   and SplitCase's one qvt render) and `CustomerServiceAccess` (+1 feature: merge the manager's and not the agent's, split a case
   editor's and not the reader's, another organization's case and lineage refused). Acceptance
-  `acceptance/CustomerService/CustomerServiceRelationsWalk` (the usable-when, 4 features, all pass) and `AppStructure`'s
+  `test/acceptance/CustomerService/CustomerServiceRelationsWalk` (the usable-when, 4 features, all pass) and `AppStructure`'s
   fixtures for the two screens (18 features pass).
 - Tests run (all pass): Mantle SupportRelations, SupportSla, SupportCases, SupportChannels, SupportAssignment,
   SupportReplies, SupportTemplates, SupportKnowledge, WorkProjectRequests, RecordVisibility, RecordLinks, WorkProjectClients,
@@ -2170,7 +2170,7 @@ CX-ORDER-CHANGE. On Accounting P10 and P17 and Warehouse P11 and P12.
   APPROVAL_EXPIRED, SELF_APPROVAL and the Credit hold kept). BOSS `CustomerServiceAccess` (+1: the record kind's
   capability for the order desk and the agent, another organization's record, Mantle's read and the order lines; the menu
   feature expects OrderChangeApproval) and `CustomerServiceOrderChanges` (1 feature: OrderChangeDetail's and OrderChanges'
-  one qvt render). Acceptance `acceptance/CustomerService/CustomerServiceOrderChangesWalk` (the usable-when, 5 features,
+  one qvt render). Acceptance `test/acceptance/CustomerService/CustomerServiceOrderChangesWalk` (the usable-when, 5 features,
   through OrderChangeDetail's transitions) and AppStructure's fixtures (OrderChanges, OrderChangeDetail).
 - Tests run (all pass): Mantle OrderChanges, OrderToCashBasicFlow, AssetReservationMisc, AssetReservationMultipleThreads,
   WarehousePicking, WarehousePacking, AccountingCredit, PurchaseRevisions, PurchaseHoldPermission, PurchaseOrders,
@@ -2359,7 +2359,7 @@ Design §5 WarrantyClaims and WarrantyAssessment, crosscut §3.2 DeliveredItems;
   BOSS `CustomerServiceWarranty` (1 feature, about 0.9 s: WarrantyAssessment's and WarrantyClaims' one qvt render,
   Delivered items' one html render (a tab alone), NewCase's template choice by type) and `CustomerServiceAccess` (+1 feature:
   the claim's check for the agent and the reader, another organization's agent refused it, its read and the customer's
-  serials). Acceptance `acceptance/CustomerService/CustomerServiceWarrantyWalk` (the usable-when, 3 features, through
+  serials). Acceptance `test/acceptance/CustomerService/CustomerServiceWarrantyWalk` (the usable-when, 3 features, through
   Customer360, NewCase and WarrantyAssessment's transitions) and AppStructure's fixtures (WarrantyClaims, WarrantyAssessment,
   Delivered items), both passing.
 - Tests run (all pass): Mantle SupportWarranty, SupportCases, SupportTemplates, SupportRelations, SupportChannels,
@@ -2523,7 +2523,7 @@ CS-KNOWLEDGE.
   `CustomerServiceKnowledge` (4 features, about 0.7 s: the tab's read and the mount's context, Send to customer and its
   refusals, ArticleFeedback's one qvt render, CaseToArticle's one qvt render) and `CustomerServiceAccess` (+1 feature: the
   feedback for the author and manager and not an agent, CaseToArticle for the author on their organization's case, both
-  screens refused the agent). Acceptance `acceptance/CustomerService/CustomerServiceKnowledgeWalk` (the usable-when, 4
+  screens refused the agent). Acceptance `test/acceptance/CustomerService/CustomerServiceKnowledgeWalk` (the usable-when, 4
   features); `AppStructure` (the four routes, `fullPathOnly` for the Knowledge group, F106; the placeholder floor 51) and
   `CustomerServiceFoundationWalk` (Knowledge opens in tui; Send to customer's parameter for the client sweep).
 - Tests run (all pass): Mantle SupportKnowledge, SupportCases; BOSS CustomerServiceKnowledge, CustomerServiceAccess,
@@ -2718,8 +2718,8 @@ FeedbackDeliveryPolicy; CS-FEEDBACK, CS-JOBS.
   refused; Home's measures all configured now). Acceptance: BOSS `CustomerServiceFeedbackWalk` (5 features: the usable-when
   through FeedbackForms, FeedbackFormDetail, ServiceDefaults, the rule, the job after the delay, the page operations,
   ResponseDetail's follow-up in qvt, the guard, a successor question from a date and one period at a time) and `AppStructure`
-  (the four mounts' routes); mr-pass `acceptance/SupportFixtures` (PASS_HTTP's support mount and two invitations),
-  `acceptance/client/SupportFeedbackHttp` (2 features: a scanner's two GETs answer nothing; at 390 px the comment shows and is
+  (the four mounts' routes); mr-pass `test/acceptance/SupportFixtures` (PASS_HTTP's support mount and two invitations),
+  `test/acceptance/client/SupportFeedbackHttp` (2 features: a scanner's two GETs answer nothing; at 390 px the comment shows and is
   required for a 2, the answer, the receipt, a repeat post; bad links) and `RemoteHttp` (+1 feature: the same rating through the
   frontend, one response at the authority).
 - Tests run (all pass): Mantle CaseFeedback, SupportTemplates, SupportCases, SupportSla, SupportRelations, WorkProjectRequests,
@@ -2898,7 +2898,7 @@ Design §7; CS-REPORTING, CS-STACK (the dataset). Reads of what the phases befor
   return authorizer; the catalogue's CSAT entry for the manager only; the shipped definitions; the views by clock and the
   queue counts; one qvt render of ReportsHome, the four reports and Customer360's Service tab) and `CustomerServiceAccess`
   (+1 feature, 0.2 s: the manager reads the Support queue and is refused Privacy's; the reader refused; Services' agent refused
-  Retail and Retail's customer). Acceptance `acceptance/CustomerService/CustomerServiceReportsWalk` (4 features, the
+  Retail and Retail's customer). Acceptance `test/acceptance/CustomerService/CustomerServiceReportsWalk` (4 features, the
   usable-when: a cancelled case's clocks apart, the kept case's open past-due clocks counted, the merged source's never, three
   received, one merged, one cancelled, the backlog once; a resolution timed in business and elapsed time; an open return
   requested with amounts per currency; the manager's queues against the administrator's, and the CSV's rows), `AppStructure`
@@ -3111,10 +3111,10 @@ Design §8; CS-PORTAL.
   `test/Support/SupportAccess` (+1 feature, 0.12 s: MyCases and CustomerCase rendered once each for the contact; a colleague's,
   another customer's and an uninvited account's refused; the case link signed out), `SupportFixtures.js contacts`. BOSS
   `CustomerServiceAccess` (+1 feature, 0.19 s: Invite to support for the manager, refused the agent and another organization's
-  user, an address not the contact's refused). Acceptance: mr-pass `acceptance/SupportFixtures` (+1 feature),
-  `acceptance/client/SupportPagesHttp` (2 features: at 390 px the contact's cases, reply and new request, a colleague's case;
+  user, an address not the contact's refused). Acceptance: mr-pass `test/acceptance/SupportFixtures` (+1 feature),
+  `test/acceptance/client/SupportPagesHttp` (2 features: at 390 px the contact's cases, reply and new request, a colleague's case;
   on the desktop the case link, the RMA link and its withdrawal, a visitor and a forged link) and `RemoteHttp` (+1 feature);
-  BOSS `acceptance/CustomerService/CustomerServiceSupportWalk` (3 features on the demo: JoeDist's contact and administrator, Joe's
+  BOSS `test/acceptance/CustomerService/CustomerServiceSupportWalk` (3 features on the demo: JoeDist's contact and administrator, Joe's
   own account; Retail's help read and rated once per view, none for a visitor; the queue form token; Invite to support;
   ServiceDefaults' settings read).
 - Tests run (all pass): Mantle SupportPortal, AccountingPortals, SupplierPortal, ReturnPolicies, OrderChanges, CaseFeedback,
@@ -3202,7 +3202,7 @@ scanner with type, signature and size), BOSS's Invite to support and ServiceDefa
   relationship, the stale cancel naming the current revision, a retried return request answering the first and a
   different payload conflicting, the withdrawals' required revision, the authorization's notice with the return's
   link); `SupportReplies` (the reply's Support link with a site, none without). Acceptance: mr-mantle
-  `acceptance/order/SupportImmediateCancelWalk` (customerImmediateCancel on, a placed order with nothing reserved
+  `test/acceptance/order/SupportImmediateCancelWalk` (customerImmediateCancel on, a placed order with nothing reserved
   cancelled at once through the Support app, an approved one requested; the flag put back off in cleanup); mr-pass
   `SupportFixtures.contacts` gains an authorized return with its label and RMA link, `SupportPagesHttp` and `RemoteHttp`
   download the label through the facade (a forged link gets no file).
@@ -3235,15 +3235,15 @@ scanner with type, signature and size), BOSS's Invite to support and ServiceDefa
 - The open items earlier phases left for P16 (§6): F111, F131, F185, and F164 (Product360's warranty term).
 
 **Built Nov 5 (P16).**
-- **Terminal twins and server-static.** `acceptance/TuiRender.spec.js` now renders every Customer Service screen and its
+- **Terminal twins and server-static.** `test/acceptance/TuiRender.spec.js` now renders every Customer Service screen and its
   shared mounts on their route fixtures (CustomerServiceSpecLib), with Customer360's six service tabs and Knowledge's
   terminal twin (Commons' KnowledgeTui, which the qvue screen's tui names as a dynamic container; the fixture's `tuiText`),
   checks each fixture's text in the twin, and fails a Customer Service route fixture no screen renders. No Customer Service
-  screen lacked a usable twin. `acceptance/CustomerService/CustomerServiceServerStatic.spec.js` (one per app per mode, on
+  screen lacked a usable twin. `test/acceptance/CustomerService/CustomerServiceServerStatic.spec.js` (one per app per mode, on
   ServerStaticLib): the full static report of the Customer Service XML screens on their route fixtures; the two the report
   found clean, SplitCase and StatusCategories, are marked `server-static="qvt"` and render their static qvt page without an
   error. The others keep a list's condition outside its form-list or request data in a text, as the other apps' do.
-- **Design §10 "unauthorized actions and standalone use"**, `acceptance/CustomerService/CustomerServiceAccessWalk.spec.js`
+- **Design §10 "unauthorized actions and standalone use"**, `test/acceptance/CustomerService/CustomerServiceAccessWalk.spec.js`
   (7 features, about 35 s with its start), with artifact authorization on, on PurchasingAccessWalk's pattern. Each side,
   Retail and Ziziwork Services, keeps its demo case, customer and order, and the walk adds an internal note with a secret
   text to each side's case, and Retail's thermostat a standard cost and a supplier price with odd amounts. Then:
@@ -3269,7 +3269,7 @@ scanner with type, signature and size), BOSS's Invite to support and ServiceDefa
   The Customer Service administrator is left out of the isolation sweeps: its MANTLE_ACTIVE_ORG grant works in every
   organization when none is active, by design (CustomerService.js grants; impl-purchasing F185). Universal search has no
   index in a test runtime (impl-purchasing F187); the palette with its own-side control is the search check.
-  `mr-pass/acceptance/SupportIsolation.spec.js`: a contact invited for one customer gets nothing of another customer of the
+  `mr-pass/test/acceptance/SupportIsolation.spec.js`: a contact invited for one customer gets nothing of another customer of the
   same organization, through the facade by the other case's or return's id (read, reply, reopen, cancel, file, withdraw),
   by naming that customer in MyCases or MyReturns, or by the case page; its own case and return stay readable.
 - **§11 outputs.** Built earlier: the acknowledgement and outward reply (P2, P6), the RMA print, stored PDF and email (P9),
@@ -3496,7 +3496,7 @@ is written there too.
 | F43 | P0: PASS's root `Pass.xml` resolves a site from its host and mounts the Forum, Account, Members and Sites apps from `mantle.public.PublicSiteApp` (app, path prefix, enabled, target); screens call `pass.Facade.call#Operation`, whose `Schema.js` maps an operation to a Mantle service and its fields, and whose `Routes.js` gives the remote path Mantle's PassApi servlet serves at `/rest/s1/pass/v1/sites/*`. Public accounts hold only `ALL_USERS`, PASS roles are PublicSiteParty rows, invitations are PublicSiteInvitation, and site pages bind exact wiki pages (PublicSitePage). PASS has no terminal UI | The Support app on these (§2; P13, P15); P0 checks how a new app registers |
 | F44 | P0: Mantle seeds the NotificationTopic rows its services send on, with no link and with Mantle approve and refuse services (`RequestTriage`, `RequestUpdate`, `TimesheetApproval` in MantleSetupData); BossSetupData sets each `linkTemplate` to a BOSS screen | The topics Customer Service's Mantle services send on (assignment, customer reply, SLA warning and breach, return decision, `ReturnExceptionApproval`, `OrderChangeApproval`, the low-score follow-up) are seeded in mr-mantle with Mantle handlers; each phase's Shell entry is BOSS's link to CaseDetail, ReturnDetail, OrderChangeDetail or ResponseDetail (§2) |
 | F45 | P0: Purchasing's decision pattern is built: `mantle.order.purchase.PurchaseApprovalDecision` (mr-mantle entity/PurchaseOrderEntities.xml:22, `supersededDate` in PurchaseApprovalEntities.xml:91) holds source entity, id and revision, organization, decision, date, user, reason, policy row and step, and `operationKey`. `decide#PurchaseApproval` (service/mantle/order/PurchaseServices.xml:312) refuses STALE_REVISION naming the current revision (PurchaseOrders.js:508-509), but only when a revision is passed. The purchase topics use `approve#PurchaseSource` and `refuse#PurchaseSource` (PurchaseServices.xml:539, :558) | P9, P10, P11: the return authorization decision, OrderChangeDecision and WarrantyDecision copy the record's fields; their decide services require the revision on a topic path rather than defaulting to the current one |
-| F46 | P0: Commons calls only `approve#NotificationMessage(notificationMessageId)` (mr-boss screen/Commons/Notifications.xml:57); the framework's `decide#NotificationMessage` (base-component/framework/service/org/moqui/ui/NotificationServices.xml:261-305) checks the recipient, parses `messageJson`, and calls the topic service with `recordEntityName`, `recordId`, `message`, `notificationMessageId` and `reason`. Purchasing writes `sourceRevision` into the message (PurchaseApprovals.js:295) | P9, P10: the Mantle handlers take those five parameters, read the revision from `message`, and refuse a message with none; no Commons or framework change |
+| F46 | P0: Commons calls only `approve#NotificationMessage(notificationMessageId)` (mr-boss screen/Commons/Notifications.xml:57); the framework's `decide#NotificationMessage` (components/base/framework/service/org/moqui/ui/NotificationServices.xml:261-305) checks the recipient, parses `messageJson`, and calls the topic service with `recordEntityName`, `recordId`, `message`, `notificationMessageId` and `reason`. Purchasing writes `sourceRevision` into the message (PurchaseApprovals.js:295) | P9, P10: the Mantle handlers take those five parameters, read the revision from `message`, and refuse a message with none; no Commons or framework change |
 | F47 | P0: supplier returns are built: `authorize#SupplierReturn` (ReturnServices.xml:1826, `ReturnHeader.supplierRmaId`), `create#ReplacementOrder` (:1846, `ReturnItem.replacementOrderId`); Shared/ReturnDetail's Purchasing branch (template/PurchasingReturnDetail.xml). Nothing links a customer return to a supplier return | P9: a case links a supplier return or replacement order by `link#RequestRecord` on ReturnHeader; no new entity |
 | F48 | P0: Purchasing P10 is built: `RequestItem.quantityUomId` and `costCenterId`, audit-logged (PurchaseRequestEntities.xml:22-28). `complete#RequestFromWork` (RequestServices.xml:1357) skips RqtPurchaseRfq and RqtInventory (:1388), RqtPurchase with an OrgInternal party (:1391), and anything with no project (:1395) | P2: the support-case rule goes beside :1388-1395; P10's lines use `quantityUomId` |
 | F49 | P0: Shared/RequestDetail.xml:262-320 branches on Projects, Manufacturing (:269), Warehouse (:273), Purchasing (:290, section-include :429), else Commons; its RequestNotFound condition (:430) names those; the Items tab outside Projects is gated to RqtPurchase (:312-320). Shared/WorkItemDetail has Projects, Manufacturing (:415) and Commons, and its transitions hardcode `'projects' : 'commons'` (:68-201) | P2: a Customer Service branch of the same shape and a key in WorkItemDetail's transitions; P10 and P11 widen the Items gate to RqtOrderChange and RqtWarranty |
@@ -3519,10 +3519,10 @@ is written there too.
 | F66 | P0, read not run: a partial `cancel#OrderItem` (OrderServices.xml:1882) lowers quantity and ShipmentItemSource (`putBackQuantity`) and removes reservations only on a full cancel; the SECA OrderItemUpdateCheckReserve (ProductAsset.secas.xml:37) re-reserves `quantity − issued` afresh through `reserve#AssetForOrderItem` (removing all first, AssetServices.xml:847), so no excess stays. Its over-reserved branch is dead (returns at `<= 0`, :878, before `< 0`, :880) | P10 calls no `reduce#AssetReservation` after `cancel#OrderItem` (it would under-reserve) and asserts the rows; supersedes F28 |
 | F67 | P0: AssetMaintenance (ProductAssetEntities.xml:730) has audit-logged status, `taskWorkEffortId`, content and order items, `assetMaintenanceId` on AssetIssuance, and is RecordFiles-registered; WepMaintenance is unused. A sold serial is AstDelivered, owned by the customer, and keeps its facility, so Manufacturing's checks refuse it. No entity filter covers Asset, AssetMaintenance or WorkEffort | P11: one AssetMaintenance per repair on the sold serial's Asset through `create#AssetMaintenance`, its work a WepMaintenance task in `taskWorkEffortId`, parts by AssetIssuance, linked to the case by `link#RequestRecord`; WarrantyServices checks organization and customer itself; finishing is AsMntCompleted. Closes F33 and F40 |
 | F68 | P0: `RecordFilesServices.get#RecordFiles` (mr-boss shared/RecordFilesServices.xml:111-260) and Chatter's `forFiles` give a PROJECT_CLIENT user every file of a request, RqCntInternal included; `get#ClientRecordVisibility` (CommunicationServices.xml:1859-1960) shows a no-project request to the client who filed it, with internal status labels | P2: `get#ClientRecordVisibility` leaves out cases, so customers read cases only through Support. The Projects leak of internal files is a Projects bug, written into impl-projects |
-| F69 | P0: DbForm, DbFormField, DbFormFieldOption and FormResponse are in base-component/framework/entity/ScreenEntities.xml:402-575 with no dependency entity and no dates; `db_form_node` (crates/moqui-core/src/screen/form.rs:447-576) reads through the cache with no date. Only `dynamic="true"` forms go through `assemble_dynamic` (:354), which renders in html, qvt and tui; qvt-static writes a note and xml ignores form-single. `visible-when` exists in qvt, qvt-static and tui but not in ScreenHtml.js; there is no require-when. PASS pages can embed an html form-single but load no framework scripts (CSP `script-src 'self'`) | P7 framework: a dated DbFormField dependency entity mapped by `db_form_node` to `visible-when` and a require form of it, under style-guide §8.1 with the html fallback; templates are dynamic forms; P13 and P15 use the html fallback on PASS with server re-evaluation; `validate#TemplateValues` checks on the server |
+| F69 | P0: DbForm, DbFormField, DbFormFieldOption and FormResponse are in components/base/framework/entity/ScreenEntities.xml:402-575 with no dependency entity and no dates; `db_form_node` (crates/moqui-core/src/screen/form.rs:447-576) reads through the cache with no date. Only `dynamic="true"` forms go through `assemble_dynamic` (:354), which renders in html, qvt and tui; qvt-static writes a note and xml ignores form-single. `visible-when` exists in qvt, qvt-static and tui but not in ScreenHtml.js; there is no require-when. PASS pages can embed an html form-single but load no framework scripts (CSP `script-src 'self'`) | P7 framework: a dated DbFormField dependency entity mapped by `db_form_node` to `visible-when` and a require form of it, under style-guide §8.1 with the html fallback; templates are dynamic forms; P13 and P15 use the html fallback on PASS with server re-evaluation; `validate#TemplateValues` checks on the server |
 | F70 | P0: the audit log works on any entity (crates/moqui-entity/src/entity/field_rw.rs:318-360); changing DbFormField's key would break its options, attributes and FormResponseAnswer | P7 framework (about 100-200 lines plus specs): non-key `fromDate` and `thruDate` on DbFormField, DbFormFieldOption and the dependency entity, key fields audit-logged, an as-of date read by `db_form_node`, `assemble_dynamic`, `getFormNode` (tools_host.rs:620-628) and `get#FormResponse` (the response's date), drafts excluded; the delete-and-recreate `update#DbFormField` retired for dated rows |
 | F71 | P0: `dynamic-options depends-on` works in qvt, html and tui, and per row in a non-multi editable form-list, whose tui row forms are the twin; in a qvt `multi="true"` list `dependsOn` is not suffixed `_N` (ScreenQvt.js:272 vs :322), not verified | P5 and P7: no new framework element; the condition rows are a non-multi editable form-list with dependent operator and value options, typed values checked on the server. CS-FORM-ELEMENTS reduces to F69 |
-| F72 | P0: Dev AIDE presence (dev-component/dev-aide/src/notify.rs:114-170) is an in-memory per-node map broadcast to fixed groups and not cleared on close, so it does not generalize; the notification WebSocket's `notws/collab.rs` has per-document members tied to the socket (join with an access check, leave on close, cluster topic), bound to Yjs and wiki pages (crates/moqui-collab/src/lib.rs:445) | Who is viewing costs about 200-300 lines of Rust on collab's pattern plus a qvt component: decided in §4 (Nov 5) |
+| F72 | P0: Dev AIDE presence (components/dev/dev-aide/src/notify.rs:114-170) is an in-memory per-node map broadcast to fixed groups and not cleared on close, so it does not generalize; the notification WebSocket's `notws/collab.rs` has per-document members tied to the socket (join with an access check, leave on close, cluster topic), bound to Yjs and wiki pages (crates/moqui-collab/src/lib.rs:445) | Who is viewing costs about 200-300 lines of Rust on collab's pattern plus a qvt component: decided in §4 (Nov 5) |
 | F73 | P0: ORG_ACME and ORG_BLUTH have no owner; CustJqp and JoeDist are owned by ORG_ZIZI_RETAIL. BossWarehouseDemoData.xml has entity rows to CustJqp that Warehouse's walks rely on (BOSS_WH_SO*, BOSS_WH_RETURN, BOSS_WH_RMA, serials SCN-1001 to 1003); Accounting's Demo.js makes returns and invoices for BOSS_ACCT_ORG. Nothing makes a delivered serialized sale, a PftWarranty feature or a paid Ziziwork sales order | P1: a demo loader on Demo.js's pattern with its own IDs, the Warehouse rows untouched: a serialized product with PftWarranty sold, delivered, invoiced and paid; an order awaiting pick; a packed order; for CustJqp and JoeDist |
 | F74 | P1: `Party.ownerPartyId` defaults to `_NA_`, so ORG_ACME and ORG_BLUTH are shared parties, not unowned as F73 read them; ORG_ACME is a shared customer in every organization's scope, as ZiddlemanInc is Purchasing's shared supplier | Kept; CustomerServiceAccess checks both organizations serve it. P3: Customer360 of a shared customer lists only the user's organizations' orders, cases, returns and invoices |
 | F75 | P1: adding `customerservice` took a row of the client deny pattern past `artifactName`'s 255 characters | Split into two rows; the next package added there needs the same check |

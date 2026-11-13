@@ -32,7 +32,7 @@ dependency on BOSS.
 [screen inventory](ss-inventory.md) and [service inventory](usl-inventory.md).
 Decisions marked X, Z or L cite §3 of the suite-app review (see above).
 The [shared ground rules](impl-drawers-commons.md#4-ground-rules) and
-[application practices](../../../../docs/dev/Practices-App-Dev.md) govern ownership,
+[application practices](../../../../../docs/dev/Practices-App-Dev.md) govern ownership,
 permissions, dated associations, audit history, XML screens and service implementation.
 
 **Sections:** [1 shell](#1-shell) · [2 screens](#2-screens) ·
@@ -1708,7 +1708,7 @@ current consent/contact policy and suppressed after response/revocation. Transac
 and marketing subscription are distinct.
 
 After source commit, delivery/index failures log record/job identity and remain retryable without
-undoing a successful acceptance/change. Setup readiness shows failed jobs, unavailable public app,
+undoing a successful test/acceptance/change. Setup readiness shows failed jobs, unavailable public app,
 unconfigured templates and unresolved policy. The shipped alert templates (§8) tell a manager when
 quotes are about to expire unsent or unanswered and when deals stall; the jobs' `operation` marks
 give their duration and failures to the framework dashboards. Operator queues identify the record, failed step,
@@ -1765,7 +1765,7 @@ Chatter link to the surviving deal, preserving each record's history and audienc
 
 ### 14.3 Implementation acceptance scenarios
 
-Each scenario is an acceptance test to write (`acceptance/Sales/`, `acceptance/client/Sales/`), named in the
+Each scenario is an acceptance test to write (`test/acceptance/Sales/`, `test/acceptance/client/Sales/`), named in the
 implementation plan; the rules it relies on get their own regression tests. No route fixtures: a screen sweep is an
 acceptance test, one per app per mode.
 

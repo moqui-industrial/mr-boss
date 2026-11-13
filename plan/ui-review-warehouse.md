@@ -32,9 +32,9 @@ start the live review; acceptance runs follow §5.
   [Purchasing](ui-review-purchasing.md) and [Customer Service](ui-review-customer-service.md);
   [Products review](ui-review-products.md), [Projects review](ui-review-projects.md),
   [drawers, Commons and Comms review](ui-review-drawers-commons.md),
-  [framework UI review guide](../../../../docs/dev/UI-Review.md) and
-  [framework review](../../../../plans/archive/UI-Refinement.md).
-- [Application practices](../../../../docs/dev/Practices-App-Dev.md), [style guide](style-guide.md) (§8.2 handheld
+  [framework UI review guide](../../../../../docs/dev/UI-Review.md) and
+  [framework review](../../../../../plans/archive/UI-Refinement.md).
+- [Application practices](../../../../../docs/dev/Practices-App-Dev.md), [style guide](style-guide.md) (§8.2 handheld
   density), [crosscut design](design-crosscut.md), and current Purchasing, Manufacturing, Customer Service, Products
   and Accounting designs/contracts where their work enters or leaves Warehouse.
 - Current `screen/Warehouse.xml`, `screen/Warehouse/`, the mounted `screen/Shared/` sources and their children,
@@ -80,10 +80,10 @@ labels, carrier charges, customer/supplier mail and physical printer jobs are no
 
 ## 2. Review method and refinement criteria
 
-The generic method is the [UI review guide](../../../../docs/dev/UI-Review.md):
-[preparing an isolated review](../../../../docs/dev/UI-Review.md#prepare-an-isolated-review), activities and coverage,
-[judging the result](../../../../docs/dev/UI-Review.md#judge-the-result) (viewports, themes, keyboard, contrast,
-terminal) and [recording, fixing and verifying](../../../../docs/dev/UI-Review.md#record-fix-and-verify). Products
+The generic method is the [UI review guide](../../../../../docs/dev/UI-Review.md):
+[preparing an isolated review](../../../../../docs/dev/UI-Review.md#prepare-an-isolated-review), activities and coverage,
+[judging the result](../../../../../docs/dev/UI-Review.md#judge-the-result) (viewports, themes, keyboard, contrast,
+terminal) and [recording, fixing and verifying](../../../../../docs/dev/UI-Review.md#record-fix-and-verify). Products
 shows it executed: its [§2](ui-review-products.md#2-review-method-and-refinement-criteria) and
 [execution setup dispositions](ui-review-products.md#execution-setup-dispositions). This section keeps only what is
 specific to Warehouse.
@@ -226,7 +226,7 @@ revoked permission and another actor changing the record between display and con
 
 ### Area criteria
 
-Apply the guide's [judgment criteria](../../../../docs/dev/UI-Review.md#judge-the-result) (1920×1080 light/dark,
+Apply the guide's [judgment criteria](../../../../../docs/dev/UI-Review.md#judge-the-result) (1920×1080 light/dark,
 1280px, 390px, keyboard, contrast; actual TUI; bounded Standard `/apps` check). Warehouse adds:
 
 - **Handheld is its own variant.** `Handheld.xml` sets `density="handheld"` (48px controls, 18px text, no drawer, a
@@ -286,7 +286,7 @@ demo record in two concurrent walks. Corrections wait for the refinement pass (b
 
 ### Review and refinement phases
 
-Execution runs as the guide's [two separate passes](../../../../docs/dev/UI-Review.md#record-fix-and-verify)
+Execution runs as the guide's [two separate passes](../../../../../docs/dev/UI-Review.md#record-fix-and-verify)
 (user decision, 2026-11-11):
 
 1. **Review pass.** Concurrent review agents under one coordinating agent execute every activity in the waves above
@@ -1026,13 +1026,13 @@ cover less than a full activity, and their fixture consumption can conflict.
 | `WarehouseReturns`, `WarehouseTransfers` | RMA quarantine/read-only settlement, supplier issue/ship and no Warehouse return authorization; transfer/custody/request context; WH-26–30 |
 | `WarehouseReports` | Dated stock/incomplete history, unit totals, valuation gate, choices/exports and Home cards; WH-01/32 |
 | `test/client/Warehouse/WarehouseReceivingWalk.spec.js` | The registered golden path opens a purchase receipt and reopens the same one. It does not complete tracked receipt, short finish or handheld review; WH-10 |
-| `acceptance/Warehouse/WarehouseAccessWalk.spec.js` | Standalone no-ProductStore receive-to-ship, app roots, two-organization route/output/search/file/notification/financial isolation; creates its data through WarehouseStandaloneLib; WH-35–36 |
-| `acceptance/Warehouse/WarehouseServerStatic.spec.js` | Full check of Warehouse XML and marked server-static correctness; source/render support, not observed browser usability |
-| `acceptance/Warehouse/WarehouseProductionFixtures.spec.js` | Creates and releases a run of `DEMO_1_1` with frozen lines and standard for client work; fixture setup is not an observed production journey |
+| `test/acceptance/Warehouse/WarehouseAccessWalk.spec.js` | Standalone no-ProductStore receive-to-ship, app roots, two-organization route/output/search/file/notification/financial isolation; creates its data through WarehouseStandaloneLib; WH-35–36 |
+| `test/acceptance/Warehouse/WarehouseServerStatic.spec.js` | Full check of Warehouse XML and marked server-static correctness; source/render support, not observed browser usability |
+| `test/acceptance/Warehouse/WarehouseProductionFixtures.spec.js` | Creates and releases a run of `DEMO_1_1` with frozen lines and standard for client work; fixture setup is not an observed production journey |
 
 The abbreviated server spec names in the table are under `test/Warehouse/`. `WarehouseSpecLib.js` and
-`WarehouseStandaloneLib.js` are helpers, not additional independent review proof. `acceptance/AppStructure.spec.js`
-and `acceptance/TuiRender.spec.js` load WarehouseSpecLib's route list: they are the acceptance sweeps; do not
+`WarehouseStandaloneLib.js` are helpers, not additional independent review proof. `test/acceptance/AppStructure.spec.js`
+and `test/acceptance/TuiRender.spec.js` load WarehouseSpecLib's route list: they are the acceptance sweeps; do not
 reintroduce them as regression screen walks. A test that names a screen can be checking only its service context or
 one rendered state.
 
@@ -1053,7 +1053,7 @@ one rendered state.
 | `WarehouseProductionWalk` | Run context, subcontract output/service acceptance and unused return; independent issue/output/quality/cost-close continuations remain WH-30–31 |
 | `WarehouseReportsWalk` | Dated stock, incomplete opening, unit totals/drill, valuation refusal and phone layout; financial-holder and exported-artifact branches remain WH-32 |
 
-These walk files are under `acceptance/client/Warehouse/`. `acceptance/client/suite.js` registers them, runs
+These walk files are under `test/acceptance/client/Warehouse/`. `test/acceptance/client/suite.js` registers them, runs
 WarehouseReceiptFinishWalk near the end because it receives into stock the other walks do not count on, and lists
 WarehouseProductionFixtures among the server fixture specs. `test/client/suite.js` registers WarehouseReceivingWalk
 separately. Several walks tolerate an HTTP 500 for an expected refusal (§6 source concerns). Inspect current setup
@@ -1072,9 +1072,9 @@ command; no new duplicate BOSS test should restate a Mantle rule.
 ### Verification rules for later refinements
 
 These rules govern the refinement pass, and the commit rule applies in both; the review pass corrects nothing and
-commits no source (§2). The suite rules are the [testing skill](../../../../.agents/skills/testing/SKILL.md) and
-[Build-Test](../../../../docs/Build-Test.md#the-two-suites) with [rendering screens in
-tests](../../../../docs/Build-Test.md#rendering-screens-in-tests). Warehouse specifics:
+commits no source (§2). The suite rules are the [testing skill](../../../../../.agents/skills/testing/SKILL.md) and
+[Build-Test](../../../../../docs/Build-Test.md#the-two-suites) with [rendering screens in
+tests](../../../../../docs/Build-Test.md#rendering-screens-in-tests). Warehouse specifics:
 
 - **While working.** From the mr-moqui root on a built binary: `./moq test mr-boss --spec WarehouseReceiving
   --nobuild`, the owning Mantle rule spec when that rule changes, and the golden path
@@ -1158,7 +1158,7 @@ research and document review do not advance this ledger; record actual modes and
 
 No runtime/UI defect has been established by this planning work. The review pass records findings with Owner /
 correction / retest empty; the refinement pass fills them in. Number later findings **WH-UI-001** onward with the
-guide's fields and severities ([record, fix and verify](../../../../docs/dev/UI-Review.md#record-fix-and-verify)): P1
+guide's fields and severities ([record, fix and verify](../../../../../docs/dev/UI-Review.md#record-fix-and-verify)): P1
 blocks work or makes essential information unusable, P2 causes substantial friction or misleading presentation, P3 is
 a localized refinement. Distinguish observed failures, source suspicions and design judgments. Stock, financial or
 access corruption takes priority regardless of the screen's visual quality.

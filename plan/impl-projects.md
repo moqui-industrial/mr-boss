@@ -27,8 +27,8 @@ Sections: [1 scope](#1-scope-and-order) · [2 rules](#2-ground-rules) · [3 phas
 
 ## 1. Scope and order
 
-- **Repositories.** Each its own git repo: `mr-moqui-base` (`crates/`, `runtime/base-component`),
-  `runtime/component/mr-mantle`, `runtime/component/mr-mantle` and `runtime/component/mr-boss`.
+- **Repositories.** Each its own git repo: `mr-moqui-base` (`crates/`, `runtime/components/base`),
+  `runtime/components/addon/mr-mantle`, `runtime/components/addon/mr-mantle` and `runtime/components/addon/mr-boss`.
 - **Scope.** Every `parity` and `new` row of design §2 and the §15 needs they use. The `later` needs of §15 and §16 are
   in §7.
 - **Order** (decided Oct 21, 2026): the foundation, projects and work items, then Code early (the differentiator for the
@@ -49,8 +49,8 @@ Sections: [1 scope](#1-scope-and-order) · [2 rules](#2-ground-rules) · [3 phas
 - **Done for a phase:** impl-drawers-commons §4 "Done" (cargo tests for touched crates with goldens reviewed, the
   regression tests for the rules the phase adds, the regression suites of mr-mantle and mr-boss within budget,
   `moqui lint --screens` clean for BOSS, the inventories' **Implemented in** columns), and its row and **Built** note
-  here. The phase's "usable when" is an acceptance test to write (`acceptance/Projects/` or
-  `acceptance/client/Projects/`), named in the phase; running it is not part of Done.
+  here. The phase's "usable when" is an acceptance test to write (`test/acceptance/Projects/` or
+  `test/acceptance/client/Projects/`), named in the phase; running it is not part of Done.
 
 ## 3. Phases
 
@@ -859,7 +859,7 @@ F41–F43, for the PASS pattern.
 
 ### 9.1 Scope and order
 
-- **Repositories:** `runtime/component/mr-mantle`; `runtime/component/mr-pass`, the app; `runtime/component/mr-boss`,
+- **Repositories:** `runtime/components/addon/mr-mantle`; `runtime/components/addon/mr-pass`, the app; `runtime/components/addon/mr-boss`,
   for the invitations, the old form's redirect and C7. Framework work only if C5 needs a git read the framework lacks.
 - **Scope:** everything a P10 client can do, in the Client app:
   - Home: counters, gates waiting, projects, requests, replies, milestones and invoices due;
@@ -899,7 +899,7 @@ F41–F43, for the PASS pattern.
   among them `ClientPortalAccess`, the app's one access spec, which carries ProjectsAccess's rules over to the
   operations; the regression suites of mr-pass, mr-mantle and mr-boss within budget; lint clean for PASS;
   WorkProjectClients and the BOSS Client specs passing until C7 changes them; and its row and **Built** note here. The
-  phase's "usable when" is an acceptance test to write in mr-pass `acceptance/` or `acceptance/client/` (the remote
+  phase's "usable when" is an acceptance test to write in mr-pass `test/acceptance/` or `test/acceptance/client/` (the remote
   pair on PASS's RemoteFixtures pattern, a browser walk on ForumHttp's and RemoteHttp's), named in the phase; running
   it is not part of Done.
 

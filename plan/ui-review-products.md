@@ -29,9 +29,9 @@ evidence of this review's outcomes.
 - [Products design](design-products.md), [implementation](impl-products.md) and [research](research-products.md):
   intended workflows, delivered functionality, prior findings and deferrals.
 - [Projects review](ui-review-projects.md), [drawers, Commons and Comms review](ui-review-drawers-commons.md),
-  [framework UI review guide](../../../../docs/dev/UI-Review.md) and
-  [framework review](../../../../plans/archive/UI-Refinement.md): activity/evidence method and established refinements.
-- [Application practices](../../../../docs/dev/Practices-App-Dev.md), [style guide](style-guide.md),
+  [framework UI review guide](../../../../../docs/dev/UI-Review.md) and
+  [framework review](../../../../../plans/archive/UI-Refinement.md): activity/evidence method and established refinements.
+- [Application practices](../../../../../docs/dev/Practices-App-Dev.md), [style guide](style-guide.md),
   [crosscut design](design-crosscut.md), [Products implementation notes](../docs/ProductsImplementation.md) and
   [shared catalog screens](../docs/ProductsSharedScreens.md). The last two contain historical statements that must be
   reconciled with current sources, especially the now-built neighboring app contexts.
@@ -82,7 +82,7 @@ catalog, production stock, external publication, financial posting or printer de
 
 ### Environment and fixtures
 
-For later execution, follow the [review guide](../../../../docs/dev/UI-Review.md), repository building/testing skills
+For later execution, follow the [review guide](../../../../../docs/dev/UI-Review.md), repository building/testing skills
 and application practices. Use an isolated runtime and fresh disposable database with individually linked Mantle
 and BOSS components. The guide's framework-only bootstrap leaves `component/` empty and is insufficient on its own.
 Copy mutable configuration; keep database, uploaded content, generated PDFs/labels and import resources separate
@@ -752,14 +752,14 @@ rules, renders or complete journeys.
 | mr-boss regression `test/Products/` | ProductsDocuments, ProductsTools, ProductsImport, ProductsChecks, ProductsFinish | PRD-10, 16–22; focused content/tools/import/output contracts |
 | mr-boss regression `test/Products/` | ProductsAccess, ProductsSharedContext | PRD-23–24 and permission pairs throughout; not a complete access walk |
 | mr-boss regression `test/client/Products/` | ProductsWalk | Existing single golden path: create/activate draft, identifier and customer item code; reuse it |
-| mr-boss acceptance `acceptance/Products/` | ProductsScreens, ProductsTaxonomyScreens, ProductsVariantScreens, ProductsPriceScreens | Existing render coverage, including selected custom modes; source/render support, not browser or terminal interaction |
-| mr-boss acceptance `acceptance/Products/` | ProductsPriceFixtures, ProductsInventoryFixtures, ProductsToolsFixtures, ProductsImportFixtures | Acceptance setup, not an incidental authorized bootstrap |
-| mr-boss acceptance `acceptance/client/Products/` | ProductsTaxonomyWalk, ProductsVariantWalk | PRD-04–06; VariantBuilderTui is opened in a browser, not a live terminal |
-| mr-boss acceptance `acceptance/client/Products/` | ProductsPriceWalk, ProductsPriceListWalk, ProductsSupplierWalk | PRD-07–11 |
-| mr-boss acceptance `acceptance/client/Products/` | ProductsInventoryWalk, ProductsMethodWalk, ProductsCostWalk | PRD-12–15; method walk uses a composed role; cost walk covers a purchased estimate, independent approval and revaluation, not every manufacturing roll-up variant |
-| mr-boss acceptance `acceptance/client/Products/` | ProductsDocumentWalk, ProductsToolsWalk | PRD-16–19; actual current assertions determine output/translation extent |
-| mr-boss acceptance `acceptance/client/Products/` | ProductsImportWalk, ProductsChecks, ProductsCatalogSettings, ProductsFinish | PRD-20–22, outputs and cross-cutting finish checks |
-| mr-boss acceptance `acceptance/client/Products/` | ProductsPhone | 390px labels/checks/import/variant-list samples and five pricing dialogs at 1280px; the variant list and dialogs run as ADMIN `john.doe`; not app-wide phone or least-privilege coverage |
+| mr-boss acceptance `test/acceptance/Products/` | ProductsScreens, ProductsTaxonomyScreens, ProductsVariantScreens, ProductsPriceScreens | Existing render coverage, including selected custom modes; source/render support, not browser or terminal interaction |
+| mr-boss acceptance `test/acceptance/Products/` | ProductsPriceFixtures, ProductsInventoryFixtures, ProductsToolsFixtures, ProductsImportFixtures | Acceptance setup, not an incidental authorized bootstrap |
+| mr-boss acceptance `test/acceptance/client/Products/` | ProductsTaxonomyWalk, ProductsVariantWalk | PRD-04–06; VariantBuilderTui is opened in a browser, not a live terminal |
+| mr-boss acceptance `test/acceptance/client/Products/` | ProductsPriceWalk, ProductsPriceListWalk, ProductsSupplierWalk | PRD-07–11 |
+| mr-boss acceptance `test/acceptance/client/Products/` | ProductsInventoryWalk, ProductsMethodWalk, ProductsCostWalk | PRD-12–15; method walk uses a composed role; cost walk covers a purchased estimate, independent approval and revaluation, not every manufacturing roll-up variant |
+| mr-boss acceptance `test/acceptance/client/Products/` | ProductsDocumentWalk, ProductsToolsWalk | PRD-16–19; actual current assertions determine output/translation extent |
+| mr-boss acceptance `test/acceptance/client/Products/` | ProductsImportWalk, ProductsChecks, ProductsCatalogSettings, ProductsFinish | PRD-20–22, outputs and cross-cutting finish checks |
+| mr-boss acceptance `test/acceptance/client/Products/` | ProductsPhone | 390px labels/checks/import/variant-list samples and five pricing dialogs at 1280px; the variant list and dialogs run as ADMIN `john.doe`; not app-wide phone or least-privilege coverage |
 | mr-boss regression `test/Shared/`, `test/Commons/` | Chatter, RecordFiles; QuickCreate, TodayPanel, Notifications | PRD-01, 16, 24; use affected shared checks without repeating the Commons review |
 | mr-boss acceptance root | AppStructure, ServerStatic, TuiRender | Existing structural/render coverage; reconcile with Products render files before changing a sweep |
 | mr-mantle regression `test/product/` | ProductLifecycle, ProductCatalogServices, ProductCatalogSettings, ProductFeaturePolicy, ProductVariants | PRD-02–06, 22–23; native business rules |
@@ -770,12 +770,12 @@ rules, renders or complete journeys.
 | mr-mantle regression `test/product/` | Replenishment, ReplenishmentRoutes, SupplyPlanning; ReportLookups | PRD-12 stock policy, obsolete products and kit assembly; PRD-05, 18 feature and unit lookups |
 | mr-mantle regression `test/product/`, `test/ledger/` | WarehouseReports, AccountingValuation; AssetReservationMisc, WarehouseStockChecks | PRD-15 revaluation and stock history; PRD-12 edge checks |
 | webroot regression `test/client/` | WebrootVue.qvt, WebrootVue.qvt.shell, WebrootVue.qvt.layout, WebrootVue.qvt.records, WebrootVue.qvt.static, WebrootVue.qvt.views, WebrootTerminal, QvtKeys, Keys | Only for affected shared-widget/shell/renderer behavior |
-| webroot acceptance `acceptance/client/` | ThemeLayout | Existing home for reusable theme/geometry checks, not permission to run it without authorization |
+| webroot acceptance `test/acceptance/client/` | ThemeLayout | Existing home for reusable theme/geometry checks, not permission to run it without authorization |
 
 There are **18 Products server regression files**, **one Products browser regression golden path**, **eight Products
 server acceptance files** (four render specs and four fixture specs) and **15 registered Products browser acceptance
-specs**. `ProductsChecks` and `ProductsFinish` exist both in `test/Products/` and in `acceptance/client/Products/`, so
-say which suite a `--spec` run means. `test/client/suite.js` registers ProductsWalk; `acceptance/client/suite.js` registers the other 15 and requests
+specs**. `ProductsChecks` and `ProductsFinish` exist both in `test/Products/` and in `test/acceptance/client/Products/`, so
+say which suite a `--spec` run means. `test/client/suite.js` registers ProductsWalk; `test/acceptance/client/suite.js` registers the other 15 and requests
 price/inventory/method/cost/tools/import fixtures alongside other apps' setup. Method/cost fixtures live in regression
 despite their use by acceptance. Select a focused run deliberately and inspect setup dependencies before execution.
 
@@ -792,7 +792,7 @@ phone or terminal walks in acceptance. Do not recreate ProductsShots or add scre
 
 ### Verification rules for later refinements
 
-- Read the [testing skill](../../../../.agents/skills/testing/SKILL.md) before writing/running tests. Commands run
+- Read the [testing skill](../../../../../.agents/skills/testing/SKILL.md) before writing/running tests. Commands run
   from the mr-moqui root. Use affected regression specs on a suitable binary, for example
   `./moq test mr-boss --spec ProductsCatalog --nobuild`; client specs run through Moqui, not Node:
   `./moq test-client mr-boss --serve --spec ProductsWalk --nobuild`.

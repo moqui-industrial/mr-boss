@@ -24,16 +24,16 @@ the coverage ledger and batch record below distinguish current observations from
 
 ### Inputs and reference patterns
 
-- [Framework UI refinement](../../../../plans/archive/UI-Refinement.md): the earlier activity-based review, coverage ledger,
+- [Framework UI refinement](../../../../../plans/archive/UI-Refinement.md): the earlier activity-based review, coverage ledger,
   findings and lessons. Its historical environments, delegation arrangements and execution permissions do not carry
   over to this review.
-- [Reusable UI review guide](../../../../docs/dev/UI-Review.md): environment, activity/evidence method and established
-  interaction patterns; [application practices](../../../../docs/dev/Practices-App-Dev.md) and
+- [Reusable UI review guide](../../../../../docs/dev/UI-Review.md): environment, activity/evidence method and established
+  interaction patterns; [application practices](../../../../../docs/dev/Practices-App-Dev.md) and
   [style guide](style-guide.md): architecture, archetypes, widgets, vocabulary and render modes.
 - [Implementation](impl-drawers-commons.md), [design](design-drawers-commons.md),
   [research](research-drawers-commons.md), [crosscut design](design-crosscut.md) and
   [crosscut research](research-crosscut.md): intended behavior, reusable screens and the earlier reference survey.
-- [Comms framework plan](../../../../plans/archive/Comms-Framework.md), current `Commons.xml` / `Comms.xml`, component
+- [Comms framework plan](../../../../../plans/archive/Comms-Framework.md), current `Commons.xml` / `Comms.xml`, component
   configuration, theme/provider registrations, `screen-extend/basic-comms` and `screen-extend/webroot` (the launcher):
   current ownership and mounts take precedence over historical inventories when deciding what can be reviewed.
 
@@ -181,9 +181,9 @@ plan does not itself authorize application changes, commits, pushes or acceptanc
 ## 3. Screen and surface inventory
 
 Routes are relative to `/qapps/` unless an absolute token route is shown. Source aliases below are relative to the
-mr-moqui repository: **B** = `runtime/component/mr-boss/screen/`; **C** =
-`runtime/base-component/basic-comms/screen/`; **W** = `runtime/base-component/webroot/screen/webroot/`;
-**T** = `runtime/base-component/tools/screen/System/Security/UserAccount/UserAccountDetail/`.
+mr-moqui repository: **B** = `runtime/components/addon/mr-boss/screen/`; **C** =
+`runtime/components/base/basic-comms/screen/`; **W** = `runtime/components/base/webroot/screen/webroot/`;
+**T** = `runtime/components/base/tools/screen/System/Security/UserAccount/UserAccountDetail/`.
 Every source in the inventory is an existing definition; effective runtime reachability remains to be exercised.
 
 `XML` means framework-rendered widgets; `inline qvt/tui` identifies custom render sections, not a claim of feature
@@ -261,7 +261,7 @@ the primary activity IDs. This inventory holds screen/mode status; §6 holds the
 All C routes below are mounted through BOSS Comms. BOSS extends Home, Chat, Inbox/Mail, Inbox/Compose,
 Inbox/MessageDetail, Calls/Voicemail and Settings/Index in `screen-extend/basic-comms`; review the effective
 combined screen and its providers. Rows marked **+ B ext** have that extension at
-`runtime/component/mr-boss/screen-extend/basic-comms/screen/` plus the same path; their variants include what the
+`runtime/components/addon/mr-boss/screen-extend/basic-comms/screen/` plus the same path; their variants include what the
 extension adds. The
 BasicComms root is hidden in the BOSS launcher. Consent and Moderation are BOSS's own screens under `B Comms/`.
 
@@ -352,7 +352,7 @@ inspect both the helper controls and the parent inline TUI loader through the ac
 
 | Route / surface | Source / owner | Activities | Variants and inspection | Status | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| All BOSS apps: launcher | W `apps/AppList.xml` / framework shell; BOSS app registrations, suite groups in `runtime/component/mr-boss/screen-extend/webroot/screen/webroot/apps/AppList.xml` and templates `runtime/component/mr-boss/template/AppList.{html,qvt,tui}.fancy` | DC-01, DC-22 | BOSS html, qvt and tui templates; authorized destinations, group order and the trailing More group, active app, empty permissions | exercised, partial | Browser light/dark suite grouping/Commons destination; embedded TUI entry inspected. Full role/empty-permission/Standard variants deferred. `batch-1/launcher-initial-dark.dom.txt`, `launcher-light.jpg`, TUI navigation evidence. |
+| All BOSS apps: launcher | W `apps/AppList.xml` / framework shell; BOSS app registrations, suite groups in `runtime/components/addon/mr-boss/screen-extend/webroot/screen/webroot/apps/AppList.xml` and templates `runtime/components/addon/mr-boss/template/AppList.{html,qvt,tui}.fancy` | DC-01, DC-22 | BOSS html, qvt and tui templates; authorized destinations, group order and the trailing More group, active app, empty permissions | exercised, partial | Browser light/dark suite grouping/Commons destination; embedded TUI entry inspected. Full role/empty-permission/Standard variants deferred. `batch-1/launcher-initial-dark.dom.txt`, `launcher-light.jpg`, TUI navigation evidence. |
 | All BOSS apps: app navigation and breadcrumbs | W / framework shell | DC-01, DC-02 | Browser/TUI, sibling menus, keyboard and Back | exercised, partial | Browser Commons/Projects records, explicit Back and embedded TUI CtrlK navigation inspected.014 filtered Tasks-arrow Board/Calendar return and direct fallback retested. Full keyboard/mode matrix deferred. Batches 1/3; projects-task-shared-final.dom/jpg; DC-UI-014. |
 | Saved finds and list controls | Shared framework widgets; consuming lists | DC-01, DC-05 | Find Options, sort, save/update/default/reset, columns, pagination, export | exercised, partial | Existing Projects Open bugs saved find and Back observed; Commons Task List/Board/Calendar find exercised. Saved-find create/update/default/reset, columns/export/pagination matrix deferred; Commons Task screen has no saved-find control. `batch-1/saved-find-open-bugs.dom.txt`, `saved-find-back.dom.txt`; Batch 3 filtered view evidence. |
 | Palette | W / shell; Commons and Comms providers | DC-01, DC-22 | Recent, Screens, Actions, Saved finds, Records/ID, People, Pages/files, Events, Messages/rooms | exercised, partial | Browser @Bob exact person, known raw-ID destination, missing-ID no ghost record and return; TUI CtrlK→Commons Home. Other source groups, recent order/failure and full mode matrix deferred. `batch-1/palette-people.dom.txt`, `palette-id.dom.txt`, `palette-missing-id.dom.txt`, `tui-go-to.dom.txt`. |
@@ -678,12 +678,12 @@ spec names omit `.spec.js`. Inspect current assertions before extending coverage
 | mr-boss acceptance | AppStructure, ServerStatic, TuiRender | Supporting structure/render coverage; no new duplicate sweep and no usability claim |
 | mr-mantle regression | party/Consent, party/Contacts, party/ContactBooks, party/ContactAddresses, party/InboxThreads, party/InternalMessages, party/InternalLabels, party/RecordNotes, party/RecordVisibility, party/RecordLinks, party/ChatRecords; work/CalendarServices, work/CalendarChanges, work/CommonsToday, work/Dav; forum/Mailboxes | Business rules behind DC-04–10, DC-17, DC-18, DC-20 and DC-22; a rule fix and its test stay in Mantle |
 | basic-comms regression | BasicComms, BasicCommsInbox, BasicCommsComposeRef, BasicCommsFiles, BasicCommsSync, BasicCommsTexts, BasicCommsChat, BasicCommsChatChanges, BasicCommsBridges, BasicCommsEncrypted, BasicCommsCalls; client ShellSync and CryptoFlow | Shared Comms behavior; BOSS mount/extension outcomes require separate review evidence |
-| basic-comms acceptance, `acceptance/client/` | CallFlow, CallGuestFlow, EncryptedCallFlow, EncryptedChatFlow | Existing local media/guest/encryption journeys; prerequisites and actual mount must be checked |
+| basic-comms acceptance, `test/acceptance/client/` | CallFlow, CallGuestFlow, EncryptedCallFlow, EncryptedChatFlow | Existing local media/guest/encryption journeys; prerequisites and actual mount must be checked |
 | webroot regression, `test/client/` | WebrootVue.qvt, WebrootVue.qvt.shell, WebrootVue.qvt.layout, WebrootVue.qvt.records, WebrootVue.qvt.static, WebrootVue.qvt.views, WebrootVue.qvt.markdown, WebrootAssist, WebrootChat, WebrootTerminal, WebrootPublic.qvt, QvtKeys, Keys | Shared shell/control behavior; fixes belong in existing focused specs where applicable |
 | webroot regression, `test/` | QvtConfig | The shell restoring a saved dark/light/automatic choice and a forced or locked appearance policy taking precedence (DC-21 theme) |
-| webroot acceptance, `acceptance/client/` | ThemeLayout | Offline measured theme and geometry checks of shared components (`./moq accept` runs it with `--offline`); the place for a reusable contrast/geometry check found here |
+| webroot acceptance, `test/acceptance/client/` | ThemeLayout | Offline measured theme and geometry checks of shared components (`./moq accept` runs it with `--offline`); the place for a reusable contrast/geometry check found here |
 
-No Commons/Comms-specific browser journey files were present under BOSS `test/client/` or `acceptance/client/` at
+No Commons/Comms-specific browser journey files were present under BOSS `test/client/` or `test/acceptance/client/` at
 inventory time. Do not imply a BOSS golden path already exists from the presence of server specs or BasicComms walks.
 Adding a golden-path walk for each app is a remaining item in
 [impl-drawers-commons.md](impl-drawers-commons.md#9-addendum-nov-8-2026-remaining-items), outside this review.
@@ -691,7 +691,7 @@ Resolve coverage gaps when implementing the relevant batch; this documentation c
 
 ### Verification rules for later refinements
 
-- Read the repository's [testing skill](../../../../.agents/skills/testing/SKILL.md) before writing/running tests.
+- Read the repository's [testing skill](../../../../../.agents/skills/testing/SKILL.md) before writing/running tests.
   Run the affected regression specs with the existing binary unless a rebuild is required, for example
   `./moq test mr-boss --spec QuickCreate --nobuild`, and for client specs `./moq test-client mr-boss --serve --spec
   <name>`. Commands run from the mr-moqui root.
@@ -829,7 +829,7 @@ then allocate a DC-UI ID or close it here with the reason.
 | Lead | Source | Activity | Suspicion |
 | --- | --- | --- | --- |
 | Comms menu order | `B Comms/Moderation.xml` (`default-menu-index="6"`) and `B Comms.xml` (Settings `menu-index="6"`) | DC-01, DC-20 | Moderation and Settings share an index, so their order in the Comms menu is not decided |
-| Stale Calls card | `runtime/component/mr-boss/screen-extend/basic-comms/screen/BasicComms/Settings/Index.xml` | DC-19, DC-21 | BOSS's Calls card on the Comms settings index says camera, microphone and ringtone are "coming with calls", but `Comms/Settings/Calls` provides them |
+| Stale Calls card | `runtime/components/addon/mr-boss/screen-extend/basic-comms/screen/BasicComms/Settings/Index.xml` | DC-19, DC-21 | BOSS's Calls card on the Comms settings index says camera, microphone and ringtone are "coming with calls", but `Comms/Settings/Calls` provides them |
 | No Call handling card | `C BasicComms/Settings/Index.xml` | DC-19 | The settings index has cards for Phone and Desk and soft phones but none for Call handling, which is reached only from the Settings menu |
 
 ### Bounded batch record

@@ -32,9 +32,9 @@ establish live review outcomes.
   [Manufacturing](ui-review-manufacturing.md) and [Purchasing](ui-review-purchasing.md);
   [Products review](ui-review-products.md), [Projects review](ui-review-projects.md),
   [drawers, Commons and Comms review](ui-review-drawers-commons.md),
-  [framework UI review guide](../../../../docs/dev/UI-Review.md) and
-  [framework review](../../../../plans/archive/UI-Refinement.md).
-- [Application practices](../../../../docs/dev/Practices-App-Dev.md), [style guide](style-guide.md),
+  [framework UI review guide](../../../../../docs/dev/UI-Review.md) and
+  [framework review](../../../../../plans/archive/UI-Refinement.md).
+- [Application practices](../../../../../docs/dev/Practices-App-Dev.md), [style guide](style-guide.md),
   [crosscut design](design-crosscut.md), and the current Warehouse, Accounting, Products, Purchasing, Commerce,
   Projects, Commons and PASS contracts at the bounded handoffs below. Sales is not built (its plan,
   [impl-sales](impl-sales.md), has not started; `screen/Sales/` holds placeholders).
@@ -86,10 +86,10 @@ disposable local records and captured or synthetic integrations.
 
 ## 2. Review method and refinement criteria
 
-The generic method is the [UI review guide](../../../../docs/dev/UI-Review.md):
-[preparing an isolated review](../../../../docs/dev/UI-Review.md#prepare-an-isolated-review), activities and coverage,
-[judging the result](../../../../docs/dev/UI-Review.md#judge-the-result) (viewports, themes, keyboard, contrast,
-terminal) and [recording, fixing and verifying](../../../../docs/dev/UI-Review.md#record-fix-and-verify). Products
+The generic method is the [UI review guide](../../../../../docs/dev/UI-Review.md):
+[preparing an isolated review](../../../../../docs/dev/UI-Review.md#prepare-an-isolated-review), activities and coverage,
+[judging the result](../../../../../docs/dev/UI-Review.md#judge-the-result) (viewports, themes, keyboard, contrast,
+terminal) and [recording, fixing and verifying](../../../../../docs/dev/UI-Review.md#record-fix-and-verify). Products
 shows it executed: its [§2](ui-review-products.md#2-review-method-and-refinement-criteria) and
 [execution setup dispositions](ui-review-products.md#execution-setup-dispositions). This section keeps only what is
 specific to Customer Service.
@@ -241,7 +241,7 @@ independent failed batch member.
 
 ### Area criteria
 
-Apply the guide's [judgment criteria](../../../../docs/dev/UI-Review.md#judge-the-result) (1920×1080 light/dark,
+Apply the guide's [judgment criteria](../../../../../docs/dev/UI-Review.md#judge-the-result) (1920×1080 light/dark,
 1280px, 390px, keyboard, contrast; actual TUI; bounded Standard `/apps` check). Customer Service adds:
 
 - **Audience is the first thing to read.** Internal note, customer reply, public forum response, saved-reply
@@ -295,7 +295,7 @@ does not authorize feature construction.
 
 ### Review and refinement phases
 
-Execution runs as the guide's [two separate passes](../../../../docs/dev/UI-Review.md#record-fix-and-verify)
+Execution runs as the guide's [two separate passes](../../../../../docs/dev/UI-Review.md#record-fix-and-verify)
 (user decision, 2026-11-11):
 
 1. **Review pass.** Concurrent review agents under one coordinating agent execute every activity in the waves above
@@ -1078,7 +1078,7 @@ actor table.
 
 This is an inventory of source coverage, not a record of tests run for this document. BOSS has **13 Customer
 Service server regression specs**, **one browser regression walk**, **18 server acceptance specs**, and no
-`acceptance/client/CustomerService/`. A server acceptance walk that posts transitions or renders qvt/TUI is not
+`test/acceptance/client/CustomerService/`. A server acceptance walk that posts transitions or renders qvt/TUI is not
 observed browser interaction.
 
 | Current BOSS regression source under `test/CustomerService/` | What it supplies to the review | Activities |
@@ -1103,7 +1103,7 @@ fixtures; it is a helper, not a spec. The one registered browser regression is
 duplicates, creates a distinct case and resolves it with Reopen offered. It establishes none of the other
 activities, a phone layout, the themes or public Support.
 
-| Current BOSS acceptance source under `acceptance/CustomerService/` | Existing scenario/supporting coverage | Activities |
+| Current BOSS acceptance source under `test/acceptance/CustomerService/` | Existing scenario/supporting coverage | Activities |
 | --- | --- | --- |
 | `CustomerServiceFoundationWalk.spec.js` | Menus/areas/quick create per group, palette scope, forged ids, `sheldon.acme` refused; the demo orders | CS-01–02, 15, 34 |
 | `CustomerServiceCasesWalk.spec.js` | NewCase with duplicates, chat-made case, employee request, board and row moves, bulk result, work completion, Commons' hidden actions, Privacy | CS-03–04, 06, 09, 34 |
@@ -1125,26 +1125,26 @@ activities, a phone layout, the themes or public Support.
 | `CustomerServiceServerStatic.spec.js` | Server-static qvt structure of each plain screen; no journey or visual result | CS-35 |
 
 Keep the same-named server acceptance and browser regression `CustomerServiceCasesWalk` distinct by runner and
-path. BOSS `acceptance/client/suite.js` registers no Customer Service browser walk; do not relabel the transition
+path. BOSS `test/acceptance/client/suite.js` registers no Customer Service browser walk; do not relabel the transition
 walks as browser coverage or add a second regression golden path to fill the gap.
 
 | Owning component/source | Existing coverage to reuse and limitation |
 | --- | --- |
 | Mantle `test/request/` | `SupportCases`, `SupportSla`, `SupportAssignment`, `SupportReplies`, `SupportChannels`, `SupportTemplates`, `SupportRelations`, `SupportKnowledge`, `SupportWarranty`, `CaseFeedback`, `SupportPortal`: business rules and refusals, not BOSS usability evidence |
 | Mantle `test/order/` | `OrderChanges`, `OrderConfirmations`, `ReturnPolicies`, `AccountingReturns`, `WarehouseReturns`; match a changed rule's owner instead of duplicating it through BOSS |
-| Mantle `acceptance/order/SupportImmediateCancelWalk.spec.js` | Policy-sensitive customer cancellation; acceptance authorization still required |
+| Mantle `test/acceptance/order/SupportImmediateCancelWalk.spec.js` | Policy-sensitive customer cancellation; acceptance authorization still required |
 | PASS `test/Support/SupportAccess.spec.js` | Support access contract; `SupportFixtures.js` is its helper |
-| PASS `acceptance/SupportFixtures.spec.js`, `SupportIsolation.spec.js` | Public fixture setup and customer isolation |
-| PASS `acceptance/client/SupportPagesHttp.spec.js`, `SupportFeedbackHttp.spec.js` | Public-page forms and feedback against a configured fixture, registered in PASS's acceptance client suite |
-| PASS `acceptance/RemoteFixtures.spec.js`, `acceptance/client/RemoteHttp.spec.js` | The remote frontend in general; whether they cover Support pages is to verify; a local facade call does not establish a remote browser handoff |
+| PASS `test/acceptance/SupportFixtures.spec.js`, `SupportIsolation.spec.js` | Public fixture setup and customer isolation |
+| PASS `test/acceptance/client/SupportPagesHttp.spec.js`, `SupportFeedbackHttp.spec.js` | Public-page forms and feedback against a configured fixture, registered in PASS's acceptance client suite |
+| PASS `test/acceptance/RemoteFixtures.spec.js`, `test/acceptance/client/RemoteHttp.spec.js` | The remote frontend in general; whether they cover Support pages is to verify; a local facade call does not establish a remote browser handoff |
 | Commons/Projects/Products/Warehouse/Accounting/Insights | Existing shared component, task, stock, quality, finance and dataset checks; choose a second consumer only for a shared behavior later changed |
 
 ### Verification rules for later refinements
 
 These rules govern the refinement pass, and the commit rule applies in both; the review pass corrects nothing and
-commits no source (§2). The suite rules are the [testing skill](../../../../.agents/skills/testing/SKILL.md) and
-[Build-Test](../../../../docs/Build-Test.md#the-two-suites) with [rendering screens in
-tests](../../../../docs/Build-Test.md#rendering-screens-in-tests). Customer Service specifics:
+commits no source (§2). The suite rules are the [testing skill](../../../../../.agents/skills/testing/SKILL.md) and
+[Build-Test](../../../../../docs/Build-Test.md#the-two-suites) with [rendering screens in
+tests](../../../../../docs/Build-Test.md#rendering-screens-in-tests). Customer Service specifics:
 
 - **While working.** From the mr-moqui root on a built binary: `./moq test mr-boss --spec CustomerServiceReturns
   --nobuild`, the owning Mantle rule spec when its rule changes, and the golden path
@@ -1226,7 +1226,7 @@ research and document review do not advance this ledger; record actual modes and
 
 No runtime/UI defect has been established by this planning work. The review pass records findings with Owner /
 correction / retest empty; the refinement pass fills them in. Number later findings **CS-UI-001** onward with the
-guide's fields and severities ([record, fix and verify](../../../../docs/dev/UI-Review.md#record-fix-and-verify)): P1
+guide's fields and severities ([record, fix and verify](../../../../../docs/dev/UI-Review.md#record-fix-and-verify)): P1
 blocks work or makes essential information unusable, P2 causes substantial friction or misleading presentation, P3 is
 a localized refinement. Distinguish observed failures, source suspicions and design judgments. A private-data,
 authority or transaction-integrity failure takes priority regardless of visual quality.

@@ -976,16 +976,16 @@ for now.
 | What | File |
 | --- | --- |
 | The qvt client and the `m-*` components, button hierarchy, shell description | mr-moqui `docs/ui/Qvt-Client.md` |
-| The components and the shell root | `runtime/base-component/webroot/screen/webroot/js/WebrootVue.qvt.js` |
-| The style sheet over Quasar | `runtime/base-component/webroot/screen/webroot/css/WebrootVue.qvt.css` |
-| The macros that write qvt from screen XML, and the static mirror | `runtime/base-component/framework/template/screen/ScreenQvt.js`, `ScreenQvtStatic.js` |
-| The page shell and its settings | `runtime/base-component/webroot/screen/webroot/qapps.xml`, `includes/WebrootVue.qvt.html.fancy` |
-| Theme resources: style sheets, logo, footer, `STRT_QUASAR_CONFIG`, header plugin slots | `runtime/base-component/webroot/data/WebrootQuasarThemeData.xml` |
-| Vendored libraries, versions and how to upgrade | `runtime/base-component/webroot/screen/webroot/README.md`, `libs/refresh.mjs`, `libs/MANIFEST.json` |
-| The screen and form XML vocabulary | `runtime/base-component/framework/xsd/xml-screen-3.xsd`, `xml-form-3.xsd` |
+| The components and the shell root | `runtime/components/base/webroot/screen/webroot/js/WebrootVue.qvt.js` |
+| The style sheet over Quasar | `runtime/components/base/webroot/screen/webroot/css/WebrootVue.qvt.css` |
+| The macros that write qvt from screen XML, and the static mirror | `runtime/components/base/framework/template/screen/ScreenQvt.js`, `ScreenQvtStatic.js` |
+| The page shell and its settings | `runtime/components/base/webroot/screen/webroot/qapps.xml`, `includes/WebrootVue.qvt.html.fancy` |
+| Theme resources: style sheets, logo, footer, `STRT_QUASAR_CONFIG`, header plugin slots | `runtime/components/base/webroot/data/WebrootQuasarThemeData.xml` |
+| Vendored libraries, versions and how to upgrade | `runtime/components/base/webroot/screen/webroot/README.md`, `libs/refresh.mjs`, `libs/MANIFEST.json` |
+| The screen and form XML vocabulary | `runtime/components/base/framework/xsd/xml-screen-3.xsd`, `xml-form-3.xsd` |
 | The style decisions this guide continues | `plans/archive/QvtStylePlan.txt` |
 | Render goldens and the browser smoke | `crates/moqui-core/src/script/testdata/screen/qvt/render/`, `crates/moqui-host/tests/gate3_browser.rs` |
-| Status flows (for §5.2) | `runtime/base-component/tools/screen/Tools/StatusFlows.xml` |
+| Status flows (for §5.2) | `runtime/components/base/tools/screen/Tools/StatusFlows.xml` |
 | The terminal render mode: design, widget map, keys, the `tui` text and components (planned) | `plans/archive/Screen-TUI-Impl.md`; later `framework/template/screen/ScreenTui.js`, `crates/moqui-tui`, `docs/ui/TUI.md` |
 
 **Quasar 2.35.1** (paths under `~/work/moquiwork/3p_other/quasar/`):
@@ -1007,7 +1007,7 @@ for now.
 ## 10. The archetype gallery
 
 The archetypes of §3 and the widgets of §4 are rendered as real screens in the framework's
-example component, `runtime/dev-component/example/`, so a design decision is checked against
+example component, `runtime/components/dev/example/`, so a design decision is checked against
 the actual render mode in light and dark, at the breakpoints of §7, and so a new XML element
 has a screen that shows it. It is a dev component (since Oct 29, 2026): `./moq run` loads it,
 and the gallery is at `/qapps/gallery`.
@@ -1019,10 +1019,10 @@ Built Oct 18, 2026:
 | `example/screen/Gallery.xml` | The gallery root, mounted under the apps root by the example `MoquiConf.xml`; ADMIN authorization in `example/data/ExampleSecurityData.xml` |
 | `Gallery/Landing.xml`, `List.xml`, `Detail.xml`, `Record360.xml`, `Task.xml`, `Split.xml`, `Settings.xml`, `Wizard.xml`, `Dialog.xml`, `Report.xml`, `Panel.xml` | One archetype each over framework data (`moqui.basic.Enumeration`, `Geo`, `StatusItem`, `moqui.security.UserAccount`, `moqui.server.ArtifactHitBin`) or inline lists built in the screen actions; every widget of §4 appears at least once |
 | `Gallery/Board.xml` + `Board.qvue`, `Gallery/Calendar.xml` + `Calendar.qvue` | The `.qvue` path of §4.8 for the custom archetypes: a drag-and-drop board and a month grid over the screen's own transitions |
-| `Gallery/Tree.xml` (`view-tree` is shown in `Gallery/Views.xml` since Oct 21, 2026; a screen of its own is left) | §3.15 over an inline three- to seven-level breakdown built in the screen actions, with own and total hours, a muted ancestor from a find, a branch of more than 200 rows, drag and keyboard re-parenting through a transition that refuses a drop into a row's own branch, and the CSV, XLSX and print outputs. `example/acceptance/client/GallerySmoke.spec.js` loads Views with the tree. |
+| `Gallery/Tree.xml` (`view-tree` is shown in `Gallery/Views.xml` since Oct 21, 2026; a screen of its own is left) | §3.15 over an inline three- to seven-level breakdown built in the screen actions, with own and total hours, a muted ancestor from a find, a branch of more than 200 rows, drag and keyboard re-parenting through a transition that refuses a drop into a row's own branch, and the CSV, XLSX and print outputs. `example/test/acceptance/client/GallerySmoke.spec.js` loads Views with the tree. |
 | `Gallery/Widgets.xml` | Every field widget, button role, label type, list feature, container type, tree, editable and image side by side, as the fixture for style changes |
-| `example/acceptance/Gallery.spec.js` | The gallery sweep, an acceptance test of the framework: renders every gallery screen in its render mode through the screen test API (`./moq accept example`) |
-| `example/acceptance/client/GallerySmoke.spec.js` | The gallery sweep in the browser, an acceptance test: loads each gallery screen in the `/qapps` shell at 1280 with a clean console and no render error |
+| `example/test/acceptance/Gallery.spec.js` | The gallery sweep, an acceptance test of the framework: renders every gallery screen in its render mode through the screen test API (`./moq accept example`) |
+| `example/test/acceptance/client/GallerySmoke.spec.js` | The gallery sweep in the browser, an acceptance test: loads each gallery screen in the `/qapps` shell at 1280 with a clean console and no render error |
 
 Each gallery screen starts with an info box naming the §3 section it renders and the §8 items it
 stands in for with a fallback. A dialog opens on load with `?_openDialog=<dialog id>`.

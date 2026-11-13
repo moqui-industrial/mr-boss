@@ -30,9 +30,9 @@ results and existing tests are starting points; they do not establish review out
   [Purchasing](ui-review-purchasing.md) and [Customer Service](ui-review-customer-service.md);
   [Products review](ui-review-products.md), [Projects review](ui-review-projects.md),
   [drawers, Commons and Comms review](ui-review-drawers-commons.md),
-  [framework UI review guide](../../../../docs/dev/UI-Review.md) and
-  [framework review](../../../../plans/archive/UI-Refinement.md).
-- [Application practices](../../../../docs/dev/Practices-App-Dev.md), [style guide](style-guide.md),
+  [framework UI review guide](../../../../../docs/dev/UI-Review.md) and
+  [framework review](../../../../../plans/archive/UI-Refinement.md).
+- [Application practices](../../../../../docs/dev/Practices-App-Dev.md), [style guide](style-guide.md),
   [crosscut design](design-crosscut.md), and current Products, Warehouse, Purchasing, Accounting, Projects and
   [Maintenance](impl-maintenance.md) contracts where they supply methods, physical movements, service purchase orders,
   financial authority, time records or the planned adoption of maintenance records.
@@ -81,10 +81,10 @@ is included here only to explain a subcontract's status.
 
 ## 2. Review method and refinement criteria
 
-The generic method is the [UI review guide](../../../../docs/dev/UI-Review.md):
-[preparing an isolated review](../../../../docs/dev/UI-Review.md#prepare-an-isolated-review), activities and coverage,
-[judging the result](../../../../docs/dev/UI-Review.md#judge-the-result) (viewports, themes, keyboard, contrast,
-terminal) and [recording, fixing and verifying](../../../../docs/dev/UI-Review.md#record-fix-and-verify). Products
+The generic method is the [UI review guide](../../../../../docs/dev/UI-Review.md):
+[preparing an isolated review](../../../../../docs/dev/UI-Review.md#prepare-an-isolated-review), activities and coverage,
+[judging the result](../../../../../docs/dev/UI-Review.md#judge-the-result) (viewports, themes, keyboard, contrast,
+terminal) and [recording, fixing and verifying](../../../../../docs/dev/UI-Review.md#record-fix-and-verify). Products
 shows it executed: its [§2](ui-review-products.md#2-review-method-and-refinement-criteria) and
 [execution setup dispositions](ui-review-products.md#execution-setup-dispositions). This section keeps only what is
 specific to Manufacturing.
@@ -283,7 +283,7 @@ evidence and recovery run through every wave. Continuations, each kept in its or
 
 ### Review and refinement phases
 
-Execution runs as the guide's [two separate passes](../../../../docs/dev/UI-Review.md#record-fix-and-verify)
+Execution runs as the guide's [two separate passes](../../../../../docs/dev/UI-Review.md#record-fix-and-verify)
 (user decision, 2026-11-11):
 
 1. **Review pass.** Concurrent review agents under one coordinating agent execute every activity in the waves above
@@ -1042,18 +1042,18 @@ their demo records are shared (impl F60), and a render cannot establish browser 
 | mr-boss regression `test/Manufacturing/` | ManufacturingSubcontracting | MFG-25–26; request, buyer conversion, price omission and shared order/supplier/shipment context; the spec places the order itself |
 | mr-boss regression `test/Manufacturing/` | ManufacturingReports | MFG-01, 29–30; Home KPIs, cost report money columns by reader on screen and in export, scope and as-of time |
 | mr-boss regression `test/client/Manufacturing/` | ManufacturingWorkOrdersWalk | MFG-07–08; the app's one browser golden path (New work order → release); reuse it rather than adding another |
-| mr-boss acceptance `acceptance/Manufacturing/` | ManufacturingAccessWalk | MFG-07–13, 23–24, 27–32; standalone `BOSS_P17_ORG` plan-to-stock, app isolation, exports/prints, palette/scans/station, cost boundaries; server-side, not a live terminal/browser pass |
-| mr-boss acceptance `acceptance/Manufacturing/` | ManufacturingServerStatic | Server-static qvt of plain XML Manufacturing screens; its `./moq test` Run comment does not change its acceptance classification |
-| mr-boss acceptance `acceptance/Manufacturing/` | ManufacturingPlanningFixtures, ManufacturingSubcontractFixtures, ManufacturingScheduleFixtures, ManufacturingShopFloorFixtures | Setup for the client walks, each making new runs per load; the client suite's server also loads Products, Warehouse, Accounting and Insights fixtures. Registration does not authorize execution |
-| mr-boss acceptance `acceptance/client/Manufacturing/` | ManufacturingMethodsWalk, ManufacturingWorkCentersWalk, ManufacturingPolicyWalk | MFG-02–06; instruction/routing release, center/capacity with no rate action, policy override trace and reason deactivation, 390px |
-| mr-boss acceptance `acceptance/client/Manufacturing/` | ManufacturingWorkOrdersPhone, ManufacturingMaterialsWalk | MFG-07–09; list/detail and Components/Materials at 390px; the materials walk opens the tabs and posts nothing |
-| mr-boss acceptance `acceptance/client/Manufacturing/` | ManufacturingQuantitiesWalk, ManufacturingQualityWalk | MFG-10–13; dialogs and states only, nothing recorded (shared `BOSS_WH_RUN`, `BOSS_MFG_INSP`) |
-| mr-boss acceptance `acceptance/client/Manufacturing/` | ManufacturingChangesWalk | MFG-14–17; remap, split steps and Disassembly entry at 390px; nothing confirmed |
-| mr-boss acceptance `acceptance/client/Manufacturing/` | ManufacturingShopFloorWalk | MFG-18–20; the material handler's scan/start/instruction/timer/output completion, refused-input recovery and the supervisor's week approval/reopen |
-| mr-boss acceptance `acceptance/client/Manufacturing/` | ManufacturingDowntimeWalk, ManufacturingScheduleWalk | MFG-21–22; robot fault with its maintenance request (it leaves equipment under open maintenance), drag-preview-confirm and conflicts, 390px |
-| mr-boss acceptance `acceptance/client/Manufacturing/` | ManufacturingPlanningWalk, ManufacturingSubcontractWalk | MFG-23–25; make conversion, service-PO line conversion, buyer/planner price difference, 390px; no vendor-custody round trip |
-| mr-boss acceptance `acceptance/client/Manufacturing/` | ManufacturingCostsWalk, ManufacturingCostCloseWalk | MFG-27–28; estimate/actual read and review request (after the Warehouse production walk issues), blocked close findings, Accounting queue as `finance.approve` (empty of Retail runs), 390px; no successful post or adjustment |
-| mr-boss acceptance `acceptance/client/Manufacturing/` | ManufacturingReportsWalk | MFG-29; OEE KPI drill, money columns by reader and a phone report |
+| mr-boss acceptance `test/acceptance/Manufacturing/` | ManufacturingAccessWalk | MFG-07–13, 23–24, 27–32; standalone `BOSS_P17_ORG` plan-to-stock, app isolation, exports/prints, palette/scans/station, cost boundaries; server-side, not a live terminal/browser pass |
+| mr-boss acceptance `test/acceptance/Manufacturing/` | ManufacturingServerStatic | Server-static qvt of plain XML Manufacturing screens; its `./moq test` Run comment does not change its acceptance classification |
+| mr-boss acceptance `test/acceptance/Manufacturing/` | ManufacturingPlanningFixtures, ManufacturingSubcontractFixtures, ManufacturingScheduleFixtures, ManufacturingShopFloorFixtures | Setup for the client walks, each making new runs per load; the client suite's server also loads Products, Warehouse, Accounting and Insights fixtures. Registration does not authorize execution |
+| mr-boss acceptance `test/acceptance/client/Manufacturing/` | ManufacturingMethodsWalk, ManufacturingWorkCentersWalk, ManufacturingPolicyWalk | MFG-02–06; instruction/routing release, center/capacity with no rate action, policy override trace and reason deactivation, 390px |
+| mr-boss acceptance `test/acceptance/client/Manufacturing/` | ManufacturingWorkOrdersPhone, ManufacturingMaterialsWalk | MFG-07–09; list/detail and Components/Materials at 390px; the materials walk opens the tabs and posts nothing |
+| mr-boss acceptance `test/acceptance/client/Manufacturing/` | ManufacturingQuantitiesWalk, ManufacturingQualityWalk | MFG-10–13; dialogs and states only, nothing recorded (shared `BOSS_WH_RUN`, `BOSS_MFG_INSP`) |
+| mr-boss acceptance `test/acceptance/client/Manufacturing/` | ManufacturingChangesWalk | MFG-14–17; remap, split steps and Disassembly entry at 390px; nothing confirmed |
+| mr-boss acceptance `test/acceptance/client/Manufacturing/` | ManufacturingShopFloorWalk | MFG-18–20; the material handler's scan/start/instruction/timer/output completion, refused-input recovery and the supervisor's week approval/reopen |
+| mr-boss acceptance `test/acceptance/client/Manufacturing/` | ManufacturingDowntimeWalk, ManufacturingScheduleWalk | MFG-21–22; robot fault with its maintenance request (it leaves equipment under open maintenance), drag-preview-confirm and conflicts, 390px |
+| mr-boss acceptance `test/acceptance/client/Manufacturing/` | ManufacturingPlanningWalk, ManufacturingSubcontractWalk | MFG-23–25; make conversion, service-PO line conversion, buyer/planner price difference, 390px; no vendor-custody round trip |
+| mr-boss acceptance `test/acceptance/client/Manufacturing/` | ManufacturingCostsWalk, ManufacturingCostCloseWalk | MFG-27–28; estimate/actual read and review request (after the Warehouse production walk issues), blocked close findings, Accounting queue as `finance.approve` (empty of Retail runs), 390px; no successful post or adjustment |
+| mr-boss acceptance `test/acceptance/client/Manufacturing/` | ManufacturingReportsWalk | MFG-29; OEE KPI drill, money columns by reader and a phone report |
 | mr-boss regression `test/Accounting/`, `test/Warehouse/` | AccountingProductionCostClose; WarehouseCounts | MFG-09, 28; neighboring queue and count contract; use only for an affected shared correction |
 | mr-boss regression `test/Shared/`, `test/Commons/` | Chatter, RecordFiles; QuickCreate, TodayPanel, Notifications | MFG-01, 21, 31; shared identity and entry/return behavior, not a second Commons review |
 | mr-boss acceptance root | AppStructure, TuiRender, ServerStatic | Existing broad route/render sweeps; reconcile overlap before changing one; there is no separate ManufacturingScreens sweep |
@@ -1067,7 +1067,7 @@ their demo records are shared (impl F60), and a render cannot establish browser 
 
 The app has **11 server regression specs**, **one browser regression golden path** (registered in
 `test/client/suite.js`), **six server acceptance files** (four fixture specs, the access walk and the server-static
-check) and **16 browser acceptance specs** registered in `acceptance/client/suite.js` (ManufacturingWorkOrdersPhone
+check) and **16 browser acceptance specs** registered in `test/acceptance/client/suite.js` (ManufacturingWorkOrdersPhone
 last). `ManufacturingSpecLib.js` supplies demo IDs, users and route fixtures; `ManufacturingStandaloneLib.js` the
 isolated organization. Inspect their setup rather than guessing generated IDs or running acceptance fixtures as a
 convenient bootstrap.
@@ -1080,9 +1080,9 @@ passes close these activities. No test is added or changed by this documentation
 ### Verification rules for later refinements
 
 These rules govern the refinement pass, and the commit rule applies in both; the review pass corrects nothing and
-commits no source (§2). The suite rules are the [testing skill](../../../../.agents/skills/testing/SKILL.md) and
-[Build-Test](../../../../docs/Build-Test.md#the-two-suites) with [rendering screens in
-tests](../../../../docs/Build-Test.md#rendering-screens-in-tests). Manufacturing specifics:
+commits no source (§2). The suite rules are the [testing skill](../../../../../.agents/skills/testing/SKILL.md) and
+[Build-Test](../../../../../docs/Build-Test.md#the-two-suites) with [rendering screens in
+tests](../../../../../docs/Build-Test.md#rendering-screens-in-tests). Manufacturing specifics:
 
 - **While working.** From the mr-moqui root on a built binary: `./moq test mr-boss --spec ManufacturingSchedule
   --nobuild`, the owning Mantle spec when its rule changes, and the golden path
@@ -1159,7 +1159,7 @@ research and document review do not advance this ledger; record actual modes and
 
 No runtime/UI defect has been established by this planning work. The review pass records findings with Owner /
 correction / retest empty; the refinement pass fills them in. Number later findings **MFG-UI-001** onward with the
-guide's fields and severities ([record, fix and verify](../../../../docs/dev/UI-Review.md#record-fix-and-verify)): P1
+guide's fields and severities ([record, fix and verify](../../../../../docs/dev/UI-Review.md#record-fix-and-verify)): P1
 blocks work or makes essential information unusable, P2 causes substantial friction or misleading presentation, P3 is
 a localized refinement. Distinguish observed failures, source suspicions and design judgments. Stock, authority or
 financial-history corruption takes priority regardless of visual severity.

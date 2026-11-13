@@ -45,8 +45,8 @@ screens followed in P4–P21.
 - Inventories: [ss-inventory.md](ss-inventory.md) and [usl-inventory.md](usl-inventory.md).
 - mr-moqui: `plans/Remaining-Work.md` and `docs/Build-Test.md`.
 
-Framework paths are under the mr-moqui checkout (`crates/`, `runtime/base-component/`), Mantle paths under
-`runtime/component/mr-mantle/`, PASS paths under `runtime/component/mr-pass/`.
+Framework paths are under the mr-moqui checkout (`crates/`, `runtime/components/base/`), Mantle paths under
+`runtime/components/addon/mr-mantle/`, PASS paths under `runtime/components/addon/mr-pass/`.
 
 Sections: [1 scope](#1-scope-and-order) · [2 rules](#2-ground-rules) · [3 phases](#3-phases) ·
 [4 decisions](#4-decisions) · [5 open](#5-open-questions) · [6 findings](#6-findings) · [7 later](#7-later) ·
@@ -60,12 +60,12 @@ Sections: [1 scope](#1-scope-and-order) · [2 rules](#2-ground-rules) · [3 phas
 work is §7, the open questions §5.
 
 - **Repositories.** Each is its own git repo:
-  - `mr-moqui` (`crates/`, `runtime/base-component`)
-  - `runtime/component/mr-mantle`
-  - `runtime/component/mr-boss`, the internal app
-  - `runtime/component/mr-pass`, the customer and supplier pages as PASS apps (P18; §4)
+  - `mr-moqui` (`crates/`, `runtime/components/base`)
+  - `runtime/components/addon/mr-mantle`
+  - `runtime/components/addon/mr-boss`, the internal app
+  - `runtime/components/addon/mr-pass`, the customer and supplier pages as PASS apps (P18; §4)
 
-  `runtime/component/mr-marble` is read only, for the baseline Accounting, Asset and Party screens that design
+  `runtime/components/addon/mr-marble` is read only, for the baseline Accounting, Asset and Party screens that design
   §16.1 maps.
 - **Scope.**
   - Every `parity` and `new` row of design §2, and the §18 needs they use: AC-01 to AC-14 and AC-18 to AC-22,
@@ -214,9 +214,9 @@ work is §7, the open questions §5.
   - for P18: the same for mr-pass, and lint clean for PASS;
   - its row and **Built** note here.
 
-  The phase's "usable when" and its §8 walkthrough are acceptance tests to write (`acceptance/Accounting/`,
-  `acceptance/client/Accounting/`), named in the phase; for P18 the remote pair on PASS's RemoteFixtures pattern and
-  the browser walk on ForumHttp's and RemoteHttp's, in mr-pass `acceptance/`. Running them is not part of Done.
+  The phase's "usable when" and its §8 walkthrough are acceptance tests to write (`test/acceptance/Accounting/`,
+  `test/acceptance/client/Accounting/`), named in the phase; for P18 the remote pair on PASS's RemoteFixtures pattern and
+  the browser walk on ForumHttp's and RemoteHttp's, in mr-pass `test/acceptance/`. Running them is not part of Done.
 
 ## 3. Phases
 
@@ -1572,7 +1572,7 @@ Designed, not in this build:
 | Access | `AccountingAccess` for each access rule a phase adds; P18 (customer token); P21 (the full walk, acceptance) |
 
 - **Walks.** `AccountingReceivablesWalk` is the app's one golden-path client walk in the regression suite; every other
-  walk, the 390 px checks among them, is an acceptance test in `acceptance/client/Accounting/`.
+  walk, the 390 px checks among them, is an acceptance test in `test/acceptance/client/Accounting/`.
 
 ### P0 verification — Oct 29, 2026
 

@@ -28,8 +28,8 @@ Sections: [1 scope](#1-scope-and-order) · [2 step 0](#2-step-0) · [3 review](#
 
 ## 1. Scope and order
 
-- **Repositories.** Each of these is its own git repo: `mr-moqui-base` (`crates/`, `runtime/base-component`),
-  `runtime/component/mr-mantle`, `runtime/component/mr-marble` and `runtime/component/mr-boss`.
+- **Repositories.** Each of these is its own git repo: `mr-moqui-base` (`crates/`, `runtime/components/base`),
+  `runtime/components/addon/mr-mantle`, `runtime/components/addon/mr-marble` and `runtime/components/addon/mr-boss`.
 - **Scope.** Every `parity` and `new` row of design §3. The `later` rows are in §6.
 - **Order** (decided Oct 18): the shell foundation (M0–M3), then Contacts, Mail, Tasks and Requests, Calendar, Files,
   Knowledge and Notes, Chat, Consent. Contacts come before mail so recipients, contact cards and "Add to contacts" have
@@ -159,8 +159,8 @@ after it (Nov 5, from Customer Service P16).
     milestone adds passing, in Mantle for Mantle rules; the regression suites of mr-mantle and mr-boss passing within
     their `test/budget` (`./moq test-apps`); `moqui lint --screens` clean for BOSS. No route fixtures: a screen sweep
     is an acceptance test, one per app per mode.
-  - Scenarios: the milestone's end-to-end scenarios are acceptance tests to write (`acceptance/`,
-    `acceptance/client/`), named in the milestone; running them is not part of Done. The rules are mr-moqui
+  - Scenarios: the milestone's end-to-end scenarios are acceptance tests to write (`test/acceptance/`,
+    `test/acceptance/client/`), named in the milestone; running them is not part of Done. The rules are mr-moqui
     `docs/dev/Practices-App-Dev.md` §7 and `docs/Build-Test.md` "The two suites".
   - Paperwork: the **Implemented in** columns of `ss-inventory.md` and `usl-inventory.md` filled, and
     `Remaining-Work.md` updated. The milestone's status in §5 updated.
