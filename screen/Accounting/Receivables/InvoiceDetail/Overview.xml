@@ -203,17 +203,6 @@ along with this software (see the LICENSE.md file). If not, see
                                         </drop-down>
                                     </default-field>
                                 </field>
-                                <field name="settlementTermId">
-                                    <default-field title="Settlement term (optional)">
-                                        <drop-down allow-empty="true">
-                                            <entity-options key="${settlementTermId}" text="${description}">
-                                                <entity-find entity-name="mantle.account.invoice.SettlementTerm">
-                                                    <order-by field-name="description"/>
-                                                </entity-find>
-                                            </entity-options>
-                                        </drop-down>
-                                    </default-field>
-                                </field>
                                 <field name="termNumber"><default-field title="Value / Days"><text-line size="10"/></default-field></field>
                                 <field name="termText"><default-field title="Description / Note"><text-line size="50"/></default-field></field>
                                 <field name="submitButton"><default-field title="Add"><submit/></default-field></field>
@@ -224,10 +213,6 @@ along with this software (see the LICENSE.md file). If not, see
                         <form-list name="InvoiceTermsList" list="receivable.terms" skip-form="true" paginate="false">
                             <field name="termTypeDescription">
                                 <header-field title="Type"/>
-                                <default-field><display/></default-field>
-                            </field>
-                            <field name="settlementTermDescription">
-                                <header-field title="Settlement term"/>
                                 <default-field><display/></default-field>
                             </field>
                             <field name="termNumber">
