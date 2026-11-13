@@ -550,7 +550,7 @@ along with this software (see the LICENSE.md file). If not, see
                                     </form-single>
                                 </container-dialog>
                                 <link url="/fop${printPath}" text="Download PDF" url-type="plain" target-window="_blank"/>
-                                <link url="downloadFatturaPaXml" text="Download FatturaPA XML (SdI)" url-type="plain" link-type="anchor" target-window="_blank" parameter-map="{invoiceId:invoiceId}"/>
+                                <link url="downloadFatturaPaXml" text="Download FatturaPA XML (SdI)" link-type="anchor" target-window="_blank" parameter-map="{invoiceId:invoiceId}"/>
                             </button-menu>
                         </container>
                     </container>
