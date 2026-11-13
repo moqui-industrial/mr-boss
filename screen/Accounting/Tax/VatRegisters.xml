@@ -226,10 +226,10 @@
                     <container style="col-auto row q-gutter-sm">
                         <link url="${printUrl}"
                                 url-type="plain"
-                                text="Print / PDF"
+                                text="Print / VAT Register"
                                 icon="sym_o_print"
                                 target-window="_blank"
-                                condition="organizationPartyId &amp;&amp; totalDocuments &gt; 0"/>
+                                condition="organizationPartyId"/>
                     </container>
                 </container>
 
