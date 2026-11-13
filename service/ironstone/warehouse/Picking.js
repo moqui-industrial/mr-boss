@@ -586,6 +586,8 @@ function outboundDetail(p) {
             shipmentRouteSegmentSeqId: row.shipmentRouteSegmentSeqId,
             carrierText: row.carrierPartyId && row.carrierPartyId !== "_NA_" ? row.carrierPartyId : "No carrier",
             methodText: row.shipmentMethodEnumId || "",
+            tradeTermText: row.tradeTermEnumId ? (one("moqui.basic.Enumeration", {enumId: row.tradeTermEnumId})?.description || row.tradeTermEnumId) : "",
+            tradeTermEnumId: row.tradeTermEnumId || "",
             trackingText: row.trackingIdNumber || "",
             originFacilityId: row.originFacilityId || "",
             // freight cost only with financial read

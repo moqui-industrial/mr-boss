@@ -56,6 +56,12 @@ function invoiceContext(parameters) {
         customerName: invoice.fromPartyId === organizationPartyId ? invoice.toName : invoice.fromName,
         recipientsText: output.sendTo,
         lines: plainRows(output.lines),
+        terms: plainRows(output.terms),
+        taxSummary: plainRows(output.taxSummary),
+        fromFiscal: output.fromFiscal || {},
+        toFiscal: output.toFiscal || {},
+        settlementTerm: output.settlementTerm,
+        settlementTermDescription: output.settlementTerm?.description || "",
         payments: plainRows(output.paymentRows).map(row =>
             Object.assign(row, {
                 counterpartInvoiceId: row.paymentId ? null : row.invoiceId === invoiceId ? row.toInvoiceId : row.invoiceId

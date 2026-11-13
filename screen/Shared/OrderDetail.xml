@@ -187,7 +187,7 @@ along with this software (see the LICENSE.md file). If not, see
         invoiceRows = ord.invoiceRows
         projectRows = ord.projectRows
         detailRows = [['Customer', ord.customerName], ['Vendor', ord.vendorName], ['Name', ord.orderName], ['Entered', ord.entryDateText], ['Placed', ord.placedDateText],
-            ['Approved', ord.approvedDateText], ['Estimate', ord.estimateText]].filter((pair) => pair[1]).map((pair) => ({label: L(pair[0]), value: pair[1]}))
+            ['Approved', ord.approvedDateText], ['Estimate', ord.estimateText], ['Incoterm', ord.incotermText]].filter((pair) => pair[1]).map((pair) => ({label: L(pair[0]), value: pair[1]}))
         const shared = shareRows.length
         sharesValue = shared ? String(shared) : '—'
         billedCount = shareRows.filter((share) => share.invoiceUrl).length

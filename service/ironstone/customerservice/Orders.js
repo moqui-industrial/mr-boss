@@ -400,6 +400,7 @@ function trackingOf(shipmentId) {
         return {
             carrierName: segment.carrierPartyId && segment.carrierPartyId !== "_NA_" ? cs.partyName(segment.carrierPartyId) : "",
             methodText: cs.enumText(segment.shipmentMethodEnumId),
+            tradeTermText: cs.enumText(segment.tradeTermEnumId),
             statusText: cs.statusText(segment.statusId),
             codes,
             trackingText: codes.map(row => row.code).join(", "),

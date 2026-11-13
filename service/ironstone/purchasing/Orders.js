@@ -418,6 +418,7 @@ function detail(p) {
             estimatedDeliveryDate: part.estimatedDeliveryDate ? lib.dateText(part.estimatedDeliveryDate) : "",
             settlementTermId: part.settlementTermId || "",
             tradeTermEnumId: part.tradeTermEnumId || "",
+            incotermText: enumText(part.tradeTermEnumId),
             termsText: [
                 part.estimatedDeliveryDate ? "Delivery by " + lib.dateText(part.estimatedDeliveryDate) : "",
                 part.settlementTermId

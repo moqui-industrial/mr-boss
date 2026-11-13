@@ -21,6 +21,27 @@ along with this software (see the LICENSE.md file). If not, see
     <parameter name="organizationPartyId"/>
     <parameter name="recordId"/>
     <parameter name="invoiceId"/>
+    <transition name="storeInvoiceTerm">
+        <actions>
+            <if condition="invoiceTermId">
+                <then>
+                    <service-call name="update#mantle.account.invoice.InvoiceTerm" in-map="context"/>
+                </then>
+                <else>
+                    <service-call name="create#mantle.account.invoice.InvoiceTerm" in-map="context"/>
+                </else>
+            </if>
+        </actions>
+        <default-response url="."/>
+        <error-response url="."/>
+    </transition>
+    <transition name="deleteInvoiceTerm">
+        <actions>
+            <service-call name="delete#mantle.account.invoice.InvoiceTerm" in-map="context"/>
+        </actions>
+        <default-response url="."/>
+        <error-response url="."/>
+    </transition>
     <actions>
         <!-- InvoiceDetail's actions read the invoice when it renders with the tab -->
         <if condition="receivable == null">
@@ -58,6 +79,11 @@ along with this software (see the LICENSE.md file). If not, see
                                     <display text="${receivable.dueDateText || ''}"/>
                                 </default-field>
                             </field>
+                            <field name="settlementTermId">
+                                <default-field title="Payment terms">
+                                    <display text="${receivable.settlementTermDescription || receivable.settlementTerm?.description || ''}"/>
+                                </default-field>
+                            </field>
                             <field name="referenceNumber">
                                 <default-field title="Reference">
                                     <display/>
@@ -74,6 +100,98 @@ along with this software (see the LICENSE.md file). If not, see
                                 </default-field>
                             </field>
                         </form-single>
+                    </box-body>
+                </container-box>
+                <container-box>
+                    <box-header title="Fiscal and registration details"/>
+                    <box-body>
+                        <container-row>
+                            <row-col md="6">
+                                <container style="q-pa-sm">
+                                    <label text="From / Issuer" type="strong"/>
+                                    <label text="VAT / Tax ID: ${receivable.fromFiscal?.taxIdNumber ?: '—'}" type="div"/>
+                                    <label text="Tax code / SSN: ${receivable.fromFiscal?.socialSecurityNumber ?: '—'}" type="div"/>
+                                    <label text="SDI / Exchange code: ${receivable.fromFiscal?.exchSysCode ?: '—'}" type="div"/>
+                                    <label text="REA: ${receivable.fromFiscal?.reaNumber ?: '—'}" type="div" condition="receivable.fromFiscal?.reaNumber"/>
+                                    <label text="EORI: ${receivable.fromFiscal?.eoriNumber ?: '—'}" type="div" condition="receivable.fromFiscal?.eoriNumber"/>
+                                </container>
+                            </row-col>
+                            <row-col md="6">
+                                <container style="q-pa-sm">
+                                    <label text="Customer / Recipient" type="strong"/>
+                                    <label text="VAT / Tax ID: ${receivable.toFiscal?.taxIdNumber ?: '—'}" type="div"/>
+                                    <label text="Tax code / SSN: ${receivable.toFiscal?.socialSecurityNumber ?: '—'}" type="div"/>
+                                    <label text="SDI / Exchange code: ${receivable.toFiscal?.exchSysCode ?: '—'}" type="div"/>
+                                    <label text="REA: ${receivable.toFiscal?.reaNumber ?: '—'}" type="div" condition="receivable.toFiscal?.reaNumber"/>
+                                    <label text="EORI: ${receivable.toFiscal?.eoriNumber ?: '—'}" type="div" condition="receivable.toFiscal?.eoriNumber"/>
+                                </container>
+                            </row-col>
+                        </container-row>
+                    </box-body>
+                </container-box>
+                <container-box>
+                    <box-header title="Terms and conditions"/>
+                    <box-toolbar>
+                        <container-dialog id="AddInvoiceTermDialog" button-text="Add term" title="Add invoice term" condition="receivable.canEdit">
+                            <form-single name="AddInvoiceTermForm" transition="storeInvoiceTerm">
+                                <field name="invoiceId" from="invoiceId"><default-field><hidden/></default-field></field>
+                                <field name="termTypeEnumId">
+                                    <default-field title="Term type">
+                                        <drop-down allow-empty="false">
+                                            <entity-options key="${enumId}" text="${description}">
+                                                <entity-find entity-name="moqui.basic.Enumeration">
+                                                    <econdition field-name="enumTypeId" value="TermType"/>
+                                                    <order-by field-name="description"/>
+                                                </entity-find>
+                                            </entity-options>
+                                        </drop-down>
+                                    </default-field>
+                                </field>
+                                <field name="settlementTermId">
+                                    <default-field title="Settlement term">
+                                        <drop-down allow-empty="true">
+                                            <entity-options key="${settlementTermId}" text="${description}">
+                                                <entity-find entity-name="mantle.account.invoice.SettlementTerm">
+                                                    <order-by field-name="description"/>
+                                                </entity-find>
+                                            </entity-options>
+                                        </drop-down>
+                                    </default-field>
+                                </field>
+                                <field name="termNumber"><default-field title="Value / Days"><text-line size="10"/></default-field></field>
+                                <field name="termText"><default-field title="Description / Note"><text-line size="50"/></default-field></field>
+                                <field name="submitButton"><default-field title="Add"><submit/></default-field></field>
+                            </form-single>
+                        </container-dialog>
+                    </box-toolbar>
+                    <box-body>
+                        <form-list name="InvoiceTermsList" list="receivable.terms" skip-form="true" paginate="false">
+                            <field name="termTypeDescription">
+                                <header-field title="Type"/>
+                                <default-field><display/></default-field>
+                            </field>
+                            <field name="settlementTermDescription">
+                                <header-field title="Settlement term"/>
+                                <default-field><display/></default-field>
+                            </field>
+                            <field name="termNumber">
+                                <header-field title="Value"/>
+                                <default-field><display/></default-field>
+                            </field>
+                            <field name="termText">
+                                <header-field title="Details"/>
+                                <default-field><display/></default-field>
+                            </field>
+                            <field name="actions">
+                                <header-field title=""/>
+                                <default-field>
+                                    <link url="deleteInvoiceTerm" text="Remove" link-type="hidden-form" btn-type="danger"
+                                            condition="receivable.canEdit" confirmation="Remove this term?"
+                                            parameter-map="{invoiceTermId:invoiceTermId, invoiceId:invoiceId}"/>
+                                </default-field>
+                            </field>
+                        </form-list>
+                        <label text="No specific terms defined for this invoice." type="p" style="m-muted" condition="!receivable.terms?.length"/>
                     </box-body>
                 </container-box>
                 <section name="InvoiceDeliveries" condition="receivable.deliveryRecipients.length">

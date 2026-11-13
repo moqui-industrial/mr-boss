@@ -1679,6 +1679,8 @@ along with this software (see the LICENSE.md file). If not, see
                 detail = {orderId: orderId, orderName: header.orderName || '', statusId: header.statusId, statusText: statusText(header.statusId),
                     customerName: nameOf(part?.customerPartyId), vendorName: nameOf(part?.vendorPartyId), customerPartyId: part?.customerPartyId || null,
                     entryDateText: day(header.entryDate), placedDateText: day(header.placedDate), approvedDateText: day(header.approvedDate),
+                    incotermText: part?.tradeTermEnumId ? ec.entity.find('moqui.basic.Enumeration').condition('enumId', part.tradeTermEnumId).one()?.description || part.tradeTermEnumId : null,
+                    tradeTermEnumId: part?.tradeTermEnumId || null,
                     totalText: cash(header.grandTotal ?? total), currencyUomId: uom, lineRows: lineRows, shareRows: shareRows, invoiceRows: invoiceRows, projectRows: projectRows,
                     projectId: single, projectName: single ? projectNames[single] : '', canManage: !!access.canManage,
                     canSendEstimate: !!single && !!access.canManage && ['OrderOpen', 'OrderProposed'].includes(header.statusId),

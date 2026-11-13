@@ -65,6 +65,27 @@ along with this software (see the LICENSE.md file). If not, see
         <default-response url="."/>
         <error-response url="."/>
     </transition>
+    <transition name="storeInvoiceTerm">
+        <actions>
+            <if condition="invoiceTermId">
+                <then>
+                    <service-call name="update#mantle.account.invoice.InvoiceTerm" in-map="context"/>
+                </then>
+                <else>
+                    <service-call name="create#mantle.account.invoice.InvoiceTerm" in-map="context"/>
+                </else>
+            </if>
+        </actions>
+        <default-response url="."/>
+        <error-response url="."/>
+    </transition>
+    <transition name="deleteInvoiceTerm">
+        <actions>
+            <service-call name="delete#mantle.account.invoice.InvoiceTerm" in-map="context"/>
+        </actions>
+        <default-response url="."/>
+        <error-response url="."/>
+    </transition>
     <transition-include name="choices" location="component://mr-boss/template/AccountingParts.xml"/>
     <subscreens default-item="Overview" always-use-full-path="true">
         <subscreens-item name="Items"

@@ -454,6 +454,7 @@ along with this software (see the LICENSE.md file). If not, see
                                                 condition="po.supplierReference"/>
                                         <label text="Receive at: ${po.facilityName}" type="div" condition="po.facilityName"/>
                                         <label text="Terms: ${po.termsText}" type="div" condition="po.termsText"/>
+                                        <label text="Incoterm: ${po.incotermText}" type="div" condition="po.incotermText"/>
                                         <label text="Currency: ${po.currencyUomId}" type="div"/>
                                         <label text="Entered ${po.entryText}" type="div" style="m-muted"/>
                                         <label text="Placed ${po.placedText}" type="div" style="m-muted" condition="po.placedText"/>

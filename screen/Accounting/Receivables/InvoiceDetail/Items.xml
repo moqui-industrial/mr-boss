@@ -297,6 +297,39 @@ along with this software (see the LICENSE.md file). If not, see
                                 condition="!receivable.lines.length"/>
                     </box-body>
                 </container-box>
+                <container-box condition="receivable.taxSummary?.length">
+                    <box-header title="Tax summary"/>
+                    <box-body>
+                        <form-list name="FinanceInvoiceTaxSummary" list="receivable.taxSummary" skip-form="true" paginate="false">
+                            <field name="taxCode">
+                                <header-field title="Tax code"/>
+                                <default-field><display/></default-field>
+                            </field>
+                            <field name="taxRate" align="right">
+                                <header-field title="Rate %"/>
+                                <default-field><display format="#,##0.00"/></default-field>
+                            </field>
+                            <field name="itemsTotal" align="right">
+                                <header-field title="Taxable base"/>
+                                <default-field><display currency-unit-field="receivable.currencyUomId"/></default-field>
+                            </field>
+                            <field name="taxAmount" align="right">
+                                <header-field title="Tax amount"/>
+                                <default-field><display currency-unit-field="receivable.currencyUomId"/></default-field>
+                            </field>
+                            <columns type="mobile">
+                                <column>
+                                    <field-ref name="taxCode"/>
+                                    <field-ref name="taxRate"/>
+                                </column>
+                                <column>
+                                    <field-ref name="itemsTotal"/>
+                                    <field-ref name="taxAmount"/>
+                                </column>
+                            </columns>
+                        </form-list>
+                    </box-body>
+                </container-box>
             </widgets>
         </section>
     </widgets>

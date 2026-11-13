@@ -22,7 +22,8 @@ along with this software (see the LICENSE.md file). If not, see
     <transition name="createOrder">
         <actions>
             <service-call name="mantle.order.PurchaseServices.create#PurchaseOrder" out-map="created"
-                    in-map="{organizationPartyId:organizationPartyId, vendorPartyId:vendorPartyId, orderName:orderName}"/>
+                    in-map="{organizationPartyId:organizationPartyId, vendorPartyId:vendorPartyId, orderName:orderName,
+                        settlementTermId:settlementTermId, tradeTermEnumId:tradeTermEnumId}"/>
             <set field="orderId" from="created.orderId"/>
         </actions>
         <default-response url="//Purchasing/Orders/OrderDetail">
@@ -58,6 +59,29 @@ along with this software (see the LICENSE.md file). If not, see
             <field name="orderName">
                 <default-field title="Reference">
                     <text-line/>
+                </default-field>
+            </field>
+            <field name="settlementTermId">
+                <default-field title="Payment terms">
+                    <drop-down allow-empty="true">
+                        <entity-options key="${settlementTermId}" text="${description}">
+                            <entity-find entity-name="mantle.account.invoice.SettlementTerm">
+                                <order-by field-name="description"/>
+                            </entity-find>
+                        </entity-options>
+                    </drop-down>
+                </default-field>
+            </field>
+            <field name="tradeTermEnumId">
+                <default-field title="Incoterm">
+                    <drop-down allow-empty="true">
+                        <entity-options key="${enumId}" text="${description}">
+                            <entity-find entity-name="moqui.basic.Enumeration">
+                                <econdition field-name="parentEnumId" value="TtInco"/>
+                                <order-by field-name="description"/>
+                            </entity-find>
+                        </entity-options>
+                    </drop-down>
                 </default-field>
             </field>
             <field name="submit">
