@@ -135,6 +135,20 @@ along with this software (see the LICENSE.md file). If not, see
         <authz artifactAuthzId="BOSS_SALES_APPADMIN" userGroupId="BOSS_SALES_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
             <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/><filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/></authz>
     </artifactGroups>
+    <!-- CalcGrid's sales access profile (mr-mantle data/CalcGridProfileData.xml; mr-moqui docs/tools/Database.md, CalcGrid and
+        access profiles) for the Sales administrators: orders, returns, invoices, payments, customers and products on a
+        spreadsheet's data sheet, the rows of the organizations they work in (MANTLE_USER_ORG), of the active one when one is
+        chosen (MANTLE_ACTIVE_ORG), and no private contact of another user's. ALWAYS, for view: CalcGrid enters the profile
+        before it reads, so these filters are the ones its finds get, whatever screen it is shown under. They also author
+        documents (CALC_GRID_AUTHOR). CalcGrid itself is shown under Insights (screen/Insights.xml), whose root grant opens
+        it: a Sales administrator reaches it as an Insights user. No grant names the framework's own screen. -->
+    <moqui.security.ArtifactAuthz artifactAuthzId="BOSS_SALES_CALC_PROFILE" userGroupId="BOSS_SALES_ADMIN" artifactGroupId="CALC_PROFILE_SALES"
+            authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_VIEW"/>
+    <moqui.security.ArtifactAuthzFilter artifactAuthzId="BOSS_SALES_CALC_PROFILE" entityFilterSetId="MANTLE_USER_ORG"/>
+    <moqui.security.ArtifactAuthzFilter artifactAuthzId="BOSS_SALES_CALC_PROFILE" entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+    <moqui.security.ArtifactAuthzFilter artifactAuthzId="BOSS_SALES_CALC_PROFILE" entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+    <moqui.security.ArtifactAuthz artifactAuthzId="BOSS_SALES_CALC_AUTHOR" userGroupId="BOSS_SALES_ADMIN" artifactGroupId="CALC_GRID_AUTHOR"
+            authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL"/>
     <artifactGroups artifactGroupId="BOSS_MARKETING" description="IronStone Marketing App (via root screen)">
         <artifacts artifactName="component://mr-boss/screen/Marketing.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_MARKETING_ADMIN" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
@@ -3039,6 +3053,16 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_AP" userPermissionId="INVOICE_HOLD" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_AP" userPermissionId="INVOICE_MATCH" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_AP" userPermissionId="SUPPLIER_TERMS_EDIT" capabilityKindEnumId="CpkEdit"/>
+    <!-- People P27 review: payroll finance, the one finance bundle with PAYROLL_VIEW (payroll-origin invoices and payments) -->
+    <moqui.security.CapabilityBundle userGroupId="BOSS_ACCOUNTING_PAYROLL" appName="Accounting" description="Payroll finance" scopeDependency="organization" sequenceNum="795"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="PAYABLE_EDIT" capabilityKindEnumId="CpkEdit"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="PAYABLE_VIEW" capabilityKindEnumId="CpkView"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="PAYMENT_VIEW" capabilityKindEnumId="CpkView"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="PAYMENT_EDIT" capabilityKindEnumId="CpkEdit"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="INVOICE_APPROVE" capabilityKindEnumId="CpkEdit"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="INVOICE_HOLD" capabilityKindEnumId="CpkEdit"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="PAYMENT_RUN_APPROVE" capabilityKindEnumId="CpkEdit"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="PAYROLL_VIEW" capabilityKindEnumId="CpkSensitive"/>
     <moqui.security.CapabilityBundle userGroupId="BOSS_ACCOUNTING_MATCH" appName="Accounting" description="Bill matching" scopeDependency="organization" sequenceNum="800"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_MATCH" userPermissionId="INVOICE_MATCH" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_MATCH" userPermissionId="PAYABLE_VIEW" capabilityKindEnumId="CpkView"/>
@@ -5073,7 +5097,9 @@ along with this software (see the LICENSE.md file). If not, see
         user's call, impl-people §4, Nov 11, 2026). P14: PEOPLE_ROSTER_EDIT, saving and publishing shifts, to the manager and the HR
         officer, each in their own scope (the user's call, impl-people §4, Nov 12, 2026). P22 review: PAYROLL_CONFIGURE, changing
         payroll configuration (pay components, structures, groups and localizations) in place of PEOPLE_CONFIGURE there, to the payroll
-        operator and the People administrator (the user's call, impl-people §4, Nov 12, 2026). -->
+        operator and the People administrator (the user's call, impl-people §4, Nov 12, 2026). P31: PAYROLL_VIEW is no People read by
+        itself, so the payroll operator and approver hold PEOPLE_DIRECTORY_VIEW for the employees they pay (the lead's call,
+        impl-people §4, Nov 13, 2026). -->
     <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_READ" userPermissionId="PEOPLE_DIRECTORY_VIEW" fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_SELF" userPermissionId="PEOPLE_SELF_SERVICE" fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_MANAGER" userPermissionId="PEOPLE_TEAM_VIEW" fromDate="0"/>
@@ -5086,9 +5112,13 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_HR" userPermissionId="PEOPLE_ROSTER_EDIT" fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_RECRUIT" userPermissionId="PEOPLE_RECRUIT_VIEW" fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_RECRUIT" userPermissionId="PEOPLE_RECRUIT_EDIT" fromDate="0"/>
+    <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_PAYROLL" userPermissionId="PEOPLE_DIRECTORY_VIEW" fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_PAYROLL" userPermissionId="PAYROLL_VIEW" fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_PAYROLL" userPermissionId="PAYROLL_EDIT" fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_PAYROLL" userPermissionId="PAYROLL_CONFIGURE" fromDate="0"/>
+    <!-- P28: the payroll operator imports payroll history and a processor's results (the payroll exchange), People's import permission -->
+    <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_PAYROLL" userPermissionId="PEOPLE_IMPORT" fromDate="0"/>
+    <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_PAYROLL_APPROVE" userPermissionId="PEOPLE_DIRECTORY_VIEW" fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_PAYROLL_APPROVE" userPermissionId="PAYROLL_VIEW" fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_PAYROLL_APPROVE" userPermissionId="PAYROLL_APPROVE" fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_PEOPLE_DEVELOP" userPermissionId="PEOPLE_DEVELOP_VIEW" fromDate="0"/>
@@ -5127,10 +5157,13 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PEOPLE_RECRUIT" userPermissionId="PEOPLE_RECRUIT_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PEOPLE_RECRUIT" userPermissionId="PEOPLE_RECRUIT_EDIT" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundle userGroupId="BOSS_PEOPLE_PAYROLL" appName="People" description="Payroll operator" scopeDependency="organization, employment" sequenceNum="1170"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PEOPLE_PAYROLL" userPermissionId="PEOPLE_DIRECTORY_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PEOPLE_PAYROLL" userPermissionId="PAYROLL_VIEW" capabilityKindEnumId="CpkSensitive"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PEOPLE_PAYROLL" userPermissionId="PAYROLL_EDIT" capabilityKindEnumId="CpkSensitive"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PEOPLE_PAYROLL" userPermissionId="PAYROLL_CONFIGURE" capabilityKindEnumId="CpkSensitive"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PEOPLE_PAYROLL" userPermissionId="PEOPLE_IMPORT" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundle userGroupId="BOSS_PEOPLE_PAYROLL_APPROVE" appName="People" description="Payroll approver" scopeDependency="organization, employment" sequenceNum="1180"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PEOPLE_PAYROLL_APPROVE" userPermissionId="PEOPLE_DIRECTORY_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PEOPLE_PAYROLL_APPROVE" userPermissionId="PAYROLL_VIEW" capabilityKindEnumId="CpkSensitive"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PEOPLE_PAYROLL_APPROVE" userPermissionId="PAYROLL_APPROVE" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundle userGroupId="BOSS_PEOPLE_DEVELOP" appName="People" description="Learning and review administrator" scopeDependency="organization, review participation" sequenceNum="1190"/>

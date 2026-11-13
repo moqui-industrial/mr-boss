@@ -45,7 +45,7 @@
 // administrator and the instance administrator with the same parameters; no Commons list, access check or id lookup holds it;
 // RequestDetail's one qvt render as the handler (the case inside its AI opt-out) and the employee's html render by their own
 // grant; Grievances opened to the self-service employee by its own grant and refused another app's user, and the Employees group
-// with Grievances.
+// with Grievances; the People root (qvt) and Employees (tui) levels the employee's frame of Grievances, refused alone.
 // P20: a review cycle set up by a development editor of the employer (the HR officer refused with the same parameters, Services
 // refused to Retail's review administrator); Review cycles the review administrator's (the HR officer and the employee refused the
 // screen), Reviews the employee's by the area's own grant and their self-service link to it (the Performance group per user is
@@ -76,11 +76,23 @@
 // approver and missing to the HR officer; Services' slip missing to Retail's payroll; the employee's own preview slip missing to
 // them through get#MyPayslip, and find#Payslips answering them nothing but their own issued slips; Payslips and PayslipDetail refused
 // to the HR officer; MyPayslip opened to the employee by its own grant (BOSS_PPL_PAYSLIP_SELF) and refused another app's user.
+// P27: a pay run finalized by the payroll operator alone (the HR officer refused with the same parameters, the operator past the
+// permission to the group's own refusal: the demonstration group is not live), Services' run missing to Retail's payroll; its
+// settlement read by the payroll approver and refused to the HR officer; a pay obligation's invoice in Payroll's InvoiceDetail
+// (get#Obligation) a payroll reader's of its employer, refused to the HR officer and missing to Retail's payroll for Services'.
+// P27 review: Overpayment recovery (PayRecovery) payroll's, its settings refused to the HR officer (the user's call of Nov 13, 2026).
+// P28: a payroll history import previewed by the payroll operator (PEOPLE_IMPORT with PAYROLL_VIEW and PAYROLL_EDIT) and refused to
+// the HR officer (PEOPLE_IMPORT without payroll) with the same parameters; the exchange read by the payroll approver and refused to
+// the HR officer, Services' missing to Retail's payroll; PayrollExchange payroll's (one html render, the HR officer refused the
+// screen) and the import listed in Admin's Imports with People's place.
 // P29: the payroll register run by the payroll operator and refused to the HR officer with the same parameters, Services' headcount
 // refused to Retail's HR; Reports opened to HR and payroll and refused to the directory reader and the manager; the confidential case
 // intake set by the People administrator and refused to the HR officer with the same parameters; the clocking default set by the HR
 // officer and refused to the directory reader with the same parameters, Services' refused to Retail's HR; Preferences the People
 // administrator's (the HR officer refused the screen).
+// P31 (the lead's call of Nov 13, 2026): PAYROLL_VIEW alone is no People read: Accounting's payroll finance (a spec-local account of
+// BOSS_ACCOUNTING_PAYROLL, an agent of Retail) is refused Tomas's employee record, the directory and his compensation, with the
+// parameters the payroll operator, who holds PEOPLE_DIRECTORY_VIEW beside it, is answered with.
 // Run: ./moq test mr-boss --spec PeopleAccessLater
 const lib = ec.resource.script("component://mr-boss/test/People/PeopleSpecLib.js")
 const {ids, users, asUser, system, refusal, invoke, page, screenRefusal, hit} = lib
@@ -95,6 +107,9 @@ const teamOnly = "PPL_SPEC_TEAM_ONLY"
 const hrOnly = "PPL_SPEC_HR_ONLY"
 // P26: the payslip case's group, made in its feature
 const state26 = {}
+// P31: a spec-local payroll finance user of Accounting (BOSS_ACCOUNTING_PAYROLL: PAYROLL_VIEW with the finance permissions), an agent
+// of Retail, so the rule is met at an employer that has employees (finance.payroll is Accounting's organization's agent)
+const financePayroll = "PPL_SPEC_FIN_PAYROLL"
 
 spec({
     setupSpec() {
@@ -136,6 +151,24 @@ spec({
             })
             for (const userGroupId of ["BOSS_USERS", "BOSS_PEOPLE", hrOnly])
                 call("create#moqui.security.UserGroupMember", {userId: hrOnly, userGroupId, fromDate: 0})
+            call("create#mantle.party.Party", {partyId: financePayroll, partyTypeEnumId: "PtyPerson"})
+            call("create#mantle.party.Person", {partyId: financePayroll, firstName: "People spec", lastName: "Payroll finance"})
+            call("create#mantle.party.PartyRelationship", {
+                relationshipTypeEnumId: "PrtAgent",
+                fromPartyId: financePayroll,
+                toPartyId: ids.organizationId,
+                toRoleTypeId: "OrgInternal",
+                fromDate: 0
+            })
+            call("create#moqui.security.UserAccount", {
+                userId: financePayroll,
+                username: "people.spec.financepayroll",
+                partyId: financePayroll,
+                currentPassword: "16ac58bbfa332c1c55bd98b53e60720bfa90d394",
+                passwordHashType: "SHA"
+            })
+            for (const userGroupId of ["BOSS_USERS", "BOSS_ACCOUNTING", "BOSS_ACCOUNTING_PAYROLL"])
+                call("create#moqui.security.UserGroupMember", {userId: financePayroll, userGroupId, fromDate: 0})
         })
     },
     cleanupSpec() {
@@ -145,7 +178,7 @@ spec({
         system(() =>
             ec.entity
                 .find("moqui.security.UserGroupMember")
-                .condition("userId", "in", [teamOnly, hrOnly])
+                .condition("userId", "in", [teamOnly, hrOnly, financePayroll])
                 .updateAll({thruDate: ec.user.nowTimestamp})
         )
         ec.artifactExecution.enableAuthz()
@@ -853,7 +886,7 @@ feature(
 )
 
 feature(
-    "confidential cases: the employee files a case with Retail's case handler, who reads it; the manager, the HR officer and the administrators are refused it with the same parameters; no other app's request list, detail or lookup holds it; RequestDetail shows it behind the AI opt-out to its handler and to the employee by their own grant; the employee opens Grievances by its own grant",
+    "confidential cases: the employee files a case with Retail's case handler, who reads it; the manager, the HR officer and the administrators are refused it with the same parameters; no other app's request list, detail or lookup holds it; RequestDetail shows it behind the AI opt-out to its handler and to the employee by their own grant; the employee opens Grievances by its own grant, the levels above it as its frame",
     {
         when() {
             const R = "mantle.request.RequestServices."
@@ -942,6 +975,41 @@ feature(
             if (own) problems.push(`the employee's Grievances: ${own}`)
             if (!unauthorized(screenRefusal(users.otherApp, "Employees/Grievances")))
                 problems.push("another app's user opens Grievances")
+            // the levels above Grievances the employee may not open alone (the People root, Employees) answer, loaded for
+            // Grievances, as its frame: in qvt the placeholder alone, in tui the active level (Employees has no tabs); asked for
+            // alone they are refused (the framework's rule, docs/security/Attack-Surface.md "Parent frames")
+            const level = (path, pagePath) =>
+                asUser(users.employee, () => {
+                    const test = ec.screen.makeTest().rootScreen("component://webroot/screen/webroot.xml")
+                    if (pagePath) test.header("X-Moqui-Page-Path", pagePath)
+                    const result = test.render(path, {}, null)
+                    const errors = Array.from(result.errorMessages || []).join(" | ")
+                    ec.message.clearErrors()
+                    return {status: result.status, output: String(result.output || ""), errors}
+                })
+            const grievances = "/apps/People/Employees/Grievances"
+            const rootFrame = level("apps/People.qvt", grievances)
+            if (
+                rootFrame.status != 200 ||
+                rootFrame.output != '<div class="m-frame"><m-subscreens-active></m-subscreens-active></div>'
+            )
+                problems.push(
+                    `the People root's frame for Grievances: ${rootFrame.status} ${rootFrame.errors} ${rootFrame.output.slice(0, 200)}`
+                )
+            const areaFrame = level("apps/People/Employees.tui", grievances)
+            const areaNodes = areaFrame.status == 200 ? JSON.parse(areaFrame.output).c : null
+            if (!areaNodes || areaNodes.length != 1 || areaNodes[0].t != "active")
+                problems.push(
+                    `Employees' terminal frame for Grievances: ${areaFrame.status} ${areaFrame.errors} ${areaFrame.output.slice(0, 200)}`
+                )
+            for (const [path, pagePath] of [
+                ["apps/People.qvt", null],
+                ["apps/People/Employees.tui", null],
+                ["apps/People/Employees.tui", "/apps/People/Employees/List"]
+            ]) {
+                const alone = level(path, pagePath)
+                if (alone.status == 200 && !alone.errors) problems.push(`the employee opens ${path} for ${pagePath}`)
+            }
             return {codes, problems}
         },
         then({codes, problems}) {
@@ -1696,6 +1764,202 @@ feature(
                     hrServicesClocking: "ORGANIZATION_DENIED"
                 }
             problems.join("\n") == ""
+        }
+    }
+)
+
+feature(
+    "P27: finalizing a pay run is payroll's: the HR officer refused with the parameters the payroll operator is answered with, Services' run missing to Retail's payroll; the settlement and an obligation's invoice payroll's",
+    {
+        when() {
+            const R = "mantle.humanres.PayrollRunServices."
+            const code = message => /[A-Z][A-Z0-9_]{3,}(?=:)/.exec(message)?.[0] || message || "accepted"
+            const as = (user, service, parameters) => code(asUser(user, () => system(() => refusal(service, parameters))))
+            // P26's approved run of Retail's spec group (its regular run); Services' run, a payroll obligation of it and its invoice,
+            // as data: only their employer matters here
+            const runId = system(
+                () =>
+                    ec.entity
+                        .find("mantle.humanres.payroll.PayrollRun")
+                        .condition({payrollGroupId: state26.group.payrollGroupId, runKindEnumId: "PrkRegular"})
+                        .one()?.payrollRunId
+            )
+            system(() => {
+                call("create#mantle.humanres.payroll.PayrollRun", {
+                    payrollRunId: "PPL_SPEC_PAL_RUN_SVC",
+                    organizationPartyId: ids.otherOrganizationId,
+                    currencyUomId: "USD",
+                    runKindEnumId: "PrkRegular",
+                    statusId: "PrnApproved"
+                })
+                call("create#mantle.account.invoice.Invoice", {
+                    invoiceId: "PPL_SPEC_PAL_INV_SVC",
+                    invoiceTypeEnumId: "InvoicePayroll",
+                    fromPartyId: ids.otherEmployeePartyId,
+                    toPartyId: ids.otherOrganizationId,
+                    statusId: "InvoiceIncoming",
+                    currencyUomId: "USD"
+                })
+                call("create#mantle.humanres.payroll.PayrollObligation", {
+                    obligationKey: "NET:PPL_SPEC_PAL_SVC",
+                    obligationKindEnumId: "PokNetPay",
+                    payrollRunId: "PPL_SPEC_PAL_RUN_SVC",
+                    organizationPartyId: ids.otherOrganizationId,
+                    partyId: ids.otherEmployeePartyId,
+                    payeePartyId: ids.otherEmployeePartyId,
+                    currencyUomId: "USD",
+                    invoiceId: "PPL_SPEC_PAL_INV_SVC",
+                    amount: "100"
+                })
+            })
+            const finalize = {payrollRunId: runId}
+            return {
+                codes: {
+                    hrFinalizes: as(users.hr, R + "finalize#Run", finalize),
+                    payrollFinalizes: as(users.payroll, R + "finalize#Run", finalize),
+                    payrollServices: as(users.payroll, R + "finalize#Run", {payrollRunId: "PPL_SPEC_PAL_RUN_SVC"}),
+                    approverSettlement: as(users.payApprover, R + "get#Settlement", finalize),
+                    hrSettlement: as(users.hr, R + "get#Settlement", finalize),
+                    hrObligation: as(users.hr, R + "get#Obligation", {invoiceId: "PPL_SPEC_PAL_INV_SVC"}),
+                    payrollObligationServices: as(users.payroll, R + "get#Obligation", {invoiceId: "PPL_SPEC_PAL_INV_SVC"}),
+                    hrRecovery: as(users.hr, "mantle.humanres.PayrollSetupServices.get#RecoverySettings", {})
+                },
+                // P27 review: the recovery settings' screen beside Pay groups, payroll's (people.payroll configures)
+                payrollRecoveryScreen: screenRefusal(users.payroll, "Payroll/PayRecovery", {}),
+                hrRecoveryScreen: screenRefusal(users.hr, "Payroll/PayRecovery", {})
+            }
+        },
+        then({codes, payrollRecoveryScreen, hrRecoveryScreen}) {
+            payrollRecoveryScreen == ""
+            unauthorized(hrRecoveryScreen)
+            codes ==
+                {
+                    hrFinalizes: "PERMISSION_DENIED",
+                    // past the permission, to the group's own refusal (the demonstration localization is never live)
+                    payrollFinalizes: "NOT_LIVE",
+                    payrollServices: "RECORD_UNAVAILABLE",
+                    approverSettlement: "accepted",
+                    hrSettlement: "PERMISSION_DENIED",
+                    hrObligation: "PERMISSION_DENIED",
+                    payrollObligationServices: "RECORD_UNAVAILABLE",
+                    hrRecovery: "PERMISSION_DENIED"
+                }
+        }
+    }
+)
+
+feature(
+    "P28: a payroll import is payroll's with People's import permission: the HR officer refused with the parameters the payroll operator is answered with; Services' exchange missing to Retail's payroll; PayrollExchange payroll's and listed in Admin's Imports",
+    {
+        when() {
+            const X = "mantle.humanres.PayrollExchangeServices."
+            const code = message => /[A-Z][A-Z0-9_]{3,}(?=:)/.exec(message)?.[0] || message || "accepted"
+            const as = (user, service, parameters) => code(asUser(user, () => system(() => refusal(service, parameters))))
+            // a history file of Retail's with one worker no one is: the import permission is the rule, the row its own refusal
+            const history = {
+                exchangeKind: "history",
+                organizationPartyId: ids.organizationId,
+                cutoverDate: "2026-01-01",
+                currencyUomId: "USD",
+                sourceSystem: "Former payroll",
+                fileName: "history-2025.csv",
+                importText: "worker,payDate,gross,net\nPPL_SPEC_NO_SUCH_WORKER,2025-12-31,1000,800"
+            }
+            const codes = {
+                hrImports: as(users.hr, X + "preview#Batch", history),
+                payrollImports: as(users.payroll, X + "preview#Batch", history)
+            }
+            const batch = system(() =>
+                ec.entity
+                    .find("mantle.humanres.payroll.PayrollExchangeBatch")
+                    .condition({organizationPartyId: ids.organizationId, exchangeKindEnumId: "PxkHistory"})
+                    .one()
+            )
+            // Services' exchange, as data: only its employer matters here
+            system(() =>
+                call("create#mantle.humanres.payroll.PayrollExchangeBatch", {
+                    payrollExchangeBatchId: "PPL_SPEC_PAL_XCHG_SVC",
+                    exchangeKindEnumId: "PxkHistory",
+                    organizationPartyId: ids.otherOrganizationId,
+                    batchKey: "PPL_SPEC_PAL_XCHG_SVC",
+                    statusId: "PxbPreviewed"
+                })
+            )
+            Object.assign(codes, {
+                approverReads: as(users.payApprover, X + "get#Batch", {payrollExchangeBatchId: batch?.payrollExchangeBatchId}),
+                hrReads: as(users.hr, X + "get#Batch", {payrollExchangeBatchId: batch?.payrollExchangeBatchId}),
+                payrollServices: as(users.payroll, X + "get#Batch", {payrollExchangeBatchId: "PPL_SPEC_PAL_XCHG_SVC"})
+            })
+            // the one render of PayrollExchange (html), the batch opened with its problem rows
+            const rendered = asUser(users.payroll, () =>
+                page(
+                    "Payroll/PayrollExchange",
+                    {payrollExchangeBatchId: batch?.payrollExchangeBatchId, outcome: "problems"},
+                    "html"
+                )
+            )
+            const listed = system(() => invoke("org.moqui.admin.DataTransferServices.find#ImportRuns", {}))
+            return {
+                codes,
+                rendered,
+                hrScreen: screenRefusal(users.hr, "Payroll/PayrollExchange", {}),
+                run: Array.from(listed.transferList || []).find(found => found.runId === batch?.payrollExchangeBatchId) || null
+            }
+        },
+        then({codes, rendered, hrScreen, run}) {
+            codes ==
+                {
+                    hrImports: "PERMISSION_DENIED",
+                    payrollImports: "accepted",
+                    approverReads: "accepted",
+                    hrReads: "PERMISSION_DENIED",
+                    payrollServices: "RECORD_UNAVAILABLE"
+                }
+            rendered.status == 200 && rendered.errors.length == 0
+            rendered.output.includes("Import of payroll history") && rendered.output.includes("history-2025.csv")
+            rendered.output.includes("No person is PPL_SPEC_NO_SUCH_WORKER")
+            unauthorized(hrScreen)
+            run.targetId == "payrollExchange" && run.ownerApp == "People" && run.ownerRoute == "peoplePayrollExchange"
+            run.errorCount == 1 && run.ownerParameters.payrollExchangeBatchId == run.runId
+        }
+    }
+)
+
+feature(
+    "P31: PAYROLL_VIEW alone reads no People employee: payroll finance is refused Tomas's record, the directory and his compensation, with the parameters the payroll operator is answered with",
+    {
+        when() {
+            const code = message => /[A-Z][A-Z0-9_]{3,}(?=:)/.exec(message)?.[0] || message || "accepted"
+            const as = (user, service, parameters) => code(asUser(user, () => system(() => refusal(service, parameters))))
+            const finance = "people.spec.financepayroll"
+            const reads = user => ({
+                employee: as(user, "mantle.humanres.PeopleServices.get#Employee360", {partyId: ids.employeePartyId}),
+                compensation: as(user, "mantle.humanres.PayrollSetupServices.get#Compensation", {partyId: ids.employeePartyId}),
+                directory: asUser(user, () =>
+                    system(() => {
+                        ec.message.pushErrors()
+                        try {
+                            const found = ec.service
+                                .sync()
+                                .name("mantle.humanres.PeopleServices.find#Employees")
+                                .parameters({organizationPartyId: ids.organizationId})
+                                .call()
+                            return ec.message.hasError()
+                                ? code(ec.message.getErrorsString())
+                                : Array.from(found?.employees || []).length
+                        } finally {
+                            ec.message.clearErrors()
+                            ec.message.popErrors()
+                        }
+                    })
+                )
+            })
+            return {finance: reads(finance), payroll: reads(users.payroll)}
+        },
+        then({finance, payroll}) {
+            finance.employee == "RECORD_UNAVAILABLE" && finance.compensation == "RECORD_UNAVAILABLE"
+            finance.directory == "ORGANIZATION_DENIED"
+            payroll.employee == "accepted" && payroll.compensation == "accepted" && payroll.directory > 0
         }
     }
 )
