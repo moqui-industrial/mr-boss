@@ -69,7 +69,7 @@ along with this software (see the LICENSE.md file). If not, see
                 <econdition field-name="actualEndOfLife" operator="is-not-null" ignore="disposed != 'Y'"/>
                 <econdition field-name="actualEndOfLife" operator="is-null" ignore="disposed != 'N'"/>
             </entity-find-count>
-            <set field="recordsPageSize" from="Math.min(100, Math.max(1, pageSize))"/>
+            <set field="recordsPageSize" from="Math.min(10000, Math.max(1, pageSize))"/>
             <set field="recordsPageMaxIndex" from="Math.max(0, Math.ceil(recordsCount / recordsPageSize) - 1)"/>
             <set field="recordsPageIndex" from="Math.min(recordsPageMaxIndex, Math.max(0, pageIndex))"/>
             <set field="recordsPageRangeLow" from="recordsCount ? recordsPageIndex * recordsPageSize + 1 : 0"/>
@@ -156,7 +156,7 @@ along with this software (see the LICENSE.md file). If not, see
                 <econdition field-name="organizationPartyId" from="scope.organizationPartyId"/>
                 <econdition field-name="classEnumId" ignore-if-empty="true"/>
             </entity-find-count>
-            <set field="recordsPageSize" from="Math.min(100, Math.max(1, pageSize))"/>
+            <set field="recordsPageSize" from="Math.min(10000, Math.max(1, pageSize))"/>
             <set field="recordsPageMaxIndex" from="Math.max(0, Math.ceil(recordsCount / recordsPageSize) - 1)"/>
             <set field="recordsPageIndex" from="Math.min(recordsPageMaxIndex, Math.max(0, pageIndex))"/>
             <set field="recordsPageRangeLow" from="recordsCount ? recordsPageIndex * recordsPageSize + 1 : 0"/>

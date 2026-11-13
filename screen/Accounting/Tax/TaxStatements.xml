@@ -65,6 +65,14 @@ along with this software (see the LICENSE.md file). If not, see
                     pageIndex:pageIndex, pageSize:pageSize}"
                 out-map="context"/>
         <set field="newStatement" from="{organizationPartyId:organizationPartyId}"/>
+        <entity-find entity-name="mantle.other.tax.TaxAuthorityParty" list="taxAuthPartyList">
+            <date-filter/><econdition field-name="partyId" from="organizationPartyId"/>
+        </entity-find>
+        <entity-find-one entity-name="mantle.other.tax.TaxAuthority" value-field="primaryTaxAuthority">
+            <field-map field-name="taxAuthorityId" from="taxAuthPartyList?.[0]?.taxAuthorityId"/>
+        </entity-find-one>
+        <set field="taxAuthGeoId" from="primaryTaxAuthority?.taxAuthGeoId || 'USA'"/>
+        <set field="isUsaTax" from="taxAuthGeoId == 'USA'"/>
     </actions>
     <widgets>
         <container style="row items-center q-col-gutter-sm">
@@ -72,11 +80,17 @@ along with this software (see the LICENSE.md file). If not, see
                 <label text="Tax statements" type="h5"/>
             </container>
             <container style="col-auto row q-gutter-sm">
+                <link url="${sharedLinks['Tax/VatRegisters']}"
+                        text="Registri IVA"
+                        icon="sym_o_menu_book"
+                        btn-type="primary"
+                        condition="organizationPartyId &amp;&amp; !isUsaTax"
+                        parameter-map="{organizationPartyId:organizationPartyId}"/>
                 <container-dialog id="Run1099Dialog"
                         button-text="Make 1099 data"
                         icon="sym_o_receipt_long"
                         title="Make the year's 1099-MISC data"
-                        condition="canEdit">
+                        condition="canEdit &amp;&amp; isUsaTax">
                     <label text="One statement for each vendor registered with the IRS whom the organization paid at least
                                 the threshold in the year, from its payments. Vendors that cannot be reported are named."
                             type="p"/>
@@ -169,6 +183,7 @@ along with this software (see the LICENSE.md file). If not, see
                     <drop-down allow-empty="true">
                         <option key="LocalSalesTaxReturn" text="Sales tax"/>
                         <option key="UsaIrs1099Misc" text="1099-MISC"/>
+                        <option key="ItalianVatLiquidation" text="Liquidazione IVA"/>
                     </drop-down>
                 </default-field>
             </field>

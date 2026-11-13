@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        default-menu-title="VAT registers"
+        default-menu-index="4"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd">
+    <parameter name="organizationPartyId"/>
+    <parameter name="registerType" default-value="sales"/>
+    <parameter name="fiscalYear"/>
+    <parameter name="timePeriodId"/>
+    <parameter name="fromDate"/>
+    <parameter name="thruDate"/>
+    <parameter name="vatRegisterSeries"/>
+    <parameter name="pageStartingNumber"/>
+
+    <transition-include name="choices" location="component://mr-boss/template/AccountingParts.xml"/>
+
+    <actions>
+        <set field="isPrinting" from="String(ec.web?.requestParameters?.renderMode || context.renderMode || '') == 'html-print'"/>
+        <set field="registerType" from="registerType || 'sales'"/>
+        <if condition="organizationPartyId">
+            <service-call name="mantle.ledger.FiscalRegisterServices.get#VatRegisterData"
+                    in-map="{organizationPartyId:organizationPartyId, registerType:registerType,
+                        fiscalYear:fiscalYear, timePeriodId:timePeriodId, fromDate:fromDate, thruDate:thruDate,
+                        vatRegisterSeries:vatRegisterSeries, pageStartingNumber:pageStartingNumber}"
+                    out-map="context"/>
+        </if>
+        <set field="printUrl"
+                from="'/apps/Accounting/Tax/VatRegisters?'
+                    + Object.entries(Object.assign({renderMode: 'html-print'},
+                    {organizationPartyId:organizationPartyId, registerType:registerType, fiscalYear:fiscalYear,
+                     timePeriodId:timePeriodId, fromDate:fromDate, thruDate:thruDate,
+                     vatRegisterSeries:vatRegisterSeries})).filter(entry => entry[1]).map(entry => entry[0] + '='
+                    + encodeURIComponent(entry[1])).join('&amp;')"/>
+        <set field="printDate" from="ec.l10n.format(ec.user.nowTimestamp, 'dd/MM/yyyy HH:mm')"/>
+    </actions>
+
+    <widgets>
+        <!-- ============================================================= -->
+        <!-- PRINT VIEW (PDF / HTML-PRINT)                                 -->
+        <!-- ============================================================= -->
+        <section name="PrintView" condition="isPrinting">
+            <widgets>
+                <text type="html,html-print"><![CDATA[
+                <style>
+                    @page {
+                        size: A4 landscape;
+                        margin: 12mm 10mm 15mm 10mm;
+                        @top-right { content: "Registro IVA - Pagina " counter(page); font-size: 8pt; font-family: sans-serif; color: #555; }
+                        @bottom-left { content: "${organization.organizationName} · P.IVA ${organization.taxIdNumber} · CF ${organization.socialSecurityNumber}"; font-size: 8pt; font-family: sans-serif; color: #555; }
+                        @bottom-right { content: "Data stampa: ${printDate}"; font-size: 8pt; font-family: sans-serif; color: #555; }
+                    }
+                    .vat-report { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 8.5pt; color: #222; }
+                    .header-box { border-bottom: 2px solid #2563eb; padding-bottom: 8px; margin-bottom: 12px; }
+                    .org-title { font-size: 13pt; font-weight: bold; color: #1e3a8a; }
+                    .report-title { font-size: 11pt; font-weight: bold; text-transform: uppercase; margin-top: 4px; }
+                    .meta-row { display: flex; justify-content: space-between; margin-top: 4px; font-size: 8.5pt; color: #444; }
+                    table.report-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+                    table.report-table th { background: #f1f5f9; border-top: 1px solid #cbd5e1; border-bottom: 2px solid #94a3b8; padding: 5px 4px; text-align: left; font-size: 8pt; font-weight: 600; text-transform: uppercase; }
+                    table.report-table td { border-bottom: 1px solid #e2e8f0; padding: 4px 4px; font-size: 8pt; }
+                    table.report-table tr:nth-child(even) td { background-color: #fafafa; }
+                    .text-right { text-align: right; }
+                    .text-center { text-align: center; }
+                    .carry-row td { background: #f8fafc !important; font-weight: bold; color: #475569; border-top: 1px dashed #94a3b8; border-bottom: 1px dashed #94a3b8; }
+                    .totals-box { margin-top: 20px; display: flex; justify-content: space-between; page-break-inside: avoid; }
+                    .summary-table { width: 450px; border-collapse: collapse; font-size: 8pt; }
+                    .summary-table th { background: #e2e8f0; padding: 4px; border: 1px solid #cbd5e1; text-align: left; }
+                    .summary-table td { padding: 4px; border: 1px solid #cbd5e1; }
+                    .sign-line { border-top: 1px solid #333; width: 220px; text-align: center; padding-top: 4px; margin-top: 35px; }
+                    .page-break { page-break-after: always; }
+                </style>
+                <div class="vat-report">
+                ]]></text>
+                <iterate list="pages" entry="p">
+                    <text type="html,html-print"><![CDATA[
+                    <div class="header-box">
+                        <div class="meta-row">
+                            <div>
+                                <div class="org-title">${organization.organizationName}</div>
+                                <div>P.IVA: <strong>${organization.taxIdNumber}</strong> · Codice Fiscale: <strong>${organization.socialSecurityNumber}</strong> · REA: <strong>${organization.reaNumber}</strong></div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div class="report-title">${registerTitle}</div>
+                                <div style="font-size: 9pt; color: #64748b;">Periodo: <strong>${periodDescription}</strong> · Pagina <strong>${p.pageLabel}</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 55px;" class="text-center">Prot.</th>
+                                <th style="width: 70px;" class="text-center">Data Prot.</th>
+                                <th style="width: 80px;">Doc. N°</th>
+                                <th style="width: 70px;" class="text-center">Data Doc.</th>
+                                <th>Cliente / Fornitore</th>
+                                <th style="width: 100px;">Partita IVA / CF</th>
+                                <th style="width: 80px;" class="text-right">Imponibile</th>
+                                <th style="width: 50px;" class="text-center">Aliq.</th>
+                                <th style="width: 75px;" class="text-right">Imposta</th>
+                                <th style="width: 85px;" class="text-right">Totale Doc.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="carry-row">
+                                <td colspan="6">Riporto da pagina precedente:</td>
+                                <td class="text-right">${ec.l10n.format(p.broughtForwardTaxable, '#,##0.00')} €</td>
+                                <td></td>
+                                <td class="text-right">${ec.l10n.format(p.broughtForwardTax, '#,##0.00')} €</td>
+                                <td class="text-right">${ec.l10n.format(p.broughtForwardTotal, '#,##0.00')} €</td>
+                            </tr>
+                    ]]></text>
+                    <iterate list="p.documents" entry="doc">
+                        <text type="html,html-print"><![CDATA[
+                            <tr>
+                                <td class="text-center"><strong>${doc.vatProtocolNum}</strong></td>
+                                <td class="text-center">${ec.l10n.format(doc.vatProtocolDate, 'dd/MM/yyyy')}</td>
+                                <td><code>${doc.documentNum}</code></td>
+                                <td class="text-center">${ec.l10n.format(doc.documentDate, 'dd/MM/yyyy')}</td>
+                                <td><strong>${doc.counterPartyName}</strong></td>
+                                <td>${doc.counterPartyTaxId}</td>
+                                <td class="text-right">${ec.l10n.format(doc.taxableAmount, '#,##0.00')} €</td>
+                                <td class="text-center">${doc.taxRateText}</td>
+                                <td class="text-right">${ec.l10n.format(doc.taxAmount, '#,##0.00')} €</td>
+                                <td class="text-right"><strong>${ec.l10n.format(doc.totalAmount, '#,##0.00')} €</strong></td>
+                            </tr>
+                        ]]></text>
+                    </iterate>
+                    <text type="html,html-print"><![CDATA[
+                            <tr class="carry-row">
+                                <td colspan="6">Totale progressivo a riportare:</td>
+                                <td class="text-right">${ec.l10n.format(p.carriedForwardTaxable, '#,##0.00')} €</td>
+                                <td></td>
+                                <td class="text-right">${ec.l10n.format(p.carriedForwardTax, '#,##0.00')} €</td>
+                                <td class="text-right">${ec.l10n.format(p.carriedForwardTotal, '#,##0.00')} €</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    ]]></text>
+                </iterate>
+                <text type="html,html-print"><![CDATA[
+                    <!-- Riepilogo IVA finale (Castelletto IVA) -->
+                    <div class="totals-box">
+                        <div>
+                            <div style="font-weight: bold; margin-bottom: 6px;">RIEPILOGO PER ALIQUOTA IVA / NATURA:</div>
+                            <table class="summary-table">
+                                <thead>
+                                    <tr>
+                                        <th>Descrizione Aliquota</th>
+                                        <th class="text-right">Imponibile</th>
+                                        <th class="text-right">Imposta</th>
+                                        <th class="text-right">Detraibile</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                ]]></text>
+                <iterate list="vatRateSummaries" entry="rate">
+                    <text type="html,html-print"><![CDATA[
+                                    <tr>
+                                        <td>${rate.rateDescription}</td>
+                                        <td class="text-right">${ec.l10n.format(rate.taxableAmount, '#,##0.00')} €</td>
+                                        <td class="text-right">${ec.l10n.format(rate.taxAmount, '#,##0.00')} €</td>
+                                        <td class="text-right">${ec.l10n.format(rate.deductibleAmount, '#,##0.00')} €</td>
+                                    </tr>
+                    ]]></text>
+                </iterate>
+                <text type="html,html-print"><![CDATA[
+                                    <tr style="font-weight: bold; background: #e2e8f0;">
+                                        <td>TOTALI:</td>
+                                        <td class="text-right">${ec.l10n.format(totalTaxable, '#,##0.00')} €</td>
+                                        <td class="text-right">${ec.l10n.format(totalTax, '#,##0.00')} €</td>
+                                        <td class="text-right">${ec.l10n.format(totalDeductible, '#,##0.00')} €</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <div>Numero Documenti Registrati: <strong>${totalDocuments}</strong></div>
+                            <div class="sign-line">Firma del Legale Rappresentante</div>
+                        </div>
+                    </div>
+                </div>
+                ]]></text>
+            </widgets>
+        </section>
+
+        <!-- ============================================================= -->
+        <!-- SCREEN VIEW (INTERACTIVE QUASAR UI)                           -->
+        <!-- ============================================================= -->
+        <section name="ScreenView" condition="!isPrinting">
+            <widgets>
+                <container style="row items-center q-col-gutter-sm q-mb-md">
+                    <container style="col">
+                        <label text="${registerTitle || 'VAT registers'}" type="h5"/>
+                    </container>
+                    <container style="col-auto row q-gutter-sm">
+                        <link url="${printUrl}"
+                                url-type="plain"
+                                text="Print / PDF"
+                                icon="sym_o_print"
+                                target-window="_blank"
+                                condition="organizationPartyId &amp;&amp; totalDocuments &gt; 0"/>
+                    </container>
+                </container>
+
+                <!-- Filter Form -->
+                <form-single name="FilterRegisters" transition="." map="context">
+                    <field name="organizationPartyId">
+                        <default-field title="Organization">
+                            <drop-down allow-empty="true">
+                                <dynamic-options transition="choices" server-search="true" min-length="0"
+                                        parameter-map="{choice:'organizations', organizationPartyId:organizationPartyId, selected:organizationPartyId}"/>
+                            </drop-down>
+                        </default-field>
+                    </field>
+                    <field name="registerType">
+                        <default-field title="Register type">
+                            <drop-down>
+                                <option key="sales" text="Registro IVA Vendite (Fatture Emesse)"/>
+                                <option key="purchases" text="Registro IVA Acquisti (Fatture Ricevute)"/>
+                                <option key="summary" text="Liquidazione Periodica IVA (Riepilogo)"/>
+                            </drop-down>
+                        </default-field>
+                    </field>
+                    <field name="timePeriodId">
+                        <default-field title="Period">
+                            <drop-down allow-empty="true">
+                                <dynamic-options transition="choices" server-search="true" min-length="0"
+                                        parameter-map="{choice:'taxPeriods', organizationPartyId:organizationPartyId, selected:timePeriodId}"/>
+                            </drop-down>
+                        </default-field>
+                    </field>
+                    <field name="fromDate">
+                        <default-field title="From date">
+                            <date-time type="date"/>
+                        </default-field>
+                    </field>
+                    <field name="thruDate">
+                        <default-field title="Thru date">
+                            <date-time type="date"/>
+                        </default-field>
+                    </field>
+                    <field name="submit">
+                        <default-field title="">
+                            <submit text="Find"/>
+                        </default-field>
+                    </field>
+                    <field-layout>
+                        <field-row>
+                            <field-ref name="organizationPartyId"/>
+                            <field-ref name="registerType"/>
+                            <field-ref name="timePeriodId"/>
+                            <field-ref name="fromDate"/>
+                            <field-ref name="thruDate"/>
+                            <field-ref name="submit"/>
+                        </field-row>
+                    </field-layout>
+                </form-single>
+
+                <label text="Choose an organization to view VAT registers." type="p" condition="!organizationPartyId"/>
+
+                <section name="Results" condition="organizationPartyId">
+                    <widgets>
+                        <!-- KPI Metric Summary Cards -->
+                        <container style="row q-col-gutter-md q-my-md">
+                            <container style="col-12 col-md-3">
+                                <container style="q-pa-md bg-blue-1 rounded-borders text-center">
+                                    <label text="Documenti" style="text-caption text-grey-8"/>
+                                    <label text="${totalDocuments}" type="h5" style="color: #1e3a8a;"/>
+                                </container>
+                            </container>
+                            <container style="col-12 col-md-3">
+                                <container style="q-pa-md bg-green-1 rounded-borders text-center">
+                                    <label text="Totale Imponibile" style="text-caption text-grey-8"/>
+                                    <label text="${ec.l10n.format(totalTaxable, '#,##0.00')} €" type="h5" style="color: #15803d;"/>
+                                </container>
+                            </container>
+                            <container style="col-12 col-md-3">
+                                <container style="q-pa-md bg-orange-1 rounded-borders text-center">
+                                    <label text="Totale Imposta IVA" style="text-caption text-grey-8"/>
+                                    <label text="${ec.l10n.format(totalTax, '#,##0.00')} €" type="h5" style="color: #c2410c;"/>
+                                </container>
+                            </container>
+                            <container style="col-12 col-md-3">
+                                <container style="q-pa-md bg-purple-1 rounded-borders text-center">
+                                    <label text="Totale Documenti" style="text-caption text-grey-8"/>
+                                    <label text="${ec.l10n.format(totalInvoiceAmount, '#,##0.00')} €" type="h5" style="color: #6b21a8;"/>
+                                </container>
+                            </container>
+                        </container>
+
+                        <!-- If Summary: Liquidazione Box -->
+                        <container-box condition="registerType == 'summary'" style="q-mb-md">
+                            <box-header title="Liquidazione Periodica IVA"/>
+                            <box-body>
+                                <container style="row q-col-gutter-md">
+                                    <container style="col-md-4">
+                                        <label text="IVA a Debito (Vendite): ${ec.l10n.format(salesTaxTotal, '#,##0.00')} €" type="div" style="font-weight: 500;"/>
+                                    </container>
+                                    <container style="col-md-4">
+                                        <label text="IVA a Credito Detraibile (Acquisti): ${ec.l10n.format(purchaseTaxDeductibleTotal, '#,##0.00')} €" type="div" style="font-weight: 500;"/>
+                                    </container>
+                                    <container style="col-md-4">
+                                        <label text="SALDO PERIODO (F24): ${ec.l10n.format(netVatDue, '#,##0.00')} €" type="h6"
+                                                style="${netVatDue &gt; 0 ? 'color: #b91c1c;' : 'color: #15803d;'}"/>
+                                    </container>
+                                </container>
+                            </box-body>
+                        </container-box>
+
+                        <!-- Document List -->
+                        <form-list name="VatDocuments"
+                                list="pages ? pages.flatMap(p =&gt; p.documents) : []"
+                                skip-form="true"
+                                paginate="false">
+                            <field name="vatProtocolNum">
+                                <default-field title="Prot.">
+                                    <display/>
+                                </default-field>
+                            </field>
+                            <field name="vatProtocolDate">
+                                <default-field title="Data Prot.">
+                                    <display format="dd/MM/yyyy"/>
+                                </default-field>
+                            </field>
+                            <field name="documentNum">
+                                <default-field title="Doc. N°">
+                                    <link url="${isSale ? sharedLinks['Receivables/InvoiceDetail'] : sharedLinks['Payables/BillDetail']}"
+                                            text="${documentNum}"
+                                            parameter-map="{invoiceId:invoiceId, organizationPartyId:organizationPartyId}"/>
+                                </default-field>
+                            </field>
+                            <field name="documentDate">
+                                <default-field title="Data Doc.">
+                                    <display format="dd/MM/yyyy"/>
+                                </default-field>
+                            </field>
+                            <field name="counterPartyName">
+                                <default-field title="Cliente / Fornitore">
+                                    <display/>
+                                </default-field>
+                            </field>
+                            <field name="counterPartyTaxId">
+                                <default-field title="Partita IVA / CF">
+                                    <display/>
+                                </default-field>
+                            </field>
+                            <field name="taxableAmount" align="right">
+                                <default-field title="Imponibile">
+                                    <display format="#,##0.00"/>
+                                </default-field>
+                            </field>
+                            <field name="taxRateText" align="center">
+                                <default-field title="Aliquota">
+                                    <display/>
+                                </default-field>
+                            </field>
+                            <field name="taxAmount" align="right">
+                                <default-field title="Imposta">
+                                    <display format="#,##0.00"/>
+                                </default-field>
+                            </field>
+                            <field name="totalAmount" align="right">
+                                <default-field title="Totale Doc.">
+                                    <display format="#,##0.00"/>
+                                </default-field>
+                            </field>
+                        </form-list>
+
+                        <label text="Nessun documento trovato per il periodo e registro selezionato."
+                                type="p"
+                                condition="!totalDocuments"/>
+
+                        <!-- Castelletto IVA Summary -->
+                        <container-box style="q-mt-lg" condition="vatRateSummaries &amp;&amp; vatRateSummaries.length &gt; 0">
+                            <box-header title="Riepilogo Aliquote IVA (Castelletto)"/>
+                            <box-body>
+                                <form-list name="VatRateSummaryList" list="vatRateSummaries" skip-form="true" paginate="false">
+                                    <field name="rateDescription">
+                                        <default-field title="Aliquota / Natura IVA">
+                                            <display/>
+                                        </default-field>
+                                    </field>
+                                    <field name="taxableAmount" align="right">
+                                        <default-field title="Imponibile (€)">
+                                            <display format="#,##0.00"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="taxAmount" align="right">
+                                        <default-field title="Imposta (€)">
+                                            <display format="#,##0.00"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="deductibleAmount" align="right">
+                                        <default-field title="Imposta Detraibile (€)">
+                                            <display format="#,##0.00"/>
+                                        </default-field>
+                                    </field>
+                                </form-list>
+                            </box-body>
+                        </container-box>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </widgets>
+</screen>
