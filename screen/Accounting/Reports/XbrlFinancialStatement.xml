@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        default-menu-title="XBRL Balance Sheet (OIC)"
+        default-menu-index="7"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd">
+    <parameter name="organizationPartyId"/>
+    <parameter name="fiscalYear"/>
+    <parameter name="timePeriodId"/>
+
+    <transition-include name="choices" location="component://mr-boss/template/AccountingParts.xml"/>
+    <transition name="downloadXbrl" read-only="true">
+        <actions>
+            <service-call name="mantle.ledger.XbrlServices.generate#XbrlFinancialStatement"
+                    in-map="context" out-map="xbrlOut"/>
+            <script>ec.web.sendTextResponse(xbrlOut.xmlText, "application/xml", xbrlOut.filename);</script>
+        </actions>
+        <default-response type="none"/>
+    </transition>
+
+    <actions>
+        <if condition="!organizationPartyId">
+            <set field="organizationPartyId" from="ec.user.getPreference('OrganizationPartyId') || 'ORG_ZIZI_CORP'"/>
+        </if>
+        <if condition="!fiscalYear">
+            <set field="fiscalYear" from="String(new Date().getFullYear())"/>
+        </if>
+        <if condition="organizationPartyId">
+            <service-call name="mantle.ledger.XbrlServices.generate#XbrlFinancialStatement"
+                    in-map="{organizationPartyId:organizationPartyId, fiscalYear:fiscalYear, timePeriodId:timePeriodId}"
+                    out-map="context"/>
+        </if>
+    </actions>
+    <widgets>
+        <container style="row items-center q-col-gutter-sm q-mb-md">
+            <container style="col">
+                <label text="XBRL Financial Statement (Taxonomy PCI_2018-11-04)" type="h5"/>
+            </container>
+            <container style="col-auto">
+                <link url="downloadXbrl"
+                        text="Export .xbrl"
+                        icon="sym_o_download"
+                        link-type="anchor"
+                        target-window="_blank"
+                        parameter-map="{organizationPartyId:organizationPartyId, fiscalYear:fiscalYear, timePeriodId:timePeriodId}"
+                        condition="organizationPartyId"/>
+            </container>
+        </container>
+
+        <form-single name="FilterXbrl" transition="." map="context">
+            <field name="organizationPartyId">
+                <default-field title="Organization">
+                    <drop-down allow-empty="true">
+                        <dynamic-options transition="choices" server-search="true" min-length="0"
+                                parameter-map="{choice:'organizations', organizationPartyId:organizationPartyId, selected:organizationPartyId}"/>
+                    </drop-down>
+                </default-field>
+            </field>
+            <field name="fiscalYear">
+                <default-field title="Fiscal year"><text-line size="6"/></default-field>
+            </field>
+            <field name="timePeriodId">
+                <default-field title="Fiscal period">
+                    <drop-down allow-empty="true">
+                        <entity-options key="${timePeriodId}" text="${periodName || timePeriodId}">
+                            <entity-find entity-name="mantle.party.time.TimePeriod">
+                                <econdition field-name="partyId" from="organizationPartyId"/>
+                                <order-by field-name="-fromDate"/>
+                            </entity-find>
+                        </entity-options>
+                    </drop-down>
+                </default-field>
+            </field>
+            <field name="submitButton"><default-field title="Find"><submit/></default-field></field>
+            <field-layout><field-row><field-ref name="organizationPartyId"/><field-ref name="fiscalYear"/><field-ref name="timePeriodId"/><field-ref name="submitButton"/></field-row></field-layout>
+        </form-single>
+
+        <section name="XbrlSummarySection" condition="organizationPartyId">
+            <widgets>
+                <container style="row q-col-gutter-md q-my-md">
+                    <container style="col-md-4">
+                        <container style="q-pa-md bg-blue-1 rounded-borders text-center">
+                            <label text="Total Assets (SP Attivo)" style="text-caption text-grey-8"/>
+                            <label text="${ec.l10n.format(totalAssets, '#,##0.00')} €" type="h5" style="color: #1d4ed8;"/>
+                        </container>
+                    </container>
+                    <container style="col-md-4">
+                        <container style="q-pa-md bg-green-1 rounded-borders text-center">
+                            <label text="Total Equity and Liabilities (SP Passivo)" style="text-caption text-grey-8"/>
+                            <label text="${ec.l10n.format(totalLiabilitiesEquity, '#,##0.00')} €" type="h5" style="color: #15803d;"/>
+                        </container>
+                    </container>
+                    <container style="col-md-4">
+                        <container style="q-pa-md bg-amber-1 rounded-borders text-center">
+                            <label text="Profit (loss) for the year (CE.21)" style="text-caption text-grey-8"/>
+                            <label text="${ec.l10n.format(netIncome, '#,##0.00')} €" type="h5" style="color: #b45309;"/>
+                        </container>
+                    </container>
+                </container>
+
+                <form-list name="XbrlRows" list="rows || []" skip-form="true" paginate="false">
+                    <field name="section"><header-field title="Section"/><default-field><display/></default-field></field>
+                    <field name="ceeCode"><header-field title="CEE Code"/><default-field><display/></default-field></field>
+                    <field name="xbrlTag"><header-field title="XBRL Tag (itcc-ci)"/><default-field><display/></default-field></field>
+                    <field name="label"><header-field title="Description"/><default-field><display text="${ec.l10n.localize(label)}"/></default-field></field>
+                    <field name="amount" align="right"><header-field title="Amount (EUR)"/><default-field><display format="#,##0.00"/></default-field></field>
+                </form-list>
+            </widgets>
+        </section>
+    </widgets>
+</screen>
