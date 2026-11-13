@@ -32,6 +32,19 @@ along with this software (see the LICENSE.md file). If not, see
     <parameter name="pageSize"/>
     <transition-include name="choices" location="component://mr-boss/template/AccountingParts.xml"/>
     <transition-include name="selectOrganization" location="component://mr-boss/template/AccountingParts.xml"/>
+    <transition name="importFatturaPaXml">
+        <actions>
+            <service-call name="mantle.account.ElectronicInvoiceServices.import#FatturaPaXml"
+                    in-map="{organizationPartyId:organizationPartyId, xmlText:xmlText}" out-map="imported"/>
+            <set field="recordId" from="imported.invoiceId"/>
+            <message type="success">Imported FatturaPA bill ${imported.invoiceId}</message>
+        </actions>
+        <default-response url="${sharedLinks['Payables/BillDetail']}">
+            <parameter name="recordId"/>
+            <parameter name="organizationPartyId"/>
+        </default-response>
+        <error-response url="."/>
+    </transition>
     <transition name="uploadBill">
         <actions>
             <service-call name="mantle.account.InvoiceServices.import#Bill" in-map="context" out-map="imported"/>
@@ -101,6 +114,18 @@ along with this software (see the LICENSE.md file). If not, see
                                 link-type="anchor-button"
                                 condition="billCapabilities.apEdit"
                                 parameter-map="{organizationPartyId:organizationPartyId}"/>
+                        <container-dialog id="ImportFatturaPaDialog"
+                                button-text="Import FatturaPA XML"
+                                title="Import supplier FatturaPA XML"
+                                width="720"
+                                icon="sym_o_code"
+                                condition="billCapabilities.apEdit">
+                            <form-single name="ImportFatturaPaForm" transition="importFatturaPaXml">
+                                <field name="organizationPartyId" from="organizationPartyId"><default-field title=""><hidden/></default-field></field>
+                                <field name="xmlText"><default-field title="FatturaPA XML"><text-area rows="12" cols="80"/></default-field></field>
+                                <field name="submitButton"><default-field title="Import XML"><submit/></default-field></field>
+                            </form-single>
+                        </container-dialog>
                         <container-dialog id="BillUpload"
                                 button-text="Upload bill"
                                 title="Upload a supplier bill"
