@@ -4,7 +4,7 @@
         default-menu-index="4"
         xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd">
     <parameter name="organizationPartyId"/>
-    <parameter name="registerType" default-value="sales"/>
+    <parameter name="registerType"/>
     <parameter name="fiscalYear"/>
     <parameter name="timePeriodId"/>
     <parameter name="fromDate"/>
@@ -345,7 +345,7 @@
                         </container>
 
                         <!-- If Summary: Settlement Box -->
-                        <container-box style="q-mb-md">
+                        <container-box>
                             <box-header title="Periodic VAT Settlement">
                                 <container-dialog id="PostVatSettlementDialog" button-text="Post VAT settlement"
                                         title="Post periodic VAT settlement" width="480" condition="organizationPartyId">
@@ -441,33 +441,37 @@
                                 condition="!totalDocuments"/>
 
                         <!-- Castelletto IVA Summary -->
-                        <container-box style="q-mt-lg" condition="vatRateSummaries &amp;&amp; vatRateSummaries.length &gt; 0">
-                            <box-header title="VAT Rates Summary"/>
-                            <box-body>
-                                <form-list name="VatRateSummaryList" list="vatRateSummaries" skip-form="true" paginate="false">
-                                    <field name="rateDescription">
-                                        <default-field title="Rate / VAT Nature">
-                                            <display/>
-                                        </default-field>
-                                    </field>
-                                    <field name="taxableAmount" align="right">
-                                        <default-field title="Taxable Base (€)">
-                                            <display format="#,##0.00"/>
-                                        </default-field>
-                                    </field>
-                                    <field name="taxAmount" align="right">
-                                        <default-field title="Tax Amount (€)">
-                                            <display format="#,##0.00"/>
-                                        </default-field>
-                                    </field>
-                                    <field name="deductibleAmount" align="right">
-                                        <default-field title="Deductible Tax (€)">
-                                            <display format="#,##0.00"/>
-                                        </default-field>
-                                    </field>
-                                </form-list>
-                            </box-body>
-                        </container-box>
+                        <section name="VatRateSummarySection" condition="vatRateSummaries &amp;&amp; vatRateSummaries.length &gt; 0">
+                            <widgets>
+                                <container-box>
+                                    <box-header title="VAT Rates Summary"/>
+                                    <box-body>
+                                        <form-list name="VatRateSummaryList" list="vatRateSummaries" skip-form="true" paginate="false">
+                                            <field name="rateDescription">
+                                                <default-field title="Rate / VAT Nature">
+                                                    <display/>
+                                                </default-field>
+                                            </field>
+                                            <field name="taxableAmount" align="right">
+                                                <default-field title="Taxable Base (€)">
+                                                    <display format="#,##0.00"/>
+                                                </default-field>
+                                            </field>
+                                            <field name="taxAmount" align="right">
+                                                <default-field title="Tax Amount (€)">
+                                                    <display format="#,##0.00"/>
+                                                </default-field>
+                                            </field>
+                                            <field name="deductibleAmount" align="right">
+                                                <default-field title="Deductible Tax (€)">
+                                                    <display format="#,##0.00"/>
+                                                </default-field>
+                                            </field>
+                                        </form-list>
+                                    </box-body>
+                                </container-box>
+                            </widgets>
+                        </section>
                     </widgets>
                 </section>
             </widgets>

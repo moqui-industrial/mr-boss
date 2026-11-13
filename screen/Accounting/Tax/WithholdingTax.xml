@@ -194,13 +194,17 @@ Grant of Patent License.
                     <field-layout><field-row><field-ref name="organizationPartyId"/><field-ref name="fiscalYear"/><field-ref name="submit"/></field-row></field-layout>
                 </form-single>
 
-                <dashboard min-width="170" style="q-my-md" condition="organizationPartyId">
-                    <number-card title="Gross Compensation" value="${ec.l10n.format(totalGrossAmount || 0, '#,##0.00')} €"/>
-                    <number-card title="Taxable Base" value="${ec.l10n.format(totalTaxableAmount || 0, '#,##0.00')} €"/>
-                    <number-card title="Withheld Tax (F24)" value="${ec.l10n.format(totalWithheldAmount || 0, '#,##0.00')} €" color="negative"/>
-                    <number-card title="Net Paid" value="${ec.l10n.format(totalNetAmount || 0, '#,##0.00')} €" color="positive"/>
-                    <number-card title="Beneficiaries" value="${beneficiaries ? beneficiaries.length : 0}"/>
-                </dashboard>
+                <section name="WithholdingSummary" condition="organizationPartyId">
+                    <widgets>
+                        <dashboard min-width="170" style="q-my-md">
+                            <number-card title="Gross Compensation" value="${ec.l10n.format(totalGrossAmount || 0, '#,##0.00')} €"/>
+                            <number-card title="Taxable Base" value="${ec.l10n.format(totalTaxableAmount || 0, '#,##0.00')} €"/>
+                            <number-card title="Withheld Tax (F24)" value="${ec.l10n.format(totalWithheldAmount || 0, '#,##0.00')} €"/>
+                            <number-card title="Net Paid" value="${ec.l10n.format(totalNetAmount || 0, '#,##0.00')} €"/>
+                            <number-card title="Beneficiaries" value="${beneficiaries ? beneficiaries.length : 0}"/>
+                        </dashboard>
+                    </widgets>
+                </section>
 
                 <form-list name="BeneficiaryList" list="beneficiaries" skip-form="true">
                     <field name="beneficiaryName">
