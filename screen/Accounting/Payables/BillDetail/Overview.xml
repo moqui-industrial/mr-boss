@@ -22,8 +22,24 @@ along with this software (see the LICENSE.md file). If not, see
     <parameter name="organizationPartyId"/>
     <parameter name="recordId"/>
     <parameter name="invoiceId"/>
+    <transition name="updateInvoiceSettlementTerm">
+        <actions>
+            <service-call name="mantle.account.InvoiceServices.update#Invoice" in-map="context"/>
+        </actions>
+        <default-response url="."/>
+        <error-response url="."/>
+    </transition>
     <transition name="storeInvoiceTerm">
         <actions>
+            <if condition="settlementTermId &amp;&amp; !termTypeEnumId">
+                <entity-find-one entity-name="mantle.account.invoice.SettlementTerm" value-field="st">
+                    <field-map field-name="settlementTermId"/>
+                </entity-find-one>
+                <set field="termTypeEnumId" from="st?.termTypeEnumId || 'TtFinPaymentDays'"/>
+            </if>
+            <if condition="!termTypeEnumId &amp;&amp; !settlementTermId">
+                <set field="termTypeEnumId" value="TtOther"/>
+            </if>
             <if condition="invoiceTermId">
                 <then>
                     <service-call name="update#mantle.account.invoice.InvoiceTerm" in-map="context"/>
@@ -91,6 +107,26 @@ along with this software (see the LICENSE.md file). If not, see
                             <field name="settlementTermId">
                                 <default-field title="Payment terms">
                                     <display-entity entity-name="mantle.account.invoice.SettlementTerm"/>
+                                    <container-dialog id="EditInvoiceSettlementTerm" button-text="Change" title="Change payment terms" condition="receivable.canEdit">
+                                        <form-single name="EditInvoiceSettlementTermForm" transition="updateInvoiceSettlementTerm">
+                                            <field name="invoiceId" from="invoiceId"><default-field><hidden/></default-field></field>
+                                            <field name="settlementTermId" from="receivable.settlementTermId">
+                                                <default-field title="Payment terms">
+                                                    <drop-down allow-empty="true">
+                                                        <entity-options key="${settlementTermId}" text="${description}">
+                                                            <entity-find entity-name="mantle.account.invoice.SettlementTerm">
+                                                                <order-by field-name="description"/>
+                                                            </entity-find>
+                                                        </entity-options>
+                                                    </drop-down>
+                                                </default-field>
+                                            </field>
+                                            <field name="dueDate" from="receivable.dueDate">
+                                                <default-field title="Due date"><date-time type="date"/></default-field>
+                                            </field>
+                                            <field name="submitButton"><default-field title="Update"><submit/></default-field></field>
+                                        </form-single>
+                                    </container-dialog>
                                 </default-field>
                             </field>
                             <field name="approval">
@@ -139,23 +175,23 @@ along with this software (see the LICENSE.md file). If not, see
                         <container-dialog id="AddBillTermDialog" button-text="Add term" title="Add bill term" condition="receivable.canEdit">
                             <form-single name="AddBillTermForm" transition="storeInvoiceTerm">
                                 <field name="invoiceId" from="invoiceId"><default-field><hidden/></default-field></field>
-                                <field name="termTypeEnumId">
-                                    <default-field title="Term type">
-                                        <drop-down allow-empty="false">
-                                            <entity-options key="${enumId}" text="${description}">
-                                                <entity-find entity-name="moqui.basic.Enumeration">
-                                                    <econdition field-name="enumTypeId" value="TermType"/>
+                                <field name="settlementTermId">
+                                    <default-field title="Payment terms (Settlement)">
+                                        <drop-down allow-empty="true">
+                                            <entity-options key="${settlementTermId}" text="${description}">
+                                                <entity-find entity-name="mantle.account.invoice.SettlementTerm">
                                                     <order-by field-name="description"/>
                                                 </entity-find>
                                             </entity-options>
                                         </drop-down>
                                     </default-field>
                                 </field>
-                                <field name="settlementTermId">
-                                    <default-field title="Settlement term">
+                                <field name="termTypeEnumId">
+                                    <default-field title="Additional term type (Incoterm / Clause / Other)">
                                         <drop-down allow-empty="true">
-                                            <entity-options key="${settlementTermId}" text="${description}">
-                                                <entity-find entity-name="mantle.account.invoice.SettlementTerm">
+                                            <entity-options key="${enumId}" text="${description}">
+                                                <entity-find entity-name="moqui.basic.Enumeration">
+                                                    <econdition field-name="enumTypeId" value="TermType"/>
                                                     <order-by field-name="description"/>
                                                 </entity-find>
                                             </entity-options>
