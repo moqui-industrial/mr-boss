@@ -13,6 +13,23 @@
     <parameter name="pageStartingNumber"/>
 
     <transition-include name="choices" location="component://mr-boss/template/AccountingParts.xml"/>
+    <transition name="postVatSettlement">
+        <actions>
+            <service-call name="mantle.ledger.FiscalRegisterServices.post#VatSettlement"
+                    in-map="context" out-map="settlementResult"/>
+            <message>Posted VAT settlement transaction ${settlementResult.acctgTransId}</message>
+        </actions>
+        <default-response url="."/>
+        <error-response url="."/>
+    </transition>
+    <transition name="downloadLipeXml" read-only="true">
+        <actions>
+            <service-call name="mantle.ledger.FiscalRegisterServices.generate#LipeXml"
+                    in-map="context" out-map="lipeResult"/>
+            <script>ec.web.sendTextResponse(lipeResult.xmlText, "application/xml", lipeResult.filename);</script>
+        </actions>
+        <default-response type="none"/>
+    </transition>
 
     <actions>
         <set field="isPrinting" from="String(ec.web?.requestParameters?.renderMode || context.renderMode || '') == 'html-print'"/>
@@ -224,6 +241,14 @@
                         <label text="${registerTitle || 'VAT registers'}" type="h5"/>
                     </container>
                     <container style="col-auto row q-gutter-sm">
+                        <link url="downloadLipeXml"
+                                text="Export LIPE XML"
+                                icon="sym_o_download"
+                                link-type="anchor"
+                                target-window="_blank"
+                                parameter-map="{organizationPartyId:organizationPartyId, fiscalYear:fiscalYear,
+                                    timePeriodId:timePeriodId, fromDate:fromDate, thruDate:thruDate}"
+                                condition="organizationPartyId"/>
                         <link url="${printUrl}"
                                 url-type="plain"
                                 text="Print / VAT Register"
@@ -320,8 +345,22 @@
                         </container>
 
                         <!-- If Summary: Settlement Box -->
-                        <container-box condition="registerType == 'summary'" style="q-mb-md">
-                            <box-header title="Periodic VAT Settlement"/>
+                        <container-box style="q-mb-md">
+                            <box-header title="Periodic VAT Settlement">
+                                <container-dialog id="PostVatSettlementDialog" button-text="Post VAT settlement"
+                                        title="Post periodic VAT settlement" width="480" condition="organizationPartyId">
+                                    <form-single name="PostVatSettlementForm" transition="postVatSettlement">
+                                        <field name="organizationPartyId"><default-field><hidden/></default-field></field>
+                                        <field name="fiscalYear"><default-field><hidden/></default-field></field>
+                                        <field name="timePeriodId"><default-field><hidden/></default-field></field>
+                                        <field name="fromDate"><default-field><hidden/></default-field></field>
+                                        <field name="thruDate"><default-field><hidden/></default-field></field>
+                                        <field name="previousCreditAmount"><default-field title="Previous period VAT credit"><text-line size="12" default-value="0"/></default-field></field>
+                                        <field name="advancePaymentAmount"><default-field title="VAT advance payment"><text-line size="12" default-value="0"/></default-field></field>
+                                        <field name="submitButton"><default-field title="Post settlement"><submit/></default-field></field>
+                                    </form-single>
+                                </container-dialog>
+                            </box-header>
                             <box-body>
                                 <container style="row q-col-gutter-md">
                                     <container style="col-md-4">
