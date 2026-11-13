@@ -109,21 +109,21 @@ along with this software (see the LICENSE.md file). If not, see
                             <row-col md="6">
                                 <container style="q-pa-sm">
                                     <label text="From / Issuer" type="strong"/>
-                                    <label text="VAT / Tax ID: ${receivable.fromFiscal?.taxIdNumber ?: '—'}" type="div"/>
-                                    <label text="Tax code / SSN: ${receivable.fromFiscal?.socialSecurityNumber ?: '—'}" type="div"/>
-                                    <label text="SDI / Exchange code: ${receivable.fromFiscal?.exchSysCode ?: '—'}" type="div"/>
-                                    <label text="REA: ${receivable.fromFiscal?.reaNumber ?: '—'}" type="div" condition="receivable.fromFiscal?.reaNumber"/>
-                                    <label text="EORI: ${receivable.fromFiscal?.eoriNumber ?: '—'}" type="div" condition="receivable.fromFiscal?.eoriNumber"/>
+                                    <label text="VAT / Tax ID: ${receivable.fromFiscal?.taxIdNumber || '—'}" type="div"/>
+                                    <label text="Tax code / SSN: ${receivable.fromFiscal?.socialSecurityNumber || '—'}" type="div"/>
+                                    <label text="SDI / Exchange code: ${receivable.fromFiscal?.exchSysCode || '—'}" type="div"/>
+                                    <label text="REA: ${receivable.fromFiscal?.reaNumber || '—'}" type="div" condition="receivable.fromFiscal?.reaNumber"/>
+                                    <label text="EORI: ${receivable.fromFiscal?.eoriNumber || '—'}" type="div" condition="receivable.fromFiscal?.eoriNumber"/>
                                 </container>
                             </row-col>
                             <row-col md="6">
                                 <container style="q-pa-sm">
                                     <label text="Customer / Recipient" type="strong"/>
-                                    <label text="VAT / Tax ID: ${receivable.toFiscal?.taxIdNumber ?: '—'}" type="div"/>
-                                    <label text="Tax code / SSN: ${receivable.toFiscal?.socialSecurityNumber ?: '—'}" type="div"/>
-                                    <label text="SDI / Exchange code: ${receivable.toFiscal?.exchSysCode ?: '—'}" type="div"/>
-                                    <label text="REA: ${receivable.toFiscal?.reaNumber ?: '—'}" type="div" condition="receivable.toFiscal?.reaNumber"/>
-                                    <label text="EORI: ${receivable.toFiscal?.eoriNumber ?: '—'}" type="div" condition="receivable.toFiscal?.eoriNumber"/>
+                                    <label text="VAT / Tax ID: ${receivable.toFiscal?.taxIdNumber || '—'}" type="div"/>
+                                    <label text="Tax code / SSN: ${receivable.toFiscal?.socialSecurityNumber || '—'}" type="div"/>
+                                    <label text="SDI / Exchange code: ${receivable.toFiscal?.exchSysCode || '—'}" type="div"/>
+                                    <label text="REA: ${receivable.toFiscal?.reaNumber || '—'}" type="div" condition="receivable.toFiscal?.reaNumber"/>
+                                    <label text="EORI: ${receivable.toFiscal?.eoriNumber || '—'}" type="div" condition="receivable.toFiscal?.eoriNumber"/>
                                 </container>
                             </row-col>
                         </container-row>
