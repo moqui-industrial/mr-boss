@@ -23,8 +23,9 @@ Grant of Patent License.
                     out-map="context"/>
             <if condition="isPrinting">
                 <script><![CDATA[
+                    const toNum = (v) => (v == null ? 0 : (typeof v === 'object' && typeof v.toNumber === 'function' ? v.toNumber() : (Number(v) || 0)));
                     function fmt(n) {
-                        return (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+                        return toNum(n).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
                     }
                     function fmtDt(d) {
                         if (!d) return '—';

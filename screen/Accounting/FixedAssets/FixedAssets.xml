@@ -51,9 +51,9 @@ along with this software (see the LICENSE.md file). If not, see
             <set field="orgVatId" from="taxAuthPartyList?.[0]?.partyTaxId || '—'"/>
             <set field="orgFiscalCode" from="partyIdentList.find(p => p.partyIdTypeEnumId == 'PtidSsn')?.idValue || '—'"/>
             <set field="orgRea" from="partyIdentList.find(p => p.partyIdTypeEnumId == 'PtidREA')?.idValue || '—'"/>
-            <set field="totalCost" from="records.reduce((acc, r) => acc + (Number(r.acquireCost) || 0), 0)"/>
-            <set field="totalAccumulated" from="records.reduce((acc, r) => acc + (Number(r.accumulated) || 0), 0)"/>
-            <set field="totalNetBook" from="records.reduce((acc, r) => acc + (Number(r.netBook) || 0), 0)"/>
+            <set field="totalCost" from="records.reduce((acc, r) => acc + (r.acquireCost?.toNumber ? r.acquireCost.toNumber() : (Number(r.acquireCost) || 0)), 0)"/>
+            <set field="totalAccumulated" from="records.reduce((acc, r) => acc + (r.accumulated?.toNumber ? r.accumulated.toNumber() : (Number(r.accumulated) || 0)), 0)"/>
+            <set field="totalNetBook" from="records.reduce((acc, r) => acc + (r.netBook?.toNumber ? r.netBook.toNumber() : (Number(r.netBook) || 0)), 0)"/>
             <set field="currencyUomId" from="records?.[0]?.currencyUomId || 'EUR'"/>
             <set field="printDate" from="ec.l10n.format(ec.user.nowTimestamp, 'dd/MM/yyyy HH:mm')"/>
         </if>
@@ -73,9 +73,9 @@ along with this software (see the LICENSE.md file). If not, see
                     @page {
                         size: A4 landscape;
                         margin: 12mm 10mm 15mm 10mm;
-                        @top-right { content: "Libro Cespiti - Pagina " counter(page); font-size: 8pt; font-family: sans-serif; color: #555; }
-                        @bottom-left { content: "${orgName} · P.IVA ${orgVatId} · CF ${orgFiscalCode}"; font-size: 8pt; font-family: sans-serif; color: #555; }
-                        @bottom-right { content: "Data stampa: ${printDate}"; font-size: 8pt; font-family: sans-serif; color: #555; }
+                        @top-right { content: "${ec.l10n.localize('Fixed Assets Register')} - ${ec.l10n.localize('Page')} " counter(page); font-size: 8pt; font-family: sans-serif; color: #555; }
+                        @bottom-left { content: "${orgName} · ${ec.l10n.localize('VAT ID')} ${orgVatId} · ${ec.l10n.localize('Fiscal Code')} ${orgFiscalCode}"; font-size: 8pt; font-family: sans-serif; color: #555; }
+                        @bottom-right { content: "${ec.l10n.localize('Print Date')}: ${printDate}"; font-size: 8pt; font-family: sans-serif; color: #555; }
                     }
                     .asset-report { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 9pt; color: #222; }
                     .header-box { border-bottom: 2px solid #2563eb; padding-bottom: 8px; margin-bottom: 12px; }
@@ -97,28 +97,28 @@ along with this software (see the LICENSE.md file). If not, see
                         <div class="meta-row">
                             <div>
                                 <div class="org-title">${orgName}</div>
-                                <div>Partita IVA: <strong>${orgVatId}</strong> · Codice Fiscale: <strong>${orgFiscalCode}</strong> · REA: <strong>${orgRea}</strong></div>
+                                <div>${ec.l10n.localize('VAT ID')}: <strong>${orgVatId}</strong> · ${ec.l10n.localize('Fiscal Code')}: <strong>${orgFiscalCode}</strong> · ${ec.l10n.localize('R.E.A.')}: <strong>${orgRea}</strong></div>
                             </div>
                             <div style="text-align: right;">
-                                <div class="report-title">Registro dei Beni Ammortizzabili</div>
-                                <div style="font-size: 9pt; color: #64748b;">(Libro Cespiti - Art. 16 D.P.R. 600/73)</div>
-                                <div>Data Stampa: ${printDate}</div>
+                                <div class="report-title">${ec.l10n.localize('Fixed Assets Register')}</div>
+                                <div style="font-size: 9pt; color: #64748b;">(${ec.l10n.localize('Depreciable Assets Register - OIC 16')})</div>
+                                <div>${ec.l10n.localize('Print Date')}: ${printDate}</div>
                             </div>
                         </div>
                     </div>
                     <table class="report-table">
                         <thead>
                             <tr>
-                                <th style="width: 80px;">Codice</th>
-                                <th>Descrizione Bene / Matricola</th>
-                                <th style="width: 110px;">Classe / Categoria</th>
-                                <th style="width: 80px;" class="text-center">Data Acq.</th>
-                                <th style="width: 80px;" class="text-center">Inizio Util.</th>
-                                <th style="width: 90px;">Metodo</th>
-                                <th style="width: 90px;" class="text-right">Costo Storico</th>
-                                <th style="width: 90px;" class="text-right">Fondo Amm.</th>
-                                <th style="width: 90px;" class="text-right">Valore Netto</th>
-                                <th style="width: 70px;" class="text-center">Stato</th>
+                                <th style="width: 80px;">${ec.l10n.localize('Code')}</th>
+                                <th>${ec.l10n.localize('Asset Description / Serial')}</th>
+                                <th style="width: 110px;">${ec.l10n.localize('Class / Category')}</th>
+                                <th style="width: 80px;" class="text-center">${ec.l10n.localize('Acq. Date')}</th>
+                                <th style="width: 80px;" class="text-center">${ec.l10n.localize('In Service')}</th>
+                                <th style="width: 90px;">${ec.l10n.localize('Method')}</th>
+                                <th style="width: 90px;" class="text-right">${ec.l10n.localize('Historical Cost')}</th>
+                                <th style="width: 90px;" class="text-right">${ec.l10n.localize('Accum. Depr.')}</th>
+                                <th style="width: 90px;" class="text-right">${ec.l10n.localize('Net Book Value')}</th>
+                                <th style="width: 70px;" class="text-center">${ec.l10n.localize('Status')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -131,7 +131,7 @@ along with this software (see the LICENSE.md file). If not, see
                                 <td>${rec.classText || '—'}</td>
                                 <td class="text-center">${rec.acquiredDate ? ec.l10n.format(rec.acquiredDate, 'dd/MM/yyyy') : '—'}</td>
                                 <td class="text-center">${rec.inServiceText || '—'}</td>
-                                <td>${rec.methodText || 'Quote costanti'}</td>
+                                <td>${rec.methodText || ec.l10n.localize('Straight-line')}</td>
                                 <td class="text-right">${ec.l10n.format(rec.acquireCost, '#,##0.00')} ${currencyUomId}</td>
                                 <td class="text-right">${ec.l10n.format(rec.accumulated, '#,##0.00')} ${currencyUomId}</td>
                                 <td class="text-right"><strong>${ec.l10n.format(rec.netBook, '#,##0.00')} ${currencyUomId}</strong></td>
@@ -141,7 +141,7 @@ along with this software (see the LICENSE.md file). If not, see
                 </iterate>
                 <text type="html,html-print"><![CDATA[
                             <tr class="totals-row">
-                                <td colspan="6" class="text-right">TOTALI GENERALI:</td>
+                                <td colspan="6" class="text-right">${ec.l10n.localize('GRAND TOTALS')}:</td>
                                 <td class="text-right">${ec.l10n.format(totalCost, '#,##0.00')} ${currencyUomId}</td>
                                 <td class="text-right">${ec.l10n.format(totalAccumulated, '#,##0.00')} ${currencyUomId}</td>
                                 <td class="text-right">${ec.l10n.format(totalNetBook, '#,##0.00')} ${currencyUomId}</td>
@@ -150,8 +150,8 @@ along with this software (see the LICENSE.md file). If not, see
                         </tbody>
                     </table>
                     <div class="sign-box">
-                        <div>Numero Cespiti a Registro: <strong>${records.length}</strong></div>
-                        <div class="sign-line">Firma del Legale Rappresentante</div>
+                        <div>${ec.l10n.localize('Registered Assets Count')}: <strong>${records.length}</strong></div>
+                        <div class="sign-line">${ec.l10n.localize('Legal Representative Signature')}</div>
                     </div>
                 </div>
                 ]]></text>
@@ -166,7 +166,7 @@ along with this software (see the LICENSE.md file). If not, see
                     <container style="col-auto row q-gutter-sm">
                         <link url="${printUrl}"
                                 url-type="plain"
-                                text="Print / Libro Cespiti"
+                                text="Print Fixed Assets Register"
                                 icon="sym_o_print"
                                 target-window="_blank"
                                 condition="organizationPartyId"/>
