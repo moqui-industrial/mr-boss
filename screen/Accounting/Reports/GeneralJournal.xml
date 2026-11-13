@@ -146,88 +146,113 @@ Grant of Patent License.
                             padding: 2px 0;
                         }
                     </style>
-
-                    <% for (def page in (journalData?.pages ?: [])) { %>
+                    ]]></text>
+                </render-mode>
+                <section-iterate name="PrintPages" list="journalData?.pages || []" entry="page">
+                    <widgets>
+                        <render-mode>
+                            <text type="html,html-print"><![CDATA[
                     <div class="journal-page">
                         <div class="journal-header">
                             <div class="header-row">
                                 <div>
-                                    <div class="company-name">\${journalData.organization?.organizationName}</div>
+                                    <div class="company-name">${journalData.organization?.organizationName || ''}</div>
                                     <div class="company-fiscal">
-                                        P.IVA: \${journalData.organization?.taxIdNumber ?: '—'} | C.F.: \${journalData.organization?.socialSecurityNumber ?: '—'}
-                                        <% if (journalData.organization?.reaNumber) { %> | REA: \${journalData.organization.reaNumber} <% } %>
+                                        ${ec.l10n.localize('VAT ID')}: ${journalData.organization?.taxIdNumber || '—'} | ${ec.l10n.localize('Fiscal Code')}: ${journalData.organization?.socialSecurityNumber || '—'} | ${ec.l10n.localize('R.E.A.')}: ${journalData.organization?.reaNumber || '—'}
                                     </div>
                                 </div>
                                 <div class="page-number-box">
-                                    FOGLIO \${page.pageLabel}
+                                    ${ec.l10n.localize('PAGE')} ${page.pageLabel}
                                 </div>
                             </div>
-                            <div class="register-title">LIBRO GIORNALE - ESERCIZIO \${journalData.fiscalYear}</div>
+                            <div class="register-title">${ec.l10n.localize('GENERAL JOURNAL - FISCAL YEAR')} ${journalData.fiscalYear}</div>
                             <div class="header-row">
-                                <div>Periodo: \${journalData.periodDescription}</div>
-                                <div class="watermark">STAMPA DI PROVA - DOCUMENTO NON FISCALE</div>
+                                <div>${ec.l10n.localize('Period')}: ${journalData.periodDescription}</div>
+                                <div class="watermark">${ec.l10n.localize('DRAFT PRINT - NON-FISCAL DOCUMENT')}</div>
                             </div>
                         </div>
 
                         <table class="journal-table">
                             <thead>
                                 <tr>
-                                    <th style="width: 75px;">Data</th>
-                                    <th style="width: 55px;">N. Reg.</th>
-                                    <th style="width: 85px;">Conto</th>
-                                    <th>Descrizione conto / Causale operazione</th>
-                                    <th style="width: 85px;" class="amount">Dare (€)</th>
-                                    <th style="width: 85px;" class="amount">Avere (€)</th>
+                                    <th style="width: 75px;">${ec.l10n.localize('Date')}</th>
+                                    <th style="width: 55px;">${ec.l10n.localize('Entry No.')}</th>
+                                    <th style="width: 85px;">${ec.l10n.localize('Account')}</th>
+                                    <th>${ec.l10n.localize('Account Description / Transaction Reason')}</th>
+                                    <th style="width: 85px;" class="amount">${ec.l10n.localize('Debit (€)')}</th>
+                                    <th style="width: 85px;" class="amount">${ec.l10n.localize('Credit (€)')}</th>
                                 </tr>
-                                <% if (page.carriedForwardDebit > 0 || page.carriedForwardCredit > 0) { %>
+                            ]]></text>
+                        </render-mode>
+                        <section name="PrintBroughtForward" condition="(page.broughtForwardDebit || 0) &gt; 0 || (page.broughtForwardCredit || 0) &gt; 0">
+                            <widgets>
+                                <render-mode>
+                                    <text type="html,html-print"><![CDATA[
                                 <tr class="carry-row">
-                                    <td colspan="4">TOTALE RIPORTATO DA PAGINA PRECEDENTE</td>
-                                    <td class="amount">\${String.format('%,.2f', page.carriedForwardDebit)}</td>
-                                    <td class="amount">\${String.format('%,.2f', page.carriedForwardCredit)}</td>
+                                    <td colspan="4">${ec.l10n.localize('TOTAL BROUGHT FORWARD FROM PREVIOUS PAGE')}</td>
+                                    <td class="amount">${ec.l10n.format(page.broughtForwardDebit || 0, '#,##0.00')}</td>
+                                    <td class="amount">${ec.l10n.format(page.broughtForwardCredit || 0, '#,##0.00')}</td>
                                 </tr>
-                                <% } %>
+                                    ]]></text>
+                                </render-mode>
+                            </widgets>
+                        </section>
+                        <render-mode>
+                            <text type="html,html-print"><![CDATA[
                             </thead>
                             <tbody>
-                                <% for (def tx in page.transactions) { %>
+                            ]]></text>
+                        </render-mode>
+                        <section-iterate name="PrintTx" list="page.transactions || []" entry="tx">
+                            <widgets>
+                                <render-mode>
+                                    <text type="html,html-print"><![CDATA[
                                     <tr class="tx-header-row">
-                                        <td>\${String.format('%tF', tx.transactionDate)}</td>
-                                        <td>#\${tx.journalSequenceNum}</td>
+                                        <td>${tx.transactionDate ? ec.l10n.format(tx.transactionDate, 'yyyy-MM-dd') : ''}</td>
+                                        <td>#${tx.journalSequenceNum}</td>
                                         <td colspan="4">
-                                            \${tx.txDescription}
-                                            <% if (tx.txVoucherRef) { %> [Doc: \${tx.txVoucherRef}] <% } %>
-                                            <% if (tx.invoiceId) { %> (Fattura: \${tx.invoiceId}) <% } %>
-                                            <% if (tx.paymentId) { %> (Pagamento: \${tx.paymentId}) <% } %>
+                                            ${tx.txDescription || ''}
+                                            ${tx.txVoucherRef ? (' [Doc: ' + tx.txVoucherRef + ']') : ''}
+                                            ${tx.invoiceId ? (' (' + ec.l10n.localize('Invoice') + ': ' + tx.invoiceId + ')') : ''}
+                                            ${tx.paymentId ? (' (' + ec.l10n.localize('Payment') + ': ' + tx.paymentId + ')') : ''}
                                         </td>
                                     </tr>
-                                    <% for (def entry in tx.entries) { %>
+                                    ]]></text>
+                                </render-mode>
+                                <section-iterate name="PrintEntries" list="tx.entries || []" entry="entry">
+                                    <widgets>
+                                        <render-mode>
+                                            <text type="html,html-print"><![CDATA[
                                     <tr>
                                         <td></td>
                                         <td></td>
-                                        <td>\${entry.accountCode}</td>
-                                        <td>\${entry.accountName}</td>
-                                        <td class="amount"><% if (entry.debitAmount > 0) { %>\${String.format('%,.2f', entry.debitAmount)}<% } %></td>
-                                        <td class="amount"><% if (entry.creditAmount > 0) { %>\${String.format('%,.2f', entry.creditAmount)}<% } %></td>
+                                        <td>${entry.accountCode || ''}</td>
+                                        <td>${entry.accountName || ''}</td>
+                                        <td class="amount">${entry.debitAmount > 0 ? ec.l10n.format(entry.debitAmount, '#,##0.00') : ''}</td>
+                                        <td class="amount">${entry.creditAmount > 0 ? ec.l10n.format(entry.creditAmount, '#,##0.00') : ''}</td>
                                     </tr>
-                                    <% } %>
-                                <% } %>
+                                            ]]></text>
+                                        </render-mode>
+                                    </widgets>
+                                </section-iterate>
+                            </widgets>
+                        </section-iterate>
+                        <render-mode>
+                            <text type="html,html-print"><![CDATA[
                             </tbody>
                             <tfoot>
                                 <tr class="carry-row">
-                                    <td colspan="4">TOTALE MOVIMENTI DELLA PAGINA</td>
-                                    <td class="amount">\${String.format('%,.2f', page.pageDebit)}</td>
-                                    <td class="amount">\${String.format('%,.2f', page.pageCredit)}</td>
-                                </tr>
-                                <tr class="carry-row" style="border-top: none;">
-                                    <td colspan="4">TOTALE PROGRESSIVO DA RIPORTARE</td>
-                                    <td class="amount">\${String.format('%,.2f', page.carryOverDebit)}</td>
-                                    <td class="amount">\${String.format('%,.2f', page.carryOverCredit)}</td>
+                                    <td colspan="4">${ec.l10n.localize('PROGRESSIVE TOTAL CARRIED FORWARD')}</td>
+                                    <td class="amount">${ec.l10n.format(page.carriedForwardDebit || 0, '#,##0.00')}</td>
+                                    <td class="amount">${ec.l10n.format(page.carriedForwardCredit || 0, '#,##0.00')}</td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
-                    <% } %>
-                    ]]></text>
-                </render-mode>
+                            ]]></text>
+                        </render-mode>
+                    </widgets>
+                </section-iterate>
             </widgets>
         </section>
 
@@ -236,8 +261,8 @@ Grant of Patent License.
             <widgets>
                 <container style="row items-center q-col-gutter-sm q-mb-md">
                     <container style="col">
-                        <label text="General journal (Libro giornale)" type="h4"/>
-                        <label text="Registro cronologico obbligatorio delle scritture contabili in partita doppia (art. 2216 C.C.)"
+                        <label text="General journal" type="h4"/>
+                        <label text="Mandatory chronological register of double-entry accounting records (Art. 2216 Italian Civil Code)"
                                 type="p" style="m-muted"/>
                     </container>
                     <container style="col-auto">
@@ -247,24 +272,24 @@ Grant of Patent License.
                                 icon="sym_o_print"
                                 target-window="_blank"
                                 condition="journalData?.pages?.length"/>
-                        <container-dialog id="FinalizeJournalDialog" button-text="Consolida registro" title="Consolida periodo e blocca scritture"
+                        <container-dialog id="FinalizeJournalDialog" button-text="Finalize register" title="Finalize period and lock entries"
                                 condition="journalData?.pages?.length">
                             <form-single name="FinalizeJournalForm" transition="finalizeJournal">
                                 <field name="organizationPartyId" from="organizationPartyId"><default-field><hidden/></default-field></field>
                                 <field name="fiscalYear" from="fiscalYear"><default-field><hidden/></default-field></field>
                                 <field name="timePeriodId" from="timePeriodId"><default-field><hidden/></default-field></field>
-                                <field name="fromDate" from="journalData.fromDate"><default-field title="Data inizio"><display/></default-field></field>
-                                <field name="thruDate" from="journalData.thruDate"><default-field title="Data fine"><display/></default-field></field>
-                                <field name="pageCount"><default-field title="Fogli da numerare">
+                                <field name="fromDate" from="journalData.fromDate"><default-field title="From date"><display/></default-field></field>
+                                <field name="thruDate" from="journalData.thruDate"><default-field title="Thru date"><display/></default-field></field>
+                                <field name="pageCount"><default-field title="Pages to number">
                                     <display text="${journalData.startPageNumber} - ${journalData.endPageNumber}"/></default-field></field>
-                                <field name="totalDebitAmount"><default-field title="Totale Dare">
+                                <field name="totalDebitAmount"><default-field title="Total Debit">
                                     <display text="${journalData.totalDebit}"/></default-field></field>
-                                <field name="totalCreditAmount"><default-field title="Totale Avere">
+                                <field name="totalCreditAmount"><default-field title="Total Credit">
                                     <display text="${journalData.totalCredit}"/></default-field></field>
                                 <field name="confirmNote"><default-field title="">
-                                    <label text="Attenzione: il consolidamento definitivo assegnerà i numeri progressivi annuali continui via SequenceValueItem e registrerà i totali nel giornale fiscale." style="text-warning"/>
+                                    <label text="Warning: finalization will permanently assign continuous annual sequential numbers and log totals in the fiscal register." style="text-warning"/>
                                 </default-field></field>
-                                <field name="submitButton"><default-field title="Conferma e consolida"><submit/></default-field></field>
+                                <field name="submitButton"><default-field title="Confirm and finalize"><submit/></default-field></field>
                             </form-single>
                         </container-dialog>
                     </container>
@@ -272,11 +297,11 @@ Grant of Patent License.
 
                 <!-- Filter form -->
                 <container-box>
-                    <box-header title="Filtri registro"/>
+                    <box-header title="Register filters"/>
                     <box-body>
-                        <form-single name="JournalFilter" transition="." method="get">
+                        <form-single name="JournalFilter" transition=".">
                             <field name="organizationPartyId">
-                                <default-field title="Organizzazione">
+                                <default-field title="Organization">
                                     <drop-down allow-empty="false">
                                         <entity-options key="${partyId}" text="${organizationName}">
                                             <entity-find entity-name="mantle.party.Organization">
@@ -304,18 +329,18 @@ Grant of Patent License.
                                 </default-field>
                             </field>
                             <field name="fromDate">
-                                <default-field title="Dal"><date-time type="date"/></default-field>
+                                <default-field title="From"><date-time type="date"/></default-field>
                             </field>
                             <field name="thruDate">
-                                <default-field title="Al"><date-time type="date"/></default-field>
+                                <default-field title="Thru"><date-time type="date"/></default-field>
                             </field>
                             <field name="pageStartingNumber">
-                                <default-field title="N. Pagina iniziale">
+                                <default-field title="Starting page no.">
                                     <text-line size="6"/>
                                 </default-field>
                             </field>
                             <field name="submitButton">
-                                <default-field title="Visualizza registro"><submit/></default-field>
+                                <default-field title="View register"><submit/></default-field>
                             </field>
                             <field-layout>
                                 <field-row>
@@ -335,89 +360,97 @@ Grant of Patent License.
                 </container-box>
 
                 <!-- Summary Statistics -->
-                <container style="row q-col-gutter-sm q-mt-md" condition="journalData?.totalTransactions != null">
-                    <container style="col-12 col-md-3">
-                        <container-box>
-                            <box-header title="Registrazioni"/>
-                            <box-body>
-                                <label text="${journalData.totalTransactions}" type="h3"/>
-                                <label text="${journalData.totalEntries} righe contabili" type="div" style="m-muted"/>
-                            </box-body>
-                        </container-box>
-                    </container>
-                    <container style="col-12 col-md-3">
-                        <container-box>
-                            <box-header title="Totale Dare (€)"/>
-                            <box-body>
-                                <label text="${journalData.totalDebit}" type="h3" style="text-primary"/>
-                            </box-body>
-                        </container-box>
-                    </container>
-                    <container style="col-12 col-md-3">
-                        <container-box>
-                            <box-header title="Totale Avere (€)"/>
-                            <box-body>
-                                <label text="${journalData.totalCredit}" type="h3" style="text-primary"/>
-                            </box-body>
-                        </container-box>
-                    </container>
-                    <container style="col-12 col-md-3">
-                        <container-box>
-                            <box-header title="Quadratura e Fogli"/>
-                            <box-body>
-                                <label text="Sbilancio: 0.00 €" type="strong" style="color: green;"
-                                        condition="journalData.totalDebit == journalData.totalCredit"/>
-                                <label text="ATTENZIONE: Registro sbilanciato!" type="strong" style="color: red;"
-                                        condition="journalData.totalDebit != journalData.totalCredit"/>
-                                <label text="Fogli: ${journalData.startPageNumber} - ${journalData.endPageNumber} (${journalData.pages?.length} pag.)" type="div" style="m-muted"/>
-                            </box-body>
-                        </container-box>
-                    </container>
-                </container>
+                <section name="JournalSummarySection" condition="journalData?.totalTransactions != null">
+                    <widgets>
+                        <container style="row q-col-gutter-sm q-mt-md">
+                            <container style="col-12 col-md-3">
+                                <container-box>
+                                    <box-header title="Entries"/>
+                                    <box-body>
+                                        <label text="${journalData.totalTransactions}" type="h3"/>
+                                        <label text="${journalData.totalEntries} ${ec.l10n.localize('accounting lines')}" type="div" style="m-muted"/>
+                                    </box-body>
+                                </container-box>
+                            </container>
+                            <container style="col-12 col-md-3">
+                                <container-box>
+                                    <box-header title="Total Debit (€)"/>
+                                    <box-body>
+                                        <label text="${journalData.totalDebit}" type="h3" style="text-primary"/>
+                                    </box-body>
+                                </container-box>
+                            </container>
+                            <container style="col-12 col-md-3">
+                                <container-box>
+                                    <box-header title="Total Credit (€)"/>
+                                    <box-body>
+                                        <label text="${journalData.totalCredit}" type="h3" style="text-primary"/>
+                                    </box-body>
+                                </container-box>
+                            </container>
+                            <container style="col-12 col-md-3">
+                                <container-box>
+                                    <box-header title="Balance and Pages"/>
+                                    <box-body>
+                                        <label text="Imbalance: 0.00 €" type="strong" style="color: green;"
+                                                condition="journalData.totalDebit == journalData.totalCredit"/>
+                                        <label text="WARNING: Register unbalanced!" type="strong" style="color: red;"
+                                                condition="journalData.totalDebit != journalData.totalCredit"/>
+                                        <label text="${ec.l10n.localize('Pages')}: ${journalData.startPageNumber} - ${journalData.endPageNumber} (${journalData.pages?.length} ${ec.l10n.localize('pp.')})" type="div" style="m-muted"/>
+                                    </box-body>
+                                </container-box>
+                            </container>
+                        </container>
+                    </widgets>
+                </section>
 
                 <!-- Data Table preview -->
-                <container-box style="q-mt-md" condition="journalData?.pages?.length">
-                    <box-header title="Anteprima Libro Giornale"/>
-                    <box-body>
-                        <section-iterate name="JournalPages" list="journalData.pages" entry="page">
-                            <widgets>
-                                <container style="q-pa-sm q-mb-sm bg-grey-2 rounded-borders row justify-between items-center">
-                                    <label text="Pagina ${page.pageLabel}" type="strong"/>
-                                    <label text="Riporto Dare: € ${page.carriedForwardDebit} | Avere: € ${page.carriedForwardCredit}" style="m-muted"
-                                            condition="page.carriedForwardDebit > 0 || page.carriedForwardCredit > 0"/>
-                                </container>
-                                <section-iterate name="JournalTx" list="page.transactions" entry="tx">
+                <section name="JournalPreviewSection" condition="journalData?.pages?.length">
+                    <widgets>
+                        <container-box>
+                            <box-header title="General Journal Preview"/>
+                            <box-body>
+                                <section-iterate name="JournalPages" list="journalData.pages" entry="page">
                                     <widgets>
-                                        <container style="border-bottom: 1px solid #ddd; q-py-xs">
-                                            <container style="row justify-between bg-blue-grey-1 q-pa-xs">
-                                                <container style="col-auto">
-                                                    <label text="${tx.transactionDate} - Reg. #${tx.journalSequenceNum}" type="strong"/>
-                                                </container>
-                                                <container style="col">
-                                                    <label text=" - ${tx.txDescription} ${tx.txVoucherRef ? ('[Doc: ' + tx.txVoucherRef + ']') : ''}"/>
-                                                </container>
-                                            </container>
-                                            <section-iterate name="TxEntries" list="tx.entries" entry="entry">
-                                                <widgets>
-                                                    <container style="row q-px-sm q-py-xs text-caption">
-                                                        <container style="col-2"><label text="${entry.accountCode}"/></container>
-                                                        <container style="col-6"><label text="${entry.accountName}"/></container>
-                                                        <container style="col-2 text-right"><label text="${entry.debitAmount > 0 ? entry.debitAmount : ''}"/></container>
-                                                        <container style="col-2 text-right"><label text="${entry.creditAmount > 0 ? entry.creditAmount : ''}"/></container>
+                                        <container style="q-pa-sm q-mb-sm bg-grey-2 rounded-borders row justify-between items-center">
+                                            <label text="${ec.l10n.localize('Page')} ${page.pageLabel}" type="strong"/>
+                                            <label text="${ec.l10n.localize('Brought Forward Debit')}: € ${page.broughtForwardDebit} | ${ec.l10n.localize('Credit')}: € ${page.broughtForwardCredit}" style="m-muted"
+                                                    condition="(page.broughtForwardDebit || 0) &gt; 0 || (page.broughtForwardCredit || 0) &gt; 0"/>
+                                        </container>
+                                        <section-iterate name="JournalTx" list="page.transactions" entry="tx">
+                                            <widgets>
+                                                <container style="border-bottom: 1px solid #ddd; q-py-xs">
+                                                    <container style="row justify-between bg-blue-grey-1 q-pa-xs">
+                                                        <container style="col-auto">
+                                                            <label text="${tx.transactionDate} - ${ec.l10n.localize('Reg. #')}${tx.journalSequenceNum}" type="strong"/>
+                                                        </container>
+                                                        <container style="col">
+                                                            <label text=" - ${tx.txDescription} ${tx.txVoucherRef ? ('[Doc: ' + tx.txVoucherRef + ']') : ''}"/>
+                                                        </container>
                                                     </container>
-                                                </widgets>
-                                            </section-iterate>
+                                                    <section-iterate name="TxEntries" list="tx.entries" entry="entry">
+                                                        <widgets>
+                                                            <container style="row q-px-sm q-py-xs text-caption">
+                                                                <container style="col-2"><label text="${entry.accountCode}"/></container>
+                                                                <container style="col-6"><label text="${entry.accountName}"/></container>
+                                                                <container style="col-2 text-right"><label text="${entry.debitAmount &gt; 0 ? entry.debitAmount : ''}"/></container>
+                                                                <container style="col-2 text-right"><label text="${entry.creditAmount &gt; 0 ? entry.creditAmount : ''}"/></container>
+                                                            </container>
+                                                        </widgets>
+                                                    </section-iterate>
+                                                </container>
+                                            </widgets>
+                                        </section-iterate>
+                                        <container style="q-pa-sm q-mt-xs q-mb-md bg-grey-3 row justify-between text-weight-bold">
+                                            <label text="Progressive total carried forward:"/>
+                                            <label text="${ec.l10n.localize('Debit')}: € ${page.carriedForwardDebit} | ${ec.l10n.localize('Credit')}: € ${page.carriedForwardCredit}"/>
                                         </container>
                                     </widgets>
                                 </section-iterate>
-                                <container style="q-pa-sm q-mt-xs q-mb-md bg-grey-3 row justify-between text-weight-bold">
-                                    <label text="Progressivo a riportare:"/>
-                                    <label text="Dare: € ${page.carryOverDebit} | Avere: € ${page.carryOverCredit}"/>
-                                </container>
-                            </widgets>
-                        </section-iterate>
-                    </box-body>
-                </container-box>
+                            </box-body>
+                        </container-box>
+                    </widgets>
+                </section>
             </widgets>
         </section>
     </widgets>

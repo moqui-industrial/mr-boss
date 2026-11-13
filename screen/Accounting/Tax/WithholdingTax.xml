@@ -13,6 +13,22 @@ Grant of Patent License.
     <parameter name="thruDate"/>
 
     <transition-include name="choices" location="component://mr-boss/template/AccountingParts.xml"/>
+    <transition name="downloadCu770Xml" read-only="true">
+        <actions>
+            <service-call name="mantle.ledger.FiscalRegisterServices.generate#Cu770Export"
+                    in-map="context" out-map="cuResult"/>
+            <script>ec.web.sendTextResponse(cuResult.xmlText, "application/xml", cuResult.filename);</script>
+        </actions>
+        <default-response type="none"/>
+    </transition>
+    <transition name="downloadF24Csv" read-only="true">
+        <actions>
+            <service-call name="mantle.ledger.FiscalRegisterServices.generate#F24Export"
+                    in-map="context" out-map="f24Result"/>
+            <script>ec.web.sendTextResponse(f24Result.csvText, "text/csv", f24Result.filename);</script>
+        </actions>
+        <default-response type="none"/>
+    </transition>
 
     <actions>
         <set field="isPrinting" from="String(ec.web?.requestParameters?.renderMode || context.renderMode || '') == 'html-print'"/>
@@ -164,6 +180,20 @@ Grant of Patent License.
                         <label text="Withholding tax (Model 770 / Single Certification)" type="h5"/>
                     </container>
                     <container style="col-auto row q-gutter-sm">
+                        <link url="downloadCu770Xml"
+                                text="Export CU/770 XML"
+                                icon="sym_o_download"
+                                link-type="anchor"
+                                target-window="_blank"
+                                parameter-map="{organizationPartyId:organizationPartyId, fiscalYear:fiscalYear, fromDate:fromDate, thruDate:thruDate}"
+                                condition="organizationPartyId"/>
+                        <link url="downloadF24Csv"
+                                text="Export F24 CSV"
+                                icon="sym_o_download"
+                                link-type="anchor"
+                                target-window="_blank"
+                                parameter-map="{organizationPartyId:organizationPartyId, fiscalYear:fiscalYear, fromDate:fromDate, thruDate:thruDate}"
+                                condition="organizationPartyId"/>
                         <link url="${printUrl}"
                                 url-type="plain"
                                 text="Print / Statement (770/CU)"
