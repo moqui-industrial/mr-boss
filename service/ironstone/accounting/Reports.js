@@ -9,6 +9,7 @@ const ledger = name => "mantle.ledger.LedgerReportServices." + name
 // whether its quick options take a fiscal period.
 const catalogRows = [
     ["TrialBalance", "Trial balance", "Ledger", "Each account's beginning balance, debits, credits and ending balance."],
+    ["GeneralJournal", "General journal (Libro giornale)", "Ledger", "Sequential chronological journal entries with page carry-overs."],
     ["GeneralLedger", "General ledger", "Ledger", "The posted lines of each account, with a running balance."],
     ["PartnerLedger", "Partner ledger", "Ledger", "Each customer's or supplier's movements and balance on its account."],
     ["BalanceSheet", "Balance sheet", "Statements", "Assets, liabilities and equity at the end of a period."],
@@ -29,6 +30,7 @@ const runners = {Aging: ["reportRead", "admin", "arRead", "apRead"]}
 // Reports whose quick options take a fiscal period; the others take the organization alone.
 const periodReports = new Set([
     "TrialBalance",
+    "GeneralJournal",
     "GeneralLedger",
     "PartnerLedger",
     "BalanceSheet",

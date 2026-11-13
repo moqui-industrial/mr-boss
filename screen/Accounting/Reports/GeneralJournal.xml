@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a
+Grant of Patent License.
+-->
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        default-menu-title="General journal"
+        default-menu-index="2"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd">
+    <parameter name="organizationPartyId"/>
+    <parameter name="fiscalYear"/>
+    <parameter name="timePeriodId"/>
+    <parameter name="fromDate"/>
+    <parameter name="thruDate"/>
+    <parameter name="pageStartingNumber"/>
+    <parameter name="renderMode"/>
+
+    <transition-include name="choices" location="component://mr-boss/template/AccountingParts.xml"/>
+
+    <transition name="finalizeJournal">
+        <actions>
+            <service-call name="mantle.ledger.FiscalRegisterServices.finalize#GeneralJournalPeriod"
+                    in-map="[organizationPartyId:organizationPartyId, fiscalYear:fiscalYear,
+                        timePeriodId:timePeriodId, fromDate:fromDate, thruDate:thruDate]"/>
+        </actions>
+        <default-response url="."/>
+        <error-response url="."/>
+    </transition>
+
+    <actions>
+        <set field="isPrinting" from="String(ec.web?.requestParameters?.renderMode || context.renderMode || '') == 'html-print'"/>
+        <if condition="!organizationPartyId">
+            <set field="organizationPartyId" from="ec.user.getPreference('OrganizationPartyId') || 'ORG_ZIZI_CORP'"/>
+        </if>
+        <if condition="!fiscalYear">
+            <set field="fiscalYear" from="String.format('%tY', new Date())"/>
+        </if>
+
+        <set field="journalData" from="[:]"/>
+        <if condition="organizationPartyId">
+            <service-call name="mantle.ledger.FiscalRegisterServices.get#GeneralJournalData"
+                    in-map="[organizationPartyId:organizationPartyId, fiscalYear:fiscalYear,
+                        timePeriodId:timePeriodId, fromDate:fromDate, thruDate:thruDate,
+                        pageStartingNumber:(pageStartingNumber ? Integer.parseInt(pageStartingNumber) : null)]"
+                    out-map="journalData"/>
+        </if>
+
+        <set field="printUrl"
+                from="'/apps/Accounting/Reports/GeneralJournal?'
+                    + Object.entries({renderMode:'html-print', organizationPartyId:organizationPartyId,
+                        fiscalYear:fiscalYear, timePeriodId:timePeriodId, fromDate:fromDate, thruDate:thruDate,
+                        pageStartingNumber:pageStartingNumber})
+                        .filter(e =&gt; e[1] != null &amp;&amp; e[1] !== '')
+                        .map(e =&gt; e[0] + '=' + encodeURIComponent(e[1])).join('&amp;')"/>
+    </actions>
+    <widgets>
+        <!-- PRINT / PDF RENDER MODE -->
+        <section name="PrintMode" condition="isPrinting">
+            <widgets>
+                <render-mode>
+                    <text type="html,html-print"><![CDATA[
+                    <style>
+                        @page {
+                            size: A4 portrait;
+                            margin: 12mm 10mm 15mm 10mm;
+                            @bottom-right {
+                                content: counter(page);
+                            }
+                        }
+                        body {
+                            font-family: 'Courier New', Courier, monospace;
+                            font-size: 9pt;
+                            color: #111;
+                            background: #fff;
+                        }
+                        .journal-page {
+                            page-break-after: always;
+                            margin-bottom: 25px;
+                        }
+                        .journal-header {
+                            border-bottom: 2px solid #222;
+                            padding-bottom: 6px;
+                            margin-bottom: 8px;
+                        }
+                        .header-row {
+                            display: flex;
+                            justify-content: space-between;
+                        }
+                        .company-name {
+                            font-size: 11pt;
+                            font-weight: bold;
+                        }
+                        .company-fiscal {
+                            font-size: 8.5pt;
+                            color: #444;
+                        }
+                        .register-title {
+                            font-size: 12pt;
+                            font-weight: bold;
+                            text-align: center;
+                            margin: 6px 0;
+                            text-transform: uppercase;
+                        }
+                        .page-number-box {
+                            text-align: right;
+                            font-weight: bold;
+                            font-size: 10pt;
+                        }
+                        .journal-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            font-size: 8.5pt;
+                        }
+                        .journal-table th {
+                            border-top: 1px solid #333;
+                            border-bottom: 1px solid #333;
+                            padding: 3px 4px;
+                            text-align: left;
+                            font-weight: bold;
+                        }
+                        .journal-table td {
+                            padding: 2px 4px;
+                            vertical-align: top;
+                        }
+                        .amount {
+                            text-align: right;
+                            font-family: monospace;
+                        }
+                        .tx-header-row td {
+                            font-weight: bold;
+                            border-top: 1px dotted #888;
+                            padding-top: 4px;
+                            background-color: #f9f9f9;
+                        }
+                        .carry-row {
+                            font-weight: bold;
+                            background-color: #eee;
+                            border-top: 1px solid #222;
+                            border-bottom: 1px solid #222;
+                        }
+                        .watermark {
+                            color: #c33;
+                            font-weight: bold;
+                            text-align: center;
+                            font-size: 9pt;
+                            padding: 2px 0;
+                        }
+                    </style>
+
+                    <% for (def page in (journalData?.pages ?: [])) { %>
+                    <div class="journal-page">
+                        <div class="journal-header">
+                            <div class="header-row">
+                                <div>
+                                    <div class="company-name">\${journalData.organization?.organizationName}</div>
+                                    <div class="company-fiscal">
+                                        P.IVA: \${journalData.organization?.taxIdNumber ?: '—'} | C.F.: \${journalData.organization?.socialSecurityNumber ?: '—'}
+                                        <% if (journalData.organization?.reaNumber) { %> | REA: \${journalData.organization.reaNumber} <% } %>
+                                    </div>
+                                </div>
+                                <div class="page-number-box">
+                                    FOGLIO \${page.pageLabel}
+                                </div>
+                            </div>
+                            <div class="register-title">LIBRO GIORNALE - ESERCIZIO \${journalData.fiscalYear}</div>
+                            <div class="header-row">
+                                <div>Periodo: \${journalData.periodDescription}</div>
+                                <div class="watermark">STAMPA DI PROVA - DOCUMENTO NON FISCALE</div>
+                            </div>
+                        </div>
+
+                        <table class="journal-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 75px;">Data</th>
+                                    <th style="width: 55px;">N. Reg.</th>
+                                    <th style="width: 85px;">Conto</th>
+                                    <th>Descrizione conto / Causale operazione</th>
+                                    <th style="width: 85px;" class="amount">Dare (€)</th>
+                                    <th style="width: 85px;" class="amount">Avere (€)</th>
+                                </tr>
+                                <% if (page.carriedForwardDebit > 0 || page.carriedForwardCredit > 0) { %>
+                                <tr class="carry-row">
+                                    <td colspan="4">TOTALE RIPORTATO DA PAGINA PRECEDENTE</td>
+                                    <td class="amount">\${String.format('%,.2f', page.carriedForwardDebit)}</td>
+                                    <td class="amount">\${String.format('%,.2f', page.carriedForwardCredit)}</td>
+                                </tr>
+                                <% } %>
+                            </thead>
+                            <tbody>
+                                <% for (def tx in page.transactions) { %>
+                                    <tr class="tx-header-row">
+                                        <td>\${String.format('%tF', tx.transactionDate)}</td>
+                                        <td>#\${tx.journalSequenceNum}</td>
+                                        <td colspan="4">
+                                            \${tx.txDescription}
+                                            <% if (tx.txVoucherRef) { %> [Doc: \${tx.txVoucherRef}] <% } %>
+                                            <% if (tx.invoiceId) { %> (Fattura: \${tx.invoiceId}) <% } %>
+                                            <% if (tx.paymentId) { %> (Pagamento: \${tx.paymentId}) <% } %>
+                                        </td>
+                                    </tr>
+                                    <% for (def entry in tx.entries) { %>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>\${entry.accountCode}</td>
+                                        <td>\${entry.accountName}</td>
+                                        <td class="amount"><% if (entry.debitAmount > 0) { %>\${String.format('%,.2f', entry.debitAmount)}<% } %></td>
+                                        <td class="amount"><% if (entry.creditAmount > 0) { %>\${String.format('%,.2f', entry.creditAmount)}<% } %></td>
+                                    </tr>
+                                    <% } %>
+                                <% } %>
+                            </tbody>
+                            <tfoot>
+                                <tr class="carry-row">
+                                    <td colspan="4">TOTALE MOVIMENTI DELLA PAGINA</td>
+                                    <td class="amount">\${String.format('%,.2f', page.pageDebit)}</td>
+                                    <td class="amount">\${String.format('%,.2f', page.pageCredit)}</td>
+                                </tr>
+                                <tr class="carry-row" style="border-top: none;">
+                                    <td colspan="4">TOTALE PROGRESSIVO DA RIPORTARE</td>
+                                    <td class="amount">\${String.format('%,.2f', page.carryOverDebit)}</td>
+                                    <td class="amount">\${String.format('%,.2f', page.carryOverCredit)}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <% } %>
+                    ]]></text>
+                </render-mode>
+            </widgets>
+        </section>
+
+        <!-- INTERACTIVE SCREEN RENDER MODE -->
+        <section name="InteractiveMode" condition="!isPrinting">
+            <widgets>
+                <container style="row items-center q-col-gutter-sm q-mb-md">
+                    <container style="col">
+                        <label text="General journal (Libro giornale)" type="h4"/>
+                        <label text="Registro cronologico obbligatorio delle scritture contabili in partita doppia (art. 2216 C.C.)"
+                                type="p" style="m-muted"/>
+                    </container>
+                    <container style="col-auto">
+                        <link url="${printUrl}"
+                                url-type="plain"
+                                text="Print / PDF"
+                                icon="sym_o_print"
+                                target-window="_blank"
+                                condition="journalData?.pages?.length"/>
+                        <container-dialog id="FinalizeJournalDialog" button-text="Consolida registro" title="Consolida periodo e blocca scritture"
+                                condition="journalData?.pages?.length">
+                            <form-single name="FinalizeJournalForm" transition="finalizeJournal">
+                                <field name="organizationPartyId" from="organizationPartyId"><default-field><hidden/></default-field></field>
+                                <field name="fiscalYear" from="fiscalYear"><default-field><hidden/></default-field></field>
+                                <field name="timePeriodId" from="timePeriodId"><default-field><hidden/></default-field></field>
+                                <field name="fromDate" from="journalData.fromDate"><default-field title="Data inizio"><display/></default-field></field>
+                                <field name="thruDate" from="journalData.thruDate"><default-field title="Data fine"><display/></default-field></field>
+                                <field name="pageCount"><default-field title="Fogli da numerare">
+                                    <display text="${journalData.startPageNumber} - ${journalData.endPageNumber}"/></default-field></field>
+                                <field name="totalDebitAmount"><default-field title="Totale Dare">
+                                    <display text="${journalData.totalDebit}"/></default-field></field>
+                                <field name="totalCreditAmount"><default-field title="Totale Avere">
+                                    <display text="${journalData.totalCredit}"/></default-field></field>
+                                <field name="confirmNote"><default-field title="">
+                                    <label text="Attenzione: il consolidamento definitivo assegnerà i numeri progressivi annuali continui via SequenceValueItem e registrerà i totali nel giornale fiscale." style="text-warning"/>
+                                </default-field></field>
+                                <field name="submitButton"><default-field title="Conferma e consolida"><submit/></default-field></field>
+                            </form-single>
+                        </container-dialog>
+                    </container>
+                </container>
+
+                <!-- Filter form -->
+                <container-box>
+                    <box-header title="Filtri registro"/>
+                    <box-body>
+                        <form-single name="JournalFilter" transition="." method="get">
+                            <field name="organizationPartyId">
+                                <default-field title="Organizzazione">
+                                    <drop-down allow-empty="false">
+                                        <entity-options key="${partyId}" text="${organizationName}">
+                                            <entity-find entity-name="mantle.party.Organization">
+                                                <order-by field-name="organizationName"/>
+                                            </entity-find>
+                                        </entity-options>
+                                    </drop-down>
+                                </default-field>
+                            </field>
+                            <field name="fiscalYear">
+                                <default-field title="Esercizio (Anno)">
+                                    <text-line size="6"/>
+                                </default-field>
+                            </field>
+                            <field name="timePeriodId">
+                                <default-field title="Periodo fiscale">
+                                    <drop-down allow-empty="true">
+                                        <entity-options key="${timePeriodId}" text="${periodName ?: timePeriodId}">
+                                            <entity-find entity-name="mantle.party.time.TimePeriod">
+                                                <econdition field-name="partyId" from="organizationPartyId"/>
+                                                <order-by field-name="-fromDate"/>
+                                            </entity-find>
+                                        </entity-options>
+                                    </drop-down>
+                                </default-field>
+                            </field>
+                            <field name="fromDate">
+                                <default-field title="Dal"><date-time type="date"/></default-field>
+                            </field>
+                            <field name="thruDate">
+                                <default-field title="Al"><date-time type="date"/></default-field>
+                            </field>
+                            <field name="pageStartingNumber">
+                                <default-field title="N. Pagina iniziale">
+                                    <text-line size="6"/>
+                                </default-field>
+                            </field>
+                            <field name="submitButton">
+                                <default-field title="Visualizza registro"><submit/></default-field>
+                            </field>
+                            <field-layout>
+                                <field-row>
+                                    <field-ref name="organizationPartyId"/>
+                                    <field-ref name="fiscalYear"/>
+                                    <field-ref name="timePeriodId"/>
+                                </field-row>
+                                <field-row>
+                                    <field-ref name="fromDate"/>
+                                    <field-ref name="thruDate"/>
+                                    <field-ref name="pageStartingNumber"/>
+                                    <field-ref name="submitButton"/>
+                                </field-row>
+                            </field-layout>
+                        </form-single>
+                    </box-body>
+                </container-box>
+
+                <!-- Summary Statistics -->
+                <container style="row q-col-gutter-sm q-mt-md" condition="journalData?.totalTransactions != null">
+                    <container style="col-12 col-md-3">
+                        <container-box>
+                            <box-header title="Registrazioni"/>
+                            <box-body>
+                                <label text="${journalData.totalTransactions}" type="h3"/>
+                                <label text="${journalData.totalEntries} righe contabili" type="div" style="m-muted"/>
+                            </box-body>
+                        </container-box>
+                    </container>
+                    <container style="col-12 col-md-3">
+                        <container-box>
+                            <box-header title="Totale Dare (€)"/>
+                            <box-body>
+                                <label text="${journalData.totalDebit}" type="h3" style="text-primary"/>
+                            </box-body>
+                        </container-box>
+                    </container>
+                    <container style="col-12 col-md-3">
+                        <container-box>
+                            <box-header title="Totale Avere (€)"/>
+                            <box-body>
+                                <label text="${journalData.totalCredit}" type="h3" style="text-primary"/>
+                            </box-body>
+                        </container-box>
+                    </container>
+                    <container style="col-12 col-md-3">
+                        <container-box>
+                            <box-header title="Quadratura e Fogli"/>
+                            <box-body>
+                                <label text="Sbilancio: 0.00 €" type="strong" style="color: green;"
+                                        condition="journalData.totalDebit == journalData.totalCredit"/>
+                                <label text="ATTENZIONE: Registro sbilanciato!" type="strong" style="color: red;"
+                                        condition="journalData.totalDebit != journalData.totalCredit"/>
+                                <label text="Fogli: ${journalData.startPageNumber} - ${journalData.endPageNumber} (${journalData.pages?.length} pag.)" type="div" style="m-muted"/>
+                            </box-body>
+                        </container-box>
+                    </container>
+                </container>
+
+                <!-- Data Table preview -->
+                <container-box style="q-mt-md" condition="journalData?.pages?.length">
+                    <box-header title="Anteprima Libro Giornale"/>
+                    <box-body>
+                        <section-iterate name="JournalPages" list="journalData.pages" entry="page">
+                            <widgets>
+                                <container style="q-pa-sm q-mb-sm bg-grey-2 rounded-borders row justify-between items-center">
+                                    <label text="Pagina ${page.pageLabel}" type="strong"/>
+                                    <label text="Riporto Dare: € ${page.carriedForwardDebit} | Avere: € ${page.carriedForwardCredit}" style="m-muted"
+                                            condition="page.carriedForwardDebit > 0 || page.carriedForwardCredit > 0"/>
+                                </container>
+                                <section-iterate name="JournalTx" list="page.transactions" entry="tx">
+                                    <widgets>
+                                        <container style="border-bottom: 1px solid #ddd; q-py-xs">
+                                            <container style="row justify-between bg-blue-grey-1 q-pa-xs">
+                                                <container style="col-auto">
+                                                    <label text="${tx.transactionDate} - Reg. #${tx.journalSequenceNum}" type="strong"/>
+                                                </container>
+                                                <container style="col">
+                                                    <label text=" - ${tx.txDescription} ${tx.txVoucherRef ? ('[Doc: ' + tx.txVoucherRef + ']') : ''}"/>
+                                                </container>
+                                            </container>
+                                            <section-iterate name="TxEntries" list="tx.entries" entry="entry">
+                                                <widgets>
+                                                    <container style="row q-px-sm q-py-xs text-caption">
+                                                        <container style="col-2"><label text="${entry.accountCode}"/></container>
+                                                        <container style="col-6"><label text="${entry.accountName}"/></container>
+                                                        <container style="col-2 text-right"><label text="${entry.debitAmount > 0 ? entry.debitAmount : ''}"/></container>
+                                                        <container style="col-2 text-right"><label text="${entry.creditAmount > 0 ? entry.creditAmount : ''}"/></container>
+                                                    </container>
+                                                </widgets>
+                                            </section-iterate>
+                                        </container>
+                                    </widgets>
+                                </section-iterate>
+                                <container style="q-pa-sm q-mt-xs q-mb-md bg-grey-3 row justify-between text-weight-bold">
+                                    <label text="Progressivo a riportare:"/>
+                                    <label text="Dare: € ${page.carryOverDebit} | Avere: € ${page.carryOverCredit}"/>
+                                </container>
+                            </widgets>
+                        </section-iterate>
+                    </box-body>
+                </container-box>
+            </widgets>
+        </section>
+    </widgets>
+</screen>
