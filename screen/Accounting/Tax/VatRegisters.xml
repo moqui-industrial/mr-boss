@@ -23,6 +23,176 @@
                         fiscalYear:fiscalYear, timePeriodId:timePeriodId, fromDate:fromDate, thruDate:thruDate,
                         vatRegisterSeries:vatRegisterSeries, pageStartingNumber:pageStartingNumber}"
                     out-map="context"/>
+            <if condition="isPrinting">
+                <script><![CDATA[
+                    function fmt(n) {
+                        return (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+                    }
+                    function fmtDt(d) {
+                        if (!d) return '—';
+                        try { return ec.l10n.format(d, 'dd/MM/yyyy'); } catch (e) { return String(d).slice(0, 10); }
+                    }
+
+                    const org = context.organization || {};
+                    const pages = context.pages || [];
+                    const summaries = context.vatRateSummaries || [];
+                    const title = context.registerTitle || 'REGISTRO IVA';
+                    const periodDesc = context.periodDescription || '';
+                    const nowFmt = ec.l10n.format(ec.user.nowTimestamp, 'dd/MM/yyyy HH:mm');
+
+                    let h = `
+                    <style>
+                        @page {
+                            size: A4 landscape;
+                            margin: 12mm 10mm 15mm 10mm;
+                            @top-right { content: "Registro IVA - Pagina " counter(page); font-size: 8pt; font-family: sans-serif; color: #555; }
+                            @bottom-left { content: "${org.organizationName || ''} - P.IVA ${org.taxIdNumber || ''} - CF ${org.socialSecurityNumber || ''}"; font-size: 8pt; font-family: sans-serif; color: #555; }
+                            @bottom-right { content: "Data stampa: ${nowFmt}"; font-size: 8pt; font-family: sans-serif; color: #555; }
+                        }
+                        .vat-report { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 8.5pt; color: #222; }
+                        .header-box { border-bottom: 2px solid #2563eb; padding-bottom: 8px; margin-bottom: 12px; }
+                        .org-title { font-size: 13pt; font-weight: bold; color: #1e3a8a; }
+                        .report-title { font-size: 11pt; font-weight: bold; text-transform: uppercase; margin-top: 4px; }
+                        .meta-row { display: flex; justify-content: space-between; margin-top: 4px; font-size: 8.5pt; color: #444; }
+                        table.report-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+                        table.report-table th { background: #f1f5f9; border-top: 1px solid #cbd5e1; border-bottom: 2px solid #94a3b8; padding: 5px 4px; text-align: left; font-size: 8pt; font-weight: 600; text-transform: uppercase; }
+                        table.report-table td { border-bottom: 1px solid #e2e8f0; padding: 4px 4px; font-size: 8pt; }
+                        table.report-table tr:nth-child(even) td { background-color: #fafafa; }
+                        .text-right { text-align: right; }
+                        .text-center { text-align: center; }
+                        .carry-row td { background: #f8fafc !important; font-weight: bold; color: #475569; border-top: 1px dashed #94a3b8; border-bottom: 1px dashed #94a3b8; }
+                        .totals-box { margin-top: 20px; display: flex; justify-content: space-between; page-break-inside: avoid; }
+                        .summary-table { width: 450px; border-collapse: collapse; font-size: 8pt; }
+                        .summary-table th { background: #e2e8f0; padding: 4px; border: 1px solid #cbd5e1; text-align: left; }
+                        .summary-table td { padding: 4px; border: 1px solid #cbd5e1; }
+                        .sign-line { border-top: 1px solid #333; width: 220px; text-align: center; padding-top: 4px; margin-top: 35px; }
+                        .page-break { page-break-after: always; }
+                    </style>
+                    <div class="vat-report">`;
+
+                    if (pages.length === 0) {
+                        h += `<div style="padding: 40px; text-align: center; color: #666;">
+                            <h2>${title}</h2>
+                            <p>Nessun documento registrato per l'organizzazione <strong>${organizationPartyId}</strong> nel periodo selezionato.</p>
+                        </div>`;
+                    }
+
+                    for (const p of pages) {
+                        h += `<div class="header-box">
+                            <div class="meta-row">
+                                <div>
+                                    <div class="org-title">${org.organizationName || organizationPartyId}</div>
+                                    <div>P.IVA: <strong>${org.taxIdNumber || '—'}</strong> | Codice Fiscale: <strong>${org.socialSecurityNumber || '—'}</strong> | REA: <strong>${org.reaNumber || '—'}</strong></div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div class="report-title">${title}</div>
+                                    <div style="font-size: 9pt; color: #64748b;">Periodo: <strong>${periodDesc}</strong> | Pagina <strong>${p.pageLabel}</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="report-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 55px;" class="text-center">Prot.</th>
+                                    <th style="width: 70px;" class="text-center">Data Prot.</th>
+                                    <th style="width: 80px;">Doc. N°</th>
+                                    <th style="width: 70px;" class="text-center">Data Doc.</th>
+                                    <th>Cliente / Fornitore</th>
+                                    <th style="width: 100px;">Partita IVA / CF</th>
+                                    <th style="width: 80px;" class="text-right">Imponibile</th>
+                                    <th style="width: 50px;" class="text-center">Aliq.</th>
+                                    <th style="width: 75px;" class="text-right">Imposta</th>
+                                    <th style="width: 85px;" class="text-right">Totale Doc.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="carry-row">
+                                    <td colspan="6">Riporto da pagina precedente:</td>
+                                    <td class="text-right">${fmt(p.broughtForwardTaxable)}</td>
+                                    <td></td>
+                                    <td class="text-right">${fmt(p.broughtForwardTax)}</td>
+                                    <td class="text-right">${fmt(p.broughtForwardTotal)}</td>
+                                </tr>`;
+
+                        for (const doc of (p.documents || [])) {
+                            h += `<tr>
+                                <td class="text-center"><strong>${doc.vatProtocolNum || '—'}</strong></td>
+                                <td class="text-center">${fmtDt(doc.vatProtocolDate)}</td>
+                                <td><code>${doc.documentNum || '—'}</code></td>
+                                <td class="text-center">${fmtDt(doc.documentDate)}</td>
+                                <td><strong>${doc.counterPartyName || '—'}</strong></td>
+                                <td>${doc.counterPartyTaxId || '—'}</td>
+                                <td class="text-right">${fmt(doc.taxableAmount)}</td>
+                                <td class="text-center">${doc.taxRateText || '—'}</td>
+                                <td class="text-right">${fmt(doc.taxAmount)}</td>
+                                <td class="text-right"><strong>${fmt(doc.totalAmount)}</strong></td>
+                            </tr>`;
+                        }
+
+                        h += `<tr class="carry-row">
+                            <td colspan="6">Totale progressivo a riportare:</td>
+                            <td class="text-right">${fmt(p.carriedForwardTaxable)}</td>
+                            <td></td>
+                            <td class="text-right">${fmt(p.carriedForwardTax)}</td>
+                            <td class="text-right">${fmt(p.carriedForwardTotal)}</td>
+                        </tr>
+                        </tbody>
+                        </table>`;
+
+                        if (p.pageNumber < context.endPageNumber) {
+                            h += `<div class="page-break"></div>`;
+                        }
+                    }
+
+                    if (pages.length > 0) {
+                        h += `<div class="totals-box">
+                            <div>
+                                <div style="font-weight: bold; margin-bottom: 6px;">RIEPILOGO PER ALIQUOTA IVA / NATURA (CASTELLETTO):</div>
+                                <table class="summary-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Aliquota / Natura</th>
+                                            <th class="text-right">Imponibile</th>
+                                            <th class="text-right">Imposta</th>
+                                            <th class="text-right">Detraibile</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>`;
+                        for (const rate of summaries) {
+                            h += `<tr>
+                                <td>${rate.rateDescription || '—'}</td>
+                                <td class="text-right">${fmt(rate.taxableAmount)}</td>
+                                <td class="text-right">${fmt(rate.taxAmount)}</td>
+                                <td class="text-right">${fmt(rate.deductibleAmount)}</td>
+                            </tr>`;
+                        }
+                        h += `<tr style="font-weight: bold; background: #e2e8f0;">
+                            <td>TOTALI:</td>
+                            <td class="text-right">${fmt(context.totalTaxable)}</td>
+                            <td class="text-right">${fmt(context.totalTax)}</td>
+                            <td class="text-right">${fmt(context.totalDeductible)}</td>
+                        </tr>
+                        </tbody>
+                        </table>
+                        </div>
+                        <div style="text-align: right; padding-top: 10px;">
+                            <div style="font-size: 10pt;">Totale Documenti nel Registro: <strong>${context.totalDocuments}</strong></div>
+                            <div style="font-size: 11pt; font-weight: bold; margin-top: 6px;">
+                                IVA a Debito: <span style="color: #dc2626;">${fmt(context.salesTaxTotal)}</span> |
+                                IVA Detraibile: <span style="color: #16a34a;">${fmt(context.purchaseTaxDeductibleTotal)}</span>
+                            </div>
+                            <div style="font-size: 11pt; font-weight: bold; margin-top: 4px;">
+                                Saldo Periodo: <strong>${fmt(context.netVatDue)}</strong>
+                            </div>
+                            <div class="sign-line">Firma del Legale Rappresentante</div>
+                        </div>
+                        </div>`;
+                    }
+
+                    h += `</div>`;
+                    context.printHtml = h;
+                ]]></script>
+            </if>
         </if>
         <set field="printUrl"
                 from="'/apps/Accounting/Tax/VatRegisters?'
@@ -40,145 +210,7 @@
         <!-- ============================================================= -->
         <section name="PrintView" condition="isPrinting">
             <widgets>
-                <text type="html,html-print"><![CDATA[
-                <style>
-                    @page {
-                        size: A4 landscape;
-                        margin: 12mm 10mm 15mm 10mm;
-                        @top-right { content: "Registro IVA - Pagina " counter(page); font-size: 8pt; font-family: sans-serif; color: #555; }
-                        @bottom-left { content: "${organization.organizationName} · P.IVA ${organization.taxIdNumber} · CF ${organization.socialSecurityNumber}"; font-size: 8pt; font-family: sans-serif; color: #555; }
-                        @bottom-right { content: "Data stampa: ${printDate}"; font-size: 8pt; font-family: sans-serif; color: #555; }
-                    }
-                    .vat-report { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 8.5pt; color: #222; }
-                    .header-box { border-bottom: 2px solid #2563eb; padding-bottom: 8px; margin-bottom: 12px; }
-                    .org-title { font-size: 13pt; font-weight: bold; color: #1e3a8a; }
-                    .report-title { font-size: 11pt; font-weight: bold; text-transform: uppercase; margin-top: 4px; }
-                    .meta-row { display: flex; justify-content: space-between; margin-top: 4px; font-size: 8.5pt; color: #444; }
-                    table.report-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-                    table.report-table th { background: #f1f5f9; border-top: 1px solid #cbd5e1; border-bottom: 2px solid #94a3b8; padding: 5px 4px; text-align: left; font-size: 8pt; font-weight: 600; text-transform: uppercase; }
-                    table.report-table td { border-bottom: 1px solid #e2e8f0; padding: 4px 4px; font-size: 8pt; }
-                    table.report-table tr:nth-child(even) td { background-color: #fafafa; }
-                    .text-right { text-align: right; }
-                    .text-center { text-align: center; }
-                    .carry-row td { background: #f8fafc !important; font-weight: bold; color: #475569; border-top: 1px dashed #94a3b8; border-bottom: 1px dashed #94a3b8; }
-                    .totals-box { margin-top: 20px; display: flex; justify-content: space-between; page-break-inside: avoid; }
-                    .summary-table { width: 450px; border-collapse: collapse; font-size: 8pt; }
-                    .summary-table th { background: #e2e8f0; padding: 4px; border: 1px solid #cbd5e1; text-align: left; }
-                    .summary-table td { padding: 4px; border: 1px solid #cbd5e1; }
-                    .sign-line { border-top: 1px solid #333; width: 220px; text-align: center; padding-top: 4px; margin-top: 35px; }
-                    .page-break { page-break-after: always; }
-                </style>
-                <div class="vat-report">
-                ]]></text>
-                <iterate list="pages" entry="p">
-                    <text type="html,html-print"><![CDATA[
-                    <div class="header-box">
-                        <div class="meta-row">
-                            <div>
-                                <div class="org-title">${organization.organizationName}</div>
-                                <div>P.IVA: <strong>${organization.taxIdNumber}</strong> · Codice Fiscale: <strong>${organization.socialSecurityNumber}</strong> · REA: <strong>${organization.reaNumber}</strong></div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div class="report-title">${registerTitle}</div>
-                                <div style="font-size: 9pt; color: #64748b;">Periodo: <strong>${periodDescription}</strong> · Pagina <strong>${p.pageLabel}</strong></div>
-                            </div>
-                        </div>
-                    </div>
-                    <table class="report-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 55px;" class="text-center">Prot.</th>
-                                <th style="width: 70px;" class="text-center">Data Prot.</th>
-                                <th style="width: 80px;">Doc. N°</th>
-                                <th style="width: 70px;" class="text-center">Data Doc.</th>
-                                <th>Cliente / Fornitore</th>
-                                <th style="width: 100px;">Partita IVA / CF</th>
-                                <th style="width: 80px;" class="text-right">Imponibile</th>
-                                <th style="width: 50px;" class="text-center">Aliq.</th>
-                                <th style="width: 75px;" class="text-right">Imposta</th>
-                                <th style="width: 85px;" class="text-right">Totale Doc.</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="carry-row">
-                                <td colspan="6">Riporto da pagina precedente:</td>
-                                <td class="text-right">${ec.l10n.format(p.broughtForwardTaxable, '#,##0.00')} €</td>
-                                <td></td>
-                                <td class="text-right">${ec.l10n.format(p.broughtForwardTax, '#,##0.00')} €</td>
-                                <td class="text-right">${ec.l10n.format(p.broughtForwardTotal, '#,##0.00')} €</td>
-                            </tr>
-                    ]]></text>
-                    <iterate list="p.documents" entry="doc">
-                        <text type="html,html-print"><![CDATA[
-                            <tr>
-                                <td class="text-center"><strong>${doc.vatProtocolNum}</strong></td>
-                                <td class="text-center">${ec.l10n.format(doc.vatProtocolDate, 'dd/MM/yyyy')}</td>
-                                <td><code>${doc.documentNum}</code></td>
-                                <td class="text-center">${ec.l10n.format(doc.documentDate, 'dd/MM/yyyy')}</td>
-                                <td><strong>${doc.counterPartyName}</strong></td>
-                                <td>${doc.counterPartyTaxId}</td>
-                                <td class="text-right">${ec.l10n.format(doc.taxableAmount, '#,##0.00')} €</td>
-                                <td class="text-center">${doc.taxRateText}</td>
-                                <td class="text-right">${ec.l10n.format(doc.taxAmount, '#,##0.00')} €</td>
-                                <td class="text-right"><strong>${ec.l10n.format(doc.totalAmount, '#,##0.00')} €</strong></td>
-                            </tr>
-                        ]]></text>
-                    </iterate>
-                    <text type="html,html-print"><![CDATA[
-                            <tr class="carry-row">
-                                <td colspan="6">Totale progressivo a riportare:</td>
-                                <td class="text-right">${ec.l10n.format(p.carriedForwardTaxable, '#,##0.00')} €</td>
-                                <td></td>
-                                <td class="text-right">${ec.l10n.format(p.carriedForwardTax, '#,##0.00')} €</td>
-                                <td class="text-right">${ec.l10n.format(p.carriedForwardTotal, '#,##0.00')} €</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    ]]></text>
-                </iterate>
-                <text type="html,html-print"><![CDATA[
-                    <!-- Riepilogo IVA finale (Castelletto IVA) -->
-                    <div class="totals-box">
-                        <div>
-                            <div style="font-weight: bold; margin-bottom: 6px;">RIEPILOGO PER ALIQUOTA IVA / NATURA:</div>
-                            <table class="summary-table">
-                                <thead>
-                                    <tr>
-                                        <th>Descrizione Aliquota</th>
-                                        <th class="text-right">Imponibile</th>
-                                        <th class="text-right">Imposta</th>
-                                        <th class="text-right">Detraibile</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                ]]></text>
-                <iterate list="vatRateSummaries" entry="rate">
-                    <text type="html,html-print"><![CDATA[
-                                    <tr>
-                                        <td>${rate.rateDescription}</td>
-                                        <td class="text-right">${ec.l10n.format(rate.taxableAmount, '#,##0.00')} €</td>
-                                        <td class="text-right">${ec.l10n.format(rate.taxAmount, '#,##0.00')} €</td>
-                                        <td class="text-right">${ec.l10n.format(rate.deductibleAmount, '#,##0.00')} €</td>
-                                    </tr>
-                    ]]></text>
-                </iterate>
-                <text type="html,html-print"><![CDATA[
-                                    <tr style="font-weight: bold; background: #e2e8f0;">
-                                        <td>TOTALI:</td>
-                                        <td class="text-right">${ec.l10n.format(totalTaxable, '#,##0.00')} €</td>
-                                        <td class="text-right">${ec.l10n.format(totalTax, '#,##0.00')} €</td>
-                                        <td class="text-right">${ec.l10n.format(totalDeductible, '#,##0.00')} €</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div>
-                            <div>Numero Documenti Registrati: <strong>${totalDocuments}</strong></div>
-                            <div class="sign-line">Firma del Legale Rappresentante</div>
-                        </div>
-                    </div>
-                </div>
-                ]]></text>
+                <text type="html,html-print"><![CDATA[${printHtml}]]></text>
             </widgets>
         </section>
 

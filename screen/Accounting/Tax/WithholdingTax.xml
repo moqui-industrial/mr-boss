@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a
+Grant of Patent License.
+-->
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        default-menu-title="Withholding tax (770/CU)"
+        default-menu-index="5"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd">
+    <parameter name="organizationPartyId"/>
+    <parameter name="fiscalYear"/>
+    <parameter name="fromDate"/>
+    <parameter name="thruDate"/>
+
+    <transition-include name="choices" location="component://mr-boss/template/AccountingParts.xml"/>
+
+    <actions>
+        <set field="isPrinting" from="String(ec.web?.requestParameters?.renderMode || context.renderMode || '') == 'html-print'"/>
+        <if condition="organizationPartyId">
+            <service-call name="mantle.ledger.FiscalRegisterServices.get#WithholdingTaxRegisterData"
+                    in-map="{organizationPartyId:organizationPartyId, fiscalYear:fiscalYear,
+                        fromDate:fromDate, thruDate:thruDate}"
+                    out-map="context"/>
+            <if condition="isPrinting">
+                <script><![CDATA[
+                    function fmt(n) {
+                        return (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+                    }
+                    function fmtDt(d) {
+                        if (!d) return '—';
+                        try { return ec.l10n.format(d, 'dd/MM/yyyy'); } catch (e) { return String(d).slice(0, 10); }
+                    }
+
+                    const org = context.organization || {};
+                    const bens = context.beneficiaries || [];
+                    const yr = context.fiscalYear || new Date().getFullYear();
+                    const nowFmt = ec.l10n.format(ec.user.nowTimestamp, 'dd/MM/yyyy HH:mm');
+
+                    let h = `
+                    <style>
+                        @page {
+                            size: A4 landscape;
+                            margin: 12mm 10mm 15mm 10mm;
+                            @top-right { content: "Certificazione Unica / Modello 770 - Esercizio ${yr}"; font-size: 8pt; font-family: sans-serif; color: #555; }
+                            @bottom-right { content: "Pagina " counter(page); font-size: 8pt; font-family: sans-serif; color: #555; }
+                        }
+                        body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 8.5pt; color: #222; margin: 0; padding: 0; background: #fff; }
+                        .report-container { padding: 10px; }
+                        .header-box { border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 12px; display: flex; justify-content: space-between; }
+                        .company-name { font-size: 13pt; font-weight: bold; text-transform: uppercase; }
+                        .fiscal-info { font-size: 8pt; color: #444; margin-top: 2px; }
+                        .doc-title { font-size: 11pt; font-weight: bold; margin-top: 4px; color: #000; }
+                        table.rep-table { width: 100%; border-collapse: collapse; font-size: 8pt; margin-top: 8px; }
+                        table.rep-table th { background: #f0f0f0; border: 1px solid #777; padding: 5px 4px; font-weight: bold; text-align: left; }
+                        table.rep-table td { border: 1px solid #ddd; padding: 4px; vertical-align: top; }
+                        tr.totals-row td { background: #e2e8f0; font-weight: bold; border-top: 2px solid #000; }
+                        .text-right { text-align: right; }
+                        .text-center { text-align: center; }
+                        .sign-box { margin-top: 25px; border-top: 1px solid #000; padding-top: 10px; display: flex; justify-content: space-between; }
+                    </style>
+                    <div class="report-container">
+                        <div class="header-box">
+                            <div>
+                                <div class="company-name">${org.organizationName || organizationPartyId}</div>
+                                <div class="fiscal-info">
+                                    Partita IVA: <strong>${org.taxIdNumber || '—'}</strong> |
+                                    Codice Fiscale: <strong>${org.socialSecurityNumber || '—'}</strong> |
+                                    R.E.A.: <strong>${org.reaNumber || '—'}</strong>
+                                </div>
+                                <div class="doc-title">PROSPETTO RITENUTE D'ACCONTO / CERTIFICAZIONE UNICA (Art. 4 D.P.R. 322/98 - Mod. 770)</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 10pt; font-weight: bold;">ANNO FISCALE: ${yr}</div>
+                                <div style="font-size: 8pt; color: #666; margin-top: 4px;">Data emissione: ${nowFmt}</div>
+                            </div>
+                        </div>
+
+                        <table class="rep-table">
+                            <thead>
+                                <tr>
+                                    <th>Percipiente (Professionista / Agente)</th>
+                                    <th style="width: 110px;">Codice Fiscale</th>
+                                    <th style="width: 95px;">Partita IVA</th>
+                                    <th style="width: 55px;" class="text-center">Caus.</th>
+                                    <th style="width: 60px;" class="text-center">Trib. F24</th>
+                                    <th style="width: 85px;" class="text-right">Compenso Lordo</th>
+                                    <th style="width: 75px;" class="text-right">Non Impon.</th>
+                                    <th style="width: 85px;" class="text-right">Imponibile</th>
+                                    <th style="width: 85px;" class="text-right">Ritenuta (20%)</th>
+                                    <th style="width: 85px;" class="text-right">Netto Versato</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+                    if (bens.length === 0) {
+                        h += `<tr><td colspan="10" style="text-align: center; padding: 25px; color: #666;">
+                            Nessuna fattura con ritenuta d'acconto (professionisti, provvigioni) registrata per l'anno fiscale ${yr}.
+                        </td></tr>`;
+                    }
+
+                    for (const b of bens) {
+                        h += `<tr>
+                            <td><strong>${b.beneficiaryName}</strong></td>
+                            <td><code>${b.fiscalCode || '—'}</code></td>
+                            <td>${b.vatNumber || '—'}</td>
+                            <td class="text-center"><strong>${b.paymentReason}</strong></td>
+                            <td class="text-center"><strong>${b.f24TaxCode}</strong></td>
+                            <td class="text-right">${fmt(b.grossAmount)}</td>
+                            <td class="text-right">${fmt(b.nonTaxableAmount)}</td>
+                            <td class="text-right">${fmt(b.taxableAmount)}</td>
+                            <td class="text-right" style="color: #dc2626; font-weight: bold;">${fmt(b.withheldAmount)}</td>
+                            <td class="text-right"><strong>${fmt(b.netAmount)}</strong></td>
+                        </tr>`;
+                    }
+
+                    h += `<tr class="totals-row">
+                        <td colspan="5" class="text-right">TOTALI GENERALI:</td>
+                        <td class="text-right">${fmt(context.totalGrossAmount)}</td>
+                        <td class="text-right">${fmt(context.totalNonTaxableAmount)}</td>
+                        <td class="text-right">${fmt(context.totalTaxableAmount)}</td>
+                        <td class="text-right" style="color: #dc2626;">${fmt(context.totalWithheldAmount)}</td>
+                        <td class="text-right">${fmt(context.totalNetAmount)}</td>
+                    </tr>
+                    </tbody>
+                    </table>
+
+                    <div class="sign-box">
+                        <div>
+                            Totale Percipienti Certificati: <strong>${bens.length}</strong> |
+                            Totale Fatture/Parcelle: <strong>${context.totalInvoicesCount || 0}</strong>
+                        </div>
+                        <div style="text-align: right;">
+                            <div>Firma del Sostituto d'Imposta: ___________________________</div>
+                        </div>
+                    </div>
+                    </div>`;
+
+                    context.printHtml = h;
+                ]]></script>
+            </if>
+        </if>
+        <set field="printUrl"
+                from="'/apps/Accounting/Tax/WithholdingTax?'
+                    + Object.entries(Object.assign({renderMode: 'html-print'},
+                    {organizationPartyId:organizationPartyId, fiscalYear:fiscalYear,
+                     fromDate:fromDate, thruDate:thruDate})).filter(entry => entry[1]).map(entry => entry[0] + '='
+                    + encodeURIComponent(entry[1])).join('&amp;')"/>
+    </actions>
+
+    <widgets>
+        <!-- Print Mode -->
+        <section name="PrintView" condition="isPrinting">
+            <widgets>
+                <text type="html,html-print"><![CDATA[${printHtml}]]></text>
+            </widgets>
+        </section>
+
+        <!-- Interactive Screen Mode -->
+        <section name="ScreenView" condition="!isPrinting">
+            <widgets>
+                <container style="row items-center q-col-gutter-sm q-mb-md">
+                    <container style="col">
+                        <label text="Withholding tax (Modello 770 / Certificazione Unica)" type="h5"/>
+                    </container>
+                    <container style="col-auto row q-gutter-sm">
+                        <link url="${printUrl}"
+                                url-type="plain"
+                                text="Print / Prospetto CU-770"
+                                icon="sym_o_print"
+                                target-window="_blank"
+                                condition="organizationPartyId"/>
+                    </container>
+                </container>
+
+                <form-single name="FilterForm" transition="." pass-through-parameters="true">
+                    <field name="organizationPartyId" from="organizationPartyId">
+                        <default-field title="Organization">
+                            <drop-down allow-empty="false">
+                                <entity-find entity-name="mantle.party.Organization">
+                                    <order-by field-name="organizationName"/>
+                                </entity-find>
+                            </drop-down>
+                        </default-field>
+                    </field>
+                    <field name="fiscalYear" from="fiscalYear || ec.l10n.format(ec.user.nowTimestamp, 'yyyy')">
+                        <default-field title="Fiscal year">
+                            <text-line size="6"/>
+                        </default-field>
+                    </field>
+                    <field name="submit"><default-field title=""><submit text="Find"/></default-field></field>
+                    <field-layout><field-row><field-ref name="organizationPartyId"/><field-ref name="fiscalYear"/><field-ref name="submit"/></field-row></field-layout>
+                </form-single>
+
+                <dashboard min-width="170" style="q-my-md" condition="organizationPartyId">
+                    <number-card title="Compensi Lordi" value="${ec.l10n.format(totalGrossAmount || 0, '#,##0.00')} €"/>
+                    <number-card title="Base Imponibile" value="${ec.l10n.format(totalTaxableAmount || 0, '#,##0.00')} €"/>
+                    <number-card title="Ritenute Trattenute (F24)" value="${ec.l10n.format(totalWithheldAmount || 0, '#,##0.00')} €" color="negative"/>
+                    <number-card title="Netto Pagato" value="${ec.l10n.format(totalNetAmount || 0, '#,##0.00')} €" color="positive"/>
+                    <number-card title="Percipienti" value="${beneficiaries ? beneficiaries.length : 0}"/>
+                </dashboard>
+
+                <form-list name="BeneficiaryList" list="beneficiaries" skip-form="true">
+                    <field name="beneficiaryName">
+                        <default-field title="Percipiente">
+                            <display text="${beneficiaryName}"/>
+                        </default-field>
+                    </field>
+                    <field name="fiscalCode">
+                        <default-field title="Codice Fiscale">
+                            <display text="${fiscalCode || '—'}"/>
+                        </default-field>
+                    </field>
+                    <field name="vatNumber">
+                        <default-field title="Partita IVA">
+                            <display text="${vatNumber || '—'}"/>
+                        </default-field>
+                    </field>
+                    <field name="paymentReason">
+                        <default-field title="Causale">
+                            <display text="${paymentReason}"/>
+                        </default-field>
+                    </field>
+                    <field name="f24TaxCode">
+                        <default-field title="Codice Tributo">
+                            <display text="${f24TaxCode}"/>
+                        </default-field>
+                    </field>
+                    <field name="grossAmount">
+                        <default-field title="Lordo">
+                            <display text="${ec.l10n.format(grossAmount, '#,##0.00')} €"/>
+                        </default-field>
+                    </field>
+                    <field name="taxableAmount">
+                        <default-field title="Imponibile">
+                            <display text="${ec.l10n.format(taxableAmount, '#,##0.00')} €"/>
+                        </default-field>
+                    </field>
+                    <field name="withheldAmount">
+                        <default-field title="Ritenuta d'acconto">
+                            <display text="${ec.l10n.format(withheldAmount, '#,##0.00')} €"/>
+                        </default-field>
+                    </field>
+                    <field name="netAmount">
+                        <default-field title="Netto corrisposto">
+                            <display text="${ec.l10n.format(netAmount, '#,##0.00')} €"/>
+                        </default-field>
+                    </field>
+                </form-list>
+
+                <label text="Nessun percipiente o compenso con ritenuta d'acconto trovato per l'anno fiscale selezionato."
+                        type="p"
+                        condition="organizationPartyId &amp;&amp; (!beneficiaries || beneficiaries.length == 0)"/>
+            </widgets>
+        </section>
+    </widgets>
+</screen>

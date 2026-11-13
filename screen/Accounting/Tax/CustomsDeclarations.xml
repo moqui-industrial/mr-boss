@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a
+Grant of Patent License.
+-->
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        default-menu-title="Customs declarations (EUCDM/ADM)"
+        default-menu-index="6"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd">
+    <parameter name="organizationPartyId"/>
+    <parameter name="statusId"/>
+    <parameter name="pageIndex"/>
+    <parameter name="pageSize"/>
+
+    <transition name="recordCustomsDeclaration">
+        <actions>
+            <service-call name="mantle.account.CustomsAccountingServices.record#CustomsDeclaration"
+                    in-map="context" out-map="declResult"/>
+            <message type="success">Bolletta doganale MRN ${mrn} registrata con successo (Protocollo IVA Acquisti: ${declResult.vatProtocolNum})</message>
+        </actions>
+        <default-response url="."/>
+        <error-response url="."/>
+    </transition>
+
+    <actions>
+        <entity-find entity-name="mantle.shipment.customs.CustomsDeclaration" list="records" paginate="true">
+            <econdition field-name="organizationPartyId" from="organizationPartyId" ignore="!organizationPartyId"/>
+            <econdition field-name="statusId" from="statusId" ignore="!statusId"/>
+            <order-by field-name="-declarationDate,-customsDeclarationId"/>
+        </entity-find>
+    </actions>
+
+    <widgets>
+        <container style="row items-center q-col-gutter-sm q-mb-md">
+            <container style="col">
+                <label text="Customs declarations (Bollette Doganali EUCDM / ADM)" type="h5"/>
+            </container>
+            <container style="col-auto">
+                <container-dialog id="NewCustomsDeclarationDialog" button-text="New customs declaration" title="Registra Bolletta Doganale / Prospetto Contabile ADM">
+                    <form-single name="NewCustomsDeclarationForm" transition="recordCustomsDeclaration">
+                        <field name="organizationPartyId" from="organizationPartyId">
+                            <default-field title="Azienda Importatrice">
+                                <drop-down allow-empty="false">
+                                    <entity-find entity-name="mantle.party.Organization">
+                                        <order-by field-name="organizationName"/>
+                                    </entity-find>
+                                </drop-down>
+                            </default-field>
+                        </field>
+                        <field name="mrn">
+                            <default-field title="MRN (Movement Reference Number)">
+                                <text-line size="24" maxlength="18"/>
+                            </default-field>
+                        </field>
+                        <field name="customsOfficeId">
+                            <default-field title="Ufficio Doganale (Codice ADM)">
+                                <text-line size="10"/>
+                            </default-field>
+                        </field>
+                        <field name="declarationDate" from="ec.l10n.format(ec.user.nowTimestamp, 'yyyy-MM-dd')">
+                            <default-field title="Data Accettazione / Svincolo">
+                                <date-time type="date"/>
+                            </default-field>
+                        </field>
+                        <field name="declarationTypeEnumId" from="'H1'">
+                            <default-field title="Messaggio EUCDM">
+                                <drop-down allow-empty="false">
+                                    <entity-find entity-name="moqui.basic.Enumeration">
+                                        <econdition field-name="enumTypeId" value="CustomsDeclarationType"/>
+                                        <order-by field-name="sequenceNum,description"/>
+                                    </entity-find>
+                                </drop-down>
+                            </default-field>
+                        </field>
+                        <field name="customsBrokerPartyId">
+                            <default-field title="Spedizioniere Doganale">
+                                <drop-down allow-empty="true">
+                                    <entity-find entity-name="mantle.party.PartyDetailAndRole">
+                                        <econdition field-name="roleTypeId" value="Supplier"/>
+                                        <order-by field-name="organizationName,firstName"/>
+                                    </entity-find>
+                                </drop-down>
+                            </default-field>
+                        </field>
+                        <field name="foreignSupplierPartyId">
+                            <default-field title="Fornitore Estero (Mittente)">
+                                <drop-down allow-empty="true">
+                                    <entity-find entity-name="mantle.party.PartyDetailAndRole">
+                                        <econdition field-name="roleTypeId" value="Supplier"/>
+                                        <order-by field-name="organizationName,firstName"/>
+                                    </entity-find>
+                                </drop-down>
+                            </default-field>
+                        </field>
+                        <field name="customsTaxableValue">
+                            <default-field title="Valore Imponibile Doganale (EUR)">
+                                <text-line size="14"/>
+                            </default-field>
+                        </field>
+                        <field name="dutyAmount" from="'0.00'">
+                            <default-field title="Dazio Doganale - Cod. 405 (EUR)">
+                                <text-line size="14"/>
+                            </default-field>
+                        </field>
+                        <field name="importVatAmount">
+                            <default-field title="IVA all'Importazione - Cod. 421 (EUR)">
+                                <text-line size="14"/>
+                            </default-field>
+                        </field>
+                        <field name="otherChargesAmount" from="'0.00'">
+                            <default-field title="Altri Diritti / Oneri Doganali (EUR)">
+                                <text-line size="14"/>
+                            </default-field>
+                        </field>
+                        <field name="submit"><default-field title=""><submit text="Registra a Registro IVA Acquisti"/></default-field></field>
+                    </form-single>
+                </container-dialog>
+            </container>
+        </container>
+
+        <form-list name="CustomsDeclarationList" list="records" skip-form="true" paginate="true">
+            <field name="mrn">
+                <default-field title="MRN">
+                    <display text="${mrn}"/>
+                </default-field>
+            </field>
+            <field name="declarationDate">
+                <default-field title="Data Svincolo">
+                    <display text="${declarationDate ? ec.l10n.format(declarationDate, 'dd/MM/yyyy') : '—'}"/>
+                </default-field>
+            </field>
+            <field name="declarationTypeEnumId">
+                <default-field title="EUCDM">
+                    <display-entity entity-name="moqui.basic.Enumeration" key-field-name="enumId" text="${enumId}"/>
+                </default-field>
+            </field>
+            <field name="customsOfficeId">
+                <default-field title="Dogana">
+                    <display text="${customsOfficeId || 'ADM'}"/>
+                </default-field>
+            </field>
+            <field name="customsTaxableValue">
+                <default-field title="Valore Merce">
+                    <display text="${ec.l10n.format(customsTaxableValue, '#,##0.00')} €"/>
+                </default-field>
+            </field>
+            <field name="dutyAmount">
+                <default-field title="Dazio">
+                    <display text="${ec.l10n.format(dutyAmount, '#,##0.00')} €"/>
+                </default-field>
+            </field>
+            <field name="importVatAmount">
+                <default-field title="IVA Import (Detraibile)">
+                    <display text="${ec.l10n.format(importVatAmount, '#,##0.00')} €"/>
+                </default-field>
+            </field>
+            <field name="vatRegisterInvoiceId">
+                <default-field title="Protocollo IVA Acquisti">
+                    <link url="//Accounting/Receivables/InvoiceDetail"
+                            text="Fattura ${vatRegisterInvoiceId}"
+                            condition="vatRegisterInvoiceId"
+                            parameter-map="{recordId:vatRegisterInvoiceId, organizationPartyId:organizationPartyId}"/>
+                </default-field>
+            </field>
+            <field name="statusId">
+                <default-field title="Stato">
+                    <display-entity entity-name="moqui.basic.StatusItem" key-field-name="statusId" text="${description}"/>
+                </default-field>
+            </field>
+        </form-list>
+
+        <label text="Nessuna bolletta doganale registrata per questa organizzazione."
+                type="p"
+                condition="organizationPartyId &amp;&amp; (!records || records.length == 0)"/>
+    </widgets>
+</screen>

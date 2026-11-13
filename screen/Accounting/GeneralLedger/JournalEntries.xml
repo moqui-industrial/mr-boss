@@ -20,6 +20,10 @@ along with this software (see the LICENSE.md file). If not, see
         default-menu-index="2"
         xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd">
     <parameter name="organizationPartyId"/>
+    <parameter name="fiscalYear"/>
+    <parameter name="fromDate"/>
+    <parameter name="thruDate"/>
+    <parameter name="linesPerPage"/>
     <parameter name="isPosted"/>
     <parameter name="text"/>
     <parameter name="previewId"/>
@@ -38,17 +42,186 @@ along with this software (see the LICENSE.md file). If not, see
         <error-response url="."/>
     </transition>
     <actions>
-        <service-call name="mantle.ledger.AccountingServices.find#Records"
-                in-map="{kind:'journals', organizationPartyId:organizationPartyId, isPosted:isPosted,
-                    text:text, pageIndex:pageIndex, pageSize:pageSize}"
-                out-map="context"/>
+        <set field="isPrinting" from="String(ec.web?.requestParameters?.renderMode || context.renderMode || '') == 'html-print'"/>
+        <if condition="isPrinting">
+            <service-call name="mantle.ledger.FiscalRegisterServices.get#GeneralJournalData"
+                    in-map="{organizationPartyId:organizationPartyId, fiscalYear:fiscalYear, fromDate:fromDate,
+                        thruDate:thruDate, linesPerPage:(linesPerPage ? Integer.parseInt(linesPerPage) : 24)}"
+                    out-map="journalResult"/>
+            <script><![CDATA[
+                function fmt(n) {
+                    return (Number(n) || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
+                function fmtDt(d) {
+                    if (!d) return '—';
+                    try { return ec.l10n.format(d, 'dd/MM/yyyy'); } catch (e) { return String(d).slice(0, 10); }
+                }
+
+                const res = journalResult || {};
+                const org = res.organization || {};
+                const pages = res.pages || [];
+                const yr = res.fiscalYear || new Date().getFullYear();
+                const nowFmt = ec.l10n.format(ec.user.nowTimestamp, 'dd/MM/yyyy HH:mm');
+
+                let h = `
+                <style>
+                    @page {
+                        size: A4 landscape;
+                        margin: 12mm 10mm 15mm 10mm;
+                        @top-right { content: "Libro Giornale - Esercizio ${yr}"; font-size: 8pt; font-family: sans-serif; color: #555; }
+                        @bottom-right { content: "Pagina " counter(page); font-size: 8pt; font-family: sans-serif; color: #555; }
+                    }
+                    body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 8.5pt; color: #222; margin: 0; padding: 0; background: #fff; }
+                    .page-container { page-break-after: always; min-height: 98%; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 25px; padding-bottom: 10px; border-bottom: 1px dashed #ccc; }
+                    .page-container:last-child { page-break-after: avoid; border-bottom: none; }
+                    .header-box { border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 8px; }
+                    .company-name { font-size: 13pt; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+                    .fiscal-info { font-size: 8pt; color: #444; margin-top: 2px; }
+                    .doc-title { font-size: 11pt; font-weight: bold; margin-top: 4px; color: #000; }
+                    .page-meta { font-size: 8.5pt; font-weight: bold; color: #000; text-align: right; }
+                    table.journal-table { width: 100%; border-collapse: collapse; font-size: 8pt; }
+                    table.journal-table th { background: #f0f0f0; border: 1px solid #777; padding: 4px; font-weight: bold; font-size: 8pt; }
+                    table.journal-table td { border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #eee; padding: 3px 4px; vertical-align: top; }
+                    tr.tx-header td { background-color: #fafafa; font-weight: bold; border-top: 1px solid #bbb; border-bottom: 1px solid #ccc; }
+                    tr.carry-over td { background-color: #f5f5f5; font-weight: bold; border-top: 1px solid #999; border-bottom: 1px solid #999; font-style: italic; }
+                    .text-right { text-align: right; }
+                    .text-center { text-align: center; }
+                    .sign-box { margin-top: 15px; border-top: 1px solid #000; padding-top: 8px; font-size: 8.5pt; display: flex; justify-content: space-between; }
+                </style>`;
+
+                if (pages.length === 0) {
+                    h += `<div style="padding: 40px; text-align: center; color: #666;">
+                        <h2>LIBRO GIORNALE DI CONTABILITA' (Art. 2216 C.C.)</h2>
+                        <p>Nessuna scrittura contabile confermata (posted) trovata per l'organizzazione <strong>${organizationPartyId}</strong> nell'esercizio ${yr}.</p>
+                    </div>`;
+                }
+
+                for (const p of pages) {
+                    h += `<div class="page-container">
+                        <div>
+                            <div class="header-box">
+                                <table style="width: 100%; border: none;">
+                                    <tr>
+                                        <td style="border: none; padding: 0;">
+                                            <div class="company-name">${org.organizationName || organizationPartyId}</div>
+                                            <div class="fiscal-info">
+                                                Partita IVA: <strong>${org.taxIdNumber || '—'}</strong> |
+                                                Codice Fiscale: <strong>${org.socialSecurityNumber || '—'}</strong> |
+                                                R.E.A.: <strong>${org.reaNumber || '—'}</strong>
+                                            </div>
+                                            <div class="doc-title">LIBRO GIORNALE DI CONTABILITA' (Art. 2216 C.C. - Art. 16 D.P.R. 600/73)</div>
+                                        </td>
+                                        <td style="border: none; padding: 0; text-align: right; vertical-align: top;">
+                                            <div class="page-meta">ANNO FISCALE: ${yr}</div>
+                                            <div class="page-meta" style="font-size: 11pt; color: #0277bd;">PAGINA: ${p.pageLabel}</div>
+                                            <div style="font-size: 7.5pt; color: #666; margin-top: 4px;">Stampato il: ${nowFmt}</div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <table class="journal-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 65px;" class="text-center">Data</th>
+                                        <th style="width: 75px;" class="text-center">N. Reg.</th>
+                                        <th style="width: 80px;">Cod. Conto</th>
+                                        <th>Descrizione Operazione / Conto</th>
+                                        <th style="width: 95px;" class="text-right">Dare (EUR)</th>
+                                        <th style="width: 95px;" class="text-right">Avere (EUR)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+
+                    if (p.pageNumber > 1) {
+                        h += `<tr class="carry-over">
+                            <td colspan="4" class="text-right">TOTALE RIPORTATO DALLA PAGINA PRECEDENTE:</td>
+                            <td class="text-right">${fmt(p.broughtForwardDebit)}</td>
+                            <td class="text-right">${fmt(p.broughtForwardCredit)}</td>
+                        </tr>`;
+                    }
+
+                    for (const tx of (p.transactions || [])) {
+                        h += `<tr class="tx-header">
+                            <td class="text-center"><code>${fmtDt(tx.transactionDate)}</code></td>
+                            <td class="text-center"><strong>${yr} / ${tx.journalSequenceNum}</strong></td>
+                            <td colspan="4">
+                                <strong>${tx.txDescription || 'Registrazione prima nota ' + tx.acctgTransId}</strong>
+                                ${tx.invoiceId ? (' [Fattura: ' + tx.invoiceId + ']') : ''}
+                                ${tx.paymentId ? (' [Pagamento: ' + tx.paymentId + ']') : ''}
+                            </td>
+                        </tr>`;
+
+                        for (const en of (tx.entries || [])) {
+                            h += `<tr>
+                                <td></td>
+                                <td class="text-center" style="color: #666; font-size: 7.5pt;">${en.acctgTransEntrySeqId}</td>
+                                <td><code>${en.accountCode}</code></td>
+                                <td style="padding-left: 14px;">${en.accountName}</td>
+                                <td class="text-right">${en.debitAmount > 0 ? fmt(en.debitAmount) : ''}</td>
+                                <td class="text-right">${en.creditAmount > 0 ? fmt(en.creditAmount) : ''}</td>
+                            </tr>`;
+                        }
+                    }
+
+                    h += `<tr class="carry-over">
+                        <td colspan="4" class="text-right">TOTALE DA RIPORTARE A PAGINA SUCCESSIVA:</td>
+                        <td class="text-right">${fmt(p.carriedForwardDebit)}</td>
+                        <td class="text-right">${fmt(p.carriedForwardCredit)}</td>
+                    </tr>
+                    </tbody>
+                    </table>
+                    </div>`;
+
+                    if (p.pageNumber === res.endPageNumber) {
+                        h += `<div class="sign-box">
+                            <div>
+                                Totale Scritture Esercizio: <strong>${res.totalTransactions}</strong> |
+                                Totale Righe Movimentate: <strong>${res.totalEntries}</strong> |
+                                Pagine Complessive: <strong>${res.endPageNumber}</strong>
+                            </div>
+                            <div style="text-align: right;">
+                                <strong>Quadratura Contabile: DARE = ${fmt(res.totalDebit)} EUR | AVERE = ${fmt(res.totalCredit)} EUR</strong>
+                                <div style="margin-top: 15px;">Firma del Legale Rappresentante: ___________________________</div>
+                            </div>
+                        </div>`;
+                    }
+
+                    h += `</div>`;
+                }
+
+                context.printHtml = h;
+            ]]></script>
+        <else>
+            <service-call name="mantle.ledger.AccountingServices.find#Records"
+                    in-map="{kind:'journals', organizationPartyId:organizationPartyId, isPosted:isPosted,
+                        text:text, pageIndex:pageIndex, pageSize:pageSize}"
+                    out-map="context"/>
+        </else>
+        </if>
+        <set field="printUrl"
+                from="'/apps/Accounting/GeneralLedger/JournalEntries?renderMode=html-print&amp;organizationPartyId='
+                    + (organizationPartyId || '') + (fiscalYear ? ('&amp;fiscalYear=' + fiscalYear) : '')"/>
     </actions>
     <widgets>
+        <section name="PrintReport" condition="isPrinting">
+            <widgets>
+                <text type="html,html-print"><![CDATA[${printHtml}]]></text>
+            </widgets>
+        </section>
+        <section name="NormalView" condition="!isPrinting">
+            <widgets>
         <container style="row items-center q-col-gutter-sm">
             <container style="col">
                 <label text="Journal entries" type="h5"/>
             </container>
-            <container style="col-auto">
+            <container style="col-auto row q-gutter-sm">
+                <link url="${printUrl}"
+                        url-type="plain"
+                        text="Print / Libro Giornale"
+                        icon="sym_o_print"
+                        target-window="_blank"
+                        condition="organizationPartyId"/>
                 <link url="//Accounting/QuickCreate/NewEntry"
                         text="New journal entry"
                         link-type="anchor-button"
@@ -128,5 +301,7 @@ along with this software (see the LICENSE.md file). If not, see
         <label text="No journal entries match. Choose another organization or search, or create a new journal entry."
                 type="p"
                 condition="!records.length"/>
+            </widgets>
+        </section>
     </widgets>
 </screen>
