@@ -172,10 +172,10 @@ along with this software (see the LICENSE.md file). If not, see
                 <container-box>
                     <box-header title="Terms and conditions"/>
                     <box-toolbar>
-                        <container-dialog id="AddBillTermDialog" button-text="Add term" title="Add bill term" condition="receivable.canEdit">
-                            <form-single name="AddBillTermForm" transition="storeInvoiceTerm">
+                        <container-dialog id="SetBillPaymentTermsDialog" button-text="Payment terms" title="Set bill payment terms" condition="receivable.canEdit">
+                            <form-single name="SetBillPaymentTermsForm" transition="updateInvoiceSettlementTerm">
                                 <field name="invoiceId" from="invoiceId"><default-field><hidden/></default-field></field>
-                                <field name="settlementTermId">
+                                <field name="settlementTermId" from="receivable.settlementTermId">
                                     <default-field title="Payment terms (Settlement)">
                                         <drop-down allow-empty="true">
                                             <entity-options key="${settlementTermId}" text="${description}">
@@ -186,12 +186,32 @@ along with this software (see the LICENSE.md file). If not, see
                                         </drop-down>
                                     </default-field>
                                 </field>
+                                <field name="dueDate" from="receivable.dueDate">
+                                    <default-field title="Due date"><date-time type="date"/></default-field>
+                                </field>
+                                <field name="submitButton"><default-field title="Save payment terms"><submit/></default-field></field>
+                            </form-single>
+                        </container-dialog>
+                        <container-dialog id="AddBillTermDialog" button-text="Add invoice term" title="Add specific term or condition" condition="receivable.canEdit">
+                            <form-single name="AddBillTermForm" transition="storeInvoiceTerm">
+                                <field name="invoiceId" from="invoiceId"><default-field><hidden/></default-field></field>
                                 <field name="termTypeEnumId">
-                                    <default-field title="Additional term type (Incoterm / Clause / Other)">
+                                    <default-field title="Term type (Incoterm / Clause / Other)">
                                         <drop-down allow-empty="true">
                                             <entity-options key="${enumId}" text="${description}">
                                                 <entity-find entity-name="moqui.basic.Enumeration">
                                                     <econdition field-name="enumTypeId" value="TermType"/>
+                                                    <order-by field-name="description"/>
+                                                </entity-find>
+                                            </entity-options>
+                                        </drop-down>
+                                    </default-field>
+                                </field>
+                                <field name="settlementTermId">
+                                    <default-field title="Settlement term (optional)">
+                                        <drop-down allow-empty="true">
+                                            <entity-options key="${settlementTermId}" text="${description}">
+                                                <entity-find entity-name="mantle.account.invoice.SettlementTerm">
                                                     <order-by field-name="description"/>
                                                 </entity-find>
                                             </entity-options>
