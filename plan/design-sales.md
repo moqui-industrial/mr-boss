@@ -1,5 +1,11 @@
 # IronStone BOSS — Sales design
 
+Nov 13, 2026 — impl-sales P0's remaining checks written in (impl-sales F53–F73): the Comms hooks as Comms renders them
+(Mail's `message-actions` slot made to render in P5, a voicemail's action a transition, the `contact-card` read by Mail; §§1.4, 3, 12.2);
+template text rendered by `fancy-locked-html` from a stored location with an explicit map (§§1.4, 5); the
+OrderChangeApproval link resolved per recipient (§§1.3, 5); the funnel's row filter and its static output (§§3, 8); the
+borrowed `PEOPLE_DIRECTORY_VIEW` and the lifecycle's `SALES_OWNER_CHANGE` (§1.1); the active-organization user-facts
+provider built by Sales (§1.4).
 Nov 11, 2026 — the plan's decisions written in (impl-sales §4): a seller's SalesPolicy approval setting stops every
 automatic approval of its sales orders; a pre-approval warning, Sales' own too, blocks auto-approval as built, and with
 the setting on the warnings are shown to the approver only (§§1.1, 5, 6, 9, 13.1);
@@ -141,6 +147,25 @@ does not confer unrestricted read access.
 | BOSS_SALES_READ | SALES_VIEW, SALES_TEAM_VIEW, SALES_REPORT_VIEW; permitted organization reports and records, no mutation |
 | BOSS_SALES_ADMIN | SALES_CONFIGURE plus explicit Sales view/edit capabilities; configuration does not confer finance, cost, stock or deployment authority |
 
+BOSS_SALES_MANAGER and BOSS_SALES_ADMIN also hold People's `PEOPLE_DIRECTORY_VIEW`, so TeamMembers' employee lookup
+and an employee's work card open for those who manage teams, as Maintenance's planners hold it (impl-sales F53). Mantle
+also seeds `SALES_OWNER_CHANGE`, which no Sales group holds: Admin's identity group gets it for the Sales lifecycle
+participant's transfer of a departing user's opportunities, accounts and open quotes (impl-sales F54).
+
+As built (impl-sales P1 and its review): Mantle seeds the twenty `SALES_*` permissions, each granted to `ADMIN`, and reads them in one scope
+module, `mantle/sales/SalesAccess.js` (the capabilities, the reads `anyRead` of `SALES_VIEW`, `SALES_TEAM_VIEW` or
+`SALES_REPORT_VIEW`, `teamRead` and `reportRead`, an edit permission alone reading nothing; the caller's own organizations, the
+active one when it is theirs, every one for a system administrator or a holder of `SALES_ALL_ORGANIZATIONS`, which reads nothing by
+itself). The setup is mr-boss `data/BossSetupSalesData.xml`:
+every ordinary group's user is in `BOSS_SALES`, which carries `SALES_VIEW`; the table's grants but the four a built service checks
+(`SALES_APPROVE`, `ORDER_APPROVE`, `SALES_ORDER_CHANGE`, `ORDER_CHANGE_HOLD_RELEASE`, granted with their screens, F43), so
+BOSS_SALES_APPROVE holds `SALES_ORDER_APPROVE` and BOSS_SALES_CHANGE nothing beyond the view until then; BOSS_SALES_ADMIN holds
+`SALES_CONFIGURE` with the manager's and the agreement keeper's views and edits (`SALES_IMPORT` among them) and no approval or
+owner change (the user's call, Nov 13), and `SALES_ALL_ORGANIZATIONS` alone of the groups (the user's call, Nov 13; Mantle seeds it,
+granted to `ADMIN`), so its Sales scope is every internal organization, as its root's `MANTLE_ACTIVE_ORG` is while none is active; `SALES_OWNER_CHANGE` is BOSS_ADMIN_IDENTITY's. Reports is an area of its own (`BOSS_SAL_REPORTS`: the root user
+group denied, the manager and the reader allowed) and is shown to a holder of `SALES_REPORT_VIEW`. The root serves the Chatter and
+RecordFiles panels of Sales' own record hosts only, which join with their records (P3, P4, P7, P11, P15).
+
 A rep sees shared accounts in the permitted organization and opportunities assigned to them or
 their dated team; managers/readers with team-view authority see the organization-wide pipeline.
 Order/quote access additionally requires the permitted selling organization and its record assignments;
@@ -208,7 +233,9 @@ carries `recordEntity` and `recordId` so Assist's `search` tool can open it. Rec
 identifies the host and source selection; Today reuses WorkEffort activities rather than
 `nextStep` text. Approval notifications use the SalesQuoteApproval topic, seeded in Mantle beside
 the built OrderChangeApproval topic (no topic of that name is seeded yet; impl-sales P9); its push
-title names the quote, never the amount.
+title names the quote, never the amount. A notification has one link for all its recipients, so OrderChangeApproval's link
+is Commons' `openRecord` link of the change request, which opens Sales' OrderChangeDetail for a Sales approver of a
+commercial kind and Customer Service's otherwise (impl-sales F58).
 All providers use the same domain filters as lists. Chatter, files, mail composition,
 calendar and reminders retain their existing owners. **Needs:** SAL-ACCESS, SAL-SHELL, SAL-COLLAB.
 
@@ -219,14 +246,14 @@ need in §17.
 
 | Contract | Sales entries |
 | --- | --- |
-| CX-ASSIST (L1) | Procedure skills in mr-boss `skill/`: `sales-qualify-lead.md`, `sales-issue-quote.md`, `sales-follow-up.md`, `sales-log-call.md`, each with `screens:` so they show as chips, `skill/aliases.json` (quote, RFQ, deal, account) and `test/skill-retrieval.json`. `assist-prompt` chips: OpportunityDetail "Summarize this deal", "Draft a follow-up", "What changed since the last activity"; OrderDetail quote context "Explain this price", "Draft a cover note"; Customer360 "Open work for this account". `response-action`s "Log as note" (a Chatter note on the host) and "Send as message" (opens Comms Compose). `AgentToolExposure` rows only for O/Q verbs no single screen does: O.create#Opportunity, O.move#Opportunity, O.close#Opportunity, Q.preview#Quote and Q.send#Quote, every mutating one behind an Assist approval; `exposeMcp` is Y for O.find#Opportunities and Q.find#Quotes and N for mutating verbs. Prerequisite: the Mantle active-organization user-facts provider (crosscut CX-ASSIST). **Needs:** SAL-ASSIST |
-| Comms hooks (L8) | `record-lookup` for SalesOpportunity and quote/order OrderHeader; `create-from` kinds Lead and QuoteRequest; `ext-action`s "Create lead" in `chat-message-actions`, `message-actions` and `voicemail-actions`, "Create RFQ" in `message-actions`, "Log call on opportunity" in `call-actions` and `voicemail-actions`; `call-context` answers with the caller's open opportunities and quotes the user may see, for the ring bar and the call. When Comms builds the planned `contact-card` hook, Sales answers it with the sender's account or lead card. **Needs:** SAL-SHELL |
+| CX-ASSIST (L1) | Procedure skills in mr-boss `skill/`: `sales-qualify-lead.md`, `sales-issue-quote.md`, `sales-follow-up.md`, `sales-log-call.md`, each with `screens:` so they show as chips, `skill/aliases.json` (quote, RFQ, deal, account) and `test/skill-retrieval.json`. `assist-prompt` chips: OpportunityDetail "Summarize this deal", "Draft a follow-up", "What changed since the last activity"; OrderDetail quote context "Explain this price", "Draft a cover note"; Customer360 "Open work for this account". `response-action`s "Log as note" (a Chatter note on the host) and "Send as message" (opens Comms Compose). `AgentToolExposure` rows only for O/Q verbs no single screen does: O.create#Opportunity, O.move#Opportunity, O.close#Opportunity, Q.preview#Quote and Q.send#Quote, every mutating one behind an Assist approval; `exposeMcp` is Y for O.find#Opportunities and Q.find#Quotes and N for mutating verbs. Prerequisite: the Mantle active-organization user-facts provider (crosscut CX-ASSIST), which no component registers yet, so Sales builds it (impl-sales P6, F65); the facts are fixed when a conversation starts, so a tool still takes its organization. **Needs:** SAL-ASSIST |
+| Comms hooks (L8) | As Comms renders them (impl-sales F64): `record-lookup` for SalesOpportunity and quote/order OrderHeader; `create-from` kinds Lead and QuoteRequest, which Comms offers on a chat message; `ext-action`s "Create lead" in `chat-message-actions` and `voicemail-actions` (a voicemail's action is a transition given the voicemail, on Customer Service's pattern) and "Log call on opportunity" in `call-actions` and `voicemail-actions`; `call-context` answers with the caller's open opportunities and quotes the user may see, for the ring bar and the call; `contact-card`, which Comms' Mail reads, answers with the sender's account or lead card. "Create lead" and "Create RFQ" are in Mail's `message-actions` slot, which Sales P5 makes basic-comms render (impl-sales §4, Nov 13). As built (P5): create-from kind lead is a kind of Comms' one provider `boss.records` (ChatServices.create#FromChat, as Customer Service's case and People's kinds are), since a second create-from provider would answer every kind; Mail's slot posts the framework's `createRecord` transition with the message's ids; `record-lookup` comes before Comms' own (Sales' link), `contact-card` after it (a lead's card for an inquirer who is no party yet), and "Log call on opportunity" is a dialog (Sales/Pipeline/LogCall) mounted in Calls/Call and Calls/Voicemail. **Needs:** SAL-SHELL |
 | Meetings (L7) | A meeting activity is a Commons Event with a CallLink ("Add video call" on EventDetail); prospects are invited by iMIP through `mantle.work.EventServices.send#EventInvitations` and join by the link as guests, without an account (§3) |
 | CX-SYNC (L2) | Activities are events and tasks in the user's own CalDAV calendar already. Account contacts appear on reps' phones as a read-only projected CardDAV address book, "My accounts", answered by S with the rep's account scope (§4). **Needs:** SAL-SYNC |
 | CX-MAIL-INTAKE (L3) | `EmailRuleAction` actions `createLead` (O.store#LeadIntake) and `createQuoteRequest` (Q.create#QuoteRequest), reached by plus-tag intake addresses such as `sales+leads@` and `sales+rfq@` (§§3, 5). **Needs:** SAL-MAIL-INTAKE |
 | CX-DELIVERY (L4, X8) | Storeless order confirmation, quote reminders and QuoteBatch sends are sources of the one Comms delivery ledger (§13) |
 | CX-OPS-REPORTS (L6) | A shipped pipeline dataset, dashboard and alert templates ("quote expiring", "deal stalled") and a weekly pipeline/forecast digest schedule beside Mantle's `report/mantle-sales*.json`; `operation`/`operation-ref` on QuoteBatch, opportunity import and the recurrence guard (§8). These replace bespoke operational-measure lists. **Needs:** SAL-REPORT |
-| Templates and extraction (L9) | Quote cover text, terms and reminder templates render with the built `fancy-locked-html` renderer (§5); QuoteExtraction uses `org.moqui.agent.AiTaskServices.run#Extract` and returns proposals reviewed before any write (§11) |
+| Templates and extraction (L9) | Quote cover text, terms and reminder templates render with the built `fancy-locked-html` renderer (§5): stored at a resource location and rendered by the mail's and print's script with an explicit map of the fields they may use, inside the trusted mail body and print (impl-sales F70); QuoteExtraction uses `org.moqui.agent.AiTaskServices.run#Extract` and returns proposals reviewed before any write (§11) |
 
 ## 2. Screens
 
@@ -320,7 +347,11 @@ state their period and denominator. Empty pipeline offers New lead and New oppor
 | SalesWork | display | Counts and links to work | organization, period, RFQs, quotes, blocked orders, activity count | number-card; scoped drill-down | S.get#SalesHome | Carbon sales dashboard; Marble dashboard |
 | AssignedWork | list, read | Next commercial action | record/name, customer, state, owner, due/expiry, action | record links; status chip | S.get#SalesHome | Carbon assigned documents |
 | MyPipeline | list, read | Compact open pipeline | opportunity, account, amount/currency, stage, next activity | native board/list | O.find#Opportunities | Odoo My Pipeline; research §1 |
-| PipelineFunnel | component | Stage conversion at a glance | stage, count, amount | framework funnel panel through `report-embed` | the pipeline dataset (L6) | framework Monitoring funnel panel |
+| PipelineFunnel | component | Stage conversion at a glance | stage, count, amount | framework funnel panel through `report-embed`, left out of server-static output, which cannot hold a viewer's data | the pipeline dataset (L6), whose row filter is Sales' scope (organization, then assignment or team) | framework Monitoring funnel panel |
+
+As built (impl-sales P1): Home's frame, an organization filter of the user's sales scope (checked by `check#Record`) above
+SalesWork's five counters, AssignedWork and MyPipeline, each "Not configured" until P4 and P6 answer them, never zero; a
+report reader gets a Sales summary shortcut, and a user who reads nothing of Sales is told so.
 
 **Actions.** New opportunity is primary; New lead, quote and activity are contextual shortcuts.
 An unavailable metric leaves other independent panels usable. **Source:** research §1, §8, §13.
@@ -383,10 +414,23 @@ conversion time/actor, retain source and all joins. Retry returns the same recor
 qualification invokes the same operation per lead. Disqualify records an explicit lost outcome
 and reason. Reopen restores an open lead; returning a qualified opportunity to lead requires a
 manager, reason and no placed linked order. Conversion history remains audit-readable.
-"Create lead" also appears on a chat message, a mail message and a voicemail in Comms (`create-from`,
-§1.4); it opens NewLead prefilled from the message, and the lead keeps the message as its source.
+"Create lead" also appears on a chat message and a voicemail in Comms (`create-from` and `ext-action`,
+§1.4); it opens NewLead prefilled from the message, and the lead keeps the message as its source. On a mail message
+the same action is in Mail's `message-actions` slot, which Sales P5 makes basic-comms render (impl-sales §4, Nov 13).
 The bulk "Add to list (evidenced)" action, shown with Marketing's audience capability, files an
 evidenced subscription request per lead contact through Marketing; it never subscribes directly.
+
+As built (impl-sales P5, Nov 13, 2026): SalesLeadIntake holds the inquiry (source kind and id, the submitted name,
+organization, email and phone, the UTM pair, campaign, tracking code, source, team queue, received, verified and purged
+dates, and whether it made its lead or joined one); `store#LeadIntake` takes an operation key of its own (a repeat answers
+the first result whoever calls, as Marketing's capture job and an operator's reprocess both do) and one source identity per
+intake (a mail by its Message-ID). The duplicate policy joins an open lead of the organization that an intake with the same
+submitted email made or joined (a review item on that lead, shown as "Joined this lead"), never a merge. A user caller assigns
+as `create#Opportunity`; a system caller (the mail rule, Marketing's job) names a team as the queue. "Create lead" on a chat
+or mail message and a voicemail makes the lead at once (the user its owner, the message filed on it) rather than opening a
+prefilled NewLead; OpportunityDetail's Inquiries box shows what came in, and QualifyLead starts its new account and contact
+from the first inquiry. LeadList's intake columns are Came by, Received and Verification. The inquirer's email verification
+is the caller's (`verified`); Sales sends no verification mail.
 **Source:** research §2. **Needs:** SAL-CRM, SAL-ACCOUNTS, SAL-SHELL, SAL-MAIL-INTAKE.
 
 ### OpportunityDetail
@@ -429,6 +473,38 @@ contacts and internal organization use separate roles.
 **Navigation.** Account to Customer360; documents to canonical OrderDetail/QuoteRequestDetail;
 tasks to WorkItemDetail. **States.** An unauthorized linked record contributes no title, amount
 or count. **Source:** research §§3, 8. **Needs:** SAL-CRM, SAL-COLLAB, SAL-QUOTE.
+
+### As built (impl-sales P4, Nov 13, 2026)
+
+- **One record.** A lead and an opportunity are one `SalesOpportunity`, its type SotLead or SotOpportunity; its outcome
+  (`statusId`: Open, Won, Lost), lost reason, pipeline, probability mode (SpmStage, SpmManual), recurring amount and plan, the
+  conversion and close time and actor, its creation and its stage's entry (stage age) are fields of it, the key ones
+  audit-logged with the type, account and close date. Its people are dated `SalesOpportunityParty` rows: the organization
+  (OrgInternal, kept equal to `organizationPartyId`), one current owner (SalesRepresentative), one current team (SalesTeam) and
+  contacts. A deal's revision is the latest stamp of the deal and its party rows, so a change of its people is a change of it.
+- **Scope** (Mantle `SalesAccess.js opportunityOf`): a Sales reader of the organization sees the deals whose current owner or team
+  row names them or a team of theirs (an unowned lead in a team's queue among them), a holder of `SALES_TEAM_VIEW` the
+  organization's; a customer link never widens it. A representative assigns a deal only to themselves or a member of one of their
+  teams; a manager (`SALES_TEAM_MANAGE`) anyone of the organization.
+- **Services** (`mantle.sales.OpportunityServices`, `SalesOpportunities.js`): `find#Opportunities`, `get#Opportunity`,
+  `create#Opportunity`, `update#Opportunity`, `move#Opportunity`, `close#Opportunity`, `reopen#Opportunity`, `qualify#Lead`
+  (its operation key a PostingOperation), `store#OpportunityParty`, `store#Competitor`, `apply#OpportunityBatch` (move, assign,
+  lose; keys `id@revision`), and beyond the design's list `add#OpportunityActivity` (a Commons task linked through
+  `link#WorkEffortRecord`, which writes `SalesOpportunityWorkEffort`, the opportunity's own join), `check#OpportunityAccess` and
+  `create#OpportunityContent`.
+- **The board** groups by the stage's name (`stageText`), not its id: the framework's board labels a column by the value unless
+  it is a status or an enumeration, and a stage's name is unique in its pipeline; `moveCard` maps the name back to the stage of
+  the deal's own pipeline. Its columns are the stages of the pipeline filtered, else the organization's default, empty ones too;
+  each card carries Change stage. The totals are over the whole filtered result, by currency.
+- **OpportunityDetail** is one screen of boxes (Overview, People, Activities, Competitors, Quotes and orders when there are any,
+  Conversation, Files), not tabs. Its primary action is Qualify for an open lead, Close for an open opportunity until P7's New
+  quote, Reopen for a closed one; Schedule activity beside it; Change stage, Disqualify and the account in More. Returning a
+  qualified opportunity to a lead is not built.
+- **Leads** is built for a second mount: Marketing's root (`Sales.js mountRoots`) mounts it at `Marketing/Leads` and LeadSources
+  at `Marketing/Settings/LeadSources`, its `sharedLinks` naming only those, so a lead's OpportunityDetail shows without a link
+  there; any other root is refused. LeadList has row selection (Assign, Disqualify); Marketing's bulk action joins it as an
+  owner contract.
+- **Home**'s MyPipeline stays "Not configured" until P6 builds Home over `find#Opportunities`.
 
 ### WorkItemDetail — Context passed
 
@@ -481,7 +557,9 @@ to another account's documents.
 Account contacts reach reps' phones as a read-only CardDAV address book, "My accounts", a projected
 collection that Mantle `mantle.party.ContactDavServices.get#DavCollections` lists and S answers with
 the contacts of the accounts the rep may see (L2). Phone edits are refused; the contact is edited
-here. **Needs:** SAL-SYNC.
+here. As built (impl-sales P5): the projection is Mantle's `ContactProjection` (the contacts counterpart of People's
+CalendarProjection, `projected-SalesMyAccounts`), and "the rep's accounts" are those they manage or that are the account of a
+deal assigned now to them or their team, not every account of the scope. **Needs:** SAL-SYNC.
 
 ### Customer360 — Context passed
 
@@ -535,6 +613,33 @@ email or name similarity. Crosscut §3.1 row:
 
 **Source:** research §4; Party/EditParty/FindDuplicates DupPartyList; Twenty side-by-side duplicate review.
 **Needs:** SAL-ACCOUNTS, SAL-ACCESS.
+
+### As built (impl-sales P3, Nov 13, 2026)
+
+- **An account** is a party with the Account role and a Customer or Prospect role, not an internal organization, owned by
+  the organization it was created for (`Party.ownerPartyId`, which the organization filters read); a party owned by none
+  (`_NA_`) is a shared account every organization sees, as Customer Service's shared customers are. A contact is a person with a
+  current `PrtContact` relationship to an account, owned by the account's organization, with the Contact role (no longer
+  Customer, so a contact is not listed as an account). The account manager is a dated `PrtAccountManager` relationship from the
+  representative (Mantle `data/SalesAccountData.xml`); `mantle.sales.AccountServices.set#AccountManager` changes it. Mantle's
+  `SalesAccess.js` holds the account scope (`accountOf`, `contactAccounts`, `accountOrganization`, `mergesFor`).
+- **NewPerson** calls `create#Account` with a person (`partyTypeEnumId` PtyPerson), not `create#Person`, so one guarded entry
+  creates every account. `create#Account` takes the owner organization, parent, manager, email and phone.
+- **Customer360** in Sales has Overview (managers, contact details, hierarchy, notes), Contacts, Orders (a `SALES_TEAM_VIEW`
+  holder's, until P11's order scope), Invoices (a finance reader's) and Files; Opportunities, RFQs, Quotes, Agreements and
+  Activities join with P4, P8, P7 and P15. AccountList's next activity and active quotes join with P4 and P7.
+- **Contacts** is Sales' own list (`find#AccountContacts`); **ContactDetail** includes the Commons contact record behind
+  Sales' record check, with a Sales box of the person's accounts (Add to an account, End). Identity and channels are edited
+  under the record's own party checks, so a representative who is no contact administrator reads them only (impl-sales P3
+  findings).
+- **MergeAccounts** is a Sales screen over Commons' services (`get#DuplicatePairs` narrowed to the pairs `check#PartyMerge`
+  admits, `get#ComparePair`, `merge#Contacts`, `mark#NotDuplicate`) with a Compare of its own (MergeCompare) carrying the
+  opportunity, order and agreement counts (`get#AccountDocumentCounts`); Commons' Duplicates asks for a contact administrator,
+  so it is not mounted. The guards are design-drawers-commons §6's as built.
+- **Since P4** (F98, F99): a representative edits a contact's identity and channels through Commons' `canEditIdentity`, not its
+  organizations, relationships, notes or photo, and only for a person of an organization of their scope who is a contact of an
+  account of such an organization (design-drawers-commons §6); `set#AccountManager` names the management's revision
+  (`get#CustomerSales` managerRevision) and `delete#Contact` the relationship's (`find#AccountContacts` revision).
 
 ## 5. Quotes and requests for quote
 
@@ -629,7 +734,7 @@ The crosscut receives the added QuoteOffer/QuoteSend/QuoteResponse forms and act
   QuoteBatch, reminders and any send on behalf of another rep use the framework
   `org.moqui.mail.EmailServices.send#EmailTemplate` with a registered template, recorded on the Comms
   delivery ledger (X8) and filed by `EmailMessageFiling`. Template text renders with
-  `fancy-locked-html`. The PDF print header carries a QR of the PASS quote link. An accepted delivery
+  `fancy-locked-html` from its stored location with an explicit map (§1.4 L9). The PDF print header carries a QR of the PASS quote link. An accepted delivery
   is not proof of customer acceptance. Partial recipient failure remains visible and retryable.
 - **Revision binding (X2).** Issue, approval, the PASS capability and the shared change proposal bind
   to the Mantle `orderRevision` counter, which X2 narrows to commercial changes: OrderContent and
@@ -748,7 +853,8 @@ Mount Commons' approval list filtered to SalesQuoteApproval and OrderChangeAppro
 the suite inbox. It opens the source quote/change at the requested revision. Approve/Refuse calls
 Q.decide#Quote or C.decide#OrderChange, checks the approver and separation-of-duty policy, and returns
 stale/expired decisions without changing the source. Notifications are pointers, never authority.
-The SalesQuoteApproval topic is seeded in Mantle beside OrderChangeApproval (impl-sales F26, P9). Mounted at
+The SalesQuoteApproval topic is seeded in Mantle beside OrderChangeApproval (impl-sales F26, P9); OrderChangeApproval's
+link opens by the recipient through Commons' `openRecord` (impl-sales F58). Mounted at
 `Sales/Quotes/Approvals`;
 crosscut §3.15 row:
 
@@ -1116,7 +1222,8 @@ Accounting's finance columns. **Needs:** SAL-REPORT.
 Stage durations use audited transitions, including reopenings; historical gaps are reported as
 unknown. Lead-to-opportunity conversion uses conversion events over an explicit lead-created cohort,
 not current type counts. The funnel and stage chart use the built framework funnel panel through
-`report-embed` on this screen and on Home, with no wait for SAL-ANALYTICS; only a generic pivot
+`report-embed` on this screen and on Home (a table in html and print, text bars in tui, none in server-static; the
+dataset's row filter is Sales' scope, impl-sales F66), with no wait for SAL-ANALYTICS; only a generic pivot
 remains later. **Needs:** SAL-FORECAST, SAL-REPORT, SAL-ANALYTICS.
 
 **Source:** research §§1, 9; Odoo CRM reports and ERPNext funnel.
@@ -1160,6 +1267,17 @@ unassigned amounts appear separately. **Needs:** SAL-FORECAST, SAL-REPORT.
 Link the same settings from Admin's index. External hosts, credentials, gateways, mail transport,
 and tax/currency masters retain their existing owners. **Needs:** SAL-ACCESS, SAL-QUOTE.
 
+As built (impl-sales P2): Settings is an area (`BOSS_SAL_SETTINGS`: the root user group denied, the manager allowed) with the
+tabs Readiness (the landing, SalesReadiness), Stages, Teams, Sources (`LeadSources`) and Types and reasons, each gated by
+permission as the menu is; the administrator (`SALES_CONFIGURE`) opens them all, a manager (`SALES_TEAM_MANAGE`) Teams alone. The
+O verbs are `mantle.sales.OpportunityServices` `store#Pipeline`, `store#Stage`, `store#SalesTeam`, `store#SalesTeamMember`,
+`store#LeadSource`, `store#LostReason`, `get#SalesOptions` (what an organization offers now, to any Sales reader) and
+`get#SalesSetup` (the settings read, with ended rows, open-deal counts and edit flags, which the design did not name), over
+`mantle/sales/SalesSettings.js`; S's `get#SalesReadiness` answers the framework's readiness contract as `sales.readiness`
+(a default pipeline, stages for every pipeline in effect, a staffed team, a lead source offered; fix places `salesStages`,
+`salesTeams`, `salesLeadSources`), with the settings entry `sales.settings` in Admin's index. Every write of an existing row
+names the revision it read.
+
 **Source:** research §10; consolidated Odoo/Frappe settings and current Accounting readiness.
 
 ### Stages
@@ -1176,6 +1294,16 @@ intake pipeline and may have no stage until qualified. Retiring a used stage ret
 requires an explicit reassignment for open deals; it does not rewrite closed deals.
 **Needs:** SAL-CRM.
 
+As built (impl-sales P2): SalesPipeline has an organization, name, description, optional team, default flag and dates; a pipeline
+with no organization is the instance's shared pipeline, offered to every organization until it sets a default of its own, and
+changed only by a reader of every organization (the seeded `SalesDefault`, "Sales pipeline", with `SalesQualified`,
+`SalesDiscovery`, `SalesProposal` and `SalesNegotiation`, initial setup in mr-mantle `data/SalesData.xml`). One default per
+organization. A stage gains `salesPipelineId`, `foldFlag` and dates; the order is the numeric sequence with Up and Down, which
+renumber the current stages 10, 20, 30; a stage is retired by its `thruDate`, and one holding open deals (outcome not Won or Lost)
+only with another current stage of the same pipeline, to which they move, audit-logged. A pipeline is ended only when no open
+deal is on its stages. SalesOpportunity gains its outcome `statusId` (`SalesOppOpen`, `SalesOppWon`, `SalesOppLost`, seeded in
+`data/SalesCrmSeedData.xml`) here, for the retirement rule; P4 builds the lifecycle.
+
 **Source:** research §§1, 10; Mantle SalesOpportunityStage and Odoo pipeline configuration.
 
 ### Teams
@@ -1190,6 +1318,14 @@ another person/team identity table. Expiring membership changes access prospecti
 reassignment of open work. It does not rewrite historical attribution. **Needs:** SAL-CRM.
 
 **Source:** research §§3, 10; Moqui Sales team participation and Odoo teams.
+
+As built (impl-sales P2): a team is an Organization party with the `SalesTeam` role, owned by its organization, whose dated
+`PrtSalesTeamOf` relationship to the organization is its effective interval; a member is a dated `PrtSalesTeamMember` row from a
+person who works for the organization (an agent or employee in effect) as `SalesRepresentative` or `Manager`, so the manager is a
+membership. Joining and leaving are now or later, never back-dated; a person has one membership of a team at a time; ending a team
+ends its memberships; nothing is deleted. TeamMembers' lookup offers the organization's people by party, labelled with their job
+title from People's `find#Employees` for a holder of `PEOPLE_DIRECTORY_VIEW`, and a member links to Employee360 through People's
+`get#Employee360Link`. `SalesAccess.js` reads a team's organization and a person's current teams for P4's scope.
 
 ### LeadSources
 
@@ -1207,6 +1343,17 @@ O.store#LeadIntake looks up the intake's UTM source and medium (from Marketing's
 or the published form's link) and sets the lead's DataSource; source plus medium wins over source
 alone, and an unmapped pair leaves the publication's default source. The intake also writes the
 existing SalesOpportunityTracking join to the tracking code. **Needs:** SAL-CRM.
+
+As built (impl-sales P5): UtmSourceMap is `SalesLeadSourceMap` (organization, UTM source and medium lower-cased, a source the
+organization is offered, dated; ended, never changed), on LeadSources with its Map a source and End, the source and medium typed
+until Marketing offers its vocabulary. LeadSources also shows Mail intake: each team's plus tag (`sales+tag@` the intake mailbox,
+whose rule's action is Make a sales lead) and the source its mail takes, PartySettings of the team (`store#TeamIntake`).
+
+As built (impl-sales P2): the binding is `SalesLeadSourceBinding` (dataSourceId, organization, dates); a new source is offered to
+its organization at once, an offer is added or ended per organization of the caller's, and a source's name or type is changed
+only by one whose scope covers every organization it is offered to (`SOURCE_SHARED`); another organization is named on the list
+only when it is in the reader's scope. The screen links only to itself and reads the mounting root's `sales` context, for
+Marketing's mount.
 
 **Source:** research §§2, 10; SalesData source types, framework DataSource and Odoo UTM.
 
@@ -1231,6 +1378,14 @@ forecast keys and hierarchy cycles are refused. **Needs:** SAL-FORECAST.
 Seed proposed Lead/Opportunity values under SalesOpportunityType and loss-reason values under a
 new SalesLostReason type. Do not attach the unused legacy LeadStatus flow to a nonexistent Lead
 entity. Reason retirement hides future selection, retaining old labels/history. **Needs:** SAL-CRM.
+
+As built (impl-sales P2): the types are `SotLead` and `SotOpportunity`, the reasons `SalesLostReason` values (`SlrPrice`,
+`SlrCompetitor`, `SlrNoBudget`, `SlrNoDecision`, `SlrTiming`, `SlrOther`, initial setup) ended by `Enumeration.thruDate`, and
+the recurring plans `SalesRecurringPlan` (`SrpMonthly` 1, `SrpQuarterly` 3, `SrpHalfYearly` 6, `SrpYearly` 12); SalesTypes
+lists the types and plans read only. Since P4 (the user's call, impl-sales §4 Nov 13): the reasons and plans are the instance's,
+so `store#LostReason` needs every organization's scope (`SALES_ALL_ORGANIZATIONS` or a system administrator, `ORGANIZATION_DENIED`
+otherwise), as the shared pipeline does, and LossReasons offers its actions only then (`get#SalesSetup` canEditReasons); a
+configurer of one organization reads them. No service writes the recurring plans yet.
 
 **Source:** research §§2–3, 10; Odoo lost reasons and Mantle opportunity type discriminator.
 
@@ -1636,7 +1791,7 @@ in §§3–7 and are registered in crosscut, rather than copied into Sales.
 | Calendar and Today | Existing Commons calendar/activity screens, assignee and permitted host fixed; no Sales scheduler; nextStep remains free text rather than a due activity |
 | Approvals | Existing Commons provider filtered to SalesQuoteApproval and OrderChangeApproval (both Mantle topics; impl-sales F26); original source-policy actions, revision and recipient checks |
 | Palette | Scoped O/S/Q/G searches; selected destination is a same-app record route; rows carry `recordEntity` and `recordId`. Hidden field data is never indexed into a readable snippet |
-| Comms providers | `record-lookup`, `create-from` (Lead, QuoteRequest), `ext-action`s in the chat, message, voicemail and call slots, and `call-context` answering with the caller's open opportunities and quotes the user may see (§1.4) |
+| Comms providers | `record-lookup`, `create-from` (Lead, QuoteRequest), `ext-action`s in the chat, voicemail and call slots, `contact-card` in Mail, and `call-context` answering with the caller's open opportunities and quotes the user may see (§1.4) |
 | Meetings | Commons EventDetail with a CallLink and iMIP invitations for prospect meetings (L7); no Sales guest-link mechanism |
 | Sync | Read-only projected CardDAV address book of the rep's account contacts (§4); no writes from devices |
 | Mail intake | `createLead` and `createQuoteRequest` EmailRuleAction rows on the Sales intake addresses (§§3, 5) |

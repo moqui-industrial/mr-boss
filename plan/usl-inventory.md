@@ -993,7 +993,7 @@ Added in Accounting P15 (budgets), called by built screens:
 | AgreementServices | update#AgreementContent | Purchasing/Agreements/AgreementDetail; Sales/Agreements/AgreementDetail | — Purchasing: an agreement's file is not edited after its upload (F135) (Purchasing P13) |
 | AgreementServices | save#AgreementContentFile | Shared/RecordFiles |  |
 | CommunicationServices | find#PartyCommunicationEvents | Shared/Chatter; CustomerService/Cases/ChannelSessions | CustomerService/Cases/ChannelSessions |
-| CommunicationServices | create#Message | Commons/QuickCreate; Commons/Files; Comms/Inbox/Compose; Projects/Requests/RequestDetail; Projects/Code/MergeRequestDetail/Changes; Shared/Chatter; CustomerService/Cases/CaseDetail; Shared/RequestDetail; PASS: Forum/Compose; Sales/Pipeline/OpportunityDetail | Comms/Inbox/Compose; Shared/Chatter; CustomerService/Cases/CaseDetail (Conversation, through Shared/Chatter and Compose, Customer Service P2) |
+| CommunicationServices | create#Message | Commons/QuickCreate; Commons/Files; Comms/Inbox/Compose; Projects/Requests/RequestDetail; Projects/Code/MergeRequestDetail/Changes; Shared/Chatter; CustomerService/Cases/CaseDetail; Shared/RequestDetail; PASS: Forum/Compose; Sales/Pipeline/OpportunityDetail | Comms/Inbox/Compose; Shared/Chatter; CustomerService/Cases/CaseDetail (Conversation, through Shared/Chatter and Compose, Customer Service P2); Sales/Pipeline/OpportunityDetail (Conversation, through Shared/Chatter; the opportunity a record host, Sales P4) |
 | CommunicationServices | reply#CommunicationEvent | Comms/Inbox/Compose; Projects/Code/MergeRequestDetail/Changes; Shared/Chatter | Comms/Inbox/Compose; Shared/Chatter |
 | CommunicationServices | add#WikiPageComment | Commons/Knowledge; Commons/Knowledge/Review |  |
 | CommunicationServices | get#CommunicationEventContentLocation |  |  |
@@ -1023,12 +1023,12 @@ Added in Accounting P15 (budgets), called by built screens:
 | ContactServices | delete#PartyContactMech | Commons/Contacts/ContactDetail; Marketing/Contacts/ContactDetail | Commons/Contacts/ContactDetail; Commons/Contacts/List |
 | ContactServices | undelete#PartyContactMech |  |  |
 | DuplicateServices | find#PartyHasDuplicates | Commons/Contacts/Duplicates |  |
-| DuplicateServices | find#PartyDuplicates | Commons/Contacts/Duplicates; Sales/Accounts/MergeAccounts | Commons/Contacts/Duplicates |
+| DuplicateServices | find#PartyDuplicates | Commons/Contacts/Duplicates; Sales/Accounts/MergeAccounts | Commons/Contacts/Duplicates; Sales/Accounts/MergeAccounts (through Commons get#DuplicatePairs; Sales P3) |
 | DuplicateServices | find#TelecomNumbers |  |  |
 | DuplicateServices | find#PostalAddresses |  |  |
 | DuplicateServices | check#AllPartyDuplicates | Commons/Contacts/Duplicates | Commons/Contacts/Duplicates |
 | DuplicateServices | merge#AllDuplicateParties |  |  |
-| DuplicateServices | merge#Parties | Commons/Contacts; Commons/Contacts/Duplicates; Sales/Accounts/MergeAccounts | Commons/Contacts/Compare |
+| DuplicateServices | merge#Parties | Commons/Contacts; Commons/Contacts/Duplicates; Sales/Accounts/MergeAccounts | Commons/Contacts/Compare; Sales/Accounts/MergeCompare (through Commons merge#Contacts; the merge guards inside, mantle/party/PartyMerge.js; Sales P3) |
 | GooglePartyServices | get#MapsGeoCodeResults |  |  |
 | GooglePartyServices | get#MapsPlaceSearchText |  |  |
 | GooglePartyServices | get#MapsPlaceDetails |  |  |
@@ -1085,12 +1085,12 @@ Added in the drawers-commons build (Oct 18–19, 2026), called by built screens:
 | CommunicationServices | close#ListThread | PASS: Forum/Topics/TopicDetail | Comms/Inbox/Compose; Comms/Inbox/Mail |
 | CommunicationServices | find#InboxThreads |  | Comms; Comms/Home; Comms/Inbox/Mail |
 | CommunicationServices | get#InboxUnreadCounts |  | Comms/Home; Comms/Inbox/Mail |
-| CommunicationServices | get#RecordLinkInfo | Shared/Chatter; Shared/RecordFiles; Sales/Pipeline/OpportunityDetail | Commons/Calendar; Commons/Calendar/EventDetail; Commons/Files; Commons/Knowledge; Commons/Notes; Commons/QuickCreate; Commons/Requests/List; Commons/Requests/RequestDetail; Commons/Tasks/List; Commons/Tasks/TaskDetail; Comms/Chat; Comms/Inbox/Compose; Comms/Inbox/Mail; Comms/Inbox/MessageDetail; Shared/Chatter; Shared/RecordFiles; Projects: 19 screens (through the ironstone.* access and find services); People/Employees/Employee360 (Files and activity: the employment content host, its visibility by check#EmploymentAccess) (People P2) |
+| CommunicationServices | get#RecordLinkInfo | Shared/Chatter; Shared/RecordFiles; Sales/Pipeline/OpportunityDetail | Commons/Calendar; Commons/Calendar/EventDetail; Commons/Files; Commons/Knowledge; Commons/Notes; Commons/QuickCreate; Commons/Requests/List; Commons/Requests/RequestDetail; Commons/Tasks/List; Commons/Tasks/TaskDetail; Comms/Chat; Comms/Inbox/Compose; Comms/Inbox/Mail; Comms/Inbox/MessageDetail; Shared/Chatter; Shared/RecordFiles; Projects: 19 screens (through the ironstone.* access and find services); People/Employees/Employee360 (Files and activity: the employment content host, its visibility by check#EmploymentAccess) (People P2); Sales/Pipeline/OpportunityDetail (Conversation and Files: the opportunity host, its visibility by check#OpportunityAccess and its activities by SalesOpportunityWorkEffort, Sales P4) |
 | CommunicationServices | findOrCreate#EmailCommunicationEvent |  | Comms/Inbox/Mail |
 | CommunicationServices | link#CommunicationEventRecord |  | Comms/Chat; Comms/Inbox/Compose; Comms/Inbox/Mail; Comms/Inbox/MessageDetail; Shared/Chatter |
 | CommunicationServices | unlink#CommunicationEventRecord |  | Comms/Inbox/Mail; Shared/Chatter |
 | CommunicationServices | send#EmailDraft | Projects/Requests/RequestDetail; CustomerService/Cases/CaseDetail; Shared/RequestDetail; Sales/Orders/OrderDetail; Sales/Quotes/QuoteRequestDetail | Comms/Inbox/Compose; CustomerService/Orders/OrderDetail (Resend confirmation, through mantle.order.OrderConfirmationServices.resend#OrderConfirmation; Customer Service P3) |
-| CommunicationServices | get#RecordTimeline | Sales/Pipeline/OpportunityDetail | Shared/Chatter |
+| CommunicationServices | get#RecordTimeline | Sales/Pipeline/OpportunityDetail | Shared/Chatter; Sales/Pipeline/OpportunityDetail (through Shared/Chatter, Sales P4) |
 | CommunicationServices | log#RecordNote |  | Commons/QuickCreate; Shared/Chatter |
 | CommunicationServices | update#RecordNote |  | Shared/Chatter |
 | CommunicationServices | delete#RecordNote |  | Shared/Chatter |
@@ -1139,7 +1139,7 @@ Added in the drawers-commons build (Oct 18–19, 2026), called by built screens:
 | ContactImportServices | preview#Contacts | Marketing/Audiences/AudienceImport | Commons/Contacts/Import/Preview |
 | ContactImportServices | import#Contacts | Marketing/Audiences/AudienceImport | Commons/Contacts/Import/Result |
 | ContactImportServices | export#Contacts | Admin/Data/DataExport | Commons/Contacts/ContactDetail; Commons/Contacts/List; Admin/Data/DataExport |
-| DuplicateServices | mark#PartyNotDuplicate |  | Commons/Contacts/Compare; Commons/Contacts/Duplicates |
+| DuplicateServices | mark#PartyNotDuplicate |  | Commons/Contacts/Compare; Commons/Contacts/Duplicates; Sales/Accounts/MergeAccounts; Sales/Accounts/MergeCompare (through Commons mark#NotDuplicate; Sales P3) |
 | PartyServices | get#ShellCounts |  | shell header (theme value STRT_SHELL_COUNTS_SERVICE) |
 
 Added in the Projects build (Oct 21–22, 2026; impl-projects.md P1–P10), called by built screens:
@@ -1381,14 +1381,14 @@ Added in the Projects build (Oct 21–22, 2026; impl-projects.md P1–P10), call
 
 | Service XML | Service | Designed in | Implemented in |
 | --- | --- | --- | --- |
-| AccountServices | create#Account | Sales/Accounts/Accounts; Sales/Pipeline/Leads |  |
-| AccountServices | create#Contact | Sales/Accounts/Contacts; Sales/Accounts/Customer360; Sales/Accounts/ContactDetail |  |
-| AccountServices | add#Contact | Sales/Accounts/Contacts; Sales/Accounts/Customer360; Sales/Accounts/ContactDetail |  |
-| AccountServices | delete#Contact | Sales/Accounts/Contacts; Sales/Accounts/Customer360; Sales/Accounts/ContactDetail |  |
-| SalesReportServices | get#SalesOrderSummary | Accounting/Reports/SalesAnalysis; Sales/Reports/SalesSummary; Insights/Dashboard; Insights/Panels/PanelDetail; Insights/ReportBuilder/Analysis; Insights/ManagementDigest; Commerce/Home; Commerce/Reports/OnlineSales | — (replaced by mantle.sales.SalesReportServices.run#SalesAnalysis on Accounting/Reports/SalesAnalysis); Commerce/Home (PeriodStrip) and Commerce/Reports/OnlineSales through ironstone.commerce.ReportingServices (P11: productStoreIds of the user's store scope, by currency) |
-| SalesReportServices | get#SalesInvoiceSummary | Sales/Reports/SalesSummary; Insights/Dashboard; Insights/Panels/PanelDetail; Insights/ReportBuilder/Analysis; Insights/ManagementDigest; Commerce/Home; Commerce/Reports/OnlineSales | Commerce/Home (PeriodStrip's net sales) and Commerce/Reports/OnlineSales (net invoiced) through ironstone.commerce.ReportingServices (P11) |
-| SalesReportServices | get#SalesTopProduct | Sales/Reports/SalesSummary; Insights/Dashboard; Insights/Panels/PanelDetail; Insights/ReportBuilder/Analysis; Insights/ManagementDigest; Commerce/Home; Commerce/Reports/OnlineSales | organization filter (vendorPartyIds); Accounting/Reports/SalesAnalysis reads the records (run#SalesAnalysis); Commerce/Home and Commerce/Reports/OnlineSales (P11: productStoreIds and currencyUomIds) |
-| SalesReportServices | get#InvoicesByCustomerClass | Sales/Reports/SalesSummary; Insights/Dashboard; Insights/Panels/PanelDetail; Insights/ReportBuilder/Analysis; Insights/ManagementDigest | organization filter (fromPartyIds); Accounting/Reports/SalesAnalysis reads the records (run#SalesAnalysis) |
+| AccountServices | create#Account | Sales/Accounts/Accounts; Sales/Pipeline/Leads | Sales/Accounts/Accounts (NewAccount, NewPerson; guarded: SALES_ACCOUNT_EDIT, the owner organization, parent and manager checked; Sales P3); Sales/Pipeline/Leads and Sales/Pipeline/OpportunityDetail (QualifyLead's new prospect, through qualify#Lead, Sales P4) |
+| AccountServices | create#Contact | Sales/Accounts/Contacts; Sales/Accounts/Customer360; Sales/Accounts/ContactDetail | Sales/Accounts/Contacts (NewContact); Sales/Accounts/Customer360/SalesContacts (NewAccountContact) (Sales P3) |
+| AccountServices | add#Contact | Sales/Accounts/Contacts; Sales/Accounts/Customer360; Sales/Accounts/ContactDetail | Sales/Accounts/Customer360/SalesContacts (AddAccountPerson); Sales/Accounts/ContactDetail (AddToAccount) (Sales P3) |
+| AccountServices | delete#Contact | Sales/Accounts/Contacts; Sales/Accounts/Customer360; Sales/Accounts/ContactDetail | Sales/Accounts/Contacts; Sales/Accounts/Customer360/SalesContacts; Sales/Accounts/ContactDetail (End: the relationship ends, the person kept) (Sales P3) |
+| SalesReportServices | get#SalesOrderSummary | Accounting/Reports/SalesAnalysis; Sales/Reports/SalesSummary; Insights/Dashboard; Insights/Panels/PanelDetail; Insights/ReportBuilder/Analysis; Insights/ManagementDigest; Commerce/Home; Commerce/Reports/OnlineSales | — (replaced by mantle.sales.SalesReportServices.run#SalesAnalysis on Accounting/Reports/SalesAnalysis); Commerce/Home (PeriodStrip) and Commerce/Reports/OnlineSales through ironstone.commerce.ReportingServices (P11: productStoreIds of the user's store scope, by currency); Sales/Reports/SalesSummary (Sales P1: a SALES_REPORT_VIEW reader's organizations, costs withheld without PRODUCT_COST_VIEW) |
+| SalesReportServices | get#SalesInvoiceSummary | Sales/Reports/SalesSummary; Insights/Dashboard; Insights/Panels/PanelDetail; Insights/ReportBuilder/Analysis; Insights/ManagementDigest; Commerce/Home; Commerce/Reports/OnlineSales | Commerce/Home (PeriodStrip's net sales) and Commerce/Reports/OnlineSales (net invoiced) through ironstone.commerce.ReportingServices (P11); Sales/Reports/SalesSummary (Sales P1: a SALES_REPORT_VIEW reader's organizations, costs withheld without PRODUCT_COST_VIEW) |
+| SalesReportServices | get#SalesTopProduct | Sales/Reports/SalesSummary; Insights/Dashboard; Insights/Panels/PanelDetail; Insights/ReportBuilder/Analysis; Insights/ManagementDigest; Commerce/Home; Commerce/Reports/OnlineSales | organization filter (vendorPartyIds); Accounting/Reports/SalesAnalysis reads the records (run#SalesAnalysis); Commerce/Home and Commerce/Reports/OnlineSales (P11: productStoreIds and currencyUomIds); Sales/Reports/SalesSummary (Sales P1: a SALES_REPORT_VIEW reader's organizations, costs withheld without PRODUCT_COST_VIEW) |
+| SalesReportServices | get#InvoicesByCustomerClass | Sales/Reports/SalesSummary; Insights/Dashboard; Insights/Panels/PanelDetail; Insights/ReportBuilder/Analysis; Insights/ManagementDigest | organization filter (fromPartyIds); Accounting/Reports/SalesAnalysis reads the records (run#SalesAnalysis); Sales/Reports/SalesSummary (Sales P1: a SALES_REPORT_VIEW reader's organizations, costs withheld without PRODUCT_COST_VIEW) |
 
 ## Search (1 service)
 
@@ -1535,7 +1535,7 @@ Added in the Projects build (Oct 21–22, 2026; impl-projects.md P1–P10), call
 | ShipmentWorkServices | close#ShipmentLoadShip | Warehouse/Picking/PicklistDetail | — Warehouse/Picking/PicklistDetail (CompletePicklist: finish#Pick completes the load and takes unpicked shipments off) |
 | TaskServices | get#FullCalendarData | Commons/Calendar; Projects/Projects/ProjectDetail/Plan/Calendar | Commons/Calendar |
 | TaskServices | create#Task | Projects/QuickCreate; Projects/WorkItems; Projects/WorkItems/WorkItemDetail; Projects/WorkItems/Backlog; Projects/Requests; Projects/Requests/RequestDetail | Projects/QuickCreate; Projects/WorkItems/Backlog; Projects/WorkItems/List; Projects/WorkItems/WorkItemDetail |
-| TaskServices | create#SimpleTask | Commons/Panel/Today; Commons/QuickCreate; Commons/Tasks; Comms/Inbox; Comms/Chat; Shared/Chatter; Sales/Pipeline/OpportunityDetail; Sales/Agreements/Subscriptions | Commons/Panel/Today; Commons/QuickCreate; Commons/Requests/RequestDetail; Commons/Tasks/List; Commons/Tasks/TaskDetail; Shared/Chatter; Projects/Requests/RequestDetail; Projects/WorkItems/WorkItemDetail |
+| TaskServices | create#SimpleTask | Commons/Panel/Today; Commons/QuickCreate; Commons/Tasks; Comms/Inbox; Comms/Chat; Shared/Chatter; Sales/Pipeline/OpportunityDetail; Sales/Agreements/Subscriptions | Commons/Panel/Today; Commons/QuickCreate; Commons/Requests/RequestDetail; Commons/Tasks/List; Commons/Tasks/TaskDetail; Shared/Chatter; Projects/Requests/RequestDetail; Projects/WorkItems/WorkItemDetail; Sales/Pipeline/OpportunityDetail (Schedule activity, through add#OpportunityActivity, Sales P4) |
 | TaskServices | update#Task | Commons/Panel/Today; Commons/Tasks; Commons/Tasks/TaskDetail; Projects/Projects/MilestoneDetail; Projects/WorkItems; Projects/WorkItems/WorkItemDetail; Projects/WorkItems/Timeline; Shared/Chatter | Commons/Panel/Today; Commons/Tasks/List; Commons/Tasks/TaskDetail; Shared/Chatter; Projects/WorkItems/List; Projects/WorkItems/SprintDetail; Projects/WorkItems/WorkItemDetail |
 | TaskServices | set#TaskMilestone | Projects/Projects/MilestoneDetail; Projects/WorkItems; Projects/WorkItems/WorkItemDetail |  |
 | TaskServices | set#TaskDefaults |  |  |
@@ -2151,6 +2151,51 @@ remain historical; these rows add no implementation claim.
 | party/ExternalAccessServices | revoke#AccessCapability | Sales/Orders/OrderDetail |  |
 | product/PriceServices | find#ProductPrices | Sales/Agreements/CustomerPrices; Sales/Agreements/AgreementDetail |  |
 | sales/SalesReportServices | run#SalesAnalysis | Sales/Reports/SalesAnalysis; Insights/Dashboard; Insights/Panels/PanelDetail; Insights/ReportBuilder/Analysis; Insights/ManagementDigest |  |
+
+### Added in the Sales build: accounts and contacts (P3, Nov 13, 2026)
+
+| Service XML | Service | Designed in | Implemented in |
+| --- | --- | --- | --- |
+| sales/AccountServices | set#AccountManager | Sales/Accounts/Customer360 | Sales/Accounts/Customer360/SalesOverview (Change, Take this account) |
+| sales/SalesWorkspaceServices | find#Accounts | Sales/Accounts/Accounts | Sales/Accounts/Accounts (AccountList); the Sales palette and the accounts choice (ironstone.sales.ContextServices) |
+| sales/SalesWorkspaceServices | find#AccountContacts | Sales/Accounts/Contacts | Sales/Accounts/Contacts (ContactList); Sales/Accounts/ContactDetail (SalesContactAccounts) |
+| sales/SalesWorkspaceServices | get#CustomerSales | Sales/Accounts/Customer360 | Sales/Accounts/Customer360 (template/SalesCustomer360.xml and the Sales tabs) |
+| sales/SalesWorkspaceServices | get#AccountDocumentCounts | Sales/Accounts/MergeAccounts | Sales/Accounts/MergeCompare |
+| party/DuplicateServices | check#PartyMerge | Sales/Accounts/MergeAccounts | Sales/Accounts/MergeAccounts; Commons/Contacts/Compare and Sales/Accounts/MergeCompare (through Commons get#ComparePair); Commons mark#NotDuplicate |
+
+### Added in the Sales build: leads and opportunities (P4, Nov 13, 2026)
+
+| Service XML | Service | Designed in | Implemented in |
+| --- | --- | --- | --- |
+| sales/OpportunityServices | find#Opportunities | Sales/Pipeline/Opportunities; Sales/Pipeline/Leads | Sales/Pipeline/Opportunities (OpportunityList: board, list, calendar); Sales/Pipeline/Leads (LeadList); the Sales palette (ironstone.sales.ContextServices) |
+| sales/OpportunityServices | get#Opportunity | Sales/Pipeline/OpportunityDetail | Sales/Pipeline/OpportunityDetail (the header and every box) |
+| sales/OpportunityServices | create#Opportunity | Sales/Pipeline/Opportunities; Sales/Pipeline/Leads | Sales/Pipeline/Opportunities (NewOpportunity); Sales/Pipeline/Leads (NewLead) |
+| sales/OpportunityServices | update#Opportunity | Sales/Pipeline/OpportunityDetail | Sales/Pipeline/OpportunityDetail (Opportunity, Edit) |
+| sales/OpportunityServices | move#Opportunity | Sales/Pipeline/Opportunities | Sales/Pipeline/Opportunities (the board's move, ChangeStage); Sales/Pipeline/OpportunityDetail (Change stage) |
+| sales/OpportunityServices | qualify#Lead | Sales/Pipeline/Leads | Sales/Pipeline/Leads (QualifyLead); Sales/Pipeline/OpportunityDetail (Qualify) |
+| sales/OpportunityServices | close#Opportunity | Sales/Pipeline/OpportunityDetail | Sales/Pipeline/OpportunityDetail (CloseOpportunity, Disqualify) |
+| sales/OpportunityServices | reopen#Opportunity | Sales/Pipeline/OpportunityDetail | Sales/Pipeline/OpportunityDetail (ReopenOpportunity) |
+| sales/OpportunityServices | store#OpportunityParty | Sales/Pipeline/OpportunityDetail | Sales/Pipeline/OpportunityDetail (People: Add contact, Change owner, Set team, End) |
+| sales/OpportunityServices | store#Competitor | Sales/Pipeline/OpportunityDetail | Sales/Pipeline/OpportunityDetail (Competitors) |
+| sales/OpportunityServices | apply#OpportunityBatch | Sales/Pipeline/Opportunities | Sales/Pipeline/Opportunities (the selection: Move, Assign, Close as lost); Sales/Pipeline/Leads (Assign, Disqualify) |
+| sales/OpportunityServices | add#OpportunityActivity | Sales/Pipeline/OpportunityDetail | Sales/Pipeline/OpportunityDetail (Schedule activity) |
+| sales/OpportunityServices | check#OpportunityAccess | Shared/Chatter; Shared/RecordFiles | get#RecordLinkInfo's opportunity host; Shared/RecordFiles (who adds a deal's files) |
+| sales/OpportunityServices | create#OpportunityContent | Shared/RecordFiles | Sales/Pipeline/OpportunityDetail (Files, through Shared/RecordFiles) |
+
+### Added in the Sales build: lead intake, Comms hooks and account sync (P5, Nov 13, 2026)
+
+| Service XML | Service | Designed in | Implemented in |
+| --- | --- | --- | --- |
+| sales/OpportunityServices | store#LeadIntake | Sales/Pipeline/Leads (intake); PASS:Marketing/SubmitForm (Marketing's lead rules) | create#LeadFromEmail (the mail rule); ironstone.sales.ContextServices.create#LeadFromMessage (Comms' Create lead on a mail, internal or chat message, Calls/Voicemail's Create lead); Marketing's capture job (impl-marketing P13) |
+| sales/OpportunityServices | create#LeadFromEmail | — (mail rules) | the mail rules' Make a sales lead (EmailRuleAction ErActCreateLead), a team's plus tag (no screen) |
+| sales/OpportunityServices | store#LeadSourceMapping | Sales/Settings/LeadSources | Sales/Settings/LeadSources (UtmSourceMap: Map a source, End) |
+| sales/OpportunityServices | find#LeadSourceMappings | Sales/Settings/LeadSources | Sales/Settings/LeadSources (UtmSourceMap) |
+| sales/OpportunityServices | store#TeamIntake | Sales/Settings (the intake address) | Sales/Settings/LeadSources (Mail intake: Set) |
+| sales/OpportunityServices | find#TeamIntakes | Sales/Settings (the intake address) | Sales/Settings/LeadSources (Mail intake) |
+| sales/OpportunityServices | log#OpportunityCall | Comms call and voicemail actions | Sales/Pipeline/LogCall (mounted as SalesLogCall under Comms/Calls/Call and Comms/Calls/Voicemail) |
+| sales/OpportunityServices | purge#LeadIntakes | — (job) | ServiceJob purge_SalesLeadIntakes (no screen) |
+| sales/SalesWorkspaceServices | get#AccountContactProjection | Sales/Accounts/Contacts (My accounts) | the projected CardDAV address book projected-SalesMyAccounts (mantle.party.ContactDavServices; no screen) |
+| party/ContactDavServices | get#ProjectionObjects | — (CardDAV) | get#DavCollections and get#DavObjects for projected-{projectionId} (no screen) |
 
 ## Marketing design — source-verified service additions
 

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a
+Grant of Patent License.
+
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<!-- The Sales app's context (impl-sales §2, P1; design-sales §1.1, §12.1; Sales.js): the shared context every Sales screen reads in
+    the root's always-actions, the record check a screen or mount runs before a Mantle service, the drop-downs and the palette. A
+    user may open Sales through an authorization of their groups on its root (BOSS_SALES, the root user group, or
+    BOSS_SALES_ADMIN); the capabilities and organizations are Mantle's (mantle/sales/SalesAccess.js, from the SALES_* permissions),
+    and the menu areas' authorizations add theirs. Disabled artifact authorization widens nothing here; each Mantle sales service
+    checks again. Costs are never part of the context. -->
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
+    <service verb="define" noun="Parameters" type="interface">
+        <description>The in-parameters the Sales context services share; each service declares what it returns.</description>
+        <in-parameters>
+            <parameter name="appRoot" type="String"/>
+        </in-parameters>
+    </service>
+    <service verb="get" noun="SharedContext" allow-remote="false">
+        <description>Check that the user may open Sales and resolve their scope and the routes of the root that mounts Sales'
+            screens: capabilities (each SALES_* permission, the derived reads anyRead, teamRead and reportRead, an edit permission
+            alone reading nothing, the areas: reports, and reportCosts, whether the sales reports answer the user's costs: report read
+            or PRODUCT_COST_VIEW), the organizations of their sales scope (none for a user who reads
+            nothing of Sales; every internal organization for a system administrator, allOrganizations) as options, the active one,
+            the user's party and the links (sharedLinks under the mounting root). Refuses a user without Sales
+            (SALES_UNAVAILABLE), a Projects client contact and a PASS public account among them, and a root that mounts no Sales
+            screen (SALES_CONTEXT).</description>
+        <implements service="ironstone.sales.ContextServices.define#Parameters"/>
+        <out-parameters>
+            <parameter name="capabilities" type="Map"/>
+            <parameter name="organizationPartyIds" type="List"/>
+            <parameter name="activeOrganizationPartyId" type="String"/>
+            <parameter name="defaultOrganizationPartyId" type="String"><description>A new record's organization when none is chosen:
+                the active one, the scope's only one, or the only one of it the user works for (P4 review)</description></parameter>
+            <parameter name="allOrganizations" type="Boolean"/>
+            <parameter name="organizationOptions" type="List"><description>The organizations as {value, label}, by name, at most
+                100</description></parameter>
+            <parameter name="partyId" type="String"/>
+            <parameter name="appRoot" type="String"/>
+            <parameter name="sharedLinks" type="Map"/>
+            <parameter name="linkBase" type="String"/>
+            <parameter name="webBase" type="String"/>
+        </out-parameters>
+        <actions>
+            <set field="module" value="component://mr-boss/service/ironstone/sales/Sales.js"/>
+            <set field="shared" from="ec.resource.script(module).execute('sharedContext', context)"/>
+            <set field="capabilities" from="shared.capabilities"/>
+            <set field="organizationPartyIds" from="shared.organizationPartyIds"/>
+            <set field="activeOrganizationPartyId" from="shared.activeOrganizationPartyId"/>
+            <set field="defaultOrganizationPartyId" from="shared.defaultOrganizationPartyId"/>
+            <set field="allOrganizations" from="shared.allOrganizations"/>
+            <set field="organizationOptions" from="shared.organizationOptions"/>
+            <set field="partyId" from="shared.partyId"/>
+            <set field="appRoot" from="shared.appRoot"/>
+            <set field="sharedLinks" from="shared.sharedLinks"/>
+            <set field="linkBase" from="shared.linkBase"/>
+            <set field="webBase" from="shared.webBase"/>
+        </actions>
+    </service>
+    <service verb="check" noun="Record" allow-remote="false" read-only="true">
+        <description>A record a Sales screen or mount was given: an organization, an account and a contact (P3), an opportunity or
+            lead (P4) (Sales.js recordKinds; later phases add the quote, order, agreement and forecast). Answers its kind's name, its organization in the user's scope, a
+            label and a short detail. Refuses a record that does not exist and one outside the scope alike (RECORD_UNAVAILABLE):
+            an organization outside the user's, and any record for a user who reads nothing of Sales. With a capability named
+            (reportRead, opportunityEdit, ...), refuses a user without it (PERMISSION_DENIED). Refuses a user without Sales
+            (SALES_UNAVAILABLE).</description>
+        <implements service="ironstone.sales.ContextServices.define#Parameters"/>
+        <in-parameters>
+            <parameter name="recordType" required="true"><description>organization</description></parameter>
+            <parameter name="recordId" required="true"/>
+            <parameter name="capability"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="recordType"/>
+            <parameter name="recordId"/>
+            <parameter name="kindName"/>
+            <parameter name="organizationPartyId"/>
+            <parameter name="label"/>
+            <parameter name="detail"/>
+        </out-parameters>
+        <actions>
+            <set field="module" value="component://mr-boss/service/ironstone/sales/Sales.js"/>
+            <set field="record" from="ec.resource.script(module).execute('checkRecord', context)"/>
+            <set field="recordType" from="record.recordType"/>
+            <set field="recordId" from="record.recordId"/>
+            <set field="kindName" from="record.kindName"/>
+            <set field="organizationPartyId" from="record.organizationPartyId"/>
+            <set field="label" from="record.label"/>
+            <set field="detail" from="record.detail"/>
+        </actions>
+    </service>
+    <service verb="get" noun="Choices" allow-remote="false" read-only="true">
+        <description>The options of a Sales drop-down the user may choose, searched by term in the query ignoring case, with the
+            selected value's label (Sales.js choiceSources): organizations (those of the user's sales scope); P2: teams (an
+            organization's current sales teams) and teamMembers (the people who work for it, labelled with their job title for a
+            reader of People's directory); P4: pipelines and stages (an organization's), owners (its people), sources (offered to it),
+            lostReasons, recurringPlans, competitors (organizations of the scope) and dealContacts (an account's contacts). Later
+            phases add theirs. None for a user who reads nothing of Sales. Refuses a user without Sales and an unknown choice.</description>
+        <implements service="ironstone.sales.ContextServices.define#Parameters"/>
+        <in-parameters>
+            <parameter name="choice" required="true"/>
+            <parameter name="term"/>
+            <parameter name="selected"/>
+            <parameter name="organizationPartyId"><description>P2: the organization a team or team member is chosen
+                for</description></parameter>
+            <parameter name="salesPipelineId"><description>P4: the pipeline whose stages are chosen</description></parameter>
+            <parameter name="accountPartyId"><description>P4: the account whose contacts a deal's contact is chosen from</description></parameter>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="options" type="List"/>
+        </out-parameters>
+        <actions>
+            <set field="module" value="component://mr-boss/service/ironstone/sales/Sales.js"/>
+            <set field="found" from="ec.resource.script(module).execute('choices', context)"/>
+            <set field="options" from="found.options"/>
+        </actions>
+    </service>
+    <service verb="get" noun="WorkItemContext" allow-remote="false" read-only="true">
+        <description>WorkItemDetail's Sales context (P4; crosscut §3.12 Sales row): a task linked to deals the user sees
+            (SalesOpportunityWorkEffort; available), with those deals and their links. A task of no such deal is not available
+            there. Refuses a user without Sales (SALES_UNAVAILABLE).</description>
+        <in-parameters><parameter name="workEffortId" required="true"/></in-parameters>
+        <out-parameters>
+            <parameter name="available" type="Boolean"/>
+            <parameter name="opportunityRows" type="List"/>
+        </out-parameters>
+        <actions>
+            <set field="module" value="component://mr-boss/service/ironstone/sales/Sales.js"/>
+            <set field="found" from="ec.resource.script(module).execute('workItemContext', context)"/>
+            <set field="available" from="!!found.available"/>
+            <set field="opportunityRows" from="found.opportunityRows || []"/>
+        </actions>
+    </service>
+    <service verb="search" noun="Records" allow-remote="false" read-only="true">
+        <description>The palette's Sales records, each opening its Sales screen, with recordEntity and recordId for Assist's
+            search (Sales.js searchFinds). None yet: accounts join with their screens (P3), opportunities and leads (P4), quotes
+            and orders (P7, P11), agreements (P15). No rows for a user without Sales.</description>
+        <in-parameters>
+            <parameter name="text"/>
+            <parameter name="limit" type="Integer"/>
+            <parameter name="docTypes" type="List"/>
+            <parameter name="idMatch" type="Boolean"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="rows" type="List"/>
+        </out-parameters>
+        <actions>
+            <set field="module" value="component://mr-boss/service/ironstone/sales/Sales.js"/>
+            <set field="found" from="ec.resource.script(module).execute('search', context)"/>
+            <set field="rows" from="found.rows"/>
+        </actions>
+    </service>
+    <!-- ===== P5: the Comms hooks (design §1.4 Comms hooks, §3 Leads; impl-sales F64; SalesComms.js) ===== -->
+    <service verb="create" noun="LeadFromMessage" allow-remote="false">
+        <description>"Create lead" from a message, as the user (Comms' create-from kind lead on a mail, internal or chat message,
+            through ironstone.comms.ChatServices.create#FromChat; Calls/Voicemail's createLead transition): the message read as the
+            user may read it (RECORD_UNAVAILABLE otherwise), Mantle's store#LeadIntake for the user's organization (the default one,
+            ORGANIZATION_DENIED when they sell for several) with the user its owner and the sender's name, address or number as
+            submitted, a voicemail's transcript (never its audio) as the description, and the message filed on the lead as its source.
+            The same message again answers the same lead. Refuses a user without Sales (SALES_UNAVAILABLE) or without
+            SALES_OPPORTUNITY_EDIT (PERMISSION_DENIED). Answers the lead's record, its OpportunityDetail link and a message.</description>
+        <in-parameters>
+            <parameter name="emailMessageId"/>
+            <parameter name="communicationEventId"/>
+            <parameter name="chatRoomId"/>
+            <parameter name="eventSeq" type="Integer"/>
+            <parameter name="voicemailId"/>
+            <parameter name="organizationPartyId"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="recordEntityName"/>
+            <parameter name="recordId"/>
+            <parameter name="url"/>
+            <parameter name="message"/>
+            <parameter name="roomRecordLinked" type="Boolean"/>
+        </out-parameters>
+        <actions>
+            <set field="made" from="ec.resource.script('component://mr-boss/service/ironstone/sales/SalesComms.js').execute('leadFromMessage', context)"/>
+            <set field="recordEntityName" from="made.recordEntityName"/>
+            <set field="recordId" from="made.recordId"/>
+            <set field="url" from="made.url"/>
+            <set field="message" from="made.message"/>
+            <set field="roomRecordLinked" from="false"/>
+        </actions>
+    </service>
+    <service verb="lookup" noun="Records" allow-remote="false" read-only="true">
+        <implements service="org.moqui.comms.ProviderInterfaces.record#Lookup"/>
+        <description>Sales' record-lookup provider (Sales.xml shell-providers, sales.records): leads and opportunities the user sees
+            (Mantle's opportunityOf and find#Opportunities as the user). info and card: a deal's name, kind, stage or outcome, account
+            and owner (never its amount), with its OpportunityDetail link; a deal the user does not see is left to the other
+            providers. search: the open deals by name or id, as optionList {value: entity|id, label}. links: the deals a message's
+            OpportunityDetail links name, up to five.</description>
+        <out-parameters>
+            <parameter name="recordList" type="List"/>
+            <parameter name="card" type="Map"/>
+            <parameter name="optionList" type="List"/>
+        </out-parameters>
+        <actions>
+            <set field="found" from="ec.resource.script('component://mr-boss/service/ironstone/sales/SalesComms.js').execute('lookup', context)"/>
+            <set field="recordList" from="found.recordList"/>
+            <set field="card" from="found.card"/>
+            <set field="optionList" from="found.optionList"/>
+        </actions>
+    </service>
+    <service verb="get" noun="CallContext" allow-remote="false" read-only="true">
+        <implements service="org.moqui.comms.ProviderInterfaces.call#Context"/>
+        <description>Sales' call-context provider (Sales.xml shell-providers, sales.deals): for the number ringing, the open leads and
+            opportunities the user sees of the accounts the caller is or is a contact of, each with its Sales link, at most 20.
+            Comms' own provider answers the contacts. No amount.</description>
+        <actions>
+            <set field="found" from="ec.resource.script('component://mr-boss/service/ironstone/sales/SalesComms.js').execute('callContext', context)"/>
+            <set field="contactList" from="found.contactList"/>
+            <set field="recordList" from="found.recordList"/>
+        </actions>
+    </service>
+    <service verb="get" noun="ContactCard" allow-remote="false" read-only="true">
+        <implements service="org.moqui.comms.ProviderInterfaces.contact#Card"/>
+        <description>Sales' contact-card provider (Sales.xml shell-providers, sales.leads, after Comms' own): an address that is no
+            party yet but the submitted email of an open lead's intake the user sees, as that lead's card (the submitted name,
+            organization and phone, the lead's link); nothing for a known party, whose card is Comms'.</description>
+        <actions>
+            <set field="card" from="ec.resource.script('component://mr-boss/service/ironstone/sales/SalesComms.js').execute('contactCard', context).card"/>
+        </actions>
+    </service>
+    <service verb="get" noun="DealOptions" allow-remote="false" read-only="true">
+        <description>Log call's deal drop-down: the open leads and opportunities the user sees by name or id (term), at most 20, as
+            {value, label}. Refuses a user without Sales (SALES_UNAVAILABLE).</description>
+        <in-parameters><parameter name="term"/></in-parameters>
+        <out-parameters><parameter name="options" type="List"/></out-parameters>
+        <actions>
+            <set field="options" from="ec.resource.script('component://mr-boss/service/ironstone/sales/SalesComms.js').execute('dealOptions', context).options"/>
+        </actions>
+    </service>
+    <service verb="log" noun="Call" allow-remote="false">
+        <description>"Log call on opportunity" from Comms' call (callSessionId) or voicemail (voicemailId: an inbound call when it was
+            left, its length, its transcript as the summary unless one is given; never its audio): Mantle's log#OpportunityCall as the
+            user on a deal they edit (RECORD_UNAVAILABLE, PERMISSION_DENIED). Refuses a user without Sales (SALES_UNAVAILABLE).</description>
+        <in-parameters>
+            <parameter name="salesOpportunityId" required="true"/>
+            <parameter name="summary"/>
+            <parameter name="direction"/>
+            <parameter name="durationMinutes"/>
+            <parameter name="voicemailId"/>
+            <parameter name="callSessionId"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="communicationEventId"/>
+            <parameter name="url"/>
+            <parameter name="message"/>
+        </out-parameters>
+        <actions>
+            <set field="found" from="ec.resource.script('component://mr-boss/service/ironstone/sales/SalesComms.js').execute('logCall', context)"/>
+            <set field="communicationEventId" from="found.communicationEventId"/>
+            <set field="url" from="found.url"/>
+            <set field="message" from="found.message"/>
+        </actions>
+    </service>
+</services>
