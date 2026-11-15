@@ -20,7 +20,14 @@ along with this software (see the LICENSE.md file). If not, see
     every subscreen, and each Mantle sales service checks the permissions and the organization again (mantle/sales/SalesAccess.js).
     The menu of design §1.2 grows by phase: P1 builds Home (every Sales user's) and Reports (a holder of SALES_REPORT_VIEW,
     BOSS_SAL_REPORTS), P2 Settings (BOSS_SAL_SETTINGS), P3 Accounts, P4 Pipeline (Opportunities and Leads, a Sales reader's); each later
-    phase adds its area, and the design's later entries stay absent. -->
+    phase adds its area, and the design's later entries stay absent. P6: Home's work, QuickCreate, LogNote and SendMessage (hidden
+    from the menu), and the shell's quick create, Today and Assist providers. P7: Quotes (a Sales reader's), the Orders area with its one
+    OrderDetail route and Products' screens in Sales' context (both hidden from the menu until P11 shows Orders), quick create's Quote.
+    P8: RFQs (Quotes/QuoteRequests and the shared RequestDetail at Quotes/QuoteRequestDetail), whose request is a record panel host.
+    P9: Quotes' Approvals tab (a sales approver's), Settings' Defaults and Approval rules, the approval topics. P11: Orders in the menu
+    (the order list, Awaiting approval, NewSalesOrder, OrderBatch), OrderDetail's sales-order context, an order as a record panel host
+    and in the palette. P15: Agreements and prices (Agreements, the shared AgreementDetail, Customer prices and Price lists), an
+    agreement as a record panel host and in the palette. P18: Pipeline's Forecast, Settings' Targets and Reports' Target attainment. -->
 <screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
         default-menu-title="Sales" menu-image="sym_o_handshake" menu-image-type="icon">
 
@@ -49,7 +56,13 @@ along with this software (see the LICENSE.md file). If not, see
                 let entityName = String(wanted)
                 try { entityName = ec.entity.makeValue(entityName).getEntityName() } catch (error) { entityName = '' }
                 // P4: a lead or opportunity the user sees (Sales.js recordKinds opportunity, SalesAccess.js opportunityOf)
-                const panelHosts = {'mantle.party.Party': 'contact', 'mantle.sales.opportunity.SalesOpportunity': 'opportunity'}
+                // P7: a quote the user sees (Sales.js recordKinds quote, SalesAccess.js quoteOf)
+                // P8: a request for quote the user sees (Sales.js recordKinds quoteRequest, SalesAccess.js quoteRequestOf)
+                // P11: an order the user sees too (Sales.js recordKinds orderDocument: a quote, else a sales order, SalesAccess.js orderOf)
+                const panelHosts = {'mantle.party.Party': 'contact', 'mantle.sales.opportunity.SalesOpportunity': 'opportunity',
+                    'mantle.order.OrderHeader': 'orderDocument', 'mantle.request.Request': 'quoteRequest'}
+                // P15: a customer agreement the user sees (Sales.js recordKinds agreement, SalesAccess.js agreementOf)
+                panelHosts['mantle.party.agreement.Agreement'] = 'agreement'
                 if (!Object.hasOwn(panelHosts, entityName))
                     throw new Error('RECORD_PANEL_UNAVAILABLE: Notes and files of this record are kept in the app that owns it')
                 panelRecordType = panelHosts[entityName]
@@ -81,14 +94,28 @@ along with this software (see the LICENSE.md file). If not, see
             Contacts, the shared Customer360 and ContactDetail, MergeAccounts for the manager and the administrator -->
         <subscreens-item name="Accounts" location="component://mr-boss/screen/Sales/Accounts.xml" menu-index="3"
                 menu-include="ec.user.hasPermission('SALES_VIEW') || ec.user.hasPermission('SALES_TEAM_VIEW') || ec.user.hasPermission('SALES_REPORT_VIEW')"/>
+        <!-- P7: Quotes (design §5), for a user who reads Sales; Mantle's quote services scope every read to the user's sellers and
+            assignments. The Orders area holds the one OrderDetail route (P11 shows it in the menu with Orders) and Products the shared
+            product screens in Sales' context, reached from a quote's lines -->
+        <subscreens-item name="Quotes" location="component://mr-boss/screen/Sales/Quotes.xml" menu-index="4"
+                menu-include="ec.user.hasPermission('SALES_VIEW') || ec.user.hasPermission('SALES_TEAM_VIEW') || ec.user.hasPermission('SALES_REPORT_VIEW')"/>
+        <!-- P11: Orders (design §6), for a user who reads Sales; Mantle's find#SalesOrders and get#SalesOrder scope every read -->
+        <subscreens-item name="Orders" location="component://mr-boss/screen/Sales/Orders.xml" menu-index="5"
+                menu-include="ec.user.hasPermission('SALES_VIEW') || ec.user.hasPermission('SALES_TEAM_VIEW') || ec.user.hasPermission('SALES_REPORT_VIEW')"/>
+        <subscreens-item name="Products" location="component://mr-boss/screen/Sales/Products.xml" menu-index="9" menu-include="false"/>
+        <!-- P15: Agreements and prices (design §7), for a user who reads Sales: Agreements and the shared AgreementDetail (Mantle's
+            agreement services scope every read to the user's organizations); Customer prices and Price lists, Products' shared screens
+            in Sales' context, shown to a holder of Products' price permissions (PRICE_VIEW or PRICE_EDIT), checked again there -->
+        <subscreens-item name="Agreements" location="component://mr-boss/screen/Sales/Agreements.xml" menu-index="6"
+                menu-include="ec.user.hasPermission('SALES_VIEW') || ec.user.hasPermission('SALES_TEAM_VIEW') || ec.user.hasPermission('SALES_REPORT_VIEW')"/>
         <!-- P2: Settings (design §9), the administrator's (SALES_CONFIGURE) and, for Teams, the manager's (SALES_TEAM_MANAGE);
             BOSS_SAL_SETTINGS denies the root user group and opens it to the manager; Mantle's setup services check again -->
         <subscreens-item name="Settings" location="component://mr-boss/screen/Sales/Settings.xml" menu-index="8"
                 menu-include="ec.user.hasPermission('SALES_CONFIGURE') || ec.user.hasPermission('SALES_TEAM_MANAGE')"/>
     </subscreens>
 
-    <!-- P1: the sales keymap (design §1.2). The palette source (P3, P4), quick create (P6), Today (P6), the Comms providers (P5)
-        and the notification topics (P9, P14) arrive with their records. -->
+    <!-- P1: the sales keymap (design §1.2). The palette source (P3, P4), quick create (P6), Today (P6), the Comms providers (P5),
+        Assist's chips and answer actions (P6) and the notification topics (P9, P14) arrive with their records. -->
     <shell-providers>
         <!-- P3: the palette's Sales records, accounts first, P4 the open leads and opportunities (ironstone.sales.ContextServices.search#Records,
             Mantle's scoped finds) -->
@@ -101,6 +128,45 @@ along with this software (see the LICENSE.md file). If not, see
         <record-lookup name="sales.records" service="ironstone.sales.ContextServices.lookup#Records" sequence="-5"/>
         <call-context name="sales.deals" service="ironstone.sales.ContextServices.get#CallContext"/>
         <contact-card name="sales.leads" service="ironstone.sales.ContextServices.get#ContactCard" sequence="50"/>
+        <!-- P6 (design §12.2 QuickCreate, §1.3): the + menu's Sales kinds over the hosts' own forms (Sales/QuickCreate; Quote in P7),
+            each telling a user without its capability so, Mantle refusing them anyway; Today's source, the user's deals expected to
+            close (their activities are Commons' tasks, in Today already) -->
+        <quick-create kind="salesLead" label="Lead" icon="sym_o_person_add" screen="Sales/QuickCreate/NewLead" sequence="87"/>
+        <quick-create kind="salesOpportunity" label="Opportunity" icon="sym_o_trending_up" screen="Sales/QuickCreate/NewOpportunity"
+                sequence="88"/>
+        <quick-create kind="salesAccount" label="Account" icon="sym_o_storefront" screen="Sales/QuickCreate/NewAccount" sequence="89"/>
+        <quick-create kind="salesContact" label="Contact of an account" icon="sym_o_contact_page" screen="Sales/QuickCreate/NewContact"
+                sequence="90"/>
+        <quick-create kind="salesActivity" label="Activity on a deal" icon="sym_o_event" screen="Sales/QuickCreate/NewActivity"
+                sequence="91"/>
+        <!-- P7: a quote over NewQuote (Sales/QuickCreate/NewQuote) -->
+        <quick-create kind="salesQuote" label="Quote" icon="sym_o_request_quote" screen="Sales/QuickCreate/NewQuote" sequence="92"/>
+        <today-source service="ironstone.sales.ContextServices.get#TodayItems" label="Sales"/>
+        <!-- P9: the approval topics a sales approver decides (Sales/Quotes/Approvals): a quote's exception and a commercial order change -->
+        <notification-topic topic="SalesQuoteApproval"/>
+        <notification-topic topic="OrderChangeApproval"/>
+        <!-- P8 review (the user's call of Nov 13, 2026): a warranty claim's chargeable repair for Sales to quote -->
+        <notification-topic topic="SalesRepairToQuote"/>
+        <!-- P6 (design §1.4 CX-ASSIST): Assist's chips on OpportunityDetail and Customer360 (each also needs its screen's grant) and its
+            answer actions, filed through Sales' own record check: Log as note on the page's deal or account, Send as message (Comms'
+            internal message, filed on the page's record when Sales admits the user to it) -->
+        <assist-prompt label="Summarize this deal" text="Summarize this deal: its stage, amount, people, activities and what is next"
+                screen="Sales/Pipeline/OpportunityDetail" entity="mantle.sales.opportunity.SalesOpportunity" sequence="60"/>
+        <assist-prompt label="Draft a follow-up" text="Draft a follow-up message to this deal's contact about the next step"
+                screen="Sales/Pipeline/OpportunityDetail" entity="mantle.sales.opportunity.SalesOpportunity" sequence="61"/>
+        <assist-prompt label="What changed?" text="What changed on this deal since its last activity?"
+                screen="Sales/Pipeline/OpportunityDetail" entity="mantle.sales.opportunity.SalesOpportunity" sequence="62"/>
+        <assist-prompt label="Open work for this account" text="What open work does this account have: deals, activities and the next steps?"
+                screen="Sales/Accounts/Customer360" entity="mantle.party.Party" sequence="63"/>
+        <!-- P10: a quote's chips on OrderDetail (skill sales-issue-quote) -->
+        <assist-prompt label="Check this quote before I send it" text="Check this quote before I send it: its lines, validity, tax, approvals and who it goes to"
+                screen="Sales/Orders/OrderDetail" entity="mantle.order.OrderHeader" sequence="64"/>
+        <assist-prompt label="Draft the cover note" text="Draft a short cover note for sending this quote to the customer's contact"
+                screen="Sales/Orders/OrderDetail" entity="mantle.order.OrderHeader" sequence="65"/>
+        <response-action label="Log as note" icon="sym_o_sticky_note_2" screen="Sales/LogNote" text-parameter="noteText"
+                requires-record="true" sequence="70"/>
+        <response-action label="Send as message" icon="sym_o_send" screen="Sales/SendMessage" text-parameter="messageText"
+                sequence="71"/>
         <keymap scope="sales">
             <key keys="g s" label="Sales home" screen="Sales/Home"/>
             <!-- P3 -->
@@ -109,6 +175,12 @@ along with this software (see the LICENSE.md file). If not, see
             <!-- P4 -->
             <key keys="g o" label="Opportunities" screen="Sales/Pipeline/Opportunities"/>
             <key keys="g l" label="Leads" screen="Sales/Pipeline/Leads"/>
+            <!-- P7 -->
+            <key keys="g q" label="Quotes" screen="Sales/Quotes/Quotes"/>
+            <!-- P11 -->
+            <key keys="g r" label="Orders" screen="Sales/Orders/Orders"/>
+            <!-- P15 -->
+            <key keys="g m" label="Agreements" screen="Sales/Agreements/Agreements"/>
         </keymap>
     </shell-providers>
 

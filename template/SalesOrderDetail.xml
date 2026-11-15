@@ -1,0 +1,893 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a
+Grant of Patent License.
+
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<!-- OrderDetail's Sales quote context (crosscut §3.6's Sales row; design-sales §5 OrderDetail — Quote context; impl-sales P7, F34,
+    F68): the section Shared/OrderDetail includes when appRoot is Sales, over mantle.order.SalesQuoteServices.get#Quote (a quote the
+    user sees: of a seller of their sales scope, theirs or their team's, or the organization's for SALES_TEAM_VIEW; another's and a
+    missing one are "not available" alike). The header (the quote, its customer, seller, store or none, opportunity, state) with Add
+    line (the primary of a draft) and More (Add shipping charge, Edit quote, the customer, the opportunity); the totals (products,
+    shipping, tax by the store's or the seller's gateway, X1); Overview; Items, each line with its price's source, an entered price's
+    basis and reason, its tax, and Edit, Explain price (PriceExplain's Sales branch), Availability (InventoryAvailability, read only)
+    and Remove; Terms (validity on the part, the customer's reference); History (the audited fields); Chatter and Files (the root
+    admits a quote the user sees). No cost or margin. The sales-order context is P11's. P9: the Approval box (get#Quote's approval, SalesApprovalServices.preview#Quote's answer): each rule the
+    quote meets at its revision with what meets it, the approver it needs and its state; Ask for approval for the rep
+    (request#QuoteApproval), Approve and Refuse for an approver who may decide it (decide#Quote at the revision shown), and the rules'
+    preview for a configurer. P10: the state's one primary (Propose a draft with lines, Send a proposed quote, Record acceptance while an
+    issue stands) beside Add line, and in More Record decline, Revise, Withdraw, Copy as a new quote and Print (PDF); Send opens
+    Sales/Orders/QuoteSend (the preview and the send); Issues and responses lists each issue (revision, state, recipients and their
+    delivery, the response, its stored PDF), over mantle.order.SalesQuoteIssueServices. P11: the sales-order context (crosscut §3.6's second
+    Sales row; design §6 OrderDetail — Sales-order context), over mantle.order.SalesOrderServices.get#SalesOrder (a direct order, an
+    accepted quote or another sales order the user sees; Shared/OrderDetail asks it first, so a quote once placed shows here): the
+    header (the order, customer and PO, seller, store or none, the accepted quote's evidence, each open hold) with the state's one
+    primary (Add line for an empty direct draft, Place, Approve) and More (Hold, Cancel remainder, Copy as a new order); the approval
+    while it waits (the seller's setting, each order rule and its state, the pre-approval warnings, which tell the person approving
+    and refuse nothing); Overview; Items with shipped and billed quantities (Add line and Remove on a direct draft); Fulfillment
+    (shipments) and Invoices and payments for a finance reader (P14: each row opens ShipmentDetail or InvoiceDetail under Sales; a
+    Changes box lists the order's changes and More offers New change, opening OrderChangeDetail), each without a link until P14 mounts ShipmentDetail and
+    InvoiceDetail; History; Chatter and Files. -->
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd">
+    <transition name="salesChoices" read-only="true">
+        <actions>
+            <service-call name="ironstone.sales.ContextServices.get#Choices" out-map="found"
+                    in-map="{appRoot:appRoot, choice:choice, term:(term || null), selected:(selected || null),
+                        organizationPartyId:(organizationPartyId || null)}"/>
+            <script>ec.web.sendJsonResponse(found.options)</script>
+        </actions>
+        <default-response type="none"/>
+    </transition>
+    <widgets>
+        <section name="SalesOrder" condition="appRoot == 'Sales'">
+            <widgets>
+                <section name="SalesQuoteMissing" condition="!salesQuote &amp;&amp; !salesOrder">
+                    <widgets>
+                        <container-box type="warning">
+                            <box-header title="Not available"/>
+                            <box-body>
+                                <label type="p" text="Quote or order ${orderId} is not available: it does not exist, it is not a sales quote or order, or it is not yours, your team's or your organization's to see."/>
+                                <link url="${sharedLinks['Quotes/Quotes']}" text="Back to quotes" link-type="anchor"/>
+                                <link url="${sharedLinks['Orders/Orders']}" text="Back to orders" link-type="anchor"/>
+                            </box-body>
+                        </container-box>
+                    </widgets>
+                </section>
+                <section name="SalesQuoteFound" condition="salesQuote">
+                    <actions>
+                        <set field="sq" from="salesQuote.quote"/>
+                        <set field="customerUrl" from="sq.customerPartyId &amp;&amp; sharedLinks['Accounts/Customer360'] ? sharedLinks['Accounts/Customer360'] : null"/>
+                        <set field="opportunityUrl" from="sq.salesOpportunityId &amp;&amp; sharedLinks['Pipeline/OpportunityDetail'] ? sharedLinks['Pipeline/OpportunityDetail'] : null"/>
+                        <set field="productUrl" from="sharedLinks['Products/Product360']"/>
+                        <set field="explainUrl" from="sharedLinks['Products/PriceExplain']"/>
+                        <set field="availabilityUrl" from="sharedLinks['Products/InventoryAvailability']"/>
+                        <set field="quoteLines" from="salesQuote.lines"/>
+                        <set field="quoteHistory" from="salesQuote.history"/>
+                        <set field="lineDefaults" from="{orderId:orderId, orderRevision:sq.orderRevision, quantity:'1'}"/>
+                        <set field="shippingDefaults" from="{orderId:orderId, orderRevision:sq.orderRevision, itemTypeEnumId:'ItemShipping',
+                                itemDescription:ec.l10n.localize('Shipping')}"/>
+                        <set field="quoteValues" from="{orderId:orderId, orderRevision:sq.orderRevision, orderName:sq.orderName,
+                                validFromDate:sq.validFromDate, validThruDate:sq.validThruDate, otherPartyOrderId:sq.otherPartyOrderId,
+                                postalContactMechId:sq.postalContactMechId}"/>
+                        <set field="addressOptions" from="salesQuote.addresses"/>
+                        <!-- P9: the approvals the quote needs at its revision -->
+                        <set field="quoteApproval" from="salesQuote.approval || null"/>
+                        <set field="approvalRows" from="quoteApproval?.requirements || []"/>
+                        <set field="approvalRulesUrl" from="sales.capabilities.configure ? sharedLinks['Settings/ApprovalPolicies'] : null"/>
+                        <!-- P10: the quote's issues and responses and what the user may do with it now -->
+                        <service-call name="mantle.order.SalesQuoteIssueServices.get#QuoteIssues" in-map="{orderId:orderId}" out-map="quoteIssuesOut"
+                                transaction="force-new" ignore-error="true"/>
+                        <script>ec.message.clearErrors()</script>
+                        <set field="qi" from="quoteIssuesOut?.quoteFound ? quoteIssuesOut : {issues: [], recipientOptions: [], evidenceOptions: []}"/>
+                        <set field="issueRows" from="qi.issues || []"/>
+                        <set field="primaryAction" from="qi.canPropose &amp;&amp; quoteLines.length ? 'propose' : sq.canEdit ? 'addLine'
+                                : qi.canRespond ? 'accept' : qi.canSend ? 'send' : ''"/>
+                        <set field="contactOptions" from="(qi.recipientOptions || []).map(row =&gt; ({value: row.partyId, label: row.name}))"/>
+                        <set field="respondDefaults" from="{orderId:orderId, issueId:qi.standingIssueId, contactPartyId:(qi.defaultRecipientPartyIds || [])[0],
+                                operationKey:'respond-' + ec.user.randomString(24)}"/>
+                        <set field="stateActions" from="{orderId:orderId, orderRevision:sq.orderRevision}"/>
+                        <set field="overviewRows" from="[['Customer', sq.customerName], ['Contact', sq.contactName], ['Seller', sq.organizationName],
+                                ['Store', sq.storeless ? ec.l10n.localize('None: taxed through the seller') : sq.storeName], ['Owner', sq.ownerName],
+                                ['Team', sq.teamName], ['Opportunity', sq.opportunityName], ['Entered', sq.entryText], ['Ship to', sq.addressText],
+                                ['Currency', sq.currencyUomId], ['Revision', String(sq.orderRevision)]]
+                                .filter(pair =&gt; pair[1]).map(pair =&gt; ({label: ec.l10n.localize(pair[0]), value: pair[1]}))"/>
+                    </actions>
+                    <widgets>
+                        <context record-entity="mantle.order.OrderHeader" record-id="${orderId}" title="Quote ${orderId} · ${sq.customerName}"/>
+                        <container style="m-record-header">
+                            <container style="row items-start q-col-gutter-x-md q-col-gutter-y-sm">
+                                <container style="col-12 col-md m-record-title">
+                                    <container style="row items-center q-gutter-x-sm">
+                                        <label text="${ec.l10n.localize('Quote')} ${orderId}" type="h5"/>
+                                        <label text="${sq.orderName}" type="span" style="text-subtitle1" condition="sq.orderName"/>
+                                    </container>
+                                    <container style="row items-center q-gutter-x-sm">
+                                        <link url="${customerUrl}" url-type="plain" text="${sq.customerName}" link-type="anchor"
+                                                parameter-map="{customerPartyId:sq.customerPartyId}" condition="customerUrl"/>
+                                        <label text="${sq.customerName}" type="span" condition="!customerUrl"/>
+                                        <label text="${[sq.organizationName, sq.storeless ? ec.l10n.localize('no store') : sq.storeName,
+                                                sq.validThruText ? ec.l10n.localize('valid through') + ' ' + sq.validThruText : ''].filter(Boolean).join(' · ')}"
+                                                type="span" style="text-caption m-muted"/>
+                                    </container>
+                                </container>
+                                <container style="col-12 col-md-auto m-record-status">
+                                    <label text="${sq.statusText}${sq.expired ? ' · ' + ec.l10n.localize('Expired') : ''}" type="span"
+                                            style="text-weight-medium ${sq.expired ? 'text-negative' : ''}"/>
+                                </container>
+                            </container>
+                            <container style="row items-center q-gutter-xs m-record-actions">
+                                <container-dialog id="SalesQuoteAddLine" button-text="Add line" icon="sym_o_add" width="640" type="${primaryAction == 'addLine' ? 'primary' : 'default'}"
+                                        title="Add a line to quote ${orderId}" condition="sq.canEdit">
+                                    <form-single name="SalesQuoteAddLineForm" transition="salesStoreLine" map="lineDefaults">
+                                        <field name="orderId"><default-field><hidden/></default-field></field>
+                                        <field name="orderRevision"><default-field><hidden/></default-field></field>
+                                        <field name="productId">
+                                            <default-field title="Product">
+                                                <drop-down allow-empty="false" required-manual-select="true">
+                                                    <dynamic-options transition="salesChoices" server-search="true" min-length="0"
+                                                            parameter-map="{choice:'products', organizationPartyId:sq.organizationPartyId, selected:productId}"/>
+                                                </drop-down>
+                                            </default-field>
+                                        </field>
+                                        <field name="quantity"><default-field title="Quantity"><text-line size="8"/></default-field></field>
+                                        <field name="unitAmount">
+                                            <default-field title="Price" tooltip="Leave empty for the customer's price; an entered price needs its reason">
+                                                <text-line size="10"/></default-field>
+                                        </field>
+                                        <field name="overrideReason"><default-field title="Reason for the entered price"><text-line/></default-field></field>
+                                        <field name="freeLine">
+                                            <conditional-field title="Free line" condition="sq.canFreeLine">
+                                                <check><option key="Y" text="Free of charge (needs its reason)"/></check></conditional-field>
+                                            <default-field><ignored/></default-field>
+                                        </field>
+                                        <field name="requiredByDate"><default-field title="Required by"><date-time type="date"/></default-field></field>
+                                        <field name="itemDescription"><default-field title="Description" tooltip="The product's name when empty"><text-line/></default-field></field>
+                                        <field name="submitButton"><default-field title="Add line"><submit/></default-field></field>
+                                    </form-single>
+                                </container-dialog>
+                                <!-- P10: the state's actions, its one primary chosen by state: Propose (a draft with lines), Send (a proposed quote
+                                    with no issue standing), Record acceptance (an issue standing) -->
+                                <link url="salesProposeQuote" link-type="hidden-form" text="Propose" icon="sym_o_outgoing_mail" btn-type="primary"
+                                        condition="primaryAction == 'propose'" parameter-map="stateActions"
+                                        confirmation="Propose quote ${orderId} as it is now (revision ${sq.orderRevision})? Its lines are then fixed until you revise it."/>
+                                <dynamic-dialog id="SalesQuoteSend" button-text="${qi.standingIssueId ? 'Send again' : 'Send'}" icon="sym_o_send"
+                                        transition="../QuoteSend" width="720" title="Send quote ${orderId}" type="${primaryAction == 'send' ? 'primary' : 'default'}"
+                                        parameter-map="{orderId:orderId}" condition="qi.canSend"/>
+                                <container-dialog id="SalesQuoteAccept" button-text="Record acceptance" icon="sym_o_task_alt" width="640"
+                                        type="${primaryAction == 'accept' ? 'primary' : 'default'}" title="Record the customer's acceptance of quote ${orderId}"
+                                        condition="qi.canRespond">
+                                    <form-single name="SalesQuoteAcceptForm" transition="salesRespondQuote" map="respondDefaults">
+                                        <field name="orderId"><default-field><hidden/></default-field></field>
+                                        <field name="issueId"><default-field><hidden/></default-field></field>
+                                        <field name="operationKey"><default-field><hidden/></default-field></field>
+                                        <field name="responseType" from="'accept'"><default-field><hidden/></default-field></field>
+                                        <field name="contactPartyId">
+                                            <default-field title="Accepted by"><drop-down allow-empty="true"><list-options list="contactOptions" key="${value}" text="${label}"/></drop-down></default-field>
+                                        </field>
+                                        <field name="respondedDate"><default-field title="Accepted on" tooltip="When the customer accepted; now when empty"><date-time/></default-field></field>
+                                        <field name="otherPartyOrderId">
+                                            <default-field title="Customer's purchase order${qi.poRequired ? ' (required)' : ''}"><text-line size="20"/></default-field>
+                                        </field>
+                                        <field name="evidenceOrderContentId">
+                                            <default-field title="Evidence" tooltip="A file of this quote: the signed copy or the customer's mail, added under Files first">
+                                                <drop-down allow-empty="true"><list-options list="qi.evidenceOptions" key="${value}" text="${label}"/></drop-down>
+                                            </default-field>
+                                        </field>
+                                        <field name="reason"><default-field title="Note"><text-line/></default-field></field>
+                                        <field name="submitButton">
+                                            <default-field title="Record acceptance">
+                                                <submit confirmation="Record the acceptance of quote ${orderId}? The order is placed now."/>
+                                            </default-field>
+                                        </field>
+                                    </form-single>
+                                    <label type="p" style="text-caption m-muted"
+                                            text="An accepted quote becomes the customer's order through the usual placement: credit and approval rules still apply."/>
+                                </container-dialog>
+                                <button-menu text="More" icon="more_horiz">
+                                    <container-dialog id="SalesQuoteDecline" button-text="Record decline" icon="sym_o_thumb_down" width="560"
+                                            title="Record the customer's decline of quote ${orderId}" condition="qi.canRespond">
+                                        <form-single name="SalesQuoteDeclineForm" transition="salesRespondQuote" map="respondDefaults">
+                                            <field name="orderId"><default-field><hidden/></default-field></field>
+                                            <field name="issueId"><default-field><hidden/></default-field></field>
+                                            <field name="operationKey"><default-field><hidden/></default-field></field>
+                                            <field name="responseType" from="'decline'"><default-field><hidden/></default-field></field>
+                                            <field name="contactPartyId">
+                                                <default-field title="Declined by"><drop-down allow-empty="true"><list-options list="contactOptions" key="${value}" text="${label}"/></drop-down></default-field>
+                                            </field>
+                                            <field name="reason"><default-field title="The customer's reason"><text-line/></default-field></field>
+                                            <field name="submitButton">
+                                                <default-field title="Record decline"><submit type="danger" confirmation="Record the decline of quote ${orderId}? The quote is cancelled."/></default-field>
+                                            </field>
+                                        </form-single>
+                                    </container-dialog>
+                                    <container-dialog id="SalesQuoteRevise" button-text="Revise" icon="sym_o_edit_note" width="520"
+                                            title="Revise quote ${orderId}" condition="qi.canRevise">
+                                        <form-single name="SalesQuoteReviseForm" transition="salesReviseQuote" map="stateActions">
+                                            <field name="orderId"><default-field><hidden/></default-field></field>
+                                            <field name="orderRevision"><default-field><hidden/></default-field></field>
+                                            <field name="reason"><default-field title="Why it changes"><text-line/></default-field></field>
+                                            <field name="submitButton">
+                                                <default-field title="Revise"><submit confirmation="Reopen quote ${orderId} for changes? Its issue and approvals end; the PDF sent stays in its files."/></default-field>
+                                            </field>
+                                        </form-single>
+                                    </container-dialog>
+                                    <container-dialog id="SalesQuoteWithdraw" button-text="Withdraw" icon="sym_o_cancel" width="520"
+                                            title="Withdraw quote ${orderId}" condition="qi.canWithdraw">
+                                        <form-single name="SalesQuoteWithdrawForm" transition="salesWithdrawQuote" map="stateActions">
+                                            <field name="orderId"><default-field><hidden/></default-field></field>
+                                            <field name="orderRevision"><default-field><hidden/></default-field></field>
+                                            <field name="reason"><default-field title="Reason"><text-line/></default-field></field>
+                                            <field name="submitButton">
+                                                <default-field title="Withdraw"><submit type="danger" confirmation="Withdraw quote ${orderId}? It is cancelled and the customer can no longer accept it."/></default-field>
+                                            </field>
+                                        </form-single>
+                                    </container-dialog>
+                                    <link url="salesCloneQuote" link-type="hidden-form" text="Copy as a new quote" icon="sym_o_content_copy"
+                                            condition="qi.canClone" parameter-map="{orderId:orderId}" confirmation="Copy quote ${orderId} into a new draft?"/>
+                                    <link url="salesQuotePrint" text="Print (PDF)" icon="sym_o_print" target-window="_blank" parameter-map="{orderId:orderId}"/>
+                                    <container-dialog id="SalesQuoteAddShipping" button-text="Add shipping charge" icon="sym_o_local_shipping"
+                                            width="520" title="Add a shipping charge to quote ${orderId}" condition="sq.canEdit">
+                                        <form-single name="SalesQuoteAddShippingForm" transition="salesStoreLine" map="shippingDefaults">
+                                            <field name="orderId"><default-field><hidden/></default-field></field>
+                                            <field name="orderRevision"><default-field><hidden/></default-field></field>
+                                            <field name="itemTypeEnumId"><default-field><hidden/></default-field></field>
+                                            <field name="unitAmount"><default-field title="Amount"><text-line size="10"/></default-field></field>
+                                            <field name="itemDescription"><default-field title="Description"><text-line/></default-field></field>
+                                            <field name="submitButton"><default-field title="Add shipping charge"><submit/></default-field></field>
+                                        </form-single>
+                                        <label type="p" style="text-caption m-muted"
+                                                text="Freight is a charge you enter; it is taxed with the quote where the seller's tax gateway taxes shipping."/>
+                                    </container-dialog>
+                                    <container-dialog id="SalesQuoteEdit" button-text="Edit quote" icon="sym_o_edit" width="640"
+                                            title="Edit quote ${orderId}" condition="sq.canEdit">
+                                        <form-single name="SalesQuoteEditForm" transition="salesUpdateQuote" map="quoteValues">
+                                            <field name="orderId"><default-field><hidden/></default-field></field>
+                                            <field name="orderRevision"><default-field><hidden/></default-field></field>
+                                            <field name="orderName"><default-field title="Name"><text-line/></default-field></field>
+                                            <field name="validFromDate"><default-field title="Valid from"><date-time type="date"/></default-field></field>
+                                            <field name="validThruDate"><default-field title="Valid through"><date-time type="date"/></default-field></field>
+                                            <field name="otherPartyOrderId"><default-field title="Customer reference"><text-line/></default-field></field>
+                                            <field name="postalContactMechId">
+                                                <default-field title="Ship to">
+                                                    <drop-down allow-empty="true">
+                                                        <list-options list="addressOptions" key="${value}" text="${label}"/>
+                                                    </drop-down>
+                                                </default-field>
+                                            </field>
+                                            <field name="submitButton"><default-field title="Save"><submit/></default-field></field>
+                                        </form-single>
+                                    </container-dialog>
+                                    <link url="${customerUrl}" url-type="plain" text="Customer" parameter-map="{customerPartyId:sq.customerPartyId}"
+                                            condition="customerUrl"/>
+                                    <link url="${opportunityUrl}" url-type="plain" text="Opportunity"
+                                            parameter-map="{salesOpportunityId:sq.salesOpportunityId}" condition="opportunityUrl"/>
+                                </button-menu>
+                            </container>
+                        </container>
+                        <dashboard min-width="150" style="q-mb-sm">
+                            <number-card title="Total" value="${sq.totalText}" icon="sym_o_request_quote" size="sm"/>
+                            <number-card title="Products" value="${sq.productsText}" icon="sym_o_inventory_2" size="sm"/>
+                            <number-card title="Shipping" value="${sq.shippingText}" icon="sym_o_local_shipping" size="sm"/>
+                            <number-card title="Tax" value="${sq.taxTotalText}" icon="sym_o_percent" size="sm"/>
+                        </dashboard>
+                        <label text="${sq.taxNote}" type="p" style="text-caption m-muted"/>
+                        <!-- P9: the Approval box, shown while the quote meets a rule at its revision -->
+                        <container-box condition="quoteApproval?.needsApproval">
+                            <box-header title="Approval · ${quoteApproval.approved ? ec.l10n.localize('approved') : quoteApproval.requested ? ec.l10n.localize('waiting') : quoteApproval.refused ? ec.l10n.localize('refused') : ec.l10n.localize('needed')}"/>
+                            <box-toolbar>
+                                <link url="salesRequestApproval" link-type="hidden-form" text="Ask for approval" icon="sym_o_how_to_reg" btn-type="default"
+                                        condition="quoteApproval.canRequest" parameter-map="{orderId:orderId, orderRevision:quoteApproval.orderRevision}"
+                                        confirmation="Ask a sales approver to approve quote ${orderId} as it is now (revision ${quoteApproval.orderRevision})?"/>
+                                <link url="${approvalRulesUrl}" url-type="plain" text="Approval rules" icon="sym_o_rule" link-type="anchor-button"
+                                        parameter-map="{orderId:orderId, organizationPartyId:sq.organizationPartyId}" condition="approvalRulesUrl"/>
+                            </box-toolbar>
+                            <box-body-nopad>
+                                <form-list name="SalesQuoteApproval" list="approvalRows" skip-form="true" paginate="false">
+                                    <field name="ruleText">
+                                        <default-field title="Rule">
+                                            <label text="${ruleText}" type="span"/>
+                                            <label text="${inputsText}" type="div" style="text-caption m-muted" condition="inputsText"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="approverText"><default-field title="Approver"><display/></default-field></field>
+                                    <field name="stateText">
+                                        <default-field title="State">
+                                            <label text="${stateText}" type="span" style="${state == 'approved' ? 'text-positive' : state == 'refused' ? 'text-negative' : 'text-warning'}"/>
+                                            <label text="${[decidedByName, decidedText, reason].filter(Boolean).join(' · ')}" type="div"
+                                                    style="text-caption m-muted" condition="decidedByName"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="actions">
+                                        <default-field title="">
+                                            <container-dialog id="SalesApprove_${key}" button-text="Approve" icon="sym_o_check" type="default" width="480"
+                                                    title="Approve ${ruleText} on quote ${orderId}" condition="canDecide">
+                                                <form-single name="SalesApproveRule" transition="salesDecideQuote"
+                                                        map="{orderId:orderId, orderRevision:quoteApproval.orderRevision, salesApprovalPolicyId:key, decision:'approve',
+                                                            operationKey:'decide-' + ec.user.randomString(24)}">
+                                                    <field name="orderId"><default-field><hidden/></default-field></field>
+                                                    <field name="orderRevision"><default-field><hidden/></default-field></field>
+                                                    <field name="salesApprovalPolicyId"><default-field><hidden/></default-field></field>
+                                                    <field name="decision"><default-field><hidden/></default-field></field>
+                                                    <field name="operationKey"><default-field><hidden/></default-field></field>
+                                                    <field name="reason"><default-field title="Note"><text-line size="40"/></default-field></field>
+                                                    <field name="submitButton"><default-field title="Approve"><submit/></default-field></field>
+                                                </form-single>
+                                            </container-dialog>
+                                            <container-dialog id="SalesRefuse_${key}" button-text="Refuse" icon="sym_o_block" type="danger" width="480"
+                                                    title="Refuse ${ruleText} on quote ${orderId}" condition="canDecide">
+                                                <form-single name="SalesRefuseRule" transition="salesDecideQuote"
+                                                        map="{orderId:orderId, orderRevision:quoteApproval.orderRevision, salesApprovalPolicyId:key, decision:'refuse',
+                                                            operationKey:'decide-' + ec.user.randomString(24)}">
+                                                    <field name="orderId"><default-field><hidden/></default-field></field>
+                                                    <field name="orderRevision"><default-field><hidden/></default-field></field>
+                                                    <field name="salesApprovalPolicyId"><default-field><hidden/></default-field></field>
+                                                    <field name="decision"><default-field><hidden/></default-field></field>
+                                                    <field name="operationKey"><default-field><hidden/></default-field></field>
+                                                    <field name="reason"><default-field title="Reason"><text-line size="40"/></default-field></field>
+                                                    <field name="submitButton"><default-field title="Refuse"><submit confirmation="Refuse ${ruleText} on quote ${orderId}?"/></default-field></field>
+                                                </form-single>
+                                            </container-dialog>
+                                            <label text="${decideRefusal}" type="span" style="text-caption m-muted"
+                                                    condition="!canDecide &amp;&amp; decideRefusal &amp;&amp; sales.capabilities.approve"/>
+                                        </default-field>
+                                    </field>
+                                    <columns type="mobile">
+                                        <column><field-ref name="ruleText"/></column>
+                                        <column><field-ref name="stateText"/><field-ref name="actions"/></column>
+                                    </columns>
+                                </form-list>
+                                <label type="p" style="text-caption m-muted q-pa-sm q-mb-none" condition="!quoteApproval.configured"
+                                        text="A manual price needs an approver other than the one who entered it until the organization sets its approval rules."/>
+                                <label type="p" style="text-caption m-muted q-pa-sm q-mb-none"
+                                        text="An approval holds for revision ${quoteApproval.orderRevision}; a change of the quote's lines or terms asks for it again."/>
+                            </box-body-nopad>
+                        </container-box>
+                        <!-- P10: Issues and responses (QuoteOffer, QuoteSend, QuoteResponse), shown once the quote was issued; a seller that
+                            does not count commercial changes only is told why it cannot be sent -->
+                        <label type="p" style="text-caption text-warning" condition="!qi.commercialRevisionOn &amp;&amp; qi.quoteFound &amp;&amp; sq.canEdit"
+                                text="This seller does not count commercial changes only, so its quotes cannot be issued; an administrator turns it on under Sales settings › Defaults."/>
+                        <container-box condition="issueRows.length">
+                            <box-header title="Issues and responses · ${issueRows.length}"/>
+                            <box-body-nopad>
+                                <form-list name="SalesQuoteIssues" list="issueRows" skip-form="true" paginate="false">
+                                    <field name="issuedText">
+                                        <default-field title="Issued">
+                                            <label text="${issuedText}" type="span"/>
+                                            <label text="${ec.l10n.localize('Revision')} ${orderRevision} · ${issuedByName}" type="div" style="text-caption m-muted"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="stateText">
+                                        <default-field title="State">
+                                            <render-mode>
+                                                <text type="qvt"><![CDATA[<q-chip dense square class="q-ma-none m-tonal text-${state == 'current' ? 'primary' : state == 'accepted' ? 'positive' : state == 'declined' || state == 'withdrawn' ? 'negative' : 'grey'}">${stateText}</q-chip>]]></text>
+                                                <text type="tui"><![CDATA[${JSON.stringify({t: "text", text: String(stateText ?? "")})}]]></text>
+                                            </render-mode>
+                                            <label text="${endText}" type="div" style="text-caption m-muted" condition="endText"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="validThruText"><default-field title="Valid through"><display/></default-field></field>
+                                    <field name="recipientsText">
+                                        <default-field title="Sent to">
+                                            <label text="${recipientsText || ec.l10n.localize('Not sent yet')}" type="span"/>
+                                            <label text="${failedCount} ${ec.l10n.localize('failed: send again to retry them')}" type="div" style="text-caption text-negative"
+                                                    condition="failedCount &amp;&amp; state == 'current'"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="responseText"><default-field title="Response"><display/></default-field></field>
+                                    <field name="actions">
+                                        <default-field title="">
+                                            <link url="salesQuoteDocument" text="PDF" icon="sym_o_picture_as_pdf" link-type="anchor-button" target-window="_blank"
+                                                    parameter-map="{orderId:orderId, issueId:issueId}" condition="hasDocument"/>
+                                        </default-field>
+                                    </field>
+                                    <columns type="mobile">
+                                        <column><field-ref name="issuedText"/><field-ref name="responseText"/></column>
+                                        <column><field-ref name="stateText"/><field-ref name="actions"/></column>
+                                    </columns>
+                                </form-list>
+                                <label type="p" style="text-caption m-muted q-pa-sm q-mb-none"
+                                        text="A delivered mail is not the customer's acceptance: record it when they answer. An issue stands for its revision only."/>
+                            </box-body-nopad>
+                        </container-box>
+                        <container-row>
+                            <row-col md="6">
+                                <container-box>
+                                    <box-header title="Overview"/>
+                                    <box-body-nopad>
+                                        <form-list name="SalesQuoteOverview" list="overviewRows" skip-form="true" skip-header="true" paginate="false">
+                                            <field name="label"><default-field><label text="${label}" type="span" style="m-muted text-no-wrap"/></default-field></field>
+                                            <field name="value"><default-field><display/></default-field></field>
+                                        </form-list>
+                                    </box-body-nopad>
+                                </container-box>
+                            </row-col>
+                            <row-col md="6">
+                                <container-box>
+                                    <box-header title="Terms"/>
+                                    <box-body>
+                                        <label type="p" text="Valid from ${sq.validFromText || 'now'}${sq.validThruText ? ' through ' + sq.validThruText : ', with no end set'}."/>
+                                        <label type="p" style="text-negative" text="This quote has expired." condition="sq.expired"/>
+                                        <label type="p" text="Customer reference: ${sq.otherPartyOrderId}" condition="sq.otherPartyOrderId"/>
+                                        <label type="p" style="text-caption m-muted"
+                                                text="Availability is evidence at the time you look, not a reservation; nothing is reserved until the order is placed."/>
+                                    </box-body>
+                                </container-box>
+                            </row-col>
+                        </container-row>
+                        <container-box>
+                            <box-header title="Items · ${quoteLines.length}"/>
+                            <box-body-nopad>
+                                <form-list name="SalesQuoteLines" list="quoteLines" skip-form="true" paginate="false">
+                                    <field name="orderItemSeqId"><default-field title="#"><display/></default-field></field>
+                                    <field name="description">
+                                        <default-field title="Item">
+                                            <link url="${productUrl}" text="${description}" link-type="anchor" parameter-map="{productId:productId}"
+                                                    condition="productId &amp;&amp; productUrl"/>
+                                            <label text="${description}" type="div" condition="!productId || !productUrl"/>
+                                            <label text="${productId}" type="div" style="text-caption m-muted" condition="productId"/>
+                                            <label text="${priceSourceText}${overridden ? ': ' + overrideReason : ''}${overrideText ? ' · ' + overrideText : ''}"
+                                                    type="div" style="text-caption ${overridden ? 'text-warning' : 'm-muted'}"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="quantityText" align="right"><default-field title="Quantity"><display/></default-field></field>
+                                    <field name="unitText" align="right">
+                                        <default-field title="Price">
+                                            <label text="${unitText}" type="span" style="text-no-wrap"/>
+                                            <label text="${ec.l10n.localize('Calculated')} ${calculatedText}" type="div" style="text-caption m-muted"
+                                                    condition="overridden || (productId &amp;&amp; !priceAvailable)"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="taxText" align="right"><default-field title="Tax"><display/></default-field></field>
+                                    <field name="amountText" align="right">
+                                        <default-field title="Amount"><label text="${amountText}" type="span" style="text-no-wrap text-weight-medium"/></default-field>
+                                    </field>
+                                    <field name="actions">
+                                        <default-field title="">
+                                            <container-dialog id="SalesEditLine_${orderItemSeqId}" button-text="Edit" icon="sym_o_edit"
+                                                    width="560" title="Edit line ${orderItemSeqId}" condition="sq.canEdit">
+                                                <form-single name="SalesQuoteEditLine" transition="salesStoreLine">
+                                                    <field name="orderId" from="orderId"><default-field><hidden/></default-field></field>
+                                                    <field name="orderRevision" from="sq.orderRevision"><default-field><hidden/></default-field></field>
+                                                    <field name="orderItemSeqId"><default-field><hidden/></default-field></field>
+                                                    <field name="quantity" from="quantityText">
+                                                        <conditional-field title="Quantity" condition="!shipping"><text-line size="8"/></conditional-field>
+                                                        <default-field><ignored/></default-field>
+                                                    </field>
+                                                    <field name="unitAmount" from="overridden || shipping ? String(unitAmount ?? '') : ''">
+                                                        <default-field title="${shipping ? 'Amount' : 'Entered price'}" tooltip="Leave empty to keep the price; an entered price needs its reason"><text-line size="10"/></default-field>
+                                                    </field>
+                                                    <field name="overrideReason">
+                                                        <conditional-field title="Reason for the entered price" condition="!shipping"><text-line/></conditional-field>
+                                                        <default-field><ignored/></default-field>
+                                                    </field>
+                                                    <field name="useCalculatedPrice">
+                                                        <conditional-field title="Price" condition="overridden &amp;&amp; priceAvailable">
+                                                            <check><option key="Y" text="Back to the calculated price"/></check></conditional-field>
+                                                        <default-field><ignored/></default-field>
+                                                    </field>
+                                                    <field name="itemDescription" from="description"><default-field title="Description"><text-line/></default-field></field>
+                                                    <field name="submitButton"><default-field title="Save"><submit/></default-field></field>
+                                                </form-single>
+                                            </container-dialog>
+                                            <link url="${explainUrl}" text="Explain price" icon="sym_o_help" link-type="anchor-button"
+                                                    parameter-map="{orderId:orderId, orderItemSeqId:orderItemSeqId}" condition="productId &amp;&amp; explainUrl"/>
+                                            <link url="${availabilityUrl}" text="Availability" icon="sym_o_inventory" link-type="anchor-button"
+                                                    parameter-map="{productId:productId, organizationPartyId:sq.organizationPartyId}"
+                                                    condition="productId &amp;&amp; availabilityUrl"/>
+                                            <link url="salesDeleteLine" link-type="hidden-form" text="Remove" icon="sym_o_delete" btn-type="danger"
+                                                    condition="sq.canEdit" parameter-map="{orderId:orderId, orderRevision:sq.orderRevision, orderItemSeqId:orderItemSeqId}"
+                                                    confirmation="Remove line ${orderItemSeqId} of quote ${orderId}?"/>
+                                        </default-field>
+                                    </field>
+                                    <columns type="mobile">
+                                        <column><field-ref name="description"/></column>
+                                        <column><field-ref name="amountText"/><field-ref name="actions"/></column>
+                                    </columns>
+                                </form-list>
+                                <label type="p" style="m-muted q-pa-sm q-mb-none" condition="!quoteLines.length"
+                                        text="${sq.canEdit ? 'No lines yet · Add the first with Add line' : 'No lines'}"/>
+                                <container style="row justify-end q-pa-sm">
+                                    <label text="Total ${sq.totalText}" type="span" style="text-subtitle1 text-weight-medium"/>
+                                </container>
+                            </box-body-nopad>
+                        </container-box>
+                        <!-- P15: the quote's agreements, those whose prices its lines took -->
+                        <section-include name="SalesOrderAgreements" location="component://mr-boss/template/SalesAgreementParts.xml"/>
+                        <container-box>
+                            <box-header title="History · ${quoteHistory.length}"/>
+                            <box-body-nopad>
+                                <form-list name="SalesQuoteHistory" list="quoteHistory" skip-form="true" paginate="false">
+                                    <field name="changedText"><default-field title="When"><display/></default-field></field>
+                                    <field name="fieldText">
+                                        <default-field title="Change">
+                                            <label text="${fieldText}${lineText ? ' · ' + ec.l10n.localize('line') + ' ' + lineText : ''}" type="span"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="newText">
+                                        <default-field title="From and to">
+                                            <label text="${oldText || '—'} → ${newText || '—'}" type="span"/>
+                                            <label text="${reason}" type="div" style="text-caption m-muted" condition="reason"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="userName"><default-field title="By"><display/></default-field></field>
+                                    <columns type="mobile">
+                                        <column><field-ref name="fieldText"/><field-ref name="changedText"/></column>
+                                        <column><field-ref name="newText"/></column>
+                                    </columns>
+                                </form-list>
+                                <label type="p" style="m-muted q-pa-sm q-mb-none" text="No changes recorded yet." condition="!quoteHistory.length"/>
+                            </box-body-nopad>
+                        </container-box>
+                        <container-row>
+                            <row-col md="6">
+                                <container-box>
+                                    <box-header title="Conversation"/>
+                                    <box-body><chatter id="SalesQuoteChatter" record-entity="mantle.order.OrderHeader" record-id="${orderId}"/></box-body>
+                                </container-box>
+                            </row-col>
+                            <row-col md="6">
+                                <container-box>
+                                    <box-header title="Files"/>
+                                    <box-body><record-files id="SalesQuoteFiles" record-entity="mantle.order.OrderHeader" record-id="${orderId}"/></box-body>
+                                </container-box>
+                            </row-col>
+                        </container-row>
+                    </widgets>
+                </section>
+                <!-- ===== Sales P11: the sales-order context ===== -->
+                <section name="SalesOrderFound" condition="salesOrder">
+                    <actions>
+                        <set field="so" from="salesOrder.order"/>
+                        <set field="soCan" from="salesOrder.can || {}"/>
+                        <set field="soLines" from="salesOrder.lines || []"/>
+                        <set field="soHolds" from="salesOrder.holds || []"/>
+                        <set field="soApproval" from="salesOrder.approval || null"/>
+                        <set field="soRules" from="soApproval?.requirements || []"/>
+                        <set field="soWarnings" from="(salesOrder.warnings || []).map(text =&gt; ({text}))"/>
+                        <set field="soShipments" from="salesOrder.shipments || []"/>
+                        <set field="soInvoices" from="salesOrder.invoices || []"/>
+                        <set field="soPayments" from="salesOrder.payments || []"/>
+                        <set field="soHistory" from="salesOrder.history || []"/>
+                        <!-- P14: the order's changes (Mantle's find#OrderChanges, its own check), New change, and the shipment and
+                            invoice rows' links to ShipmentDetail and InvoiceDetail under Sales -->
+                        <service-call name="mantle.order.OrderChangeServices.find#OrderChanges" out-map="soChangesOut"
+                                in-map="{orderId:orderId, pageSize:20}" transaction="force-new" ignore-error="true"/>
+                        <script>ec.message.clearErrors()</script>
+                        <set field="soChanges" from="soChangesOut?.changeList || []"/>
+                        <set field="soChangePath" from="sharedLinks['Orders/OrderChangeDetail'] || null"/>
+                        <set field="soShipmentPath" from="sharedLinks['Orders/ShipmentDetail'] || null"/>
+                        <set field="soInvoicePath" from="sharedLinks['Orders/InvoiceDetail'] || null"/>
+                        <set field="soCanChange" from="!!soChangePath &amp;&amp; !!(sales.capabilities.orderChange || soCan.clone)
+                                &amp;&amp; ['OrderPlaced', 'OrderProcessing', 'OrderApproved', 'OrderHold'].includes(so.statusId)"/>
+                        <set field="soCustomerUrl" from="so.customerPartyId &amp;&amp; sharedLinks['Accounts/Customer360'] ? sharedLinks['Accounts/Customer360'] : null"/>
+                        <set field="soOpportunityUrl" from="so.salesOpportunityId &amp;&amp; sharedLinks['Pipeline/OpportunityDetail'] ? sharedLinks['Pipeline/OpportunityDetail'] : null"/>
+                        <set field="soPrimary" from="soCan.place ? 'place' : soCan.editDraft ? 'addLine' : soCan.approve ? 'approve' : ''"/>
+                        <set field="soState" from="{orderId:orderId, orderRevision:so.orderRevision}"/>
+                        <set field="soLineDefaults" from="{orderId:orderId, orderRevision:so.orderRevision, quantity:'1'}"/>
+                        <set field="soApproveValues" from="{orderId:orderId, orderRevision:so.orderRevision, operationKey:'approve-' + ec.user.randomString(24)}"/>
+                        <set field="soHoldValues" from="{orderId:orderId, holdTypeEnumId:(soCan.holdTypes || [])[0]?.value}"/>
+                        <set field="soHoldTypes" from="soCan.holdTypes || []"/>
+                        <set field="soOverview" from="[['Customer', so.customerName], ['Customer reference', so.otherPartyOrderId], ['Contact', so.contactName],
+                                ['Seller', so.organizationName], ['Store', so.storeless ? ec.l10n.localize('None: taxed through the seller') : so.storeName],
+                                ['Kind', so.kindText], ['Quote', so.acceptedText], ['Owner', so.ownerName], ['Team', so.teamName],
+                                ['Opportunity', so.opportunityName], ['Entered', so.entryText], ['Placed', so.placedText], ['Approved', so.approvedText],
+                                ['Required by', so.requiredText], ['Currency', so.currencyUomId], ['Revision', String(so.orderRevision)]]
+                                .filter(pair =&gt; pair[1]).map(pair =&gt; ({label: ec.l10n.localize(pair[0]), value: pair[1]}))"/>
+                    </actions>
+                    <widgets>
+                        <context record-entity="mantle.order.OrderHeader" record-id="${orderId}" title="Order ${orderId} · ${so.customerName}"/>
+                        <container style="m-record-header">
+                            <container style="row items-start q-col-gutter-x-md q-col-gutter-y-sm">
+                                <container style="col-12 col-md m-record-title">
+                                    <container style="row items-center q-gutter-x-sm">
+                                        <label text="${ec.l10n.localize('Order')} ${orderId}" type="h5"/>
+                                        <label text="${so.orderName}" type="span" style="text-subtitle1" condition="so.orderName"/>
+                                    </container>
+                                    <container style="row items-center q-gutter-x-sm">
+                                        <link url="${soCustomerUrl}" url-type="plain" text="${so.customerName}" link-type="anchor"
+                                                parameter-map="{customerPartyId:so.customerPartyId}" condition="soCustomerUrl"/>
+                                        <label text="${so.customerName}" type="span" condition="!soCustomerUrl"/>
+                                        <label text="${[so.otherPartyOrderId ? 'PO ' + so.otherPartyOrderId : '', so.organizationName,
+                                                so.storeless ? ec.l10n.localize('no store') : so.storeName, so.acceptedText].filter(Boolean).join(' · ')}"
+                                                type="span" style="text-caption m-muted"/>
+                                    </container>
+                                </container>
+                                <container style="col-12 col-md-auto m-record-status">
+                                    <label text="${so.statusText}" type="span" style="text-weight-medium ${so.statusId == 'OrderHold' ? 'text-negative' : ''}"/>
+                                </container>
+                            </container>
+                            <container style="row items-center q-gutter-xs m-record-actions">
+                                <link url="salesPlaceOrder" link-type="hidden-form" text="Place" icon="sym_o_send" btn-type="primary"
+                                        condition="soCan.place" parameter-map="soState"
+                                        confirmation="Place order ${orderId} as it is now (revision ${so.orderRevision})?"/>
+                                <container-dialog id="SalesOrderApprove" button-text="Approve" icon="sym_o_check" width="560"
+                                        type="${soPrimary == 'approve' ? 'primary' : 'default'}" title="Approve order ${orderId}" condition="soCan.approve">
+                                    <label type="p" style="text-caption m-muted" condition="soWarnings.length"
+                                            text="Its pre-approval warnings are listed under Approval; they tell you and do not refuse the approval. The credit check runs and may hold the order instead."/>
+                                    <form-single name="SalesOrderApproveForm" transition="salesApproveOrder" map="soApproveValues">
+                                        <field name="orderId"><default-field><hidden/></default-field></field>
+                                        <field name="orderRevision"><default-field><hidden/></default-field></field>
+                                        <field name="operationKey"><default-field><hidden/></default-field></field>
+                                        <field name="submitButton"><default-field title="Approve"><submit/></default-field></field>
+                                    </form-single>
+                                </container-dialog>
+                                <container-dialog id="SalesOrderAddLine" button-text="Add line" icon="sym_o_add" width="640"
+                                        type="${soPrimary == 'addLine' ? 'primary' : 'default'}" title="Add a line to order ${orderId}" condition="soCan.editDraft">
+                                    <form-single name="SalesOrderAddLineForm" transition="salesStoreOrderLine" map="soLineDefaults">
+                                        <field name="orderId"><default-field><hidden/></default-field></field>
+                                        <field name="orderRevision"><default-field><hidden/></default-field></field>
+                                        <field name="productId">
+                                            <default-field title="Product">
+                                                <drop-down allow-empty="false" required-manual-select="true">
+                                                    <dynamic-options transition="salesChoices" server-search="true" min-length="0"
+                                                            parameter-map="{choice:'products', organizationPartyId:so.organizationPartyId, selected:productId}"/>
+                                                </drop-down>
+                                            </default-field>
+                                        </field>
+                                        <field name="quantity"><default-field title="Quantity"><text-line size="8"/></default-field></field>
+                                        <field name="unitAmount">
+                                            <default-field title="Price" tooltip="Leave empty for the customer's price; an entered price needs its reason">
+                                                <text-line size="10"/></default-field>
+                                        </field>
+                                        <field name="overrideReason"><default-field title="Reason for the entered price"><text-line/></default-field></field>
+                                        <field name="submitButton"><default-field title="Add line"><submit/></default-field></field>
+                                    </form-single>
+                                </container-dialog>
+                                <button-menu text="More" icon="sym_o_more_horiz">
+                                    <container-dialog id="SalesOrderHold" button-text="Hold" icon="sym_o_pause_circle" width="520"
+                                            title="Hold order ${orderId}" condition="soCan.hold">
+                                        <form-single name="SalesOrderHoldForm" transition="salesHoldOrder" map="soHoldValues">
+                                            <field name="orderId"><default-field><hidden/></default-field></field>
+                                            <field name="holdTypeEnumId">
+                                                <default-field title="Hold">
+                                                    <drop-down allow-empty="false"><list-options list="soHoldTypes" key="${value}" text="${label}"/></drop-down>
+                                                </default-field>
+                                            </field>
+                                            <field name="holdComment"><default-field title="Reason"><text-line/></default-field></field>
+                                            <field name="submitButton"><default-field title="Hold"><submit/></default-field></field>
+                                        </form-single>
+                                    </container-dialog>
+                                    <link url="salesCancelRemainder" link-type="hidden-form" text="Cancel remainder" icon="sym_o_block"
+                                            condition="soCan.cancelRemainder" parameter-map="soState"
+                                            confirmation="Cancel what is left to ship of order ${orderId}? What was shipped and billed stays."/>
+                                    <link url="${soChangePath}" url-type="plain" text="New change" icon="sym_o_edit_note"
+                                            parameter-map="{orderId:orderId}" condition="soCanChange"/>
+                                    <link url="salesCloneOrder" link-type="hidden-form" text="Copy as a new order" icon="sym_o_content_copy"
+                                            condition="soCan.clone" parameter-map="{orderId:orderId}" confirmation="Copy order ${orderId} into a new draft?"/>
+                                    <!-- P16: an approved order repeated on a schedule, in Recurring orders (a keeper of recurrence's) -->
+                                    <link url="${sharedLinks['Agreements/RecurringOrders']}" url-type="plain" text="Make recurring" icon="sym_o_event_repeat"
+                                            parameter-map="{sourceOrderId:orderId, _openDialog:'NewRecurrence'}"
+                                            condition="so.statusId == 'OrderApproved' &amp;&amp; sales.capabilities.recurrenceManage &amp;&amp; sharedLinks['Agreements/RecurringOrders']"/>
+                                    <link url="${soCustomerUrl}" url-type="plain" text="Customer" parameter-map="{customerPartyId:so.customerPartyId}"
+                                            condition="soCustomerUrl"/>
+                                    <link url="${soOpportunityUrl}" url-type="plain" text="Opportunity"
+                                            parameter-map="{salesOpportunityId:so.salesOpportunityId}" condition="soOpportunityUrl"/>
+                                </button-menu>
+                            </container>
+                        </container>
+                        <dashboard min-width="150" style="q-mb-sm">
+                            <number-card title="Total" value="${so.totalText}" icon="sym_o_receipt_long" size="sm"/>
+                            <number-card title="Tax" value="${so.taxText}" icon="sym_o_percent" size="sm"/>
+                            <number-card title="Lines" value="${String(soLines.length)}" icon="sym_o_inventory_2" size="sm"/>
+                            <number-card title="Holds" value="${String(soHolds.length)}" icon="sym_o_pause_circle" size="sm"/>
+                        </dashboard>
+                        <!-- each open hold, released here when it is a Manual or Change hold and the user holds its type's permission -->
+                        <container-box condition="soHolds.length" type="warning">
+                            <box-header title="Holds · ${soHolds.length}"/>
+                            <box-body-nopad>
+                                <form-list name="SalesOrderHolds" list="soHolds" skip-form="true" paginate="false">
+                                    <field name="typeText">
+                                        <default-field title="Hold">
+                                            <label text="${typeText}" type="span"/>
+                                            <label text="${comment}" type="div" style="text-caption m-muted" condition="comment"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="placedText"><default-field title="Since"><display/></default-field></field>
+                                    <field name="release">
+                                        <default-field title="">
+                                            <container-dialog id="SalesOrderRelease_${orderHoldReasonId}" button-text="Release" icon="sym_o_play_circle"
+                                                    width="480" title="Release the ${typeText} hold of order ${orderId}" condition="canRelease">
+                                                <form-single name="SalesOrderReleaseForm" transition="salesReleaseHold"
+                                                        map="{orderId:orderId, orderHoldReasonId:orderHoldReasonId}">
+                                                    <field name="orderId"><default-field><hidden/></default-field></field>
+                                                    <field name="orderHoldReasonId"><default-field><hidden/></default-field></field>
+                                                    <field name="releaseComment"><default-field title="Comment"><text-line/></default-field></field>
+                                                    <field name="submitButton"><default-field title="Release"><submit/></default-field></field>
+                                                </form-single>
+                                            </container-dialog>
+                                        </default-field>
+                                    </field>
+                                </form-list>
+                            </box-body-nopad>
+                        </container-box>
+                        <!-- the approval while the order waits: the seller's setting, each order rule and its state, the warnings -->
+                        <container-box condition="soApproval">
+                            <box-header title="Approval · ${soApproval?.gateOn ? ec.l10n.localize('by a Sales approver') : ec.l10n.localize('order approver')}"/>
+                            <box-body-nopad>
+                                <form-list name="SalesOrderRules" list="soRules" skip-form="true" paginate="false">
+                                    <field name="ruleText">
+                                        <default-field title="Order rule">
+                                            <label text="${ruleText}" type="span"/>
+                                            <label text="${inputsText}" type="div" style="text-caption m-muted" condition="inputsText"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="approverText"><default-field title="Approver"><display/></default-field></field>
+                                    <field name="stateText">
+                                        <default-field title="State">
+                                            <label text="${stateText}" type="span" style="${state == 'approved' ? 'text-positive' : 'text-warning'}"/>
+                                            <label text="${decidedByName || decideRefusal}" type="div" style="text-caption m-muted" condition="decidedByName || decideRefusal"/>
+                                        </default-field>
+                                    </field>
+                                </form-list>
+                                <form-list name="SalesOrderWarnings" list="soWarnings" skip-form="true" paginate="false">
+                                    <field name="text">
+                                        <default-field title="Pre-approval warning (tells, does not refuse)"><label text="${text}" type="span" style="text-warning"/></default-field>
+                                    </field>
+                                </form-list>
+                                <label type="p" style="m-muted q-pa-sm q-mb-none" text="No order rule and no pre-approval warning."
+                                        condition="!soRules.length &amp;&amp; !soWarnings.length"/>
+                            </box-body-nopad>
+                        </container-box>
+                        <container-row>
+                            <row-col md="6">
+                                <container-box>
+                                    <box-header title="Overview"/>
+                                    <box-body-nopad>
+                                        <form-list name="SalesOrderOverview" list="soOverview" skip-form="true" skip-header="true" paginate="false">
+                                            <field name="label"><default-field><display/></default-field></field>
+                                            <field name="value"><default-field><display/></default-field></field>
+                                        </form-list>
+                                    </box-body-nopad>
+                                </container-box>
+                            </row-col>
+                            <row-col md="6">
+                                <container-box>
+                                    <box-header title="Fulfillment · ${soShipments.length}"/>
+                                    <box-body-nopad>
+                                        <form-list name="SalesOrderShipments" list="soShipments" skip-form="true" paginate="false">
+                                            <field name="shipmentId">
+                                                <default-field title="Shipment">
+                                                    <link url="${soShipmentPath}" url-type="plain" text="${shipmentId}" link-type="anchor"
+                                                            parameter-map="{shipmentId:shipmentId}" condition="soShipmentPath"/>
+                                                    <label text="${shipmentId}" type="span" condition="!soShipmentPath"/>
+                                                </default-field>
+                                            </field>
+                                            <field name="statusText"><default-field title="State"><display/></default-field></field>
+                                            <field name="shippedText"><default-field title="Date"><display/></default-field></field>
+                                        </form-list>
+                                        <label type="p" style="m-muted q-pa-sm q-mb-none" text="Nothing shipped yet." condition="!soShipments.length"/>
+                                    </box-body-nopad>
+                                </container-box>
+                                <container-box condition="salesOrder.showMoney">
+                                    <box-header title="Invoices and payments"/>
+                                    <box-body-nopad>
+                                        <form-list name="SalesOrderInvoices" list="soInvoices" skip-form="true" paginate="false">
+                                            <field name="invoiceId">
+                                                <default-field title="Invoice">
+                                                    <link url="${soInvoicePath}" url-type="plain" text="${invoiceId}" link-type="anchor"
+                                                            parameter-map="{invoiceId:invoiceId}" condition="soInvoicePath"/>
+                                                    <label text="${invoiceId}" type="span" condition="!soInvoicePath"/>
+                                                </default-field>
+                                            </field>
+                                            <field name="statusText"><default-field title="State"><display/></default-field></field>
+                                            <field name="dateText"><default-field title="Date"><display/></default-field></field>
+                                            <field name="totalText" align="right"><default-field title="Total"><display/></default-field></field>
+                                        </form-list>
+                                        <form-list name="SalesOrderPayments" list="soPayments" skip-form="true" paginate="false">
+                                            <field name="paymentId"><default-field title="Payment"><display/></default-field></field>
+                                            <field name="statusText"><default-field title="State"><display/></default-field></field>
+                                            <field name="amountText" align="right"><default-field title="Amount"><display/></default-field></field>
+                                        </form-list>
+                                        <label type="p" style="m-muted q-pa-sm q-mb-none" text="No invoice or payment yet."
+                                                condition="!soInvoices.length &amp;&amp; !soPayments.length"/>
+                                    </box-body-nopad>
+                                </container-box>
+                                <!-- P14: the order's commercial and service changes, each opening OrderChangeDetail under Sales -->
+                                <container-box>
+                                    <box-header title="Changes · ${soChanges.length}"/>
+                                    <box-body-nopad>
+                                        <form-list name="SalesOrderChanges" list="soChanges" skip-form="true" paginate="false">
+                                            <field name="requestId">
+                                                <default-field title="Change">
+                                                    <link url="${soChangePath}" url-type="plain" text="${requestId}" link-type="anchor"
+                                                            parameter-map="{requestId:requestId}" condition="soChangePath"/>
+                                                </default-field>
+                                            </field>
+                                            <field name="kindText"><default-field title="Kind"><display/></default-field></field>
+                                            <field name="linesText"><default-field title="Lines"><display/></default-field></field>
+                                            <field name="stateText"><default-field title="State"><display/></default-field></field>
+                                            <columns type="mobile">
+                                                <column><field-ref name="requestId"/><field-ref name="kindText"/></column>
+                                                <column><field-ref name="stateText"/></column>
+                                            </columns>
+                                        </form-list>
+                                        <label type="p" style="m-muted q-pa-sm q-mb-none" text="No change proposed." condition="!soChanges.length"/>
+                                    </box-body-nopad>
+                                </container-box>
+                            </row-col>
+                        </container-row>
+                        <container-box>
+                            <box-header title="Items · ${soLines.length}"/>
+                            <box-body-nopad>
+                                <form-list name="SalesOrderLines" list="soLines" skip-form="true" paginate="false">
+                                    <field name="description">
+                                        <default-field title="Item">
+                                            <label text="${description}" type="span"/>
+                                            <label text="${[productId, priceSourceText].filter(Boolean).join(' · ')}" type="div" style="text-caption m-muted"
+                                                    condition="productId || priceSourceText"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="quantityText" align="right">
+                                        <default-field title="Quantity">
+                                            <label text="${quantityText}" type="span"/>
+                                            <label text="${ec.l10n.localize('cancelled')} ${cancelledText}" type="div" style="text-caption m-muted" condition="cancelledText"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="unitText" align="right"><default-field title="Price"><display/></default-field></field>
+                                    <field name="totalText" align="right"><default-field title="Amount"><display/></default-field></field>
+                                    <field name="shippedText" align="right"><default-field title="Shipped"><display/></default-field></field>
+                                    <field name="billedText" align="right"><default-field title="Billed"><display/></default-field></field>
+                                    <field name="remove">
+                                        <default-field title="">
+                                            <link url="salesDeleteOrderLine" link-type="hidden-form" text="Remove" icon="sym_o_delete" btn-type="danger"
+                                                    condition="soCan.editDraft" parameter-map="{orderId:orderId, orderRevision:so.orderRevision, orderItemSeqId:orderItemSeqId}"
+                                                    confirmation="Remove this line?"/>
+                                        </default-field>
+                                    </field>
+                                    <columns type="mobile">
+                                        <column><field-ref name="description"/><field-ref name="quantityText"/></column>
+                                        <column><field-ref name="totalText"/><field-ref name="shippedText"/></column>
+                                    </columns>
+                                </form-list>
+                                <label type="p" style="m-muted q-pa-sm q-mb-none" text="No lines yet${soCan.editDraft ? ' · Add one with Add line' : ''}." condition="!soLines.length"/>
+                            </box-body-nopad>
+                        </container-box>
+                        <!-- P15: the order's agreements, those whose prices its lines took -->
+                        <section-include name="SalesOrderAgreements" location="component://mr-boss/template/SalesAgreementParts.xml"/>
+                        <container-box>
+                            <box-header title="History · ${soHistory.length}"/>
+                            <box-body-nopad>
+                                <form-list name="SalesOrderHistory" list="soHistory" skip-form="true" paginate="false">
+                                    <field name="changedText"><default-field title="When"><display/></default-field></field>
+                                    <field name="fieldText">
+                                        <default-field title="Change">
+                                            <label text="${fieldText}${lineText ? ' · ' + ec.l10n.localize('line') + ' ' + lineText : ''}" type="span"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="newText">
+                                        <default-field title="From and to"><label text="${oldText || '—'} → ${newText || '—'}" type="span"/></default-field>
+                                    </field>
+                                    <field name="userName"><default-field title="By"><display/></default-field></field>
+                                </form-list>
+                                <label type="p" style="m-muted q-pa-sm q-mb-none" text="No changes recorded yet." condition="!soHistory.length"/>
+                            </box-body-nopad>
+                        </container-box>
+                        <container-row>
+                            <row-col md="6">
+                                <container-box>
+                                    <box-header title="Conversation"/>
+                                    <box-body><chatter id="SalesOrderChatter" record-entity="mantle.order.OrderHeader" record-id="${orderId}"/></box-body>
+                                </container-box>
+                            </row-col>
+                            <row-col md="6">
+                                <container-box>
+                                    <box-header title="Files"/>
+                                    <box-body><record-files id="SalesOrderFiles" record-entity="mantle.order.OrderHeader" record-id="${orderId}"/></box-body>
+                                </container-box>
+                            </row-col>
+                        </container-row>
+                    </widgets>
+                </section>
+                <!-- ===== end of Sales P11 ===== -->
+            </widgets>
+        </section>
+    </widgets>
+</screen>

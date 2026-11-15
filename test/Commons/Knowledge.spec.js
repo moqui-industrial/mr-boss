@@ -1,7 +1,8 @@
 // Commons Knowledge (screen/Commons/Knowledge.xml and Knowledge.qvue, its subscreens Spaces and SpaceDetail,
 // service/ironstone/commons/KnowledgeServices.xml; impl-drawers-commons.md M9, design-drawers-commons.md §10): the JSON transitions the
 // screen calls under the Commons app root, on the knowledge demo (data/BossKnowledgeDemoData.xml). The side pane's spaces, the
-// tree a level at a time, a page with its links, backlinks, history, tags, files and review; a new page, edit with a version
+// tree a level at a time, a page with its links, backlinks, history, tags, files and review; a new page, including one
+// named in Chinese, edit with a version
 // note and a save that met another, history and compare, restore, publish, rename, move, a tree drop, delete; search; tags,
 // files, watch and linked records; spaces made, cloned and shared. Joe Developer may not read the restricted page or the
 // members-only space, and Bob Developer, who reads the handbook, may not change it (the wiki's rule, IronStone R21, R28;
@@ -167,6 +168,52 @@ feature("a new page under Office is made and opened; a page there already is ref
         removed.errors == ""
         !top.includes("Travel")
         hidden.errors.includes("Page not found")
+    },
+})
+
+feature("a Chinese page name is created and renamed, and a slash or .. is still refused", {
+    when() {
+        const name = `产品说明${RUN}`
+        const renamedName = `产品说明二${RUN}`
+        const created = post("createPage", { wikiSpaceId: "BOSSKB", parentPath: "Office", pageName: name })
+        const view = page({ wikiPageId: created.json.wikiPageId })
+        const renamed = post("renamePage", { wikiPageId: created.json.wikiPageId, pageName: renamedName })
+        const slash = post("createPage", { wikiSpaceId: "BOSSKB", parentPath: "Office", pageName: "产品/说明" })
+        const dots = post("createPage", { wikiSpaceId: "BOSSKB", parentPath: "Office", pageName: ".." })
+        // 81 characters, under Knowledge's 100, but 243 bytes, over the framework's 240: refused here, not by the wiki
+        const long = post("createPage", { wikiSpaceId: "BOSSKB", parentPath: "Office", pageName: "说".repeat(81) })
+        const removed = post("deletePage", { wikiPageId: created.json.wikiPageId })
+        return { created, view, renamed, slash, dots, long, removed, name, renamedName }
+    },
+    then({ created, view, renamed, slash, dots, long, removed, name, renamedName }) {
+        created.errors == ""
+        created.json.pagePath == "Office/" + name
+        view.text.startsWith("# " + name)
+        renamed.errors == ""
+        renamed.json.pagePath == "Office/" + renamedName
+        slash.errors.includes("letters")
+        dots.errors.includes("letters")
+        long.errors.includes("A page name is too long")
+        removed.errors == ""
+    },
+})
+
+feature("combining marks: a Devanagari name is made, a decomposed (NFD) name is its composed twin and taken, a leading mark is refused", {
+    when() {
+        const create = (pageName) => post("createPage", { wikiSpaceId: "BOSSKB", parentPath: "Office", pageName })
+        const devanagari = create(`हिन्दी पृष्ठ ${RUN}`)
+        const composed = create(`Café ${RUN}`)
+        const decomposed = create(`Cafe\u0301 ${RUN}`)
+        const leading = create(`\u0301Cafe ${RUN}`)
+        const removed = [devanagari, composed].map((made) => post("deletePage", { wikiPageId: made.json.wikiPageId }).errors)
+        return { devanagari, composed, decomposed, leading, removed }
+    },
+    then({ devanagari, composed, decomposed, leading, removed }) {
+        devanagari.errors == "" && devanagari.json.pagePath == `Office/हिन्दी पृष्ठ ${RUN}`
+        composed.errors == "" && composed.json.pagePath == `Office/Café ${RUN}`
+        decomposed.errors.includes(`There is a page Office/Café ${RUN} already`)
+        leading.errors.includes("letters")
+        removed.every((error) => error == "")
     },
 })
 

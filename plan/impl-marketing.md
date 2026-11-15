@@ -1,3 +1,21 @@
+Nov 15, 2026 — gate 8 and the build's phases done: P22 (SMS, with the framework's conf-level sms-consent provider and the promotional day limit per number), P23 (the tui and server-static sweeps, the access walk, the PASS phone check, the docs) and follow-ups 5–6, each reviewed by a fresh agent and merged on its focused specs. Next: the full suites, then the acceptance suites once.
+Nov 15, 2026 — gate 7 built: P19–P21 and follow-ups 1–4 (stage M7, Marketing's first release M0–M7), promotions, Customer360 and engagement, attribution, reports and Insights, the campaign calendar with its projected collection, the shell providers and Assist, and a remote PASS checkout's visitor key, each phase reviewed by a fresh agent and merged on its focused specs. Next: P22 (SMS, in review) and follow-up 5, then P23.
+Nov 15, 2026 — gate 6 built: P16–P18 (stage M6), events (registration setup with the PASS Event page, registrations, tickets and
+payment with PASS Register, check-in with the door tablet and the registration triggers), each phase reviewed by a fresh agent and merged
+on its focused specs; follow-up 1 (capture on approval, cancellation terms, stable entry codes) in review. Next: P19 beside P20.
+Nov 15, 2026 — gate 5 built: P12–P15 (stage M5), public forms and campaign content (surveys and form publication with PASS
+SubmitForm, leads and the Sales handoff, content, blog posts and landing pages, tracking links and capture), each phase reviewed by a
+fresh agent and merged on its focused specs, with an origin sync and the wiki page-name follow-ups between. Next: P16 (events).
+Nov 14, 2026 — gates 3 and 4 built: P8–P11 (stages M3–M4), durable sends and drip sequences (sends and the composer with a
+paged evaluation, dispatch and delivery, A/B experiments, automation run as its saved owner), each phase reviewed by a fresh agent and
+merged on its focused specs, beside Sales P16–P20. The user's calls of the build are in §4. Next: P12 (surveys and form publication),
+then P13 beside P14, P15 (gate 5); paused here for an origin sync and a Rust 1.100 rebuild.
+Nov 14, 2026 — gate 2 built: P6–P7 (stage M2), email readiness and public subscription (templates, sending profiles, bounce intake,
+PASS Marketing), each phase reviewed by a fresh agent and merged on its focused specs; P6 with its framework part (per-call mail values,
+the DSN and ARF reader). Next: P8 (sends, with a paged evaluation past the 5,000 preview cap), P9, then P10 beside P11.
+Nov 14, 2026 — gate 1 built: P1–P5 (stage M0–M1), campaigns and audiences, each phase reviewed by a fresh agent and merged on its
+focused specs, beside Sales P7–P11. The user's calls of the build are in §4. Next: P6 (templates, sending profiles and bounce intake),
+P7, then the sends (P8, with a paged evaluation past the 5,000 preview cap).
 # IronStone BOSS — Marketing implementation
 
 Nov 13, 2026 — P0 done: the checks left after the plan's review, F64–F89 (§6), against master as People, Maintenance,
@@ -409,29 +427,29 @@ Sections: [1 scope](#1-scope-and-order) · [2 rules](#2-ground-rules) · [3 phas
 | Phase | Repos | Screens | Status |
 | --- | --- | --- | --- |
 | P0 Checks | all (read) | — | done Nov 13 (§6 F1–F89) |
-| P1 Foundation | Mantle, BOSS | the Marketing root and menu, Home, Settings | — |
-| P2 Campaigns and approvals | Mantle, BOSS | Campaigns, CampaignDetail, Approvals, CampaignDefaults, Vocabularies | — |
-| P3 Lists, consent and suppressions | Mantle, BOSS | Lists, ListDetail, MemberDetail, Consent, ConsentDetail, Suppressions; Sales' Leads and Accounts bulk action | — |
-| P4 Audience import and merge | Mantle, BOSS | AudienceImport, AudienceMerge | — |
-| P5 Segments and audience preview | Mantle, BOSS | Segments, SegmentDetail, AudiencePreview | — |
-| P6 Templates, sending profiles and bounce intake | mr-moqui, Mantle, BOSS | MessageTemplates, MessageTemplateDetail, SendingProfiles | — |
-| P7 PASS Marketing: the app, subscription and preferences | Mantle, PASS, BOSS | PASS Subscribe, VerifySubscription, EmailPreferences' Marketing context; ListDetail's public offer | — |
-| P8 Sends and the composer | Mantle, BOSS | Sends, SendDetail, Compose | — |
-| P9 Dispatch and delivery | Mantle, BOSS | SendDetail's control, CampaignDelivery, RecipientDetail | — |
-| P10 Experiments | Mantle, BOSS | ExperimentDetail | — |
-| P11 Automation | Mantle, BOSS | Automations, AutomationDetail, EnrollmentDetail; Commerce's RecoveryPolicy | — |
-| P12 Surveys and form publication | Mantle, BOSS, PASS | Surveys, SurveyDetail, SurveyDistribution, Responses, ResponseDetail; PASS SubmitForm | — |
-| P13 Leads and the Sales handoff | Mantle, BOSS, PASS | Leads, LeadRules, LeadSources; PASS SubmitForm's lead purpose | — |
-| P14 Content, blog posts and landing pages | Mantle, BOSS, PASS | Content, ContentDetail, BlogPosts, BlogPostDetail, LandingPages, PageDetail, Knowledge; PASS pages | — |
-| P15 Tracking links and capture | Mantle, BOSS, PASS | TrackingLinks, TrackingLinkDetail; CampaignDetail's Tracking links tab | — |
-| P16 Events and registration setup | Mantle, BOSS, PASS | Events, EventDetail, RegistrationSetup; PASS Event | — |
-| P17 Registrations, tickets and payment | Mantle, BOSS, PASS | Registrations, RegistrationDetail; PASS Register, Registration | — |
-| P18 Check-in | Mantle, BOSS | CheckIn | — |
-| P19 Promotions, Customer360 and engagement | Mantle, BOSS | Promotions, PromotionDetail, PromoCodes, PromoCodeDetail, Customer360, ContactDetail | — |
-| P20 Attribution, reports and Insights | Mantle, BOSS | Reports, CampaignPerformance, DeliveryAnalysis, AudienceGrowth, Attribution | — |
-| P21 Calendar, shell providers and Assist | Mantle, BOSS | Calendar, QuickCreate | — |
-| P22 SMS | Mantle, BOSS, PASS | the SMS channel of Sends, Compose, AutomationDetail, SendingProfiles; PASS EmailPreferences' SMS scope | — |
-| P23 Finish | all | the sweeps and the review walks (acceptance) | — |
+| P1 Foundation | Mantle, BOSS | the Marketing root and menu, Home, Settings | built and reviewed Nov 13, merged |
+| P2 Campaigns and approvals | Mantle, BOSS | Campaigns, CampaignDetail, Approvals, CampaignDefaults, Vocabularies | built and reviewed Nov 13, merged |
+| P3 Lists, consent and suppressions | Mantle, BOSS | Lists, ListDetail, MemberDetail, Consent, ConsentDetail, Suppressions; Sales' Leads and Accounts bulk action | built and reviewed Nov 14, merged |
+| P4 Audience import and merge | Mantle, BOSS | AudienceImport, AudienceMerge | built and reviewed Nov 14, merged |
+| P5 Segments and audience preview | Mantle, BOSS | Segments, SegmentDetail, AudiencePreview | built and reviewed Nov 14, merged |
+| P6 Templates, sending profiles and bounce intake | mr-moqui, Mantle, BOSS | MessageTemplates, MessageTemplateDetail, SendingProfiles | built and reviewed Nov 14, merged |
+| P7 PASS Marketing: the app, subscription and preferences | Mantle, PASS, BOSS | PASS Subscribe, VerifySubscription, EmailPreferences' Marketing context; ListDetail's public offer | built and reviewed Nov 14, merged |
+| P8 Sends and the composer | Mantle, BOSS | Sends, SendDetail, Compose | built and reviewed Nov 14, merged |
+| P9 Dispatch and delivery | Mantle, BOSS | SendDetail's control, CampaignDelivery, RecipientDetail | built and reviewed Nov 14, merged |
+| P10 Experiments | Mantle, BOSS | ExperimentDetail | built and reviewed Nov 14, merged |
+| P11 Automation | Mantle, BOSS | Automations, AutomationDetail, EnrollmentDetail; Commerce's RecoveryPolicy | built and reviewed Nov 14, merged |
+| P12 Surveys and form publication | Mantle, BOSS, PASS | Surveys, SurveyDetail, SurveyDistribution, Responses, ResponseDetail; PASS SubmitForm | built and reviewed Nov 14, merged |
+| P13 Leads and the Sales handoff | Mantle, BOSS, PASS | Leads, LeadRules, LeadSources; PASS SubmitForm's lead purpose | built and reviewed Nov 14, merged |
+| P14 Content, blog posts and landing pages | Mantle, BOSS, PASS | Content, ContentDetail, BlogPosts, BlogPostDetail, LandingPages, PageDetail, Knowledge; PASS pages | built and reviewed Nov 14, merged |
+| P15 Tracking links and capture | Mantle, BOSS, PASS | TrackingLinks, TrackingLinkDetail; CampaignDetail's Tracking links tab | built and reviewed Nov 15, merged |
+| P16 Events and registration setup | Mantle, BOSS, PASS | Events, EventDetail, RegistrationSetup; PASS Event | built and reviewed Nov 15, merged |
+| P17 Registrations, tickets and payment | Mantle, BOSS, PASS | Registrations, RegistrationDetail; PASS Register, Registration | built and reviewed Nov 15, merged |
+| P18 Check-in | Mantle, BOSS | CheckIn | built and reviewed Nov 15, merged |
+| P19 Promotions, Customer360 and engagement | Mantle, BOSS | Promotions, PromotionDetail, PromoCodes, PromoCodeDetail, Customer360, ContactDetail | built and reviewed Nov 15, merged |
+| P20 Attribution, reports and Insights | Mantle, BOSS | Reports, CampaignPerformance, DeliveryAnalysis, AudienceGrowth, Attribution | built and reviewed Nov 15, merged |
+| P21 Calendar, shell providers and Assist | Mantle, BOSS | Calendar, QuickCreate | built and reviewed Nov 15, merged |
+| P22 SMS | Mantle, BOSS, PASS | the SMS channel of Sends, Compose, AutomationDetail, SendingProfiles; PASS EmailPreferences' SMS scope | built and reviewed Nov 15, merged |
+| P23 Finish | all | the sweeps and the review walks (acceptance) | built and reviewed Nov 15, merged |
 
 ### P0 — Checks
 
@@ -565,6 +583,221 @@ seeds); stage M0.
   a legacy list and it becomes editable; a Projects client and a PASS public account are refused the root and every
   `ironstone.marketing` service.
 
+**Built Nov 13 (P1).** mr-mantle and mr-boss on branch `mkt/p1` (hashes in the worker's reply); mr-moqui unchanged, no Rust
+built.
+- Checked first (the code over the plan): F1 (the root grant live for `ADMIN` and `BOSS_MARKETING_ADMIN`, ALWAYS with
+  `MANTLE_ACTIVE_ORG`; the root's comment said otherwise), F2 (nine placeholders), F3, F4, F7, F10, F45, F58, F69 and F77;
+  impl-sales P1's Built and Review notes (the scope module, the all-organizations permission of the user's call, the bundles,
+  the area deny, the root's record panels of its own hosts only) and Sales.js, SalesAccess.js, SalesAccess.spec.js and
+  SalesSpecLib.js as the pattern; Sales' readiness and settings rows (P2) for the registries. The code over the plan:
+  - the ContactList filter as the plan words it would hide every mailbox and every other organization's list from each BOSS
+    read under an ordinary grant: the Inbox's mailboxes (owned by their creators' organizations or none), Commons' contact record
+    Consent tab (a Services user lost Retail's "Ziziwork News" from a contact's consent state; Comms' `Consent` spec failed) and
+    the list services' own finds, which the contact administrator's "every list" needs. Built: the filter leaves a mailbox out
+    (`contactListTypeEnumId` MAILBOX or the owner), and the list services, Mantle's `ConsentServices` (13 reads),
+    `CommunicationServices` (2) and Comms' `get#ConsentOptions` read lists with authorization off under their own rules, as
+    before P1 (no filter applied then); the view `ForumMailboxReceipt` gains the list's type and owner as aliases, as a filter
+    refuses a view that lacks the field's alias;
+  - the plan names no all-organizations permission: `MARKETING_ALL_ORGANIZATIONS` is added for the administrator alone, on
+    Sales', People's and Maintenance's pattern (the user's calls for those apps), so the administrator's services agree with its
+    root's `MANTLE_ACTIVE_ORG`;
+  - the plan names no Mantle scope module for P1: `mantle/marketing/MarketingAccess.js`, as Sales' P1 built SalesAccess.js;
+  - Marketing's Mantle seeds other than the permissions and filter rows go in a file of their own, `data/MarketingSeedData.xml`.
+- Mantle:
+  - `data/MantleSetupData.xml` (one block after `WORKING_HOURS_EDIT`): the fifteen `MARKETING_*` permissions of design §1.1 with
+    `MARKETING_AUDIENCE_IMPORT`, `MARKETING_ALL_ORGANIZATIONS` and Comms' `MESSAGE_TEMPLATE_VIEW`, `_EDIT`,
+    `MESSAGE_SENDING_CONFIGURE` and `MESSAGE_SUPPRESSION_REVIEW`, each granted to `ADMIN`; the filter rows `MANTLE_USER_ORG_MCMP`,
+    `_MSEG`, `_CLST` and their `MANTLE_ACTIVE_ORG_*` twins (MarketingCampaign by `organizationPartyId`, MarketSegment and
+    ContactList by `ownerPartyId`, a mailbox left out), an unowned or `_NA_` row found only by an administrator's grant with no
+    organization active.
+  - `entity/MarketingEntities.xml`: `MarketingCampaign.organizationPartyId`, audit-logged, with its Organization relationship;
+    `ContactList.ownerPartyId` audit-logged on update (adoption changes it, §2's "a list's owner"). `data/MarketingSeedData.xml`:
+    the role `MarketingOrganization`, `PcpTracking` and `PcsCheckout` (F10), and `get#Readiness` callable by every user (it checks
+    `MARKETING_CONFIGURE` itself, as Sales' readiness).
+  - `service/mantle/marketing/MarketingAccess.js` (no service): `capabilities()` (each permission; the reads `anyRead` of
+    `MARKETING_VIEW`, `MARKETING_AUDIENCE_VIEW` or `MARKETING_REPORT_VIEW`, `audienceRead`, `reportRead`; an edit permission alone
+    reads nothing), `scope()` (the caller's own organizations, the active one when it is theirs; every internal organization for a
+    system administrator or a holder of `MARKETING_ALL_ORGANIZATIONS`), `covers` (never an unowned record), `requireCapability`,
+    `requireOrganization` (`ORGANIZATION_DENIED`), `organizationIds`, and the list rule `listReachable` and `requireListOwner`
+    (F77).
+  - `ContactListServices.xml`: `get#ContactListAccess` answers a list that is not a mailbox as missing (`exists` false) unless the
+    current user works for its owner, holds `MARKETING_ALL_ORGANIZATIONS` (an internal organization's list) or is a contact
+    administrator or `ADMIN`; an unowned list is reached by no one else until adopted, so `update#`, `find#ContactLists`,
+    `find#ContactListParties`, `join#`, `add#`, `remove#`, `decline#` and `set#ContactListPartyDelivery` refuse it as they refuse
+    a missing list; with no user (a run as the system) as before; `create#ContactList` takes such a list's owner from the caller's
+    organizations (`ORGANIZATION_DENIED`), any for a contact administrator; mailboxes, the list sends and Shop's internal
+    subscription service are unchanged.
+  - `CampaignServices.xml` over `MarketingAdoption.js`: `preview#Adoption` (the unowned campaigns, non-mailbox lists and segments,
+    200 of each, with their revision) and `apply#Adoption` (each assignment on its own transaction with one result: adopted, or
+    `UNKNOWN_KIND`, `RECORD_UNAVAILABLE`, `ALREADY_OWNED`, `REVISION_CHANGED`, `ORGANIZATION_DENIED`; a campaign gains its dated
+    MarketingOrganization row; the owner audited with the reason "Adopted by"), `MARKETING_CONFIGURE`.
+  - `MarketingWorkspaceServices.xml` over `MarketingWorkspace.js`: `get#Home` (six cards), `get#Upcoming` (four sources) and
+    `get#Attention` (adoption for a configurer; approvals, deliveries), each source answered by name, `notAvailable` until its
+    phase, a failing one named in `failedSources` with the others answered; `get#Settings` (the adoption entry) and `get#Readiness`
+    (`marketing.adoption`: the unowned records, instance-wide as they are no organization's, fix `marketingAdoption`).
+- BOSS:
+  - `data/BossSetupMarketingData.xml` (new, F69): the root user group `BOSS_MARKETING` and `_AUTHOR`, `_AUDIENCE`, `_APPROVER`,
+    `_DISPATCH`, `_EVENTS`, `_ANALYST`, `_READ`; on the `BOSS_MARKETING` artifact group (a second element) the
+    `ironstone\.marketing\..*` pattern and `BOSS_MARKETING_ROOT` (ALLOW, `MANTLE_USER_ORG`, `MANTLE_PRIVATE_CONTACT`);
+    `BOSS_MKT_SETTINGS` (Settings denied to the root user group); design §1.1's grants (the author also `MESSAGE_TEMPLATE_VIEW`; the
+    administrator `MARKETING_CONFIGURE` with every view and edit, `MESSAGE_TEMPLATE_VIEW` and `MARKETING_ALL_ORGANIZATIONS`, no
+    approval, dispatch or Comms configuration); nine capability bundles (1600–1680, the launcher's artifact with the root's
+    filter sets); the readiness provider `marketing.setup` and the settings entry `marketing.settings`. `data/BossSetupData.xml`:
+    `marketing` in all fifteen deny rows (the longest 254, none split) and two comments. `service/ironstone/admin/Admin.js`
+    settingsRoutes `marketingSettings` and `marketingAdoption`.
+  - `ironstone.marketing.ContextServices` (`get#SharedContext`, `check#Record`, `get#Choices`, `search#Records`) over
+    `service/ironstone/marketing/Marketing.js` (tables `mountRoots`, `areas`, `recordKinds`, `choiceSources`, `searchFinds`,
+    `linkPaths`): the root grant read from the user's own groups; a root other than `Marketing` refused (`MARKETING_CONTEXT`);
+    record kinds organization, campaign, list (not a mailbox) and segment, each by its organization, an unowned one
+    `RECORD_UNAVAILABLE`; choices organizations; no palette source yet (none registered); capability `settings` (the area's
+    grant and `MARKETING_CONFIGURE`). `template/MarketingParts.xml` holds `choices`.
+  - Screens: the root (`get#SharedContext` in always-actions; a record panel naming a record refused, Marketing having no host
+    yet; `<shell-providers>` with the `marketing` keymap, `g m`; the stale comment replaced, F1; Settings `menu-include`
+    `MARKETING_CONFIGURE`); Home's frame (HomeScope's organization checked by `check#Record`; MarketingCards, Upcoming and Attention
+    each from its W service, sources shown Not available, a failing source named, a failing panel alone; a user who reads nothing
+    told so); Settings (Index: SettingsIndex and the readiness with its fix places; Adoption: the records awaiting adoption, each
+    adopted to an organization chosen at the revision read, its result as a message). The five placeholders removed; Segments and
+    Newsletters are redirects to Home hidden from the menu, to Audiences and Sends at P5 and P8 (F2).
+  - Demo: `data/BossZZMarketingDemoData.xml` (new): `marketing.author`, `.audience`, `.approver`, `.dispatch`, `.events`,
+    `.analyst`, `.reader` (agents of Retail, each in `BOSS_USERS`, `BOSS_MARKETING` and their group), `marketing.admin` (Retail,
+    `BOSS_MARKETING_ADMIN` alone) and `marketing.author2` (Ziziwork Services only); none in `ADMIN`. BossUsersDemoData is not
+    touched.
+- Specs:
+  - Mantle `test/marketing/MarketingScope` (6 features, 1.1 s): the filters under an ordinary and an administrator's grant
+    (another organization's and the unowned campaign, segment and list left out, a mailbox of another organization kept, the
+    active organization's only); the list services (own list reached, another's and the unowned one missing, rename of the
+    unowned refused, a contact administrator reaching both, create for another organization or none refused); MarketingAccess's
+    organizations, refusal and an edit permission reading none; adoption (preview, readiness warning, the seven outcomes, a
+    second apply `ALREADY_OWNED`, the campaign's MarketingOrganization row, the adopted list then reached, a non-configurer and
+    another organization refused); Home's sources Not available, Attention's adoption source, the refusals.
+  - mr-boss `test/Marketing/MarketingSpecLib.js` (ids, users, `asUser`, `system`, `refusal`, `invoke`, `page`, `screenRefusal`,
+    `hit`, `shell`); `MarketingAccess` (7 features, 3.0 s feature time, the slowest 0.9 s): the context and its refusals (another
+    root, another app's user, a client, a PASS account); the menu, keys and launcher per group; each group's capabilities exactly
+    (a custom group with the root grant and `MARKETING_CAMPAIGN_EDIT` alone reading no organization, record or choice, and told so
+    on Home); the authors of Retail and Services refused each other's campaign, list and segment with the same parameters, the
+    administrator every organization's and no unowned record; the services refused without the root grant, a write verb of the
+    package denied a client and admitted for an author, the raw Mantle mutators and `apply#Adoption` permitted to no Marketing
+    group; Home's one qvt render, Settings/Index's and Settings/Adoption's one html render (the administrator's), Settings refused
+    an author, a Party's panel refused under the root; the bundles exactly their groups' grants, the import permission the
+    audience manager's and administrator's, the provider and the entry, Admin's index listing the entry to the administrator only.
+    `AppOrganizationFilters` gains the three entities in its two filter features (+0.1 s).
+  - Acceptance, written and not run: `test/acceptance/Marketing/MarketingFoundationWalk` (5 features: each group's menu with each
+    entry opened or refused; `marketing.reader` opens Home and no settings; the Services author sees none of Retail's records by
+    record check, choice, palette, Home or the list services; the administrator adopts a legacy list on Settings › Adoption, a
+    second adoption refused, and the Retail author then reaches it; a client and a PASS account refused the root and every
+    `ironstone.marketing` service, an author not). `test/acceptance/AppStructure`'s placeholder count is now none (it said at least
+    16 with 9 left).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle MarketingScope 6 of 6; Consent, ContactListSend,
+  DeliveryLedger, InboxThreads, Mailboxes, ContactBooks, OrganizationRowFilter, RecordVisibility, SalesOrganizationScope,
+  SalesLeadIntake, SalesWorkspace, ShopCheckout, ShopCustomer, UniversalSearch, MantleSearch, InternalOrganizations, Constitution,
+  SitePages, SupportChannels and InternalMessages 189 of 189 (before the authorization-off list reads; Consent, ContactListSend,
+  DeliveryLedger, InboxThreads, Mailboxes, InternalMessages, ShopCheckout and ShopCustomer again after them, 98 of 98). mr-boss
+  MarketingAccess 7 of 7, AppOrganizationFilters 7 of 7; ProjectsAccess (the deny rows), AdminRegistries, AdminCapabilities,
+  AdminAccess, AdminGroups, AdminUsers, AdminLifecycle, AdminOrganizations, CommsModeration, Compose, Consent, Contacts, Inbox,
+  InboxMailboxes, Unsubscribe, SalesAccess, SalesSettings, PeopleAccess, MaintenanceAccess, InsightsAccess, CommerceAccess,
+  CustomerServiceAccess, ManufacturingAccess and PurchasingAccess, all passing (Consent once the list reads were authorization-off),
+  then CommonsSettings, SalesOpportunities, SalesIntake, SalesHome and SalesAccounts 23 of 23. `moqui lint --screens` (release
+  binary): 141 flagged sites, as before, none in the Marketing screens. Prettier clean on the new JavaScript. Not run:
+  ./moq test-apps, the acceptance suite.
+- Inventories: usl-inventory's `setup#UserOrganizationInfo` row names Marketing's root; ss-inventory has no row for P1's screens.
+- Design edits: design-marketing §1.1 (as built: the permissions, the scope module, the grants, the administrator, the filter rows,
+  the list rule and Commons' authorization-off reads), §3 Home, §12 Settings and §15.4 (as built); design-admin §14.2's Marketing
+  row; design-drawers-commons' Mailboxes row (owner contract: the list services' organization check, F77).
+- Findings, numbered by the lead F90 to F98 in order:
+  - the ContactList filter, worded as the plan has it, would have hidden mailboxes and other organizations' lists from every BOSS
+    read under an ordinary grant (Commons' contact record Consent tab, the list services, Comms' consent options): the mailbox
+    exemption and the authorization-off reads keep Commons' and Comms' behavior as before P1; consent's organization scope is P3's;
+  - `ForumMailboxReceipt` named ContactList without its owner or type, so any find of it under an app root's grant would have been
+    refused once the list filter existed; aliases added;
+  - the plan names no all-organizations permission for Marketing; `MARKETING_ALL_ORGANIZATIONS` is built for the administrator
+    alone, as Sales', People's and Maintenance's are by the user's calls;
+  - design §1.1 gives the administrator "MARKETING_CONFIGURE plus explicit view/edit grants": built as every view and edit of the
+    table, `MESSAGE_TEMPLATE_VIEW` and the all-organizations permission, no approval, dispatch or Comms configuration (Sales'
+    choice; Maintenance's administrator got every app permission by the user's call);
+  - `MESSAGE_TEMPLATE_EDIT`, `MESSAGE_SENDING_CONFIGURE` and `MESSAGE_SUPPRESSION_REVIEW` are held by `ADMIN` alone: design §1.1
+    gives them to "designated template editors" and as explicit grants with no group named, which P6 needs (a Comms or Admin
+    group, or a Marketing one);
+  - the list services' new rule is the organization alone, with no Marketing permission (any employee of a list's organization
+    reaches it through ContactListServices as before; Marketing's own list services and the list policy are P3's), and a call with
+    no user is unchanged;
+  - the Settings area's deny is met after the screen's own capability check in a render (always-actions run first), as Sales'
+    and Maintenance's settings are; the spec takes either refusal;
+  - the readiness check of unowned records is instance-wide (they are no organization's), under a provider scoped by
+    organization, so Admin's Health shows it once per organization asked;
+  - `test/acceptance/AppStructure`'s placeholder count was stale before this phase (at least 16 with 9 left), now none.
+- For the lead:
+  - budget share: mr-mantle about 1.1 s (MarketingScope); mr-boss server about 3.1 s (MarketingAccess 3.0 s, AppOrganizationFilters'
+    rows 0.1 s); no client spec;
+  - merge hot spots (Sales P7 on `sal/p7` may touch the first three): mr-boss `data/BossSetupData.xml` (all fifteen deny rows; the
+    deny comment; the capability registry comment), `data/BossUsersDemoData.xml` not touched, `service/ironstone/admin/Admin.js`
+    (settingsRoutes, after Sales'), `service/ironstone/comms/ConsentServices.xml` (one read), `test/AppOrganizationFilters.spec.js`
+    and `test/screens/OrganizationRows.xml`, `test/acceptance/AppStructure.spec.js`, `plan/design-admin.md` §14.2,
+    `plan/design-drawers-commons.md` (the Mailboxes row), `plan/design-marketing.md`, `plan/usl-inventory.md`; mr-mantle
+    `data/MantleSetupData.xml` (the Marketing permission block after `WORKING_HOURS_EDIT`; the filter rows at the end of both
+    sets, after Sales'), `entity/MarketingEntities.xml`, `entity/ForumEntities.xml`, `service/mantle/party/ConsentServices.xml`
+    and `CommunicationServices.xml` (the list reads), `service/mantle/marketing/ContactListServices.xml`;
+  - the user's calls: whether Marketing gets `MARKETING_ALL_ORGANIZATIONS` (built), the administrator's grants (built as above),
+    and who holds Comms' three explicit permissions (before P6); built meanwhile as above.
+
+**Review Nov 13 (P1).** A fresh review of `mkt/p1` (mr-mantle 4bee3a0c, mr-boss a51564a1) against P1, §2, §4 and design §1.1,
+§1.2, §3, §12 and §15.4.
+- Checked and sound:
+  - the twenty permissions each granted to `ADMIN`; the six filter rows (MarketingCampaign by `organizationPartyId`, MarketSegment and
+    ContactList by `ownerPartyId`, the list rows leaving a mailbox out); the only view over the three entities is
+    `ForumMailboxReceipt`, whose new aliases are found by the filter through their member field (`listOwnerPartyId` reads
+    `ownerPartyId`) and whose own condition keeps it to mailboxes, so the filter never narrows it; no screen of BOSS, PASS or the base
+    components reads the three entities directly; Products' `marketSegmentId` columns read no MarketSegment row; Shop's checkout
+    opt-in and store topics (StoreTopics.js, StoreCheckout.js) and the Forum's list reads go through EntityLib or Forum's helpers
+    with authorization off, and every Forum list is a mailbox;
+  - the 22 authorization-off reads (ContactListServices 6, Mantle ConsentServices 13, CommunicationServices 2, Comms'
+    `get#ConsentOptions` 1): a find with `disableAuthz()` is neither checked nor filtered, and ContactList had no filter
+    before P1, so each reads exactly what it read on master and none returns a list, member or consent row its caller could not see
+    before. Each keeps its own rule after the read: the list services ask `get#ContactListAccess` (now narrower: F77) before using
+    the list, except `end#ContactListParty` (internal; `leave#` ends only the caller's own rows, so a member outside the owner's
+    organization can still leave a list) and `send#ContactListEmail` (`allow-remote="false"`, unchanged by the plan); the consent
+    services are unchanged (their callers' contact-admin and token checks; their organization scope is P3's); the two
+    CommunicationServices reads take only `defaultDeliveryEnumId` of the caller's own memberships;
+  - the list rule: `get#ContactListAccess` answers a non-mailbox list outside the rule as missing (`exists` false), so `update#`,
+    `find#ContactLists`, `find#ContactListParties`, `join#`, `add#`, `remove#`, `decline#` and `set#ContactListPartyDelivery` refuse it
+    as a missing list; `ADMIN` reaches every list through `CONTACT_ADMIN`; every caller of the list services in Mantle, BOSS
+    (BasicComms Mail, Inbox, Compose, Comms Home) and the Forum works on mailboxes, whose branch is unchanged; `create#Message`'s
+    non-mailbox branch now needs the owner's organization (no caller posts to one); Shop's subscriptions and both unsubscribe pages
+    use ConsentServices, not the list services;
+  - adoption's scope (`MARKETING_CONFIGURE`; an organization of the configurer's scope; mailboxes excluded; once per record; the
+    campaign's dated MarketingOrganization row; the owner audited "Adopted by"); Marketing.js (root grant from the user's own rows,
+    Projects clients and PASS accounts refused, record checks one answer for missing, outside and unowned); the area deny with
+    `MARKETING_CONFIGURE` on the menu; Home's sources (Not available, never zero; a failure named); the bundles equal to the grants;
+    the fifteen deny rows (all name `marketing`, the longest 254); the demo users.
+- Fixed:
+  - R1 (integrity, medium). `apply#Adoption` read and checked each record (unowned, revision) before its own transaction and wrote it
+    inside, unlocked: two administrators adopting the same record at once could both pass, the second overwriting the first's owner
+    and a campaign gaining two MarketingOrganization rows. The record is now read `forUpdate` inside the adoption's transaction and
+    checked there, so the second waits and answers `ALREADY_OWNED`.
+  - R2 (revisions, low). The revision was checked only when given, so an assignment naming none adopted whatever the record had
+    become (§2: every write names the revision it read). It is now required (`REVISION_REQUIRED`, after `ALREADY_OWNED` so a
+    repeat still answers that). The Adoption screen always posted it; MarketingScope's campaign assignment now names it and a case
+    with none is refused (fails on the unfixed code); the acceptance MarketingFoundationWalk posts the list's revision (not run).
+  - R3 (scope, low). Comms' `get#ConsentOptions` now reads every list past the new filter, and checked no permission itself (its
+    two callers check the contact admin first). It now lists the lists to a contact admin only, so the authorization-off read
+    cannot reach anyone else if a later caller forgets.
+- Findings, numbered by the lead F99 to F102 in order:
+  - `apply#Adoption`'s check-then-write race and optional revision (R1, R2);
+  - Comms' `get#ConsentOptions` gated on the contact admin (R3);
+  - `create#ContactList` lets a contact administrator create a non-mailbox list with no owner, which is then unowned (awaiting
+    adoption, reached only by contact administrators): kept, as the plan gives the contact administrator every list;
+  - the readiness check and the Adoption preview are instance-wide (unowned records are no organization's): a configurer of one
+    organization sees every unowned record's name; today only `BOSS_MARKETING_ADMIN` (every organization) holds the permission.
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle MarketingScope 6 of 6 (1.0 s), Consent 17 of 17 (0.8 s),
+  ContactListSend 14 of 14 (0.6 s); mr-boss MarketingAccess 7 of 7 (3.1 s), Consent 12 of 12 (0.7 s), AppOrganizationFilters 7 of 7
+  (0.3 s), Contacts 43 of 43, Unsubscribe 8 of 8. Not run: the acceptance MarketingFoundationWalk (changed: its adoption posts the
+  revision; AGENTS.md asks a changed acceptance test to be run, the reviewer brief says not to), test-apps.
+- For the lead:
+  - budget share unchanged by the review (MarketingScope gains one assignment);
+  - merge hot spots as the Built note, plus `service/ironstone/comms/ConsentServices.xml` `get#ConsentOptions` (mr-boss) and
+    `MarketingAdoption.js` (mr-mantle);
+  - the user's three calls (Marketing's `MARKETING_ALL_ORGANIZATIONS`, the administrator's grants, who holds `MESSAGE_TEMPLATE_EDIT`,
+    `MESSAGE_SENDING_CONFIGURE` and `MESSAGE_SUPPRESSION_REVIEW`) are open; nothing in the review depends on their answers.
+
 ### P2 — Campaigns and approvals
 
 Design §3 Campaigns, CampaignDetail and Approvals, §12 CampaignDefaults and Vocabularies, §14.3 (Chatter and
@@ -618,6 +851,183 @@ RecordFiles hosts), §18 (the campaign plan print); MKT-CAMPAIGN, MKT-APPROVAL, 
   and a manager, `marketing.approver` approves it from Approvals, the author's later budget change returns it to
   review, a cost linked to an Accounting line shows in actual cost once, and the ORG_ZIZI_SERVICES author can open
   none of it.
+
+**Built Nov 13 (P2).** mr-mantle and mr-boss on branch `mkt/p2` (hashes in the worker's reply); mr-moqui unchanged, no Rust built.
+- Checked first (the code over the plan): P1's Built and Review notes, F42, F59, F81 and §4's rows (the one-person-team flag; the
+  administrator keeps no approve or dispatch); Purchasing's approval rules (PurchaseApprovals.js: the decision bound to the source's
+  revision, STALE_REVISION naming the current one, supersession on a material change with the notices read, SELF_APPROVAL, the
+  topic's approve and refuse services on the NotificationTopic row) and impl-sales P9's plan text (not built: the author never
+  decides unless the rule allows, a line change invalidates, a file does not); Sales P6's participant (SalesWorkspace.js,
+  `sales.assignments`, SALES_OWNER_CHANGE for BOSS_ADMIN_IDENTITY and BOSS_ADMIN_ADMIN) and Sales P4's opportunity host
+  (get#RecordLinkInfo, RecordFiles, Chatter, the palette, the root's panelHosts) as the patterns. The code over the plan:
+  - no native status flow returns an approved campaign to review: a seed transition Approved → Planned is added, which a material
+    change takes; an in-progress campaign takes no material change (CAMPAIGN_IN_PROGRESS);
+  - the plan names no request record: MarketingDecision carries the requests too (MddRequested), a decision naming the request it
+    answers (`requestDecisionId`), so "one decision per draft" is one decision per request at a revision;
+  - a campaign's revision is a field of its own (`campaignRevision`), raised only by a material change, as Purchasing's
+    `orderRevision`; the lastUpdatedStamp stays the write check (`expectedRevision`), which a status change moves;
+  - the plan has no send in P2, so the 500-recipient rule is the approvals module's `selfApprovalAdmits`, tested on its own; P8 wires
+    the send kind with its prepared count;
+  - Purchasing and Customer Service seed no TopicRegistration for their approval topics (Maintenance does): Marketing seeds both, in
+    Mantle, and only the link in BOSS.
+- Mantle:
+  - `entity/MarketingEntities.xml` (one P2 block in the campaign package): MarketingCampaign gains `campaignRevision` and
+    `createdByUserId`, its dates, budget and currency audit-logged; CampaignAssociation, CampaignCost, MarketingDecision,
+    MarketingPolicy, MarketingVocabulary and CampaignAsset with their enumerations. `data/MarketingSeedData.xml` (a P2 block): the
+    roles MarketingCampaignManager and MarketingCampaignContributor, the transition Approved → Planned, the three approval topics with
+    their decision services and TopicRegistration rows (`MARKETING_APPROVE`), `MARKETING_OWNER_CHANGE` granted to `ADMIN` (here, not in
+    MantleSetupData's Marketing block, to keep Marketing's track out of the shared file) and the lifecycle services callable by
+    every user (each checks the permission).
+  - `CampaignServices.xml` over four modules: `MarketingCampaigns.js` (`find#Campaigns`, `create#`, `store#Campaign`,
+    `store#CampaignBudget`, `store#CampaignParty` with the organization mirror, `store#CampaignAssociation`, `start#`, `complete#`,
+    `cancel#Campaign`, `duplicate#Campaign`, `get#Campaign` as of a date, `check#CampaignAccess`, `create#CampaignAsset`,
+    `find#OwnedCampaignRoles`, `transfer#CampaignRole`), `MarketingApprovals.js` (`request#`, `decide#MarketingApproval`,
+    `approve#`, `refuse#MarketingTarget`, `get#Decisions`; the target kinds table, the policy read, supersession, the approvers),
+    `MarketingCosts.js` (`store#CampaignCost`, `find#CampaignCosts`) and `MarketingPolicies.js` (`get#`, `preview#`,
+    `store#MarketingPolicy`, `store#`, `find#Vocabulary`); the refusals and rules are in each service's description and
+    design §3 and §12's as-built notes.
+  - `CommunicationServices.xml` get#RecordLinkInfo: MarketingCampaign as a content host (CampaignAsset) and its visibility through
+    `check#CampaignAccess` (a Marketing reader of its organization, never an unowned one).
+  - `MarketingWorkspace.js`: Home's running campaigns and pending approvals cards, Upcoming's campaign windows (60 days), Attention's
+    approvals (an approver's), the settings entries Campaign defaults and Vocabularies, the readiness check `marketing.policy` (an
+    organization with no policy, fix `marketingCampaignDefaults`).
+- BOSS:
+  - Screens: the root (Campaigns in the menu, QuickCreate hidden; the record panels admit the campaign through `check#Record`; the
+    palette source, QuickCampaign, the three notification topics, CampaignDetail's Assist chip, `g c`); `Marketing/Campaigns`
+    (Campaigns: list, board by status, calendar; CampaignDetail as boxes, design §3's as-built; CampaignPlan, the html-print as of
+    a date; Approvals, Commons' Notifications with the three topics, `BOSS_MKT_APPROVALS`); `Settings/CampaignDefaults` (the policy,
+    a preview form, the history) and `Settings/Vocabularies`; `QuickCreate/NewCampaign`; Home's New campaign and links;
+    `template/MarketingCampaigns.xml` (the transitions and NewCampaignForm).
+  - `Marketing.js`: the area `approvals` (with `approve`), the campaign's destination, choices campaigns, people, currencies, lists
+    and segments (`get#Choices` gains organizationPartyId and excludeId), the palette's campaigns, `recordLink`, the P2 link paths.
+    Shared: RecordFilesServices, ChatterServices and PaletteServices know the campaign; Admin.js `marketingCampaignDefaults` and
+    `marketingVocabularies`.
+  - `data/BossSetupMarketingData.xml` (a P2 block): `BOSS_MKT_APPROVALS` (the root user group denied, the approver group ALWAYS, as
+    Sales' areas), the campaign topic's link, `MARKETING_OWNER_CHANGE` for BOSS_ADMIN_IDENTITY and BOSS_ADMIN_ADMIN with their bundle
+    rows, the lifecycle participant `marketing.campaigns`. Demo (`BossZZMarketingDemoData.xml`): Retail's policy with separation on,
+    the running "Spring garden launch" (approved at revision 1 by the approver) with its planned child, the planned "Holiday gift
+    guide", Services' "Service plan renewals".
+  - `skill/marketing-campaign-summary.md`, its alias (`campaign`) and two retrieval cases.
+- Specs:
+  - Mantle `test/marketing/MarketingSpecLib.js` (new, shared by the Marketing specs); `Campaigns` (7 features, 2.7 s: made in the
+    author's organization and mirrored, another organization's author finding none; the flow with start needing the approval and
+    completion refused with an open child; the revision required and stale; the organization's successor mirrored and refused once
+    linked; a link of another organization's list and a mailbox refused; costs manual or one line, the line counted once and within
+    its amount, read with Accounting's permission and masked without it, reversed once, an operation key's retry; duplicate, the
+    policy at the revision read, the vocabulary; the lifecycle participant); `MarketingApprovals` (4 features, 1.4 s: the approvers
+    told and not the author, stale and repeated decisions, a non-approver and another organization's approver refused, the refusal's
+    reason; a material change ending the approval; self-approval refused, admitted under the flag and recorded, the send rule at
+    499 and 500; the handlers at the notice's revision). `MarketingScope`'s Home feature now expects P2's two cards answered and the
+    approvals attention source an approver's.
+  - mr-boss `MarketingCampaigns` (1 feature, 0.25 s: CampaignDetail's one qvt render); `MarketingAccess` (7 features, +0.5 s): the
+    menus with Campaigns, the approver's Approvals tab, the `approvals` capability, the campaign panel admitted for its organization
+    and refused for another's, Approvals refused an author and the administrator; `MarketingSpecLib` ids.
+  - Acceptance, written and not run: `test/acceptance/Marketing/MarketingCampaignsWalk` (5 features: the author plans and asks,
+    the approver approves from Approvals, the budget change returns it to review, a ledger line in the actual cost once, the Services
+    author refused by detail, list, palette and service).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle Campaigns 7 of 7, MarketingApprovals 4 of 4,
+  MarketingScope 6 of 6, RecordLinks 19, RecordVisibility 11, SalesOpportunities 5, ContactListSend 14, Consent 17 (all passing);
+  mr-boss MarketingAccess 7 of 7, MarketingCampaigns 1 of 1, Chatter 27, RecordFiles 11, AdminLifecycle 4, AdminCapabilities 4,
+  AdminRegistries 7, AdminGroups 3, QuickCreate 24, SalesAccess 9, AppOrganizationFilters 7, ProjectsAccess 9, CommonsSettings 9 (all
+  passing); `moqui test mr-boss --skills` 48 of 48. `moqui lint --screens`: 141 flagged sites, as before, none in Marketing.
+  Prettier clean on the changed JavaScript. Not run: test-apps, the acceptance suite.
+- Inventories: usl-inventory's Marketing section gains Marketing P2's CampaignServices rows; ss-inventory has no row for P2's
+  screens (no baseline form).
+- Design edits: design-marketing §3 Campaigns, CampaignDetail and Approvals and §12 CampaignDefaults and Vocabularies (as built);
+  design-admin §14's Marketing participant (as built).
+- Findings, numbered by the lead F103 to F112 in order:
+  - the one-person-team flag admits an author's own campaign approval too (recorded as a self-approval): the user's call names a
+    send under 500; a campaign sends nothing itself and each of its sends is approved on its own. Needs the user's confirmation;
+  - an approved campaign returns to Planned on a material change through a new flow transition; a material change of a campaign in
+    progress is refused rather than re-approved (the design names no in-progress re-approval);
+  - completion refuses with the pending work's counts; the design's confirmed stop-then-complete command is not built (nothing to
+    stop before sends, P9);
+  - a cost's source must be in the campaign's currency (CURRENCY_MISMATCH): the design's rate and date evidence for a conversion is
+    not built;
+  - a campaign links lists, segments, store promotions and form publications; an event (P16) and a page (P14) are KIND_UNAVAILABLE
+    until their phases keep an organization (a Commons event's owner may be a person; a site page has none);
+  - `MARKETING_OWNER_CHANGE` is a new permission on Sales' pattern (SALES_OWNER_CHANGE, the user's call for Sales), held by Admin's
+    identity operator and administrator, seeded in MarketingSeedData;
+  - the Approvals area gives the approver group an ALWAYS (Sales' areas do the same), so the transitions under it skip artifact
+    checks below; the decision services check `MARKETING_APPROVE` and the organization themselves;
+  - CampaignDetail is one screen of boxes, not tabs (Sales' OpportunityDetail pattern); the later phases' tabs become boxes or the
+    screen moves to tabs when they land;
+  - Home's period and mine or team filters wait for more sources than P2's two counts;
+  - `skill/people-policy-question.md` is left out of the skill index (its description is 201 characters, over 160), found running
+    `--skills`; not P2's.
+- For the lead:
+  - budget share: mr-mantle about 4.1 s (Campaigns 2.7 s, MarketingApprovals 1.4 s); mr-boss server about 0.8 s (MarketingCampaigns
+    0.25 s, MarketingAccess +0.5 s); no client spec;
+  - merge hot spots (Sales P7 on `sal/p7` may touch Admin.js; MantleSetupData and BossSetupData are not touched): mr-boss
+    `service/ironstone/admin/Admin.js` (settingsRoutes, two keys after Marketing P1's), `service/ironstone/shared/RecordFilesServices.xml`,
+    `ChatterServices.xml`, `service/ironstone/commons/PaletteServices.xml` (each one Marketing branch after Sales'),
+    `skill/aliases.json`, `test/skill-retrieval.json`, `plan/design-admin.md` §14, `plan/usl-inventory.md`; mr-mantle
+    `service/mantle/party/CommunicationServices.xml` (get#RecordLinkInfo: a description paragraph, a content entry after Sales', a
+    visibility branch before the agreement's), `entity/MarketingEntities.xml`, `data/MarketingSeedData.xml`;
+  - the user's calls: the campaign self-approval under the flag (first finding) and `MARKETING_OWNER_CHANGE` (as Sales').
+
+**Review Nov 13 (P2).** A fresh review of `mkt/p2` (mr-mantle a2f44809, mr-boss e5352c40), after merging master (Sales P7) into
+both worktrees (conflicts kept both sides: mantle get#RecordLinkInfo's description and visibility branches, BOSS PaletteServices'
+record link branches), against P2, §2, §4 and design §3, §12, §14.3.
+- Checked and sound:
+  - revision binding: `campaignRevision` rises only in `materialChange` (the organization, parent, dates, currency, budget, a manager)
+    and on cancel; `store#Campaign` writes only its four plan fields beside the dates and parent it compares, so no plan write carries a
+    material field; every write locks the campaign and names its lastUpdatedStamp; an in-progress campaign refuses a material change, a
+    closed one any change; an approved one returns to Planned through the seeded Approved → Planned transition;
+  - decided once: request and decide lock the campaign; a decision answers the pending request at the named revision, a second is
+    ALREADY_DECIDED, a stale revision STALE_REVISION naming the current one; supersession marks the earlier revision's rows and reads
+    their notices; start needs the live approval of the current revision;
+  - separation: approve needs `MARKETING_APPROVE` and the organization in the decider's scope; with no policy, or the flag off (the
+    default, `selfApprovalAllowed` N), an author is SELF_APPROVAL, and a decision under the flag is recorded `selfApproval` Y; the
+    topics' handlers `approve#`/`refuse#MarketingTarget` go through `decide`, so the Approvals area's ALWAYS (screen only) adds no right;
+    the notice titles name the campaign and revision only;
+  - costs: rows are created, never changed but by the reversal mark (a reversal is negative, once, never reversed); a source line is
+    counted once by a campaign until reversed and within its amount over every campaign; amounts positive and in the campaign's
+    currency; masking of a source line's reference and description without its read permission;
+  - the host: get#RecordLinkInfo admits MarketingCampaign and CampaignAsset only through `check#CampaignAccess` (a Marketing reader of
+    its organization; never unowned; no user sees none); RecordFiles' add needs the campaign's editor while open; Chatter's title is
+    the name only; the palette's link and search go through Marketing.js's record check and scope;
+  - the lifecycle participant: `find#OwnedCampaignRoles` lists another user's rows only with `MARKETING_OWNER_CHANGE`;
+    `transfer#CampaignRole` needs it, moves only the leaving user's manager or contributor row of an open campaign, to an enabled
+    person who works for the campaign's organization, never an approval;
+  - the policy and vocabulary services need `MARKETING_CONFIGURE` in the organization; the screens call the services only.
+- Fixed:
+  - R1 (separation, medium). The author was the creator and the requester only, so a member of a one-person team (edit and approve)
+    who raised a colleague's budget could approve that budget once the colleague asked. MarketingCampaign gains `revisedByUserId`
+    (the maker of the current revision's material change; the creator on a new campaign), an author too: refused SELF_APPROVAL and
+    left out of the notice. New MarketingApprovals feature (fails on the unfixed code).
+  - R2 (confidentiality, medium). A source line was read with `PAYABLE_VIEW`/`ACCOUNTING_VIEW` alone, inside the Marketing scope: a
+    holder of `MARKETING_ALL_ORGANIZATIONS` with Accounting in one organization could link, and read unmasked, another organization's
+    Accounting lines. The line's read and its masking now also need Accounting's own scope of the organization (AccountingPolicy
+    `access`: the organizations the user works in, every internal one for its administrator). Campaigns' cost feature gains a user
+    with Marketing everywhere and Accounting in B only: refused and masked (fails on the unfixed code).
+  - R3 (integrity, low). Two campaigns allocating one line at once could pass its amount (each read the allocations unlocked); the
+    invoice item or ledger entry is now read for update.
+  - R4 (disclosure, low). A link to another organization's list, segment, promotion or form answered ORGANIZATION_MISMATCH and a
+    missing one RECORD_UNAVAILABLE, telling which ids exist elsewhere; both now answer RECORD_UNAVAILABLE (the spec updated).
+  - R5 (scope, low). `duplicate#Campaign` copied the current links without checking their records are still the organization's; one
+    re-owned since is left behind.
+- Findings, numbered by the lead F113 to F117 in order:
+  - the reviser as an author (R1), Accounting's own scope for cost lines (R2), the locked allocation (R3), the uniform link refusal
+    (R4), duplicate's link check (R5);
+  - a refused campaign may be asked again at the same revision with no change, so another approver can be sought; Purchasing's rule
+    is the same; kept;
+  - `store#MarketingPolicy`'s stale check is not locked: two first policies stored at once could both start (low; configurers are few);
+  - `create#CampaignAsset` takes `userId` and `contentDate` from its parameters (the auto-parameters), as Sales'
+    `create#OpportunityContent`: an editor could name another uploader; left for a shared fix of the content hosts;
+  - Attention's approvals list shows an approver the requests they authored too, which they may not decide.
+- Tests run (release binary, `--nobuild`, this worktree's runtime, after the merge): mr-mantle Campaigns 7 of 7 (2.9 s),
+  MarketingApprovals 5 of 5 (1.7 s), MarketingScope 6 of 6, RecordLinks 19 of 19, RecordVisibility 11 of 11, SalesQuoteDrafts 6 of 6;
+  mr-boss MarketingAccess 7 of 7, MarketingCampaigns 1 of 1, Chatter 27 of 27, RecordFiles 11 of 11, SalesQuotes 3 of 3 (all
+  passing). Not run: test-apps, the
+  acceptance MarketingCampaignsWalk (unchanged by the review).
+- For the lead:
+  - budget share: mr-mantle about 4.6 s (Campaigns 2.9 s, MarketingApprovals 1.7 s, +0.3 s for the review's feature); mr-boss as the
+    Built note;
+  - merge hot spots as the Built note; the master merge commits are on both branches; `entity/MarketingEntities.xml` gains
+    `revisedByUserId`;
+  - the user's two calls are answered and recorded in §4 (Nov 13): the flag covers the author's own campaign, and
+    `MARKETING_OWNER_CHANGE` for Admin's identity operator and administrator.
 
 ### P3 — Lists, consent and suppressions
 
@@ -674,6 +1084,195 @@ ContactDetail's Add to list; MKT-AUDIENCE, MKT-CONSENT (the suppression and scop
   audience permission sees no bulk action and one with it files requests that arrive pending; a complaint
   suppression stays after the contact resubscribes; the Forum's and Comms' mailboxes behave as before.
 
+**Built Nov 14 (P3).** mr-mantle and mr-boss on branch `mkt/p3` (hashes in the worker's reply), master (Sales P8, P9) merged into
+both; mr-moqui unchanged, no Rust built.
+- Checked first (the code over the plan): P1's and P2's Built and Review notes, F6, F9, F13, F16, F43, F50, F64, F65, F67, F77 and
+  §4's rows (Accounts at Marketing/Leads/Accounts; Comms' permissions by Marketing role); impl-sales P3 and P4 (Accounts and LeadList
+  built for a second mount, LeadList's selection key `id@revision`, a lead's contacts its current Contact rows); Mantle's
+  ContactListServices, ConsentServices and the ledger (MessageDeliveries.js); Comms' `ironstone.comms.ConsentServices` and its
+  screens. The code over the plan:
+  - `find#ContactLists` and `find#ContactListParties` answer by the mailbox model and organization membership, one access call a list,
+    and cannot page in the query: Marketing reads through its own `find#Lists` and `find#Members` (AudienceServices); the two stay as
+    they are for the Inbox, the Forum and Comms;
+  - `subscribe#ContactListParty`, `store#PartyConsent` and the signed-in `unsubscribe#ContactListParty` let any signed-in user change
+    any party's consent: they now need the party's own user, a contact administrator or Marketing's consent editor of the list's or
+    purpose's organization (design §4: "the same extensions protect direct service calls");
+  - Comms' Consent screens are mounted by location under their own names (`Audiences/Consent`, `Audiences/Consent/Contact`, not the
+    design's ConsentDetail), so their relative links hold; ListDetail and MemberDetail are siblings of Lists (`Audiences/ListDetail`),
+    as CampaignDetail is of Campaigns;
+  - Marketing/Leads did not exist: the Leads area mounts Sales' Leads (its default) and Accounts by location in Sales' context for
+    the Marketing root; P13 adds LeadRules and LeadSources;
+  - a deny of a group the user is in wins over an allow, so the Audiences area gives the audience group an ALWAYS (as Approvals' approver).
+- Mantle:
+  - `entity/MarketingEntities.xml` (a P3 block): ContactListPolicy (dated), SubscriptionRequest with its kinds and statuses;
+    ContactList gains `reservedBySendId` (audited), `reservedDate`, `consumedDate`. `entity/PartyEntities.xml`: PartyConsent
+    `organizationPartyId`. `entity/MessageDeliveryEntities.xml`: MessageSuppression with its reasons and sources.
+  - `AudienceServices.xml` over `MarketingAudiences.js`: `find#Lists`, `create#List`, `store#List`, `archive#List`, `get#List`,
+    `store#SubscriptionPolicy`, `store#ContactListEmail`, `find#Members`, `get#Member`, `request#Subscriptions` (parties, Sales leads'
+    current contacts and Sales accounts' contacts under the caller's Sales read; each item in its own transaction through the internal
+    `file#SubscriptionRequest`, recorded refused or not), `withdraw#Subscription`, `reserve#SingleUseList`, `release#SingleUseList`;
+    refusals and rules in each service's description and design §4's as-built note.
+  - `ContactListServices.create#ContactList`: a list that is not a mailbox subscribes no one (MEMBERS_NEED_EVIDENCE for named members).
+    `ConsentServices`: `store#PartyConsent` (organizationPartyId; a scoped row leaves allowSolicitation; the consent change rule),
+    `get#PartyConsentState` (organizationPartyId), `get#PartyConsentHistory` (organizationPartyIds), `find#Consents`
+    (organizationPartyIds), `subscribe#` and the signed-in `unsubscribe#ContactListParty` (the rule). `MarketingAccess.js`
+    `consentChangeAllowed`, `requireConsentChange`.
+  - `MessageServices.xml` over `MessageSuppressions.js` (Comms', owner contract): `find#Suppressions`, `store#Suppression`,
+    `check#Suppressions`; `MessageDeliveries.js` attempt refuses an active block of every organization or of the delivery's store's
+    organization, after the consent and before the hand-off. `MarketingWorkspace.js`: Home's audience changes card (requests of the
+    last seven days).
+- BOSS:
+  - Screens: the root (Audiences and Leads in the menu, QuickList, `g l`); `Marketing/Audiences` (Lists, ListDetail, MemberDetail,
+    Comms' Consent by location, `Shared/Suppressions`); `Marketing/Leads` (Sales' Leads and Accounts in Sales' context for this root);
+    `QuickCreate/NewList`; `Shared/Suppressions` (Comms', Marketing's mount only; everything decided by find#/store#Suppression);
+    `template/MarketingAudiences.xml` (the transitions, NewListForm, and the Sales bulk action's `addToList` and
+    `audienceListChoices`); Home's audience card link.
+  - Owner contracts: Sales' `Pipeline/Leads.xml` (the selection for an audience editor too, Assign and Disqualify `canEdit`, the action
+    "Add to list (evidenced)") and `Accounts/Accounts.xml` (AccountList's row selection with the action), each in a P3 block; Sales.js
+    `mountRoots` (Accounts at `Leads/Accounts`); Comms' `ConsentServices.xml` (check#ConsentAdmin's Marketing scope, check#ScopedContact,
+    the options, the registry, a contact's consent, record, subscription and bulk unsubscribe for a Marketing consent editor; the export
+    the contact administrator's), `Consent/List.xml` and `Consent/Contact.xml` (the organization of a recorded consent; the link to
+    Commons a contact administrator's), `template/ConsentRecord.xml` (the organization field) and `template/ContactRecord.xml` (the
+    Consent tab links a Marketing consent editor to Marketing's mount, F67).
+  - `Marketing.js`: the area `audiences`, the list's destination (ListDetail), choices `audienceLists` and `emailTemplates`, the
+    palette's lists, the P3 link paths. `data/BossSetupMarketingData.xml` (a P3 block): BOSS_MKT_AUDIENCES, MESSAGE_SUPPRESSION_REVIEW
+    for BOSS_MARKETING_ADMIN with its bundle row. Demo (`BossZZMarketingDemoData.xml`, a P3 block): `marketing.sales` (a Retail
+    representative who manages audiences), Retail's garden newsletter (policy; Maya accepted with evidence, Noah pending, Olive
+    unsubscribed, Pete a legacy member), its announcements, the single-use Spring VIP list, a hard bounce for every organization and
+    Olive's complaint.
+- Specs:
+  - Mantle `test/marketing/Audiences` (6 features, 1.6 s: a list subscribes no one, named members refused, a mailbox as before; pending
+    without confirmation, no address refused; acceptance needs the consent permission and evidence; a withdrawal not regranted by older
+    evidence, a withdrawn purpose not by staff; another organization's list missing, another person's consent only for the editor's
+    organization, a scoped grant not global; the dated policy and bindings, the single-use reservation); `test/party/Suppressions`
+    (3 features, 0.6 s: refused at the ledger's attempt however typed, another sent; a new subscription does not end a block, ending
+    needs the review permission and new evidence; an editor blocks for their organization only and reads no other's); `Consent` (+1
+    feature, under 0.1 s: a scoped grant against a global withdrawal, an organization's answer); `MarketingScope`'s Home feature expects
+    the audience card answered.
+  - mr-boss `MarketingLists` (2 features, 0.4 s: ListDetail's one qvt render; the bulk action on the context service and Mantle's
+    request, the list choice refused a salesperson without Marketing, a request filed pending for marketing.sales, refused as missing
+    for an audience manager without Sales and refused for sales.rep); `MarketingAccess` (the Audiences and Leads menus, Audiences' tabs,
+    the `audiences` capability, the administrator's suppression review, MESSAGE_SUPPRESSION_REVIEW's holders; +0.1 s); `SalesAccess`'
+    Marketing links case gains `Accounts/Accounts`.
+  - Acceptance, written and not run: `test/acceptance/Marketing/MarketingAudienceWalk` (3 features: the list made and five requests filed,
+    three pending; the bulk action hidden from sales.rep and filed pending by marketing.sales under Sales and Marketing's mount, refused
+    for sales.rep; a complaint suppression kept after an accepted resubscription; a mailbox as before).
+- Tests run (release binary, `--nobuild`, this worktree's runtime, after the master merge): mr-mantle Audiences, Suppressions, Consent,
+  MarketingApprovals (32 of 32); ContactListSend, DeliveryLedger, MarketingScope, Mailboxes, InboxThreads, InternalMessages, ShopCheckout,
+  ShopCustomer, Campaigns, SalesOpportunities, RecordVisibility, SitePages (119 of 119); mr-boss MarketingLists, MarketingAccess,
+  MarketingCampaigns, SalesAccess, Consent, Contacts, Unsubscribe, SalesAccounts, SalesOpportunities, Inbox, InboxMailboxes,
+  AppOrganizationFilters, ProjectsAccess, AdminCapabilities, QuickCreate, CommonsSettings (162 of 162). A throwaway render of Lists,
+  MemberDetail, Suppressions (audience manager and administrator), Consent and Consent/Contact under Marketing, QuickList, Leads and
+  Accounts under Marketing and Sales (qvt, tui, html) passed and was not kept (no screen walk in the regression suite). `moqui lint
+  --screens`: 141 flagged sites, as before, none in the P3 screens. Prettier clean on the changed JavaScript. Not run: test-apps, the
+  acceptance suite.
+- Inventories: usl-inventory's ContactListServices and ConsentServices rows and a Marketing P3 block (AudienceServices, the
+  suppression services); ss-inventory has no row for P3's screens.
+- Design edits: design-marketing §4 (as built); design-drawers-commons' Mailboxes row (owner contract: lists, consent's organization and
+  change rule, suppressions and the ledger's refusal).
+- Findings, numbered by the lead F118 to F126 in order:
+  - the consent mutators (`subscribe#ContactListParty`, `store#PartyConsent`, the signed-in `unsubscribe#ContactListParty`) admitted any
+    signed-in user for any party that was not someone's personal contact; now the party's own user, a contact administrator or
+    Marketing's consent editor of the organization; every caller found passes (Comms as a contact administrator, Shop and the account
+    hub for the party's own user, the token pages with no user);
+  - Marketing reads lists and members through its own finds rather than extending `find#ContactLists`/`find#ContactListParties` (the
+    code over the plan above);
+  - a request whose evidence predates the party's latest withdrawal is refused WITHDRAWN, and a staff acceptance of a purpose the person
+    withdrew (for every organization or the list's) is refused CONSENT_WITHDRAWN while a pending request with newer evidence is filed
+    (the person's own confirmation, P7, renews it): the plan's "never clears a withdrawal" made precise;
+  - with organizations asked, `find#Consents` merges the scoped rows of all of them into one state per purpose; a contact
+    administrator's registry (no organization) shows the global states only, so an organization's scoped grant shows only under
+    Marketing's mount;
+  - suppressions apply to every delivery of the ledger, transactional notices too, for their organization or every one; a delivery's
+    organization is its store's until P9 gives a campaign delivery its own;
+  - the bulk action's capability shows from `ec.user.hasPermission('MARKETING_AUDIENCE_EDIT')` in Sales' screens (no Marketing context
+    there); Mantle checks it, the list's organization and each record under the caller's Sales read;
+  - Comms' Consent screens answer a Marketing consent editor under Comms' own root too (the rule is by permission, not by mount);
+  - the Leads area mounts Sales' Leads in P3 (the plan places Marketing's Leads in P13), as Accounts needed an area;
+  - the design's ConsentDetail and Lists/ListDetail paths are Consent/Contact and Audiences/ListDetail (the code over the plan above).
+- For the lead:
+  - budget share: mr-mantle about 2.3 s (Audiences 1.6 s, Suppressions 0.6 s, Consent +0.1 s); mr-boss server about 0.5 s
+    (MarketingLists 0.4 s, MarketingAccess +0.1 s); no client spec;
+  - merge hot spots (Sales P8–P9 merged; Sales' later phases may touch the first four): mr-boss `service/ironstone/sales/Sales.js`
+    (mountRoots' Marketing row), `screen/Sales/Pipeline/Leads.xml` (two transition-includes, `canRequestSubscriptions`, the
+    row-selection condition, the actions' conditions and the new action), `screen/Sales/Accounts/Accounts.xml` (the same, and the new
+    row selection), `test/Sales/SalesAccess.spec.js` (the Marketing links case), `service/ironstone/comms/ConsentServices.xml`,
+    `screen/Comms/Consent/List.xml`, `Contact.xml`, `template/ConsentRecord.xml`, `template/ContactRecord.xml` (the Consent tab),
+    `data/BossSetupMarketingData.xml`, `data/BossZZMarketingDemoData.xml`, `plan/usl-inventory.md`, `plan/design-drawers-commons.md`;
+    mr-mantle `service/mantle/party/ConsentServices.xml`, `MessageServices.xml`, `MessageDeliveries.js`, `entity/PartyEntities.xml`,
+    `entity/MessageDeliveryEntities.xml`, `entity/MarketingEntities.xml`, `service/mantle/marketing/ContactListServices.xml`,
+    `MarketingAccess.js`, `MarketingWorkspace.js`, `test/party/Consent.spec.js`;
+  - the user's calls: whether the consent mutators' new rule (first finding) and suppressions on transactional notices (fifth) stand.
+
+**Review Nov 14 (P3).** A fresh review of `mkt/p3` (mr-mantle da93115d, mr-boss 035836b1) against P3, §2, §4 and design §4, §10,
+§14.1; master (Sales P10, which also changed the ledger: the body and attachments of a build, requeue#Delivery) merged into both
+worktrees during the review, clean, both sides kept. The user's two calls (Nov 14) are recorded in §4.
+- Checked and sound:
+  - `request#Subscriptions`: the audience edit permission and the list's organization first (a mailbox, another organization's or an
+    unowned list RECORD_UNAVAILABLE), an acceptance the consent permission too, evidence text and a source of PartyConsentSource
+    required, a future evidence date refused; Sales leads and accounts resolved under the caller's Sales read (`requireOpportunity`,
+    `requireAccount`, an account's contacts by `visibleParty`), a record not seen RECORD_UNAVAILABLE and one with no contact
+    MISSING_CONTACT as that item's result; each party in its own transaction (`file#SubscriptionRequest`, internal, allow-remote
+    false), every outcome recorded as a SubscriptionRequest, a failure logged and the rest going on; a party once per call; 500 at
+    most; evidence no later than the latest list or purpose withdrawal WITHDRAWN, a staff acceptance of a withdrawn purpose
+    CONSENT_WITHDRAWN, a newer request over a list withdrawal accepted only with the consent permission (design §4: re-subscription
+    records new evidence and clears only the matching withdrawal); a suppressed address filed and kept suppressed;
+  - the bulk action: Sales' LeadList and AccountList show it from `hasPermission('MARKETING_AUDIENCE_EDIT')`, Assign and Disqualify
+    keep `canEdit`, the transitions call Mantle only; the list choices are Marketing's `get#Choices` (an audience editor's lists of
+    the scope); Sales.js `mountRoots`' Marketing row maps paths only; Sales' specs pass unchanged but SalesAccess' Marketing links;
+  - PartyConsent's organization: a scoped row never touches allowSolicitation; `get#PartyConsentState` with an organization takes its
+    scoped row unless the latest global row withdraws, without one the global rows alone; `get#PartyConsentHistory` and
+    `find#Consents` with organizations leave other organizations' scoped rows and lists out; Comms' Consent for a Marketing consent
+    editor reads only contacts of their organizations' lists or scoped consents (`check#ScopedContact`, missing and other answered
+    alike), records scoped consent only, subscribes through the evidenced request, and the export stays the contact administrator's;
+  - suppressions: normalized destinations, another organization's blocks left out of the find, the address masked for a reader
+    without the audience view and not searchable by them, ending only with MESSAGE_SUPPRESSION_REVIEW and new evidence, the row
+    kept; the ledger's attempt refuses after the consent and before the hand-off;
+  - the Audiences area's deny and ALWAYS; Leads mounts Sales' screens in Sales' context for the Marketing root.
+- Fixed:
+  - R1 (compatibility, high). P3's who-may rule sat inside `store#PartyConsent`, which `set#ContactListPartySubscription` and the token
+    paths of `unsubscribe#ContactListParty` call: a visitor signed in as anyone else (a staff member opening a forwarded link, a
+    customer signed in to PASS as another account) had the unsubscribe link, one-click POST and preferences page refused
+    PERMISSION_DENIED, the list left subscribed (the bulk loop logs it as failed); a checkout opt-in's confirmation link the same.
+    `store#PartyConsent` now checks the rule and calls the new internal `record#PartyConsent` (allow-remote false), which the services
+    that decide by the link's token or code call (set#, the token's all-marketing withdrawal, StoreTopics' confirmed grant). New
+    Audiences feature (fails on the unfixed code); the rule itself is unchanged for every direct caller.
+  - R2 (the user's call, Nov 14). Suppressions refused every delivery. Now a hard bounce refuses every delivery to the address and a
+    complaint, staff block or repeated soft failures a promotional one only (the ledger's `transactional` N), never a transactional
+    notice (`MessageSuppressions.js` `blocksEveryDelivery`; `check#Suppressions` takes `transactional`). New Suppressions feature: a
+    complaint and a staff block each send a notice and suppress a promotional delivery, an unblocked promotional one is sent (fails
+    on the unfixed code); the first feature's hard bounce still refuses a notice.
+  - R3 (integrity, low). `store#Suppression` took the caller's fromDate and thruDate, so an audience editor could add a complaint block
+    that ended itself, past the reviewer; only a reviewer or the intake (no user) dates a block now (in the new feature).
+  - R4 (scope, low). A lead's contacts were taken without Sales' `visibleParty`, as an account's are; now filtered alike.
+  - R5 (scope, medium; Sales P10 review's note). The ledger took a delivery's organization from its store alone, so a storeless
+    delivery (Sales P10's quote and reminder mail, from the seller) met only every organization's blocks, never the seller's own.
+    MessageDelivery gains `organizationPartyId` (queue#Delivery's parameter; a Comms ledger extension ahead of P9's campaign
+    delivery, which will use it), the attempt uses it before the store's, and SalesQuoteIssues.js names the seller on both queues.
+    Suppressions' feature: a hard bounce of A's refuses a storeless delivery from A and not one from B.
+- Findings, numbered by the lead F127 to F131 in order:
+  - the token and code paths' consent writes go through the internal `record#PartyConsent` (R1);
+  - suppressions by kind of delivery (R2) and the editor's undated blocks (R3); the lead contacts' visibility (R4); the delivery's
+    own organization (R5, which touches Sales P10's SalesQuoteIssues.js: two queue parameters);
+  - a Sales record of one organization may be filed to a list of another when the caller holds both (Sales there, Marketing here);
+    nothing requires the lead's or account's organization to be the list's; left as built (the caller sees both);
+  - Comms' Consent/Contact for a Marketing consent editor of several organizations shows the global purpose states only (the scoped
+    state is asked for one organization); history and lists are theirs; a display gap, no disclosure;
+  - a contact with only a scoped consent appears in a contact administrator's registry with no purpose state (its scoped rows hidden).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle Audiences 7 of 7, Suppressions 4 of 4,
+  Consent 18 of 18, ContactListSend 14, DeliveryLedger 4, CartRecovery 4, StoreReviews 5, ShopCheckout 8, ShopCustomer 5, Mailboxes 22,
+  MarketingScope 6; mr-pass ShopAccount 3, Outbox 13, Integrations 6; mr-boss MarketingLists 2, MarketingAccess 7, SalesAccess 10,
+  Consent 12, Unsubscribe 8, Contacts 43, SalesAccounts 4, SalesOpportunities 3; after the master merge and R5: mr-mantle
+  DeliveryLedger 4, Suppressions 4 (1.0 s of features), Audiences 7, SalesQuoteIssue 6, SalesQuoteResponse 3, Consent 18; mr-boss
+  SalesQuoteSend 1 (all passing). Not run: test-apps, the acceptance MarketingAudienceWalk (unchanged by the review).
+- For the lead:
+  - budget share: mr-mantle about +0.3 s over the Built note (Suppressions' new feature 0.2 s, Audiences' 0.1 s); mr-boss unchanged;
+  - merge hot spots: add `service/mantle/party/ConsentServices.xml` (store# split into store# and record#),
+    `service/mantle/public/StoreTopics.js`, `MessageSuppressions.js`, `MessageDeliveries.js`, `MessageServices.xml`,
+    `entity/MessageDeliveryEntities.xml` (MessageDelivery `organizationPartyId`) and `service/mantle/order/SalesQuoteIssues.js` to the
+    Built note's; P9 should queue a campaign delivery with `organizationPartyId` rather than add another field;
+  - the user's calls are answered and recorded in §4 (Nov 14): the consent rule kept; suppressions promotional only but a hard bounce.
+
 ### P4 — Audience import and merge
 
 Design §4 AudienceImport and AudienceMerge, §18 (the import preview, error rows and membership export);
@@ -708,6 +1307,174 @@ MKT-AUDIENCE.
   in Admin's Imports for a data operator who also holds `MARKETING_AUDIENCE_VIEW`, as a summary with no row or
   address; two lists merge with their histories kept.
 
+**Built Nov 14 (P4).** mr-mantle and mr-boss on branch `mkt/p4` (hashes in the worker's reply), from master after P3's merge;
+mr-moqui unchanged, no Rust built.
+- Checked first (the code over the plan): P1–P3's Built and Review notes, F82, F90–F131, §4's import-permission row; Sales P6's
+  opportunities import (a `rows` target through Shared/DataImport, its hashed operation key) and People's, Maintenance's and Commerce's
+  targets; the framework's DataTransferServices (a `wizard` target registers only its place and runs finder; `importPermission` is
+  informational for it and `viewPermission` decides Admin's listing; run#Export is every user's and asks the target's export
+  permission, its owner services reached as the caller); Commons' ContactImportServices. The code over the plan:
+  - AudienceMerge is list consolidation (design §4), not a party merge: nothing of `merge#Parties`, PartyMerge.js or F82 is needed here,
+    and those guards stay P19's;
+  - the import does not call `preview#Contacts` or `import#Contacts`: both match a row by name as well as address (consent belongs to
+    the address's owner) and the second imports into a contact book; it reads the file with `parse#ContactFile` and `read#ContactRows`
+    (the parser they use), matches with `match#Contact` given the list channel's address alone, and makes a new contact with
+    `import#ContactRow` (a directory contact), so there is still no second parser or party merger;
+  - "through request#Subscriptions": each row is filed through `file#SubscriptionRequest`, the internal service request#Subscriptions
+    files each item through, in the row's own transaction with its contact (a new transaction per request, as request#Subscriptions
+    uses, could not see a contact made in the row's transaction); the evidence checks are request#Subscriptions' own, shared
+    (`evidenceTextOf`, `sourceOf`, `evidenceDateOf`);
+  - the route key is added to Admin.js `mountRoutes` (where ownerRoutes moved, DataImport.js :18-27 says so), not DataImport.js; no
+    Marketing branch in DataImport.js, as nothing is staged through the shared wizard;
+  - AudienceImport and AudienceMerge are hidden screens under Audiences, opened from Lists and ListDetail, so the Audiences tabs (and
+    MarketingAccess' tab list, which P5's Segments changes) are untouched.
+- Mantle:
+  - `entity/MarketingEntities.xml` (a P4 block): AudienceImport (the list and organization, the staged file's location, name and sha256,
+    the import key, the mapping, the evidence and its columns, accept, state AisStaged/AisApplying/AisComplete/AisPartial/AisExpired,
+    who staged and applied it, the expiry and purge, the counts) and AudienceImportItem (the row's proposed action, matched contact,
+    masked address, exclusion or note, outcome, reason, contact, request and attempts); the request kind SrkMerge.
+  - `AudienceServices.xml` (a P4 block) over `MarketingAudienceTransfers.js`: `preview#AudienceImport`, `apply#AudienceImport`, the
+    internal `apply#AudienceImportRow`, `get#AudienceImport`, `find#AudienceImportRuns` (find#TargetRuns), `get#AudienceImportErrors`,
+    `purge#AudienceImports`, `find#MemberExportScopes` (find#TargetScopes) and `export#MemberTransfer` (run#TargetExport); over
+    `MarketingListMerge.js`: `preview#ListMerge`, `merge#Lists`. Rules and refusals in each service's description and design §4's
+    as-built note. `MarketingAudiences.js` shares its scope, list, policy, evidence checks, `fileApart` and masks (`audience`).
+  - `data/MarketingAudienceTransferData.xml` (a file of its own): the targets `marketingAudience` (import, wizard, its runs finder,
+    `MARKETING_AUDIENCE_IMPORT,MARKETING_AUDIENCE_EDIT`, view `MARKETING_AUDIENCE_VIEW`, owner route `marketingAudienceImport`) and
+    `marketingAudienceMembers` (export, rows, scope a list, `MARKETING_AUDIENCE_EXPORT`, the address field `MARKETING_AUDIENCE_VIEW`,
+    owner route `marketingLists`); MantleMarketingTransferServices (the runs finder and the export's services for every user, each
+    checking its permission and organization); the job `purge_MarketingAudienceImports` with its JobRegistration (MARKETING_CONFIGURE).
+- BOSS:
+  - Screens: `Marketing/Audiences/AudienceImport` (ImportFile and ImportEvidence as one form; recent imports; an import's header,
+    columns and evidence again, rows with outcomes, Apply, Retry failures, Download error rows) and `AudienceMerge` (MergeSelection,
+    MergePreview with totals and conflicts, ApplyMerge with a reason and an operation key made of the preview's key); Lists' Import and
+    Merge buttons; ListDetail's More gains Import members, Merge lists into this one and Export members (the framework's run#Export).
+    `template/MarketingAudiences.xml` (a P4 block): previewImport, applyImport, downloadImportErrors, mergeLists, exportMembers.
+  - `Marketing.js` linkPaths (a P4 block): Audiences/AudienceImport, Audiences/AudienceMerge. Admin.js `mountRoutes`:
+    marketingAudienceImport, marketingLists. No BossSetupMarketingData change: BOSS_MARKETING_AUDIENCE already holds and bundles the
+    import and export permissions (P1), and the Audiences area's ALWAYS covers the new screens.
+  - Demo (`BossZZMarketingDemoData.xml`, a P4 block): Retail's fall fair import into Store announcements (Noah and Olive filed pending,
+    Olive's complaint suppression noted, a row with no valid address invalid), its staged file not part of the demo.
+- Specs:
+  - Mantle `test/marketing/AudienceImport` (3 features, 0.9 s: an editor without the import permission refused, no evidence refused (a
+    list supplies none), an acceptance without the consent permission refused, another organization's list missing; a preview files
+    nothing, a malformed row invalid and a duplicate skipped alone, another user's personal contact never matched (a new directory
+    contact), a withdrawal after the preview refused WITHDRAWN at the apply, each request naming its row and evidence, a second apply
+    changing nothing, a stale revision refused; a restart applying only the rows not yet applied, each once; the runs and the import
+    by the audience view and organization, no address in full); `test/marketing/ListMerge` (1 feature, 0.3 s: the reader refused,
+    another organization's list missing; accepted with evidence, pending stays pending, another topic's grant not carried, a
+    withdrawal from a source or the target not carried; no party made or merged, the source rows kept, the requests naming their
+    source list; a retry answering the first result, a changed list refused STALE_PREVIEW).
+  - mr-boss `MarketingImport` (3 features, 0.5 s: AudienceImport's one qvt render of the demo import; Admin's Imports listing it for a
+    data operator with the audience view and not without; the membership export for the audience manager, refused an author).
+  - Acceptance, written and not run: `test/acceptance/Marketing/MarketingImportWalk` (3 features: a CSV of six imported through the
+    screens' transitions, four pending, the malformed and the unsubscribed named; the run in Admin's Imports for a data operator with
+    the audience view, no address; two lists merged into a third with their histories kept).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle AudienceImport, ListMerge, Audiences, Suppressions,
+  Consent, MarketingScope, ContactListSend, MarketingApprovals, Campaigns (65 of 65); mr-boss MarketingImport, MarketingLists,
+  MarketingAccess, MarketingCampaigns, AdminImports, AdminExports, QuickCreate (43 of 43). A throwaway render of AudienceImport
+  (start and an import), AudienceMerge with a preview, ListDetail and Lists in qvt, tui and html, the previewImport transition, the
+  error rows' download, a merge preview and the members' export through the screen passed and was not kept. `moqui lint --screens`:
+  141 flagged sites, as before, none in the P4 screens. Prettier clean on the changed JavaScript. Not run: test-apps, the acceptance
+  suite.
+- Inventories: usl-inventory's ContactImportServices rows and a Marketing P4 block; ss-inventory has no row for P4's screens.
+- Design edits: design-marketing §4 (as built); design-admin §11.1's Marketing row (owner contract: the runs finder, permissions and
+  the export target).
+- Findings, numbered by the lead F132 to F139 in order:
+  - the merge is of lists only; party-merge guards (F82) stay P19's, and P4 needed nothing of them;
+  - the import matches by the list channel's address alone and never uses a personal contact, the importer's own included (P3's
+    request#Subscriptions admits the caller's own personal contact); a row matching only someone's personal contact makes a new
+    directory contact with the same address;
+  - the import calls neither `preview#Contacts` nor `import#Contacts` (name matching; contact books), using their parser and
+    `match#Contact`/`import#ContactRow` (the code over the plan above);
+  - a row's request is filed in the row's transaction through `file#SubscriptionRequest` rather than through request#Subscriptions'
+    per-item new transaction (the code over the plan above); the exactly-once rule is the locked item;
+  - a merge carries an acceptance only for a source of the target's purpose with a list grant (a legacy member with no evidence and
+    a member of another purpose are filed pending), and only for a consent editor; a member withdrawn from any source is not carried
+    even when accepted on another (the withdrawal wins over the preview's other sources);
+  - error rows are downloadable only while the staged file is kept (30 days); the demo import has no staged file and offers none;
+  - the membership export's view permission (who reads others' export records) is MARKETING_AUDIENCE_EXPORT; Marketing has no screen
+    of export records, so they are read in Admin's Exports by its own permissions;
+  - `./moq run lint --screens --release --nobuild` passed `--nobuild` to moqui and rebuilt the shared release binary (from master's
+    sources; 3 m 43 s) before failing; lint was then run with the binary directly. The brief's lint command should be
+    `target/release/moqui lint --screens` with the runtime.
+- For the lead:
+  - budget share: mr-mantle about 1.3 s (AudienceImport 0.9 s, ListMerge 0.3 s); mr-boss server about 0.5 s (MarketingImport); no
+    client spec;
+  - merge hot spots (P5 on mkt/p5 appends to the same files): mr-mantle `entity/MarketingEntities.xml` (the P4 block after P3's),
+    `service/mantle/marketing/AudienceServices.xml` (the P4 block at the end), `MarketingAudiences.js` (the evidence checks split out of
+    requestSubscriptions, the `audience` export at the end); mr-boss `data/BossZZMarketingDemoData.xml` (the P4 block after P3's),
+    `service/ironstone/marketing/Marketing.js` (linkPaths' P4 lines at the end), `screen/Marketing/Audiences.xml` (its comment only),
+    `screen/Marketing/Audiences/Lists.xml` and `ListDetail.xml`, `template/MarketingAudiences.xml` (a P4 block before the widgets),
+    `test/Marketing/MarketingSpecLib.js` (ids), `service/ironstone/admin/Admin.js` (mountRoutes), `plan/usl-inventory.md`,
+    `plan/design-marketing.md` (§4), `plan/design-admin.md`, this file. Not touched: BossSetupMarketingData.xml, Marketing.xml's menu,
+    Sales and order files;
+  - nothing needs the user's call; the findings' second and fifth are choices the review may want to confirm.
+
+**Review Nov 14 (P4).** A fresh review of mr-mantle and mr-boss on `mkt/p4` against the phase text, §2, §4 and design §4/§18;
+master had nothing newer to merge in either repository.
+- Checked and sound:
+  - the targets: `marketingAudience` (wizard, `MARKETING_AUDIENCE_IMPORT,MARKETING_AUDIENCE_EDIT`, view `MARKETING_AUDIENCE_VIEW`, no
+    `ADMIN_*`, runs finder answering none without the audience view and only the caller's organizations, summaries with no row or
+    address) and `marketingAudienceMembers` (rows, `MARKETING_AUDIENCE_EXPORT` for export and view, the address a field of
+    `MARKETING_AUDIENCE_VIEW`, scopes the caller's organizations' non-mailbox lists, bounded and recorded by run#Export), as §4 and
+    design-admin §11.1 say; the ALL_USERS authz covers only the runs finder and the export's two services, each checking itself;
+  - preview and apply: both permissions and the list's organization on every path (apply rechecks them, and the consent permission
+    for an accepting import, whoever previewed it); the staged dbresource file by location and sha256, never returned or put in
+    context; the 30-day expiry and the purge job (each import apart, history rows deleted with the file, outcomes kept, a staged
+    import expired); items hold the address masked; a list supplies no evidence; a re-preview only while staged, at its revision;
+  - each row once: the item locked in the row's own transaction with its contact and its request, filed through
+    `file#SubscriptionRequest` (P3's decision: a withdrawal later than the evidence refused WITHDRAWN, an accepting request refused
+    CONSENT_WITHDRAWN on a purpose withdrawal, a suppression never touched, membership rows ended, not deleted); a restart applies
+    only staged rows, a retry only failed ones; a failure logged by row and the rest go on. Filing in the row's transaction rather
+    than request#Subscriptions' new one (Built finding 4) is right: the new contact must be visible to the filing;
+  - merge#Lists: target and sources through `listOfScope` (the caller's organizations, never a mailbox or unowned list), one
+    organization and channel, at most 10 sources and 2,000 members; decisions recomputed at the apply under the preview key; each
+    member filed apart through the same filing; no party touched, no row deleted, the sources archived only through archive#List;
+    the operation key answers a retry; nothing pending or withdrawn promoted, a withdrawal on any source not carried;
+  - the export reveals party, name, state and dates to an export holder of the list's organization, the address only with the
+    audience view; the screens' transitions call only the guarded services; the one qvt render of AudienceImport in MarketingImport;
+  - Built finding 2: the import's refusal of every personal contact is right (a list's members are read by every audience reader of
+    the organization, so a personal contact on a list publishes it); a duplicate directory contact when the only match is someone's
+    personal contact is acceptable, as Commons keeps personal contacts apart. That a personal contact could hide an existing
+    directory contact was not (R1).
+- Fixed:
+  - R1 (Medium) Matching: `matchOf` used Commons' `match#Contact`, which stops at the first party it sees and falls back to a name.
+    The importer's own personal contact with a row's address, first by id, hid the directory contact of that address and a duplicate
+    contact was made; on an SMS list a row whose number matched no one was matched to a party by name alone, its evidence then filed
+    on that party's other number (`destinationOf` falling back to the primary). `matchOf` now matches by the address alone on
+    Commons' rules (email ignoring case; phone by its last digits with the row's name), skipping personal, merged and disabled
+    parties. Spec: the importer's personal contact with Ana's address (Ana still matched), an SMS row with a name and no phone (added).
+  - R2 (Medium) The import's evidence date defaulted to now, which is later than any earlier withdrawal, so an import with no date
+    moved an unsubscribed member back to pending, or to accepted for a consent editor on a list-only withdrawal. The original date
+    (design §4 ImportEvidence) is now required: the import's or a date column's (EVIDENCE_DATE_REQUIRED; a row without one excluded).
+    request#Subscriptions' staff default of now (a request made at the counter) is unchanged. Spec: a preview with no date refused.
+  - R3 (Low) The error rows (every column of the staged file, columns the import ignores included) were given to any audience reader
+    of the organization; now to the importers (`MARKETING_AUDIENCE_IMPORT` with the edit and view), and `canDownloadErrors` says so.
+    Spec: the reader refused and not offered the download, the importer given two rows.
+  - R4 (Low) `export#MemberTransfer` gave the address to any caller asking the field (run#Export gates it, but the service is every
+    user's); it now also asks the audience view. `merge#Lists` got a transaction timeout of 1,800 s (up to 2,000 members, each in
+    its own transaction under the service's).
+- Findings, numbered by the lead F140 to F143 in order:
+  - Built finding 5, the user's call: a merge carries an acceptance as a grant of the target list when a same-purpose source list
+    has a grant. Design §4 says target-list consent is required independently and evidence of another topic is not a grant, and
+    design §4 (Segments: "a subscription topic represented by a non-MAILBOX ContactList") calls a list a topic, so a literal reading files every carried member pending; the build's reading (topic as purpose)
+    keeps a consolidation of like lists usable. Left as built, the evidence text naming the source list;
+  - request#Subscriptions (P3) admits the caller's own personal contact onto an organization's list, which the import refuses for
+    the reason above; aligning P3 (refuse personal contacts there too) is suggested;
+  - an import stuck in Applying past its expiry has its file purged and its remaining rows stay not applied, shown so, with no
+    retry; import the file again;
+  - `get#AudienceImport` names a matched party to an importer by the file's address (a directory lookup by address), as P3's
+    request screens name parties; noted, not changed.
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle AudienceImport, ListMerge, Audiences, Consent (29 of
+  29, 55 s; AudienceImport 1.1 s, its new checks failing on the unfixed service: the no-date refusal and the match counts);
+  mr-boss MarketingImport, MarketingLists, MarketingAccess, AdminImports, AdminExports (18 of 18, 80 s). `moqui lint --screens`
+  (the release binary directly): nothing flagged in the P4 screens. Prettier clean on the changed JavaScript.
+- For the lead:
+  - budget share: mr-mantle AudienceImport about 1.1 s (0.2 s over the Built note's); mr-boss unchanged;
+  - merge hot spots: as the Built note's, plus `MarketingAudienceTransfers.js` and `AudienceImport.spec.js` (P4's own files) and
+    design-marketing §4's as-built note;
+  - the user's call: the merge's carried acceptance (above).
+
 ### P5 — Segments and audience preview
 
 Design §4 Segments, SegmentDetail and AudiencePreview; MKT-SEGMENT, MKT-ACCESS; gate 1.
@@ -735,6 +1502,194 @@ Design §4 Segments, SegmentDetail and AudiencePreview; MKT-SEGMENT, MKT-ACCESS;
 - **Usable when** (`test/acceptance/Marketing/MarketingAudiencePreviewWalk`; scenario 3): a preview over two lists and a
   segment with missing addresses, a duplicate, a pending and an unsubscribed member, a suppression and a tracking
   refusal shows bucket totals that sum exactly, with addresses masked for `marketing.author`.
+
+**Built Nov 14 (P5).** mr-mantle and mr-boss on branch `mkt/p5` (hashes in the worker's reply), from master after P3's merge; mr-moqui
+unchanged, no Rust built. Built beside P4 (`mkt/p4`), which appends to the same files (the hot spots below).
+- Checked first (the code over the plan): P1's to P3's Built and Review notes, F4, F5, F90–F131 and §4's rows (MarketSegment's
+  `ownerPartyId` as its X12 field; suppressions promotional only but a hard bounce; the consent rule); the native MarketSegment,
+  MarketSegmentParty (keyed by segment, party and role; no dates) and rule entities, used today only by the contact merge and the
+  filter rows; P3's AudienceServices, ConsentServices' organization rule and MessageSuppressions.js `suppressedOf`; Mantle's
+  SalesAccess.js (`opportunityOf`, `accountOf`, `contactAccounts`); the authorization engine's ALWAYS and inheritance
+  (moqui-core user/authz.rs). The code over the plan:
+  - the plan does not say what a rule segment is evaluated over: it is the segment organization's audience (its Marketing lists'
+    current members, the parties it owns, the segment's explicit members and what its filter's sources discover: an order's customer,
+    a contact of a Sales deal the caller sees), bounded at 5,000 (AUDIENCE_TOO_LARGE); a native classification or geography never
+    reaches beyond it;
+  - SegmentList's "last evaluated, eligible count" is not stored or listed: an evaluation runs under the caller's own sources (a Sales
+    representative sees their own leads), so a stored count would tell one reader what another's sources found; SegmentDetail
+    evaluates for its reader;
+  - MarketSegmentParty's dates and kind are fields, not a key: a party added again after its end takes the same row with new dates,
+    the audit log keeping the earlier ones (the contact merge and the native key unchanged); the native classification and geography
+    rows are added and removed as before, the dimension bounds audit-logged; the saved filter is a dated row of its own
+    (MarketSegmentFilter), a JSON tree naming registered sources only;
+  - the sources built are party, contact, purchases (`COMMERCE_ORDER_VIEW`: no Mantle order read exists for Marketing), engagement
+    (list membership and the ledger's deliveries; tracking events are P15's) and Sales' leads, opportunities and accounts; registration
+    waits for P16, which makes its records;
+  - the preview's identity is two digests, not a stored record: previewKey (what was asked, its time included) and resultDigest (who
+    is eligible, with address and tracking), which P8 recomputes and compares;
+  - AudiencePreview is for authors, audience managers and dispatchers (design §2) under the Audiences area, which denies the root user
+    group: `BOSS_MKT_AUDIENCE_PREVIEW` gives the author and dispatcher groups an ALWAYS on Audiences.xml that is not inherited (so
+    Lists and the rest stay refused to them) and an inherited one on AudiencePreview.xml; Audiences stays out of their menu, and P8's
+    SendDetail links the preview.
+- Mantle:
+  - `entity/MarketingEntities.xml`: MarketSegment gains `segmentName`, `segmentKindEnumId` (MskRule, MskExplicit; audited),
+    `createdByUserId`, `archivedDate` (audited) and `definitionRevision`; MarketSegmentDimension's unit and bounds audited;
+    MarketSegmentParty `fromDate`, `thruDate`, `memberKindEnumId` (MspInclude, MspExclude; audited) and `comments`; a P5 block after
+    P3's with MarketSegmentFilter.
+  - `SegmentServices.xml` over `MarketingSegments.js`: `find#Segments`, `get#Segment`, `store#Segment` (parent of the organization,
+    never a cycle: PARENT_CYCLE), `archive#Segment` (SEGMENT_IN_USE while an open child names it), `duplicate#Segment`,
+    `store#SegmentRules` (one change at the revision read), `store#SegmentFilter` (replace, add or remove a condition, all or any,
+    clear; every source readable by the caller, SOURCE_UNAVAILABLE), `store#SegmentMember` (dated include or exclude, ended never
+    deleted), `evaluate#Segment` (the rule match joined by inclusions, within the parent, less the exclusions; the rule each matched by
+    or the reason each is left out; paged; nothing stored). The projections' registry (`sources`): each source's fields, typed
+    operators and read; a missing value never matches, whatever the operator. Over `MarketingEligibility.js`: `preview#Audience`
+    (design §4's seven buckets by precedence, summing to the matched people; deduplicated by normalized address in the organization
+    and channel, the lowest party id chosen; a withdrawal or unsubscription of anyone at an address blocks it for everyone there;
+    the untracked flag; names and whole addresses for an audience reader only, a person the caller may not see a count only) and the
+    internal `classify#Recipients`, the reusable rule P8 prepares and P11 admits with (consent by organization from P3, suppressions
+    as the ledger applies them to a promotional delivery, evidenced membership: a granted consent of the topic or of the purpose, the
+    address's solicitation refusal a withdrawal).
+- BOSS:
+  - Screens: `Marketing/Audiences/Segments` (SegmentFind, SegmentList, NewSegment; tab 2), `SegmentDetail` (the record header with
+    Preview audience and More: Edit, Duplicate, Archive; Rules, Filter, Explicit members, Evaluation as of a time, refused with no
+    count on an unreadable source; Filter history), `AudiencePreview` (AudienceSelection, the buckets as number cards each showing its
+    people, the reasons, RecipientPreview; tab 6); `template/MarketingSegments.xml` (the transitions and NewSegmentForm); the old
+    `Marketing/Segments` now redirects to Audiences › Segments (F2); the root's "Explain this segment" chip and `g s`.
+  - `Marketing.js`: the area `audiencePreview` with the capability `previewRead`, the segment's destination (SegmentDetail) and label,
+    choices `segments` (not archived, excludeId, the selected one), `classifications`, `geos`, `dimensionTypes`, `units`, the palette's
+    segments, the P5 link paths. `data/BossSetupMarketingData.xml` (a P5 block): BOSS_MKT_AUDIENCE_PREVIEW. Demo
+    (`BossZZMarketingDemoData.xml`, a P5 block): Retail's "Garden newsletter readers" (a rule segment over the newsletter's accepted
+    members, Noah included by hand) and "Spring preview guests" (explicit: Maya included, Olive excluded).
+  - `skill/marketing-audience-check.md`, its alias (`segment`) and two retrieval cases.
+- Specs:
+  - Mantle `test/marketing/Segments` (5 features, 1.3 s: parent intersection, a cycle and a self parent refused, a stale write; an
+    exclusion wins, an inclusion joins within the parent, a member ended and kept; dimension bounds inclusive across a unit conversion,
+    min over max refused; a Sales filter refused to an editor without Sales at store and at evaluation with no count, matched for one
+    who reads Sales, a negation never matching a missing value, an entity name refused; an evaluation subscribes no one, another
+    organization's segment missing, a reader refused); `test/marketing/Eligibility` (3 features, 0.6 s: thirteen people each in their
+    expected bucket and reason, the buckets summing to the matched total, the duplicate chosen the same each time with the same
+    digests, the untracked eligible, a private contact a nameless row; an author's counts with masked addresses and no names, the
+    internal rule's same buckets; a segment on an unreadable source refused with no count, another organization's list and topic
+    missing, a reader refused, nothing subscribed).
+  - mr-boss `MarketingSegments` (2 features, 0.25 s: SegmentDetail's one qvt render; AudiencePreview's one html render, for an author
+    past the area's deny, masked); `MarketingAccess` (+0.2 s: the `previewRead` and `audiencePreview` capabilities per group;
+    AudiencePreview opened by an author, Lists refused the author, AudiencePreview refused a reader); `MarketingSpecLib` (the Audiences
+    tabs, the demo segments).
+  - Acceptance, written and not run: `test/acceptance/Marketing/MarketingAudiencePreviewWalk` (3 features: the audience manager makes a
+    segment on Segments and includes two people on SegmentDetail; a preview over two lists and the segment with a missing address, a
+    duplicate, a pending and an unsubscribed member, a suppression and a tracking refusal: the bucket totals sum exactly, each person
+    in their bucket; the author's same totals with every address masked and no name, and a segment change subscribing no one).
+    Marketing's one regression client walk is P9's MarketingSendWalk (§2); none is added here.
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle Segments 5 of 5, Eligibility 3 of 3, MarketingScope 6,
+  Audiences 7, Campaigns 7, ContactBooks 22 (50 of 50); mr-boss MarketingSegments 2 of 2, MarketingAccess 7 of 7; MarketingLists,
+  MarketingCampaigns, AppOrganizationFilters, QuickCreate and SalesAccess (45 of 45); `moqui test mr-boss --skills` 52 of
+  52. A throwaway render of Segments (qvt, tui), SegmentDetail (tui, html: a rule and an explicit segment, the administrator, a
+  missing one), AudiencePreview (qvt, tui, a bucket, a dispatcher with no topic) passed and was not kept. `moqui lint --screens`: 141
+  flagged sites, as before, none in Marketing. Prettier clean on the changed JavaScript. Not run: test-apps, the acceptance suite.
+- Inventories: usl-inventory's Marketing section gains P5's SegmentServices rows; ss-inventory has no row for P5's screens.
+- Design edits: design-marketing §4 AudiencePreview's as-built paragraph (segments, sources, eligibility, the preview's route grant).
+- Findings, numbered by the lead F144 to F152 in order:
+  - a rule segment is evaluated over its organization's audience, bounded at 5,000 (the code over the plan above);
+  - SegmentList shows no match count or freshness: an evaluation is the caller's own, under their sources;
+  - the purchases source reads with `COMMERCE_ORDER_VIEW`, the orders the organization sold, totals in its base currency only;
+    registration waits for P16 and tracking events for P15;
+  - a withdrawal or unsubscription of anyone at an address blocks every person at it (DESTINATION_WITHDRAWN): the design's "duplicates
+    with conflicting consent require review" built as a block; the duplicate kept is the lowest party id;
+  - an accepted member is eligible on a granted consent of the topic list or of the purpose (the organization's, else the global
+    one); a legacy member with neither needs evidence; the address's solicitation flag N blocks as a withdrawal;
+  - Sales' sources evaluate per caller (a representative's own leads, a manager's whole pipeline), so one segment answers differently
+    for two readers; an account counts when the organization owns it or it is shared;
+  - an "excludes" condition on a multi-valued field matches a known empty set (empty is known, not missing);
+  - MarketSegmentParty's dates are fields, not a key, and the native rule rows are not dated (the filter is): their history is the
+    audit log's;
+  - AudiencePreview's route grant for authors and dispatchers is an ALWAYS on Audiences.xml that is not inherited, a pattern new to the
+    apps' area denies.
+- For the lead:
+  - budget share: mr-mantle about 1.9 s (Segments 1.3 s, Eligibility 0.6 s); mr-boss server about 0.45 s (MarketingSegments 0.25 s,
+    MarketingAccess +0.2 s); no client spec;
+  - merge hot spots (P4 on `mkt/p4` appends to the first five; Sales P11 touches none of these): mr-mantle `entity/MarketingEntities.xml`
+    (MarketSegment, MarketSegmentDimension and MarketSegmentParty in place, and a P5 block after P3's); mr-boss
+    `data/BossSetupMarketingData.xml` and `data/BossZZMarketingDemoData.xml` (P5 blocks after P3's), `service/ironstone/marketing/Marketing.js`
+    (areas, areaReads, scope's `previewRead`, linkPaths, recordKinds.segment, choiceSources, searchFinds), `screen/Marketing.xml`
+    (the assist prompt, `g s`, a comment), `screen/Marketing/Audiences.xml` (its comment; Segments takes menu index 2 and
+    AudiencePreview 6, so P4's tabs take others), `test/Marketing/MarketingSpecLib.js` (`audiencesMenu`, which P4's tabs extend too),
+    `test/Marketing/MarketingAccess.spec.js` (capabilityNames, the groups' grants, the Home feature), `plan/usl-inventory.md` (the
+    Marketing heading and a P5 block after P3's), `plan/design-marketing.md` (§4 after AudiencePreview), `skill/aliases.json`,
+    `test/skill-retrieval.json`;
+  - the user's calls: none required; to confirm, AudiencePreview opened to authors and dispatchers by the route grant above, and the
+    purchases source on `COMMERCE_ORDER_VIEW`.
+
+**Review Nov 14 (P5).** A fresh review of `mkt/p5` (mr-mantle 5376f2c8, mr-boss ec7fc04d) against P5, §2, §4 and design §4
+Segments, SegmentDetail and AudiencePreview; master had nothing newer in either repository, so no merge.
+- Checked and sound:
+  - scope: every segment service asks `MARKETING_AUDIENCE_VIEW` (a write `_EDIT`) and the segment's organization by
+    `segmentOfScope`, a missing, other or unowned one answering RECORD_UNAVAILABLE alike; a parent of the same organization, not
+    archived, a cycle refused at store and at evaluation; revisions on every segment write and on an existing member row; members
+    and filters ended, never deleted; `preview#Audience` asks a Marketing read with the audience, send or dispatch permission, the
+    topic's organization and that every list and segment is of it, before anything is counted;
+  - confidentiality: Sales' sources read through SalesAccess `opportunityOf`, `accountOf` and `contactAccounts` under the caller's
+    own Sales scope in the segment's organization; a filter naming a source the caller cannot read is refused at store and at
+    evaluation, a parent's included, before any count (SOURCE_UNAVAILABLE); nothing about an evaluation is stored, so no count of one
+    reader's sources reaches another; a person the caller may not see (another user's personal contact, disabled, merged) is an
+    unnamed row with no address; names and whole addresses only for `MARKETING_AUDIENCE_VIEW`, masked otherwise; previewKey hashes
+    the request only;
+  - `classify#Recipients` (internal, allow-remote false): the seven buckets in design §4's order, each person in exactly one, the
+    counts summing to the matched; consent by organization as P3 has it (the organization's purpose row unless the latest global
+    one withdraws); suppressions read as a promotional delivery (`suppressedOf(..., false)`), so every kind applies here, a
+    complaint, staff block and soft failures as well as a hard bounce: right for an eligibility that only promotional sends use;
+    evidenced membership (a granted consent of the topic or of the purpose; a legacy member needs evidence); duplicates by the
+    normalized address, the lowest party id kept; untracked flagged on the eligible, never excluded;
+  - the AudiencePreview route grant (the worker's choice): authz.rs gives a non-inheritable ALWAYS on Audiences.xml to the frame
+    alone, so each child is decided by its own records: Lists, Segments, SegmentDetail, Comms' Consent (no record of its own) and
+    Suppressions stay refused to authors and dispatchers, AudiencePreview opens by its inheritable ALWAYS; Audiences.xml has no
+    transition or action of its own, and the service checks the permission and organization again. Sound as built;
+  - a missing value never matches whatever the operator; no entity name, SQL or script is accepted; the screens' transitions call
+    Mantle only; one render per mode in MarketingSegments; no route fixture.
+- Fixed:
+  - R1 (the 5,000 cap, high). The cap was checked on the people left after the exclusions, and each list was read with a limit of
+    5,001: an exclusion list of more than 5,000 was applied partly, so people meant to be left out were counted eligible (and P8
+    would prepare from it), and an included list cut at 5,001 could pass the cap once exclusions removed people. The universe's own
+    contacts (internal organizations removed after the limit) and Sales' pipeline discovery (a limit of 5,000, no check) cut short
+    silently too. Now `bounded` refuses every such read past the cap (AUDIENCE_TOO_LARGE, naming the list), in MarketingSegments.js
+    and MarketingEligibility.js `listMembers`; nothing is truncated. Not covered by a spec (it takes 5,001 rows).
+  - R2 (confidentiality, medium; the worker's purchases choice). The purchase source was open to any holder of
+    `COMMERCE_ORDER_VIEW` over every order the organization vended: no Commerce store scope (a store staff member read the other
+    stores' orders) and Sales orders with no store, which are Sales' records, under a Commerce permission. Now it is readable with
+    `COMMERCE_VIEW` and `COMMERCE_ORDER_VIEW` over the organization's stores in StoreAdmin.js's store scope, and its facts and
+    discovery read those stores' orders only. Segments: an editor with both permissions and no store of the organization is refused
+    SOURCE_UNAVAILABLE (stored on the unfixed code).
+  - R3 (precedence, low). A withdrawal at an address demoted only the eligible there, so a legacy member at a withdrawn address stayed
+    "needs evidence", against the order withdrawn before evidence. Eligibility's Ned (fails on the unfixed code).
+  - R4 (confidentiality, low). `duplicate#Segment` copied a filter whose source the caller cannot read, which `store#SegmentFilter`
+    refuses; now refused alike before anything is made. Segments (fails on the unfixed code).
+  - R5 (confidentiality, low). resultDigest was an unkeyed SHA over the party, the normalized address and the tracking flag: an author
+    holding it and a masked address ("j***@domain") of a one-person preview could confirm a guessed address offline. It is now over
+    the contact mech id (an address changed is a new contact mech, so P8's comparison still moves with it).
+- Findings, numbered by the lead F153 to F159 in order:
+  - the universe is the organization's whole audience (every Marketing list's members and its own contacts), so an organization with
+    more than 5,000 people on its lists can evaluate no rule segment and preview no segment, and a preview of a list over 5,000 is
+    refused: refused, never truncated (R1), but P8's sends to a large list need a paged or streamed evaluation or a universe narrowed
+    to the preview's lists first;
+  - purchases are store orders only (R2): a Sales order with no store is no purchase fact, a won Sales opportunity being the Sales
+    source's;
+  - a withdrawal blocks an address for the matched people only: someone outside the selection who withdrew at the same address does
+    not block it (a suppression does, address-wide);
+  - resultDigest and previewKey stay unkeyed hashes (over ids now); a keyed digest needs a server-keyed hash the script host lacks;
+  - `classify#Recipients` puts another user's personal contact in "not available" by the calling user, so a P8 or P11 caller running
+    as a job user (no user) sees every personal contact as not available; P8 and P11 should call it as the user who prepares;
+  - SegmentDetail describes a stored Sales condition (its lead sources or campaigns in words) to an editor without Sales, marked
+    unreadable; a definition, not Sales data;
+  - "has an open lead is false" matches a person whose leads the caller cannot see: it reads as "none you can see" and discloses
+    nothing.
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle Segments 5 of 5 and Eligibility 3 of 3 (3.8 s of
+  features; the new checks failed on the unfixed code, 2 features); mr-boss MarketingSegments 2 of 2 and MarketingAccess 7 of 7
+  (3.9 s of features). Prettier clean on the changed JavaScript. No screen changed, so no lint. Not run: test-apps, the acceptance
+  MarketingAudiencePreviewWalk (its scenario unchanged by the review).
+- For the lead:
+  - budget share: as the Built note (Segments and Eligibility gain a few calls, under 0.1 s);
+  - merge hot spots: the Built note's, and `plan/design-marketing.md` §4's as-built paragraph (the cap and the purchase source);
+  - the user's calls: none; the two worker choices judged above (the route grant kept, the purchase source scoped, R2); whether to
+    lift the 5,000 universe before P8 (the first finding) may want the user's view.
 
 ### P6 — Templates, sending profiles and bounce intake
 
@@ -795,6 +1750,240 @@ Design §5 MessageTemplates and MessageTemplateDetail, §12 SendingProfiles, §1
   show on the delivery; a profile with no
   bounce account reads not ready with its reason and a link to Admin.
 
+**Built Nov 14 (P6).** mr-moqui, mr-mantle and mr-boss on branch `mkt/p6` (hashes in the worker's reply), from master after gate 1
+(P1–P5 and Sales P11 merged); the framework change built Debug in the mr-moqui worktree.
+- Checked first (the code over the plan): P4's and P5's Built and Review notes, F13–F18, F60, F76, F78, F90–F159 and §4's rows (Comms'
+  permissions by Marketing role; personal contacts refused by request#Subscriptions; suppressions promotional only but a hard bounce);
+  the ledger (MessageDeliveries.js, its `organizationPartyId` from P3's review and Sales P10's body and attachments); Sales P10's
+  SalesQuoteIssues.js (a stored `.html.fancy-locked` text rendered by location with an explicit map); moqui-mail's send path, its edge
+  DSN reader and the SMTP listener's store (a report's parts are EmailMessageAttachment files; the raw message is not kept); Admin's
+  relay model (an EmailServer no mail account owns, `disabled`, ConnectionCheck) and the framework's RecoveryDescriptor kinds
+  (SystemMessage or ServiceJob only). The code over the plan:
+  - F17 needed more than a subject and a bounce address: to send "from the profile's server, sender and reply-to" one call also gives
+    `fromAddress`, `fromName` and `emailServerId` (`replyToAddresses` was there), so no EmailTemplate per profile is made; a call's
+    subject is used as given, never expanded (a person's text runs as no expression);
+  - F18's ARF reader and the stored-message reader are one new module, moqui-mail `report.rs` (`read#DeliveryReport` on a stored
+    message, from its report part and returned message, never its body text); the edge's `parse_dsn` stays and shares its field
+    parsing; the mail capture gains `bounceAddress` (moqui-core `mail_capture.rs`), so a spec sees the envelope sender;
+  - "the intake is a registered recovery for the reports it could not read": RecoveryDescriptor covers SystemMessages and jobs, not
+    EmailMessages, so the recovery is the poll job's (`run_DeliveryReports`, targetKind ServiceJob, retry native), which reads again
+    what failed (five tries); unknown keys and unreadable messages are recorded once and left, never retried;
+  - the ledger's existing `record#DeliveryReceipt` (an attempt's outcome, Shop's contract, its spec unchanged) is kept; F14's receipt
+    facts are a new MessageDeliveryReceipt with the delivery's strongest fact on MessageDelivery (`receiptEnumId`);
+  - Marketing had no Sends area: P6 makes `Marketing/Sends` (the authors', BOSS_MKT_SENDS) with MessageTemplates only; the detail is
+    `Sends/MessageTemplateDetail`, a sibling of the list (as ListDetail is), not the design's nested path; P8 adds the sends;
+  - a template's content is published by date (a draft, one at a time), not reviewed by a second person: design §5's "review" in
+    TemplateRelease is the reason and the editor's own publication (MESSAGE_TEMPLATE_EDIT);
+  - "Settings gains Templates, Consent and Suppressions links": settings entries (Sending profiles, Message templates, Consent,
+    Suppressions) with their places on Settings' index and Admin's settingsRoutes.
+- Framework (mr-moqui):
+  - `org.moqui.EmailServices.send#EmailTemplate` (and so `send#Email`) take `subject`, `fromAddress`, `fromName`, `bounceAddress` and
+    `emailServerId` for one call over the template's (implementation.rs `CallHeaders`; a value with a line break or an address without
+    an @ left out with a warning; the stored message names the call's relay, sender and subject);
+  - `org.moqui.mail.EmailServices.read#DeliveryReport` (report.rs): reportType dsn or arf, a DSN's recipients (address, action, status
+    code, diagnostic), an ARF's feedback type and original envelope sender and recipients, the returned message's Message-ID and the
+    addresses the report came to (Delivered-To, else To); `parse_arf` beside `parse_dsn`;
+  - MailCapture's messages carry `bounceAddress` (docs/dev/JS-Testkit.md); docs/interfaces/Mail-Inbound.md says how an app reads its
+    own bounces and that the edge's bounce domain replaces an app's bounce address.
+- Mantle:
+  - `entity/MessageDeliveryEntities.xml` (a P6 block): MessageTemplate (MessageTemplatePurpose), MessageTemplateContent (dated, its
+    files), MessageSendingProfile (MessageTrackingPolicy), MessageDeliveryReceipt (MessageDeliveryReceipt: delivered, soft bounce, hard
+    bounce, complaint), MessageDeliveryReport (MessageDeliveryReportKind, MessageDeliveryReportStatus; one row a message);
+    MessageDelivery gains `sendingProfileId`, `receiptEnumId`, `receiptDate`.
+  - `MessageServices.xml` (a P6 block) over `MessageTemplates.js`: `find#`, `get#`, `create#`, `store#Template`, `store#TemplateContent`,
+    `preview#`, `publish#`, `end#Template` and `build#TemplateDelivery` (the ledger source MdsrcMessageTemplate); over
+    `MessageSendingProfiles.js`: `find#SendingProfiles`, `get#`, `store#`, `check#SendingProfile`; over `MessageDeliveryReports.js`:
+    `process#DeliveryReport`, `run#DeliveryReports`, `handle#BouncedMessage`, `find#DeliveryReceipts`. `queue#Delivery` takes
+    `sendingProfileId`; the attempt (MessageDeliveries.js) sends from the profile (VERP `bounces+<deliveryId>@` its bounce domain), waits
+    out its quiet hours and throttle untried, and counts a profile not ready as a retryable outcome; a source may give `subject`.
+    MessageSuppressions.js `addFromIntake` (the intake's internal block, never doubled). Rules and refusals in each service's
+    description.
+  - `service/MessageReports.emecas.xml` (DeliveryReportIntake: a multipart/report of delivery-status or feedback-report, or mail to a
+    `bounces+` address); `entity/EmailMessage.eecas.xml` DeliveryReportEdgeBounce (a template's message turning ES_BOUNCED, read after
+    the commit); `data/MessageTemplateSetupData.xml` (the source, the job run_DeliveryReports with its JobRegistration and its
+    RecoveryDescriptor, MESSAGE_SENDING_CONFIGURE).
+  - Marketing: `MarketingWorkspace.js` readiness `marketing.sending` (no profile, or none ready: a warning, fixed at
+    marketingSendingProfiles) and the settings entries; `MarketingAudiences.js` request#Subscriptions refuses the caller's own personal
+    contact (PERSONAL_CONTACT) as another user's (RECORD_UNAVAILABLE) (§4 Nov 14).
+- BOSS:
+  - Screens: `Shared/MessageTemplates` (TemplateFind, TemplateList, NewTemplate with Copy), `Shared/MessageTemplateDetail` (header,
+    content with the rich editor's inline text actions and the variables as name | label | fallback | required, preview with synthetic
+    samples shown cleaned in a `v-pre` box, publish, end, published contents), `Shared/SendingProfiles` (Profiles, SendingProfile,
+    SenderReadiness with each check's fix: Admin's relays, Comms' mail accounts); `Marketing/Sends` (area); Settings' SendingProfiles
+    tab; Settings' index places; the root's Sends item and `g t`.
+  - `Marketing.js` (P6 lines): the area `sends` (read `sendsRead`), capabilities `templateRead`, `profileRead`, `sendsRead`, the link
+    paths, the choice `messageTemplates`. `Admin.js` settingsRoutes: marketingSendingProfiles, marketingTemplates, marketingConsent,
+    marketingSuppressions.
+  - `BossSetupMarketingData.xml` (a P6 block): BOSS_MKT_SENDS; MESSAGE_TEMPLATE_EDIT to BOSS_MARKETING_AUTHOR and
+    MESSAGE_SENDING_CONFIGURE to BOSS_MARKETING_ADMIN, each in its bundle (§4 Nov 13). Demo (`BossZZMarketingDemoData.xml`, a P6
+    block; contents as component files under `template/marketing/`): Retail's published Garden newsletter and Subscription
+    confirmation and draft Spring preview invitation; Retail's profile ready on the demo relay BOSS_COM_DEMO_MAIL with the shared
+    account bounces@bounce.retail.example, Services' not ready (no bounce account).
+- Specs:
+  - framework (`cargo test -p moqui-mail`, 162 passed, 1 ignored as before): implementation_tests
+    `a_call_gives_its_subject_sender_relay_and_bounce_address`; report_tests (a DSN part, an ARF report and a whole message, a stored
+    report's parts and address, `read#DeliveryReport` on a stored message); `cargo clippy -p moqui-mail -p moqui-core --tests` clean.
+  - Mantle `test/party/MessageTemplates` (3 features, 1.2 s: the refusals of the parse, a reader and another organization; the preview's
+    fallback and escaping; a published content unchanged, a change a new draft whose publication ends it; the ledger source sends the
+    content in effect, suppressed without a required value or once ended), `test/party/SendingProfiles` (3 features, 0.7 s: not ready
+    without the bounce account with its reason and fix, ready with it, no host or credential in any answer, an account's server refused,
+    a reader, a non-holder and another organization; a delivery naming the profile with its relay, sender, reply-to and bounce address,
+    one naming none as before; quiet hours wait untried, a stale change refused), `test/party/DeliveryReports` (3 features, 0.5 s: a hard
+    bounce and a complaint each one fact and one suppression, a duplicate and a copy no change; a soft bounce no suppression, a later
+    delivered fact not moving a bounce back; an unknown key and an unreadable message recorded and the next processed, the edge's
+    ES_BOUNCED matched through its ECA, the poll finding nothing left); `Audiences` (+2 checks: the personal contacts refused).
+  - mr-boss `MarketingTemplates` (2 features, 0.2 s: MessageTemplateDetail's one qvt render; SendingProfiles' one html render, Services
+    not ready); `MarketingAccess` (the author's menu, keys and Sends tab, the P6 capabilities per group, Sends for an author and not a
+    reader, SendingProfiles the administrator's, the settings index's entries, the two new grants' holders; +0.3 s); `MarketingSpecLib`
+    (ids, menus).
+  - Acceptance, written and not run: `test/acceptance/Marketing/MarketingReadinessWalk` (4 features: the administrator binds a profile,
+    not ready then ready; an author publishes a template with a fallback; a DSN and an ARF to the VERP addresses of two deliveries naming
+    the profile each suppress once and show on the delivery; a profile with no bounce account not ready with the mail accounts' link).
+- Tests run (the Debug binary of this worktree, `--debug --nobuild`, this worktree's runtime; they need the framework change):
+  mr-mantle MessageTemplates, SendingProfiles, DeliveryReports, DeliveryLedger, Suppressions, Audiences, ContactListSend,
+  SalesQuoteIssue, SalesQuoteResponse, MarketingScope, Consent, AudienceImport, CartRecovery, StoreReviews, Eligibility (86 of 86);
+  mr-boss MarketingTemplates, MarketingAccess, MarketingLists, MarketingSegments, MarketingImport, MarketingCampaigns, AdminRegistries,
+  SalesQuoteSend, QuickCreate (49 of 49); mr-pass ShopAccount, Outbox (16 of 16); framework AdminMailOutcomes, BusinessAlerts and
+  basic-comms BasicCommsComposeRef (28 of 28). A throwaway render of MessageTemplates, MessageTemplateDetail (a draft, a missing one),
+  SendingProfiles (list and a profile) and Settings' index with each organization's readiness in qvt, tui and html, and the screens'
+  create, content, publish, header, profile and check transitions passed and was not kept. `moqui lint --screens` (the Debug binary):
+  141 flagged sites, as before, none in the P6 screens. Prettier clean on the changed JavaScript; rustfmt on the changed Rust files.
+  Not run: test-apps, test-framework, the acceptance suite.
+- Inventories: usl-inventory's Marketing P6 block (MessageServices' templates, profiles, intake and receipts); ss-inventory has no row
+  for P6's screens.
+- Design edits: design-marketing §5 MessageTemplateDetail and §12 SendingProfiles (as built); design-drawers-commons' Mailboxes row
+  (owner contract: the templates, profiles, receipts and intake).
+- Findings, numbered by the lead F160 to F168 in order:
+  - F17 is five per-call values, not two (`fromAddress`, `fromName`, `emailServerId` beside `subject` and `bounceAddress`), and the
+    call's subject is never expanded (the code over the plan above);
+  - the stored message keeps the call's relay, sender and subject but not its bounce address: a send again of the stored message (the
+    mail queue's retry) would use the template's; the ledger owns its messages' retries (OWNER_RETRIES), so none is resent that way;
+  - the bounce intake's recovery is its poll job's registration (RecoveryDescriptor has no EmailMessage kind); a report recorded
+    unknown or unreadable is not read again; its EmailMessage stays in the bounce account;
+  - sender domain verification is a warning, not a block: Admin has no domain verification (design-admin MailDomains is later), so
+    "verified" is a domain this server signs or a relay that passed Admin's test; an untested relay is a warning too;
+  - a hard bounce suppresses the address for every organization, a complaint for the delivery's organization only (the delivery's own,
+    else its store's); repeated soft bounces suppress nothing yet (MsrSoftFailures has no rule);
+  - the email ECA's condition (multipart/report or a `bounces+` address) and the edge ECA are not exercised through the SMTP listener in
+    the regression suite: the specs call process#DeliveryReport on a stored report, and the edge path through the EmailMessage ECA;
+  - the poll reads the bounce accounts of the profiles' bounce domains; a bounce account that also receives other mail has each
+    message read once (an ordinary message recorded unreadable);
+  - MessageTemplateDetail's variables are a text area (name | label | fallback | required) and TextBlocks are not offered; Use (a draft
+    send) waits for P8;
+  - Sales' quote templates still expand a `${subject}` body parameter in the EmailTemplate's subject (SalesQuoteIssues.js); they could
+    pass `subject` per call now; not changed here (Sales' file).
+- For the lead:
+  - budget share: mr-mantle about 2.4 s (MessageTemplates 1.2 s, SendingProfiles 0.7 s, DeliveryReports 0.5 s); mr-boss server about
+    0.5 s (MarketingTemplates 0.2 s, MarketingAccess +0.3 s); no client spec; moqui-mail about 0.1 s of cargo tests;
+  - merge hot spots (Sales P12 and P13 beside): mr-mantle `entity/MessageDeliveryEntities.xml` (MessageDelivery's fields and a P6 block),
+    `service/mantle/party/MessageServices.xml` (queue#Delivery's parameter, a P6 block), `MessageDeliveries.js` (the attempt's profile
+    and subject lines), `MessageSuppressions.js` (addBlock/addFromIntake), `entity/EmailMessage.eecas.xml`,
+    `service/mantle/marketing/MarketingWorkspace.js`, `MarketingAudiences.js`, `AudienceServices.xml`, `test/marketing/Audiences.spec.js`;
+    mr-boss `data/BossSetupMarketingData.xml` and `data/BossZZMarketingDemoData.xml` (P6 blocks), `service/ironstone/marketing/Marketing.js`,
+    `service/ironstone/admin/Admin.js` (settingsRoutes), `screen/Marketing.xml`, `screen/Marketing/Settings.xml`, `Settings/Index.xml`,
+    `test/Marketing/MarketingAccess.spec.js`, `MarketingSpecLib.js`, `plan/usl-inventory.md`, `plan/design-marketing.md`,
+    `plan/design-drawers-commons.md`, this file; mr-moqui `crates/moqui-mail/src/implementation.rs`, `edge_mail.rs`, `lib.rs`,
+    `crates/moqui-core/src/service/mail_capture.rs`, the two EmailServices.xml, `docs/dev/JS-Testkit.md`, `docs/interfaces/Mail-Inbound.md`.
+    Not touched: Sales files, SalesQuoteIssues.js, PASS;
+  - the user's calls: none required; to confirm, the complaint's organization-scoped suppression, the sender domain as a warning until
+    Admin verifies domains, and the five per-call values of F17.
+
+**Review Nov 14 (P6).** A fresh review of `mkt/p6` (mr-moqui 32bcc345, mr-mantle 977925fd, mr-boss 4fa00f42) against P6, §2, §4
+and design §5, §12, §15.1–15.2. Master merged first into each worktree (mr-moqui dc4e8977: Edge-Node2 and Dogfood DG4–DG6; mr-mantle
+ae35c809 and mr-boss 2e97d266: Sales P12 and P13), with no conflict: master changed neither moqui-mail's send path, the two
+EmailServices.xml nor MessageDeliveries.js, so the per-call values and the ledger's profile lines stand beside the quote mail as
+built. Debug rebuilt in the mr-moqui worktree.
+- Checked and sound:
+  - the framework change (F17, F18): `send#EmailTemplate` stays internal (`anonymous-view`, no screen or remote path hands request
+    parameters to it; send#ScreenRenderEmail's `in-map="context"` carries only its declared parameters; the tools REST
+    `email/templates/{id}/send` reaches send#Email, whose caller can already make a template with any sender and relay); every
+    existing caller passes subject, sender and relay inside `bodyParameters` only, so none changes; only Mantle's ledger passes
+    `fromAddress`, `emailServerId` and `bounceAddress`, from a profile of the delivery's organization (queue#Delivery refuses
+    another's). CR/LF in a per-call value is left out (the subject's become spaces), an address needs an @ and lettre parses it
+    again; the call's subject is never expanded. The ARF and stored-report readers index nothing past a part (lossy UTF-8, `get`,
+    caps of 256 KiB a part and 100 recipients); `cargo test -p moqui-mail` and clippy clean;
+  - templates (F78): the parse refuses an undeclared name, an expression, `<#`/`</#`/`<@`/`#{` tags, an unclosed `${`, a variable in
+    a link and reserved names; the escape `\${` is read exactly as the renderer's tokenizer reads it (template.rs `tokens_at`: a
+    backslash matters only right before `${` or `<#`, so `\\${a+b}` is literal in both), so no expression reaches the renderer;
+    each store writes a new `.html.fancy-locked` file the service names (no caller sets a location), rendered by location with the
+    declared variables' map only; the preview shows `StringUtilities.cleanHtml` output in a `v-pre` box; labels are data in qvt;
+    the reader and editor scope by MESSAGE_TEMPLATE_VIEW/EDIT and the organization, another's RECORD_UNAVAILABLE; revisions on every
+    write; a published content never changed;
+  - sending profiles: MESSAGE_SENDING_CONFIGURE and the organization for a write, Marketing's configurer, authors and dispatchers to
+    read; the relay an EmailServer no mail account owns; no answer carries a host, port, user or credential (relayId only); quiet
+    hours and the throttle return before an attempt row (no try counted); a profile not ready is a retryable outcome;
+  - the user's calls built here: MESSAGE_TEMPLATE_EDIT to BOSS_MARKETING_AUTHOR and MESSAGE_SENDING_CONFIGURE to BOSS_MARKETING_ADMIN
+    (each with its bundle row), request#Subscriptions refusing the caller's own personal contact (PERSONAL_CONTACT) and another's
+    as RECORD_UNAVAILABLE; a hard bounce suppresses for every organization and a complaint for the delivery's (its own, else its
+    store's), promotional only by MessageSuppressions' rule;
+  - screens: transitions call Mantle only; one qvt render (MessageTemplateDetail) and one html render (SendingProfiles) in
+    MarketingTemplates; no route fixture.
+- Fixed:
+  - R1 (forged bounces, high). The VERP address was `bounces+<deliveryId>@`, delivery ids are a sequence, and anyone can mail the
+    bounce address: a forged DSN or ARF naming a guessed id suppressed that delivery's address, for every organization on a hard
+    bounce, and the report's recipient was never compared with the delivery's. A delivery naming a profile now carries a random
+    `bounceKey` (MessageDelivery, made at queue, or at the first attempt for one queued before) and goes out from
+    `bounces+<deliveryId>.<bounceKey>@` the bounce domain; the intake takes a VERP address only with the delivery's key (else the
+    returned message's random Message-ID, as before), and a DSN counts only the recipients that are the delivery's own address
+    (another's is MrsIgnored). An ARF is bound by its key (Original-Rcpt-To is often redacted). The emeca's address pattern takes the
+    dot. DeliveryReports' new feature (no key, a wrong key, an ARF without a key, another recipient: nothing suppressed) fails on
+    the unfixed code; SendingProfiles and the acceptance walk read the key.
+  - R2 (confidentiality, high). The email ECA sends every stored multipart/report or bounces+ message of any account to the intake,
+    which read and recorded it (MessageDeliveryReport rows, a log line) whatever mailbox it was in: a person's own bounces, and a
+    forged report mailed to any hosted address. The intake now reads only a bounce account's messages (bounces@ a profile's bounce
+    domain); another mailbox's is left alone and nothing is recorded (`notBounceAccount`). DeliveryReports (fails on the unfixed
+    code).
+  - R3 (scope, medium). find#DeliveryReceipts gave any holder of MESSAGE_SUPPRESSION_REVIEW or CONTACT_ADMIN every delivery's
+    receipts across organizations (a Sales quote's, a Shop notice's), with the remote server's diagnostic, which names the address.
+    Now a reader other than MESSAGE_DELIVERY_REVIEW (or a system administrator, or MARKETING_ALL_ORGANIZATIONS) reads only the
+    deliveries of the organizations they work for, another's RECORD_UNAVAILABLE, and an address in a detail shows as [address].
+    DeliveryReports (fails on the unfixed code).
+  - R4 (unsafe HTML, low). The stored-body check missed an attribute after a slash (`<img/src=x/onerror=...>`) and a script link
+    written with character references (`&#106;ava&#x09;script&colon;`). The handler pattern takes a slash or quote before `on`, and
+    each attribute value is checked again decoded (references, and the white space a browser drops in a scheme). MessageTemplates
+    (fails on the unfixed code). The preview was already cleaned by cleanHtml; this guards the sent mail.
+  - R5 (scope, low). build#TemplateDelivery rendered a template for any delivery naming its EmailTemplate, whatever the delivery's
+    organization; it now suppresses one that is not the template's organization's (P8 queues these). MessageTemplates.
+  - Tests added in moqui-mail: a hostile and broken report (no separator, a fold first, non-UTF-8, a part cut inside a multi-byte
+    character at the limit, a feedback part with no body, 1,000 recipients capped at 100) never panics; a call's fromName and
+    emailServerId with a line break are left out (the template's name kept).
+- Findings, numbered by the lead F169 to F174 in order:
+  - the VERP key is a random value stored on the delivery, not a keyed hash (the script host has no HMAC); deliveries queued
+    before this review get a key at their next attempt;
+  - an ARF is bound to its delivery by the key alone; a recipient (or anyone who saw the message) holding the key or the Message-ID
+    can suppress only that recipient's address, which is the recipient's own choice anyway;
+  - a DSN whose Final-Recipient is a forwarding target (not the delivery's address, no Original-Recipient) is ignored: such a hard
+    bounce suppresses nothing (lettre sends no ORCPT);
+  - a profile's purpose (promotional or transactional) is not checked against the delivery's: a promotional delivery may name a
+    transactional-only profile; P8 should choose by purpose or queue#Delivery refuse it;
+  - the template body check is a pattern list, not a sanitizer: it refuses what it names (scripts, frames, forms, handlers, script
+    links) and leaves styles and remote images; mail clients clean the rest, and BOSS shows the preview through cleanHtml;
+  - the worker's findings stand (five per-call values; the stored message keeps no bounce address; recovery by the poll job;
+    sender domain a warning; no SMTP-listener path in the regression suite).
+- Tests run (the mr-moqui worktree's Debug binary, `--debug --nobuild`, this worktree's runtime):
+  - after the merge, before the fixes: mr-mantle MessageTemplates, SendingProfiles, DeliveryReports, DeliveryLedger, Suppressions,
+    Audiences, ContactListSend, SalesQuoteIssue, SalesQuoteResponse, MarketingScope, Consent, AudienceImport, CartRecovery,
+    StoreReviews, Eligibility (86 of 86, 188 s wall, 33 s of features); mr-boss's set ran during the entity edit and is counted
+    below;
+  - after the fixes: mr-mantle the 15 above with SalesQuoteTemplates and SalesPortal (96 of 96, 134 s wall, 38 s of
+    features), MessageTemplates again after R5 (3 of 3), DeliveryReports alone (5 of 5); mr-boss MarketingTemplates, MarketingAccess,
+    MarketingLists, MarketingSegments, MarketingImport, MarketingCampaigns, AdminRegistries, SalesQuoteSend, SalesQuoteTemplates,
+    QuickCreate (51 of 51, 24 s of features); mr-pass ShopAccount, Outbox (16 of 16); framework AdminMailOutcomes, BusinessAlerts and
+    basic-comms BasicCommsComposeRef (28 of 28);
+  - `cargo test -p moqui-mail` (163 passed, 1 ignored, 23 s), `cargo clippy -p moqui-mail --tests -D warnings` clean; rustfmt and
+    Prettier on the changed files. Not run: test-apps, test-framework; the acceptance walk MarketingReadinessWalk, changed for R1, ran once (4 of 4).
+- For the lead:
+  - budget share: mr-mantle DeliveryReports +2 features (about +0.4 s), MessageTemplates +3 checks (none measurable); mr-boss none;
+    moqui-mail +1 test (well under 0.1 s);
+  - merge hot spots: mr-mantle `entity/MessageDeliveryEntities.xml` (MessageDelivery `bounceKey`), `MessageDeliveries.js` (queue's
+    key, the attempt's key), `MessageDeliveryReports.js`, `MessageSendingProfiles.js` forDelivery's signature, `MessageServices.xml`
+    (process#DeliveryReport's out-parameter, two descriptions), `MessageReports.emecas.xml`, `MessageTemplates.js`; mr-boss the
+    acceptance walk and SendingProfiles.xml's tooltip; mr-moqui `docs/security/Attack-Surface.md` (Mail: three paragraphs after the
+    mail rule actions, committed here) and the moqui-mail tests;
+  - Attack-Surface: the per-call mail values, read#DeliveryReport and the bounce intake are in the worktree's
+    docs/security/Attack-Surface.md, Mail section (commit 62d76755), ready to merge with mkt/p6;
+  - the user's calls: none new; to confirm, an ARF bound by its key only and a forwarded hard bounce ignored (above).
+
 ### P7 — PASS Marketing: the app, subscription and preferences
 
 Design §13.1, §13 Subscribe and VerifySubscription, EmailPreferences (Marketing's context), §4 ListDetail's public
@@ -836,6 +2025,244 @@ offer; MKT-PUBLIC, MKT-AUDIENCE, MKT-CONSENT; gate 2.
   nothing, the confirm button grants that topic alone, the preferences page withdraws it with a reason, and a
   mailbox membership is untouched throughout.
 
+**Built Nov 14 (P7).** mr-mantle, mr-pass and mr-boss on branch `mkt/p7` (hashes in the worker's reply), from master after P6's merge
+(Sales P13 merged); mr-moqui unchanged, no Rust built.
+- Checked first (the code over the plan): P3's and P6's Built and Review notes, F24–F26, F43, F75, F88, F120, F127, F160–F174 and §4
+  (a public subscriber is a party, the BOSS `/u/` page stays, the consent rule and `record#PartyConsent`, personal contacts refused);
+  impl-sales P13's Built and Review notes and its code (SalesPortal.js: the mount's organization, one NotFound, `record#Attempt`
+  limits, allow-listed projections; mr-pass Sales.xml, Sales.js, Portal.js, Headers.js); PublicApps.js, ForumSchema.js and
+  PassRoutes.js with mr-pass's copies, the three TOKEN_WRITES lists and the transport's anonymous-write rule; AccountHub.js,
+  StoreTopics.js, ConsentServices' token services; MarketingAudiences.js fileOne; the ledger (MessageDeliveries.js: the delivery and
+  each attempt and build in transactions of their own) and P6's templates and profiles. The code over the plan:
+  - the operations are camelCase, as PASS Sales' are: `getMarketingPublication`, `requestSubscription`, `getSubscriptionRequest`,
+    `verifySubscription` (the plan's `marketing.getPublication` …); the reads are GET routes, the request and the confirmation
+    POSTs and both in the three TOKEN_WRITES lists (the request has no token: the transport lets it through by name, as
+    `addCartItem`, and the authority accepts it from a registered deployment);
+  - the ledger keeps no token, so each attempt's build makes the confirmation link (SubscriptionRequestToken keeps its digest, as
+    Sales' quote links are made per attempt); the request is one or more SubscriptionRequest rows sharing `requestGroupId`;
+  - the subscriber and each topic's filing are committed before the verification is queued (its attempt and build read them in
+    transactions of their own); the confirmation files in its own transaction under the group's lock;
+  - a public offer is the P3 policy's `publicOffer` with `publicSiteId` and the interval `offerFromDate`/`offerThruDate`; P3's
+    offers name no site (its spec and demo), so an offer with no site is offered nowhere rather than refused;
+  - Mantle's spec is `test/marketing/MarketingSubscriptions` (a spec name is unique in a component and `Subscriptions` is Shop's);
+  - "rate limited verification mail": the framework's attempt buckets (`record#Attempt`, as Sales'): requests per client, site and
+    address answer the receipt and keep nothing; verification messages per address keep the request and send nothing;
+  - "a party made or matched": the first directory party by id with the address as a current email (never a personal contact,
+    merged or disabled), else a new person; the display name goes on a new person only and never into the message (the template's
+    `firstName` keeps its fallback), so the form cannot carry text to an arbitrary address;
+  - the Forum spec's check that the two schema copies are identical failed on master (DG6's mailing-list block and Sales P13's quotes
+    in a different order in the two files); mr-pass Schema.js is now a copy of Mantle's.
+- Mantle:
+  - `entity/MarketingEntities.xml` (a P7 block): ContactListPolicy `publicSiteId`, `offerFromDate`, `offerThruDate`; SubscriptionRequest
+    `siteId`, `requestGroupId`, `requestKey`, `expireDate`, `verifiedDate`, `verificationDeliveryId` (kind SrkCheckout); the new
+    SubscriptionRequestToken (digest only). `data/MarketingSeedData.xml` (a P7 block): the ledger source MdsrcSubscriptionVerify.
+  - `MarketingPortalServices.xml` over `MarketingPortal.js` (new, P): `get#Publication`, `request#Subscription`,
+    `get#SubscriptionRequest`, `verify#Subscription`, `check#MarketingAppReadiness`, `build#VerificationDelivery` (the source's build:
+    the confirmation template's published content, the topics' names and this attempt's link), `file#CheckoutSubscription` (internal);
+    `preferencesContext` and `changeTopics` for the Account page. Every miss is the same NotFound; the request always answers the same
+    receipt; the confirmation accepts only the request's topics for its address, once, with the request's own evidence date.
+  - `MarketingAudiences.js`: `fileOne` takes `extra` (a public request's fields), `subscriptionRequestId` (decide that row: the
+    confirmation) and `byPerson` (the person's own act: a withdrawn purpose renewed, F120, and the grant through `record#PartyConsent`),
+    and answers the row's id; `store#SubscriptionPolicy` takes the site (one whose marketing mount targets the list's organization,
+    SITE_INVALID) and the interval (OFFER_INTERVAL_INVALID); `get#List` answers them, the offer's state and the site choices.
+  - Owner contracts: `PublicApps.js` `marketing` (organization target, readiness); `ForumSchema.js`, `PassRoutes.js`, `PassApi.js`,
+    `PassAuthority.js` (the four operations, two TOKEN_WRITES); `SmithyCore.js` reserves `marketing`; Comms'
+    `ConsentServices.unsubscribe#ContactListParty` takes `organizationPartyId` (with `allMarketing`: that organization's lists and a
+    scoped withdrawal; a token's must be its list's; without it as before, so a legacy token keeps working); `AccountHub.js` the Email
+    preferences page's Marketing context (the organization's offered lists with the recipient's state, off with a reason kept on the
+    withdrawal's comments, on sent for confirmation first or accepted for a signed-in verified address, "No more email from" the
+    organization); `StoreTopics.js` (Shop's, impl-shop §7, F26): the store-news choice through `file#CheckoutSubscription` (source
+    PcsCheckout), pending until the receipt's link or a verified sign-in, accepted at once for a verified account; the topics as built.
+- PASS (Deployment.md "Adding an app"): `screen/Marketing.xml` with Subscribe (SubscriptionRequest, SubscriptionReceipt) and
+  VerifySubscription (VerifyIntent), plain HTML in `.html.fancy` pages over `Marketing/Marketing.js` and `Shared/Portal.js`, no
+  JavaScript; the default headers (no-store, `Referrer-Policy: same-origin`, the shell's CSP) hold for both. Registrations: `Apps.js`,
+  `Pass.xml`, the header's branch (Subscriptions), `Schema.js` and `Routes.js` (copies of Mantle's), `Transport.js` (TOKEN_WRITES and
+  the request's anonymous write), `Contracts.d.ts`, the test runtime's `/marketing` mounts (PASS_HTTP, ZIZI_SHOP), Portals' targeted
+  apps, Smithy's app count; `Account/Hub.js` renders the Marketing context (the lists, the reasons, "No more email from").
+  `docs/Deployment.md` "Marketing app"; README.
+- BOSS: ListDetail's SubscriptionPolicy (the offer's site and opening interval; the box shows the offer's state);
+  `template/MarketingAudiences.xml` passes them. Demo (`BossZZMarketingDemoData.xml`, a P7 block): ZIZI_SHOP's Marketing mount for
+  Retail (F88) and the garden newsletter's offer there with the published Subscription confirmation.
+- Specs:
+  - Mantle `test/marketing/MarketingSubscriptions` (new, 5 features, 0.8 s): the same receipt for a known and a new address, neither
+    echoed; the link's GET (twice) changes nothing; the confirm grants only the requested topic for that address (PcsEmailLink, the
+    address's contact); a replay answers the first result, after a withdrawal it regrants nothing, a withdrawal before the confirm is
+    kept; a forged, expired or another site's token, a site without the mount, an unoffered, closed or another organization's list
+    disclose nothing alike, the consent box required; the checkout's news choice a request of kind checkout (pending, then accepted,
+    source PcsCheckout); the preferences context (states, off with the reason on the withdrawal, on pending with its message, "No more
+    email from" a scoped withdrawal).
+  - mr-pass `test/Marketing/MarketingAccess` (new, 3 features, 0.15 s; fixtures `MarketingFixtures.js`): Subscribe's one html render
+    (the offered lists unchecked, the consent box in the offer's words) and VerifySubscription's one (the masked address, Confirm, the
+    membership still pending); the operations refused alike for a site without the mount, an unoffered list and a mailbox; six requests
+    for one address: one receipt, three messages, five requests kept; the four operations in both copies and route lists, the request
+    and confirmation in the three TOKEN_WRITES lists. Portals' targeted apps and Smithy's count follow the new app.
+  - Acceptance, written and not run: mr-pass `test/acceptance/client/MarketingSubscribeHttp` (2 features: scenario 5 with plain
+    requests: subscribe to one of two lists, the scanner's GET, Confirm, the preferences page's withdrawal with a reason, the mailbox
+    membership untouched; a forged link and an unoffered list) and `MarketingRemoteHttp` (the same walk through a remote frontend,
+    the records read on `params.authority`), with `test/acceptance/MarketingSubscribeFixtures` on PASS_HTTP, in `client/suite.js`.
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle MarketingSubscriptions, Audiences, AudienceImport,
+  ListMerge, ShopCheckout, CartRecovery, ShopCustomer, PassAuthority, SmithyPaths, SmithyGitAccess, Consent, ContactListSend,
+  DeliveryLedger, MarketingScope, Suppressions, SalesPortal, StoreReviews, StoreCheckout (104 of 104 and 55 of 55); mr-pass
+  MarketingAccess, SalesPortalAccess, ShopCart, ShopPreview, ShopAccess, ShopReviews, ShopCheckout, ShopAccount, ShopSubscriptions,
+  Portals, Transport, Smithy, Forum, Outbox (83 of 83; Forum failed before the schema copy, as on master); mr-boss MarketingLists,
+  MarketingAccess, Consent, Unsubscribe, CommerceStores, AdminRegistries, MarketingTemplates, MarketingImport (43 of 43). `moqui lint
+  --screens` (release): 141 flagged sites, as before, none in a new or changed screen; parse failures 0. Prettier (mr-moqui's config) on
+  the new JavaScript and the two changed files that were clean (MarketingAudiences.js, StoreTopics.js). Not run: test-apps, the client
+  walks, the acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P7" table; ss-inventory has no row naming a PASS Marketing path.
+- Design edits: design-marketing §13 Subscribe and VerifySubscription and EmailPreferences (as built); design-drawers-commons'
+  Mailboxes row (owner contract: the organization scope of `unsubscribe#ContactListParty`, the page's Marketing context).
+- Findings, numbered by the lead F175 to F185 in order:
+  - the operations are camelCase and the request is an anonymous write named in the transport (the code over the plan above);
+  - a confirmation link per verification attempt (SubscriptionRequestToken), any of a request's links confirming it for seven days;
+  - a public offer with no site is offered nowhere (P3's offers and demo), not refused;
+  - the verification goes from a ready profile of the organization, a transactional one first, else any ready one (Retail's demo
+    profile is promotional; F172), and waits out the profile's quiet hours like any delivery; with no ready profile or no published
+    confirmation template the request is kept and nothing is sent (readiness says which);
+  - the visitor's display name is never put in the message; the matched party is the first directory party with the address, so a
+    request may put a pending membership on a customer's or staff member's party, which only that address can confirm;
+  - a list confirmation renews the list's grant and passes a withdrawn purpose (F120) but does not undo a global marketing email
+    withdrawal (PcpMarketingEmail with no organization); whether that blocks the list's sends is P9's dispatch check;
+  - the limits' client key is the framework's requester key: server-side callers with no request (a spec, a job) share one bucket;
+  - a marketing mount with no list offered makes the site not ready (every check must be ready), so mounting Marketing before
+    publishing a list holds the site's readiness;
+  - on the preferences page a topic turned on by a list link is sent for confirmation (the legacy page's resubscribe of a list the
+    party is on stays as built); "No more email from" the organization is scoped to it, the legacy "No marketing email at all" global;
+  - the checkout's news grant now records a request and a list grant with source PcsCheckout (was PcsForm through
+    `set#ContactListPartySubscription`); a news choice the audience refuses (a personal contact, no address) is the outcome failed,
+    logged;
+  - the Forum spec's schema identity check failed on master (the DG6 and Sales P13 blocks in different orders); fixed by copying
+    Mantle's ForumSchema.js to mr-pass Schema.js.
+- For the lead:
+  - budget share: mr-mantle about 0.8 s (MarketingSubscriptions); mr-pass server about 0.15 s (MarketingAccess); mr-boss none; client
+    none;
+  - merge hot spots (Sales P15 and P17 beside): mr-pass `service/pass/Schema.js` (now a copy of Mantle's ForumSchema.js; the
+    Marketing block after getSalesQuoteResponse, the DG6 block moved after it), `service/pass/Routes.js` and Mantle's
+    `script/PassRoutes.js` (a Marketing block after Sales' quotes), `service/pass/Transport.js` (TOKEN_WRITES' end and a line in
+    routeOf), `service/pass/Apps.js` (before Shop), `screen/Pass.xml` (before Shop), `screen/Shared/Header.html.fancy` (the branch's
+    condition and nav label), `service/pass/Contracts.d.ts` (MountInput), `test/MoquiConf.xml` (PASS_HTTP and ZIZI_SHOP mounts),
+    `test/Billing/Portals.spec.js` (targeted apps), `test/Smithy/Smithy.spec.js` (the count, 11), `test/acceptance/client/suite.js`,
+    `screen/Account/Hub.js`, `README.md`, `docs/Deployment.md` (a section before Shop); Mantle `service/mantle/forum/ForumSchema.js`
+    (a Marketing block before DG6), `script/PassApi.js` and `script/PassAuthority.js` (TOKEN_WRITES' end),
+    `service/mantle/public/PublicApps.js` (before Shop), `service/mantle/smithy/SmithyCore.js` (reservedNames),
+    `service/mantle/public/AccountHub.js`, `StoreTopics.js`, `AccountHubServices.xml`, `service/mantle/party/ConsentServices.xml`
+    (unsubscribe#ContactListParty), `service/mantle/marketing/MarketingAudiences.js`, `AudienceServices.xml`,
+    `entity/MarketingEntities.xml` and `data/MarketingSeedData.xml` (P7 blocks); mr-boss `data/BossZZMarketingDemoData.xml` (a P7
+    block), `screen/Marketing/Audiences/ListDetail.xml`, `template/MarketingAudiences.xml`, `plan/usl-inventory.md`,
+    `plan/design-marketing.md`, `plan/design-drawers-commons.md`, this file;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, no mr-moqui worktree), a paragraph after PASS Sales': "PASS
+    Marketing's public subscription (`mantle.marketing.MarketingPortalServices`, all `allow-remote="false"`,
+    `authenticate="anonymous-all"`, reached only as the PASS operations `getMarketingPublication`, `requestSubscription`,
+    `getSubscriptionRequest` and `verifySubscription` of the authority's allowlist): each finds the organization from the site's
+    `marketing` mount (a published site, an internal organization) and a list only by its explicit public offer on that site (the
+    policy's offer, site and open interval; the legacy `isPublic` flag offers nothing), never from the request; a site without the
+    mount, an unoffered, closed, archived, mailbox or another organization's list and a forged, expired or another site's link answer
+    the same NotFound. `requestSubscription` is an anonymous write (the transport lets it through by name; the authority takes it from
+    a registered deployment as a TOKEN_WRITES operation) bounded by PASS's request key (a repeat answers the first request), at most
+    ten topics, and limits per client (30 in ten minutes), site (1,000 an hour) and address (5 an hour), over which it answers the same
+    receipt and keeps nothing; it always answers the same receipt (a known or new address, a member already, a refusal), echoes no
+    address and never says whether a party was matched or made (never a personal contact). Its verification message is a transactional
+    delivery of Comms' ledger from a ready sending profile of the organization with the list policy's published confirmation template,
+    at most 3 a day to an address; it carries the template's own wording, the topics' names and a link, never the visitor's text. Each
+    message's link is a 40-character random token whose digest alone is kept, ending with the request (seven days); every lookup counts
+    against the requester's limit (100 in ten minutes). `getSubscriptionRequest` is read only (a scanner's GET changes nothing) and
+    answers the address masked; `verifySubscription` (a TOKEN_WRITES bearer write, a POST with the session token locally) accepts exactly
+    the request's topics for its address under the request's lock, once (a replay answers the first result), with the request's own
+    evidence date, so a withdrawal after the request is never undone by its link. The Account Email preferences page's Marketing context
+    changes only the token's or the signed-in account's own party: a topic turned on is a request with its verification message (a
+    signed-in verified address accepted at once), `unsubscribe#ContactListParty` with `organizationPartyId` withdraws for the token
+    list's organization only. Shop's store-news choice is filed through the same evidenced path (source PcsCheckout), pending until the
+    receipt's link or a verified sign-in.";
+  - the user's call: none required; to confirm, the display name kept off the message, a site-less offer offered nowhere, and the
+    verification from a promotional profile when the organization has no transactional one.
+
+**Review Nov 14 (P7).** A fresh review of `mkt/p7` (mr-mantle d52ae91f, mr-pass 1e1a2f3, mr-boss 14bcf186) against P7, §2, §4
+and design §13, after merging master (Sales P14, P15, Marketing P6) and then master again (Sales P17) into each worktree; no Rust.
+- Checked and sound: every operation finds the organization from the site's `marketing` mount (a published site, an internal
+  organization) and each list only by its policy's public offer on that site and open interval; a site without the mount, an
+  unoffered, closed, archived, mailbox or another organization's list, a forged, expired or another site's token answer one NotFound;
+  answers are allow-listed, the address masked, no token leaves the message (digest only, per attempt, ending with the request).
+  `requestSubscription`: input checks say nothing of the address; limits per client (the framework's requester key, a registered
+  remote frontend's forwarded client), site and address answer the receipt and keep nothing; a repeated key answers the receipt;
+  a known or new address, a member already, a refusal (suppressed, withdrawn later than the evidence, a personal contact never
+  matched) all answer the same receipt; the visitor's name never reaches the message; pending only through `fileOne`. The
+  verification's GET is read only (a lookup counts against the requester's limit); `verifySubscription` re-reads the group under
+  the first row's lock, accepts each pending topic still offered once with the request's own evidence date (a later withdrawal
+  stands; spec feature two), a replay answers the first result. CSRF (the session token on both forms), no-store,
+  `Referrer-Policy: same-origin` and the shell's CSP hold as for PASS Sales. The Email preferences page's Marketing context: a
+  token's organization is its list's and must be the mount's target; signed in, the mount's organization and the account's own
+  party; a turned-on topic is a request with its mail (a verified account's own address accepted at once); "No more email from"
+  is a withdrawal scoped to the organization; `unsubscribe#ContactListParty` without `organizationPartyId` is as before (mr-boss
+  Unsubscribe and Consent pass unchanged). Shop's news choice through `file#CheckoutSubscription`: a refusal or an error is the
+  outcome failed, logged, inside `applyAll`'s per-opt-in try, so checkout never fails; Shop's checkout specs pass unchanged.
+- Fixed:
+  - R1 (medium; a timing side channel on a public endpoint): the verification was queued with `sendNow`, so the request's answer
+    waited on the SMTP hand-off when a message went out and not when none did (a member already, a refusal, a suppression, the
+    mail limit): one timed request could tell whether an address was already on a list. The delivery is now queued and attempted by
+    the new internal `attempt#VerificationDelivery` (anonymous-all, not remote, only an MdsrcSubscriptionVerify delivery) registered
+    to run on a service worker once the request commits; the ledger's `run#Deliveries` job retries it. The specs wait for the
+    worker before reading mail (the acceptance walks already poll).
+  - R2 (medium; the Built finding): the verification went from a promotional profile when no transactional one was ready. A
+    verification is transactional: `profileFor` now takes only a ready profile with purpose transactional or none; with none the
+    request is kept, nothing is sent, and the readiness check is named "transactional sending profile". MarketingSubscriptions
+    checks a promotional-only organization: the receipt, no mail, the request pending with no delivery, the check not ready (fails
+    on the unfixed rule). Demo: Retail gains `BOSS_MKT_PROFILE_RETAIL_NOTICES` (transactional) beside the promotional "Retail news";
+    Deployment's Marketing app and design §13 say so.
+  - Merges: both schema copies rebuilt from master's (DG6, then Sales' quotes and orders) with Marketing's four operations after
+    the Sales block, byte-identical; both route copies likewise; the header's branch keeps Sales' My orders and adds Marketing;
+    README and the acceptance suite list both phases' tests.
+- Findings, numbered by the lead F186 to F189 in order:
+  - a residual timing difference: a new address makes a person, a contact mech and its party link (a few writes) and a known one
+    does not; bounded by the address limit (5 an hour), not equalized;
+  - two concurrent posts with one request key can both pass the repeat check (two groups, two messages within the mail limit);
+  - a checkout news choice confirmed by the receipt's link records a new accepted request and leaves the placement's checkout
+    request SrsPending (the spec expects both); deciding the pending row would be cleaner;
+  - the Built note's others stand as written: a link per attempt, a site-less offer offered nowhere, the matched party the first
+    directory party with the address, a list confirmation not undoing a global marketing withdrawal (P9's dispatch check), a
+    marketing mount with no offered list holding the site's readiness.
+- Tests run (release, `--nobuild`, this worktree's runtime, after the second merge): mr-mantle MarketingSubscriptions, SalesPortal,
+  PassAuthority, ShopCheckout, Consent (44 of 44, 33 s; MarketingSubscriptions about 1.0 s of features); earlier in the review
+  StoreCheckout, Audiences, ContactListSend, DeliveryLedger, SendingProfiles, CartRecovery (75 of 75 with the first group); mr-pass
+  Forum, Smithy, SmithyAccess, Portals, MarketingAccess, SalesPortalAccess, ShopCheckout, ShopAccount, ShopCart, ShopSubscriptions,
+  Transport (71 of 71, 32 s); mr-boss Unsubscribe, Consent, MarketingLists, MarketingTemplates (24 of 24, 24 s), and MarketingAccess,
+  CommerceStores (with the first group, 33 of 33). Prettier on the changed JavaScript. Not run: test-apps, lint (no screen changed
+  in the review), the acceptance walks.
+- For the lead:
+  - budget share: unchanged (mr-mantle about 1.0 s, mr-pass about 0.15 s);
+  - merge hot spots: the two schema and route copies (Marketing after the Sales block), `Header.html.fancy`, mr-pass README and
+    `test/acceptance/client/suite.js`, mr-boss `data/BossZZMarketingDemoData.xml` (the P7 block's new profile);
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, after PASS Sales'): the Built note's paragraph, with "Its
+    verification message is a transactional delivery of Comms' ledger from a ready sending profile of the organization" replaced
+    by "Its verification message is a transactional delivery of Comms' ledger from a ready transactional sending profile of the
+    organization (a promotional one never sends it: the request is kept and the readiness says so), attempted on a service worker
+    once the request commits, so the answer takes the same time whether or not a message goes out"; the full paragraph:
+    "PASS Marketing's public subscription (`mantle.marketing.MarketingPortalServices`, all `allow-remote="false"`,
+    `authenticate="anonymous-all"`, reached only as the PASS operations `getMarketingPublication`, `requestSubscription`,
+    `getSubscriptionRequest` and `verifySubscription` of the authority's allowlist): each finds the organization from the site's
+    `marketing` mount (a published site, an internal organization) and a list only by its explicit public offer on that site (the
+    policy's offer, site and open interval; the legacy `isPublic` flag offers nothing), never from the request; a site without the
+    mount, an unoffered, closed, archived, mailbox or another organization's list and a forged, expired or another site's link
+    answer the same NotFound. `requestSubscription` is an anonymous write (the transport lets it through by name; the authority
+    takes it from a registered deployment as a TOKEN_WRITES operation) bounded by PASS's request key (a repeat answers the first
+    request), at most ten topics, and limits per client (30 in ten minutes), site (1,000 an hour) and address (5 an hour), over
+    which it answers the same receipt and keeps nothing; it always answers the same receipt (a known or new address, a member
+    already, a refusal), echoes no address and never says whether a party was matched or made (never a personal contact). Its
+    verification message is a transactional delivery of Comms' ledger from a ready transactional sending profile of the
+    organization (a promotional one never sends it: the request is kept and the readiness says so), attempted on a service worker
+    once the request commits, so the answer takes the same time whether or not a message goes out, with the list policy's
+    published confirmation template, at most 3 a day to an address; it carries the template's own wording, the topics' names and
+    a link, never the visitor's text. Each message's link is a 40-character random token whose digest alone is kept, ending with
+    the request (seven days); every lookup counts against the requester's limit (100 in ten minutes). `getSubscriptionRequest` is
+    read only (a scanner's GET changes nothing) and answers the address masked; `verifySubscription` (a TOKEN_WRITES bearer write,
+    a POST with the session token locally) accepts exactly the request's topics for its address under the request's lock, once (a
+    replay answers the first result), with the request's own evidence date, so a withdrawal after the request is never undone by
+    its link. The Account Email preferences page's Marketing context changes only the token's or the signed-in account's own
+    party: a topic turned on is a request with its verification message (a signed-in verified address accepted at once),
+    `unsubscribe#ContactListParty` with `organizationPartyId` withdraws for the token list's organization only. Shop's store-news
+    choice is filed through the same evidenced path (source PcsCheckout), pending until the receipt's link or a verified sign-in.";
+  - the user's call: none required (R2 follows the lead's note: a verification is transactional); to confirm, the display name
+    kept off the message and a site-less offer offered nowhere.
+
 ### P8 — Sends and the composer
 
 Design §5 Sends, SendDetail (its Summary, Content, Audience, Schedule and Decision) and Compose, §18 (the email,
@@ -869,6 +2296,210 @@ its text alternative and the test message); MKT-SEND, MKT-TEMPLATE, MKT-APPROVAL
   a template, is refused a script and an unapproved private file, tests it to an allowed address, prepares it and
   asks for approval; `marketing.approver` sees the count and approves; the author's edit of the subject returns it
   to review.
+
+**Built Nov 14 (P8).** mr-mantle and mr-boss on branch `mkt/p8` (hashes in the worker's reply), from master after gate 2 (P1–P7 merged)
+and Sales P14, P15 and P17; mr-moqui unchanged, no Rust built. Built beside Sales P16 and P18 (the hot spots below).
+- Checked first (the code over the plan): P5's to P7's Built and Review notes, F90–F189 and §4's rows (the user's call of Nov 14: the
+  5,000 cap for an interactive evaluation, a send evaluated in pages; the one-person-team flag; suppressions promotional but a hard
+  bounce); P2's approvals (MarketingApprovals.js, whose targetKinds left the send's slot), P5's `classify#Recipients` and the universe,
+  P6's MessageTemplates.js, MessageSendingProfiles.js and the ledger (MessageDeliveries.js), Sales P10's own-message source. The code
+  over the plan:
+  - "the ledger, extended: a source's build may answer the subject, body and text alternative" was already built: Sales P10 gave a
+    source its body, text and attachments and P6 its subject (used as given, never expanded). P8 adds the test source, the ledger's
+    test consent snapshot, and the P6 review's profile check (F172): a promotional delivery naming a transactional-only profile is
+    refused at `queue#Delivery` (PROFILE_PURPOSE), and the send services choose promotional (or unset) profiles only;
+  - the policy had no test allowlist: MarketingPolicy gains `testAddresses` (at most ten, audited), edited on Campaign defaults;
+  - a send's variables need values: they are each recipient's own first name, last name and name (a plain snapshot of allowlisted
+    values, design §5), so "a required unknown variable" is a required variable that names none of them (VARIABLE_UNKNOWN), and any
+    other takes its fallback; an author previews with synthetic values, an audience reader as a person of the topic;
+  - the content is the send's own: "Use" and New send with a template copy the template's published content when the send starts;
+    the prepared content is a resource of its own as well (`prepared*` fields), so the template's later change reaches neither;
+  - the paged evaluation (§4 Nov 14) narrows the universe to the topic's members: only an accepted member of the topic is ever
+    eligible, and a segment's match of a party does not depend on who else is evaluated, so each page of members (in party id order,
+    keyset paging) is matched against the send's lists and segments less its exclusions and classified, and the rules across people
+    (a withdrawal at an address, the duplicates) are settled once over every page; the eligible people and the resultDigest are a
+    preview's (MarketingEligibility.js `evaluateSend`, `classifyPeople`, `settle`; MarketingSegments.js `context(..., candidates)`);
+  - assets: a file of the send (a RecordFiles host, CampaignSendContent) or of its campaign (CampaignAsset), attached; "the public's
+    access" has no store for staff files to publish from, so a publicly retrievable inline file is refused (USAGE_INVALID) and a link
+    to a staff page or a stored file in the body is refused (PRIVATE_LINK): no private file becomes public;
+  - SendDetail's sections are boxes, as CampaignDetail's are (design §5 says tabs); QuickSend is CampaignDetail's Sends box's New send
+    (the campaign fixed), not a quick-create kind; the Sends area opens to the approvers and dispatchers (design §2: Sends is the
+    app's; an approver decides on SendDetail);
+  - "a draft, an approved and a scheduled send" of the demo: Scheduled is the state of a released send (P9), so the third is approved
+    with its schedule for 1 December (state Approved).
+- Mantle:
+  - `entity/MarketingEntities.xml` (a P8 block): CampaignSend (its status flow CampaignSend with the transitions P9 needs too, the
+    revision `sendRevision`, the audience as JSON, the content files, the preparation's fields, audited key fields), CampaignRecipient
+    (CrsSelected, CrsReplaced; a unique execution key), CampaignSendContent (the send's files and attachments); MarketingPolicy
+    `testAddresses`. `data/MarketingSeedData.xml` (a P8 block): the ledger source MdsrcCampaignSendTest and its EmailTemplate.
+  - `CampaignSendServices.xml` over `MarketingSends.js`: `find#Sends`, `create#Send`, `duplicate#Send`, `get#Send`, `store#Send`,
+    `store#SendContent`, `store#SendAssets`, `schedule#Send`, `preview#Send`, `test#Send`, `build#TestDelivery`, `prepare#Send`,
+    `check#SendAccess`, `create#CampaignSendContent`; the approvals' send kind (MarketingApprovals.js `targetKinds.send`, its rules in
+    MarketingSends.js `sendKind`; a `requested` hook moves a send to Awaiting approval); refusals in each service's description.
+    MessageTemplates.js exports its parse and render helpers; MarketingPolicies.js the test list; MessageDeliveries.js (a P8 block) the
+    test snapshot and the profile check; CommunicationServices.xml get#RecordLinkInfo's send host.
+- BOSS:
+  - Screens: `Marketing/Sends/Sends` (SendFind, SendList with its board by state and calendar by schedule, NewSend; the area's default
+    tab), `Sends/SendDetail` (the record header with Prepare, Request approval or Approve by state; Summary with what approval still
+    needs, the content rendered with sample values, Audience with its buckets and the AudiencePreview link, Schedule, Decisions,
+    Activity and Files), `Sends/Compose` (MessageContent in the rich editor, MessageAssets, MessagePreview, TestSend), all in XML;
+    `template/MarketingSends.xml` (the transitions and NewSendForm); CampaignDetail's Sends box with QuickSend; MessageTemplates' Use;
+    Campaign defaults' Test addresses; the root's send panel host, SendDetail's "Why were recipients excluded?" chip and `g n`;
+    Newsletters now redirects to Sends (F2).
+  - `Marketing.js`: `sendRead` and `sendsRead`, the record kind `send`, choices `sendTopics`, `sendProfiles`, `sendFiles`,
+    `sendMembers`, the palette's sends, the P8 link paths; ContextServices get#Choices takes `campaignSendId`; RecordFilesServices the
+    send host. `BossSetupMarketingData.xml` (a P8 block): BOSS_MKT_SENDS for the approver and dispatcher groups, the send approval
+    notice's link. Demo (`BossZZMarketingDemoData.xml`, a P8 block): Retail's test list; the draft spring invitation, the November
+    newsletter prepared (Maya) and approved, the December one approved for 1 December.
+  - `skill/marketing-prepare-send.md`, its alias (`send`) and two retrieval cases.
+- Specs:
+  - Mantle `test/marketing/Sends` (new, 7 features, 2.3 s: from a template the content copied, a required variable no recipient gives
+    refused and then prepared with a fallback, a private link and a stale revision refused; a page of two over six members (three
+    pages) and a segment source each with the preview's resultDigest, a stale digest refused, a second preparation replacing the
+    first's rows; a content, sender, audience and schedule change each ending an approval and returning the send to draft, an author's
+    own approval refused, a refusal back to draft; an empty eligible audience prepared and not approvable; a test to the allowlist
+    marked TEST with the profile's VERP sender, another address refused, a suppressed one suppressed, no count or state changed, a
+    reader refused; the prepared body unchanged after the template's next publication and the content's change; another
+    organization's send and campaign, an unknown template, a transactional or another organization's profile, another's topic and a
+    reader's write refused); `test/party/DeliveryLedger` (+1 feature, 0.1 s: a source's own subject, body and text sent as given, the
+    subject's literal `${own}` not expanded; a promotional delivery naming a transactional profile refused).
+  - mr-boss `MarketingSends` (new, 2 features, 0.2 s: SendDetail's one qvt render, Compose's one qvt render); `MarketingAccess` (the
+    approver's and dispatcher's Sends menu and tab, the `sendRead`, `sendsRead` and `sends` capabilities per group, Sends opened by an
+    approver and refused a reader, another organization's send refused by check#Record, the send's files panel; about +0.2 s);
+    `MarketingSpecLib` (ids, menus, keys).
+  - Acceptance, written and not run: `test/acceptance/Marketing/MarketingComposeWalk` (4 features, scenario 10: Use a template, a
+    script and another record's file refused, a test to an allowed address and one refused, prepare and ask; the approver sees the
+    count and approves; the author's subject edit returns it to review).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle Sends 7 of 7, DeliveryLedger 5 of 5, Eligibility,
+  Segments, MarketingApprovals, Campaigns, MessageTemplates, SendingProfiles, DeliveryReports, MarketingSubscriptions, CartRecovery,
+  SalesQuoteIssue, StoreReviews, ContactListSend (65 of 65), Audiences, Consent, MarketingScope, AudienceImport, ListMerge,
+  Suppressions, RecordVisibility, RecordLinks, ChatRecords, ShopCheckout, SalesQuoteResponse, SalesPortal (100 of 100); mr-boss
+  MarketingSends 2 of 2, MarketingAccess 7 of 7, MarketingCampaigns, MarketingTemplates, MarketingLists, MarketingSegments,
+  MarketingImport, AdminRegistries, QuickCreate, SalesQuoteSend, Consent, Unsubscribe, RecordFiles (82 of 82); mr-pass Outbox,
+  ShopAccount, MarketingAccess (19 of 19); `moqui test mr-boss --skills` 54 of 54. A throwaway walk of the screens' transitions (the
+  acceptance walk's steps, then the audience, header, schedule and duplicate transitions, the four new choices, the palette) and
+  render of Sends, SendDetail, Compose, MessageTemplates, CampaignDetail and Campaign defaults in qvt, tui and html passed and was not
+  kept. `moqui lint --screens`: 141 flagged sites, as before, none in Marketing; parse failures 0. Prettier clean on the changed
+  JavaScript. Not run: test-apps, the acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P8" table; ss-inventory has no row for P8's screens.
+- Design edits: design-marketing §5 Compose's as-built paragraph (and MessageTemplateDetail's Use); design-drawers-commons' Mailboxes
+  row (owner contract: the ledger's own-message sources, the profile check, the test source).
+- Findings, numbered by the lead F190 to F199 in order:
+  - the ledger's own-message extension was built by Sales P10 and P6 before P8 (the code over the plan above); P8 adds the test
+    source and the profile check;
+  - the paged evaluation counts the topic's members only: a person a list or segment finds who is not on the topic is not read, so a
+    prepared send's buckets differ from a preview's in "not subscribed"; and a withdrawal at a shared address by such a person (a
+    purpose withdrawn, a solicitation refused) does not block the address for a member, as F155 has it for anyone outside the
+    selection; the resultDigest then differs from the preview's and a prepare given it is refused (PREVIEW_STALE);
+  - a send's variables are the recipient's first name, last name and name only; a template variable beyond them takes its fallback;
+  - a publicly retrievable inline file is not offered (no public store for a staff file); files are attachments, and the test message
+    does not yet carry them (the ledger takes attachments; P9's message builds them for the recipients);
+  - a send's reply-to is kept and shown but the ledger sends the profile's reply-to (P9's message to apply it);
+  - a test message carries the draft as it is now with synthetic values, from the send's profile, at most 20 a day a send; its
+    recipient party is the tester's (the ledger is keyed by party), its address the allowlist's;
+  - a re-preparation marks the earlier recipients replaced and keeps them (no hand-off exists before P9); a large list's repeated
+    preparations keep each set;
+  - the policy's audience limit is checked at preparation (AUDIENCE_LIMIT) as well as P9's release;
+  - CampaignDefaults' preview box read `preview.effectiveText` with no preview, an error in every mode (P2's); now `preview?.`;
+  - a link to `//Marketing/...` renders disabled in a spec rendered from the app's root file (SendDetail's AudiencePreview link,
+    MessageTemplates' Use), as Practices-App-Dev says, so the specs check the link's text and not that it is enabled.
+- For the lead:
+  - budget share: mr-mantle about 2.4 s (Sends 2.3 s, DeliveryLedger +0.1 s); mr-boss server about 0.4 s (MarketingSends 0.2 s,
+    MarketingAccess +0.2 s); no client spec;
+  - merge hot spots (Sales P16 and P18 beside): mr-mantle `service/mantle/party/MessageDeliveries.js` (queue#Delivery's profile check
+    after the organization check, consentOf's test line; P8 lines only), `service/mantle/party/CommunicationServices.xml`
+    (get#RecordLinkInfo: the send content host after the campaign's, the send visibility after the campaign's, a description
+    paragraph), `entity/MarketingEntities.xml` and `data/MarketingSeedData.xml` (P8 blocks after P7's),
+    `service/mantle/marketing/MarketingApprovals.js` (targetKinds.send, the requested hook), `MarketingEligibility.js`,
+    `MarketingSegments.js` (context and evaluate), `MarketingPolicies.js`, `CampaignServices.xml` (the policy's testAddresses),
+    `service/mantle/party/MessageTemplates.js` (exports), `test/party/DeliveryLedger.spec.js` (a feature at the end);
+    MessageServices.xml is not changed; mr-boss `service/ironstone/shared/RecordFilesServices.xml` (the send host after the campaign's),
+    `data/BossSetupMarketingData.xml` and `data/BossZZMarketingDemoData.xml` (P8 blocks), `service/ironstone/marketing/Marketing.js`,
+    `ContextServices.xml`, `template/MarketingParts.xml`, `screen/Marketing.xml`, `screen/Marketing/Sends.xml`,
+    `Campaigns/CampaignDetail.xml`, `Settings/CampaignDefaults.xml`, `screen/Shared/MessageTemplates.xml`, `Newsletters.xml`,
+    `test/Marketing/MarketingAccess.spec.js`, `MarketingSpecLib.js`, `skill/aliases.json`, `test/skill-retrieval.json`,
+    `plan/usl-inventory.md`, `plan/design-marketing.md`, `plan/design-drawers-commons.md`, this file. Not touched: Sales files, PASS;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, no mr-moqui worktree; no public endpoint is added), a sentence for
+    the ledger's paragraph: "A Marketing send's test message (`mantle.marketing.CampaignSendServices.test#Send`, MARKETING_SEND_EDIT,
+    the send's organization) goes only to an address of the organization's MarketingPolicy test list (at most ten), at most 20 a day
+    a send, as a promotional ledger delivery from the send's sending profile, so every suppression refuses it; it asks no recipient's
+    consent and is marked TEST. A promotional delivery naming a transactional-only sending profile is refused at queue#Delivery.";
+  - the user's calls: none required; to confirm, the recipient fields a send's variables take (first name, last name, name), the
+    approvers and dispatchers in the Sends area, attachments only (no public inline file), and the demo's third send approved with a
+    schedule rather than released.
+
+**Review Nov 14 (P8).** A fresh review of `mkt/p8` (mr-mantle fccc463a, mr-boss b9c2450f) against P8, §2, §4 and design §5, §14
+and §18, after merging master (Sales P17, P18, Marketing P7's numbering) into both worktrees (clean; no Rust).
+- Checked and sound:
+  - nothing reaches a recipient: the only ledger hand-off in P8 is `test#Send` (MARKETING_SEND_EDIT, the send's organization): an
+    address of the policy's test list (at most ten, normalized), at most 20 a day a send, a promotional delivery (`transactional`
+    N) naming the send's profile, so every suppression applies (the blocked address spec'd); its consent snapshot says test, no
+    CampaignRecipient, state or count changes. No service moves a send past Approved (no release, no Scheduled), and the recipient
+    rows are selections only;
+  - approval: `revise` raises `sendRevision`, supersedes the live requests and decisions and returns the send to draft for every
+    change of subject, preheader, body, text, variables, topic, audience, profile, reply-to, schedule and attachment; the name and
+    locale are not material. A request needs a draft and `sendProblems` (a preparation at the current revision with an eligible
+    recipient, an approved campaign, a ready promotional profile, a subject), checked again at the decision; preparation is for a
+    draft only, so an approved send's recipients never change. The authors are the creator, the last material editor
+    (`revisedByUserId`, P2 R1) and the requester; the one-person flag admits a send only with a count under 500 (none without a
+    preparation);
+  - the paged evaluation: keyset pages of the topic's members in any state, each page's segments matched with the page as
+    candidates (a match depends on the party alone; explicit members intersected), the exclusions applied whole per page, and
+    `settle` once over everything; it runs as the preparing user (F157). A segment's refusals come before any page;
+  - profile purpose: the send services take a promotional or unset profile only, and `queue#Delivery` refuses a promotional
+    delivery naming a transactional-only profile. The existing callers are unaffected: P7's verification and Sales' quotes and
+    order confirmations are transactional (the default), Cart recovery and review requests name no profile (DeliveryLedger,
+    SalesQuoteIssue, MarketingSubscriptions pass);
+  - content: `checkContent` (P6's stored-body checks) on every store and again at preparation, variables only from the declared
+    set (a fallback plain text), PRIVATE_LINK on store and preparation; the subject is filled by Marketing and handed to the ledger
+    as the per-call subject, never expanded; the composer's preview is `cleanHtml` under `v-pre`;
+  - hosts: the send and CampaignSendContent are visible only through `check#SendAccess` (a Marketing reader of the send's
+    organization; none with no user) in get#RecordLinkInfo and RecordFiles; BOSS's record kind, palette and choices check the
+    organization; another organization's send, campaign, topic, profile and template answer as missing (spec'd).
+- Fixed:
+  - R1 (high; consent, the lead's question): the paged evaluation read only the topic's members, so a person of the send's lists or
+    segments who is not on the topic and withdrew (the purpose, the address's solicitation) at a member's address did not block it,
+    where the preview (F147, F155: anyone matched at the address) does: the member was prepared as eligible, and a prepare given
+    the preview's digest was refused PREVIEW_STALE. `evaluateSend` now finds, for each page, the people holding an address the page
+    may send to (an email by its text in any case, or the same contact mech) who are not on the topic, keeps those in the selection
+    (a source list's member or a segment's match, less the exclusions), classifies them once and settles with them, so the eligible
+    people and the digest are the preview's. Sends gains a case (a non-member at a member's address, in another case, withdrawn:
+    the member excluded, the digest the preview's at a page of one); it fails on the unfixed code;
+  - R2 (medium; approval): `check#SendAccess` let the author change the send's files (RecordFiles remove, a new version through
+    the records drive) while it awaited approval or was approved, which changed an attached file without ending the approval; its
+    `canEdit` is now a draft's only (the composer's `store#SendAssets` revises). Sends checks it after each approval and back in
+    draft;
+  - R3 (low; defense in depth): `build#TestDelivery` now suppresses a test delivery whose address is not on the organization's test
+    list at the attempt (a retry after the list changed, or any other queuer of the test source, which asks no consent). Sends
+    queues one off the list: suppressed, no mail;
+  - R4 (low; disclosure): SendDetail's sample-person choice (`sendMembers`) listed another user's personal contacts, disabled and
+    merged parties on the topic by name; now through Mantle's `inScopeParties`, as `preview#Send` refuses them.
+- Findings, numbered by the lead F200 to F205 in order:
+  - a campaign file attached to a send stays the campaign's: its editor can remove or replace it after the send's approval; P9
+    should attach copies made at preparation, or refuse a release whose attachment changed;
+  - R1's sharers are not restricted to the organization's audience: a segment's match outside it (the preview's universe) blocks
+    an address the preview would not, the stricter way; an SMS topic (P22) matches a sharer by the same contact mech only;
+  - a prepared send's buckets still differ from a preview's in "not subscribed" (non-members at other addresses are not read);
+  - the test daily limit is counted without a lock (concurrent tests can pass 20 by a few); a test does not run the PRIVATE_LINK
+    check (a template's link reaches only the test list), which preparation does;
+  - preparation creates each CampaignRecipient by its own call: a large list's preparation is slow (P9's load test);
+  - the Built note's findings stand as written (variables, attachments only, reply-to, a re-preparation keeping replaced rows, the
+    audience limit at preparation).
+- Tests run (release, `--nobuild`, this worktree's runtime, after the merge and the fixes): mr-mantle Sends (8 of 8, 3.4 s of
+  features), DeliveryLedger, Eligibility, Segments, MarketingApprovals, MarketingSubscriptions, SalesQuoteIssue, SalesForecasts
+  (36 of 36); mr-boss MarketingSends, MarketingAccess, MarketingTemplates, RecordFiles, SalesForecast (23 of 23). Prettier on the
+  changed JavaScript. Not run: test-apps, lint (no screen changed), the acceptance walk.
+- For the lead:
+  - budget share: mr-mantle about 3.5 s (Sends 3.4 s with the new case, DeliveryLedger +0.1 s); mr-boss server about 0.4 s;
+  - merge hot spots: as the Built note, and `MarketingEligibility.js` `evaluateSend` (R1), `MarketingSends.js` `access` and
+    `buildTest`, `CampaignSendServices.xml` check#SendAccess, mr-boss `Marketing.js` `sendMembers` and the segments loader;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, the ledger's paragraph; no public endpoint is added): "A Marketing
+    send's test message (`mantle.marketing.CampaignSendServices.test#Send`, MARKETING_SEND_EDIT, the send's organization) goes only
+    to an address of the organization's MarketingPolicy test list (at most ten), checked again at each attempt, at most 20 a day a
+    send, as a promotional ledger delivery from the send's sending profile, so every suppression refuses it; it asks no
+    recipient's consent, is marked TEST and enters no count. A promotional delivery naming a transactional-only sending profile is
+    refused at queue#Delivery. No P8 service hands a send to its recipients (that is P9's release).";
+  - the user's call: none required; R1 follows P5's rule (F147, F155) as the lead asked; the Built note's confirmations stand.
 
 ### P9 — Dispatch and delivery
 
@@ -914,6 +2545,257 @@ jobs), §18 (the delivery report); MKT-SEND, MKT-TRANSPORT; CX-DELIVERY.
   recording with one uncertain delivery, which the dispatcher reconciles and nothing resends; a duplicate bounce
   report changes no count; the email carries the unsubscribe header and link.
 
+**Built Nov 14 (P9).** mr-mantle and mr-boss on branch `mkt/p9` (hashes in the worker's reply), from master after P8's merge; mr-moqui
+unchanged, no Rust built. Built beside Sales P16 (in review) and P19 (the hot spots below).
+- Checked first (the code over the plan): P5's to P8's Built and Review notes, F90–F205 and §4's rows (the one-person-team flag under 500;
+  suppressions promotional but a hard bounce); the ledger (MessageDeliveries.js: one delivery per event, recipient, channel and template
+  key, each attempt and build in a transaction of its own; consentOf's topic rule; resolve#Delivery for MESSAGE_DELIVERY_REVIEW alone),
+  P3's reserve#SingleUseList and release#SingleUseList (built, never called), P5's classifyPeople, P6's profiles and receipts,
+  ConsentServices create#UnsubscribeToken (siteId: that site's Account Email preferences page; else baseUrl's /u/, F75), the list send's
+  CommunicationEvent and ContactListCommStatus (send#ContactListEmail), the framework's registerOnCommit and the job registrations. The
+  code over the plan:
+  - the CampaignSend and CampaignRecipient flows had no transitions for the dispatch (P8 seeded the send's; the recipient had none):
+    CampaignRecipient gains Handed off, Skipped at dispatch and Not sent: cancelled with their transitions, and a send completed with
+    failures goes back to Sending when its failures are retried;
+  - "keyed by the recipient's execution key": the ledger's natural key is event, recipient, channel and template, so a recipient's
+    eventKey is `CampaignSend:<send>:<execution key>`; queue#Delivery answers the delivery it holds for it, so a page claimed again after a
+    lease ends, or a hand-off whose recording failed, hands the recipient off once (the ledger's own job attempts a delivery the dispatch
+    did not);
+  - "consent is checked for a purpose on a topic's list within the organization": the ledger's topic consent was the list row only (a
+    member evidenced by a purpose grant would be refused); a topic delivery queued with `consentOrganizationPartyId` reads Marketing's
+    evidenced rule at each attempt, one queued without it (Commerce's review requests) is unchanged;
+  - "resolve#Delivery's permission granted to the dispatch group": MESSAGE_DELIVERY_REVIEW read every organization's receipts
+    (find#DeliveryReceipts); granted to the dispatcher it would have read every organization's, so the permission's every-organization
+    reach is a system administrator's now (ADMIN holds it, unchanged), and resolve#Delivery and the mail queue's reconciliation reach the
+    reviewer's organizations' deliveries;
+  - "release separated from approval": the releaser is none of the revision's authors (creator, the maker of its change, the requester)
+    nor its approver, but under the one-person-team flag with fewer than 500 recipients counted at the release;
+  - "the Today source of due sends" is Home's Upcoming (P8's scheduled sends source, which waited) and the sends due card; Admin's Today
+    has no Marketing source;
+  - the send's unsubscribe link: a profile naming a site gives that site's Email preferences page; one naming none the server's /u/
+    page, from the root of the request that released it (a job has no request).
+- Mantle:
+  - `entity/MarketingEntities.xml` (a P9 block): CampaignSend's release, dispatch and cancellation fields, `preparedAttachmentsJson` and
+    `communicationEventId`; CampaignRecipient's claim, lease, hand-off and skip fields. `entity/MessageDeliveryEntities.xml` (a P9 block):
+    MessageDelivery `resolvedByUserId`, `resolvedDate`, `resolutionNote`. `data/MarketingSeedData.xml` (a P9 block): the recipient states and
+    transitions, the send's retry transition, the ledger source MdsrcCampaignSend and its EmailTemplate. `data/MarketingDispatchSetupData.xml`
+    (new, seed-initial): the job run_MarketingDueSends with its JobRegistration (MARKETING_DISPATCH) and RecoveryDescriptor.
+  - `MarketingDispatch.js` (new) under `CampaignSendServices.xml` (a P9 block): `release#Send`, `pause#Send`, `cancel#Send`,
+    `run#DueSends` (the job; `operation` marketing.send.dispatch.run), `dispatch#Send` (operation-ref the send), the internal
+    `start#DueSend`, `claim#RecipientPage`, `handOff#Recipient`, `sweep#Send`, `find#Recipients`, `get#Recipient`, `retry#Recipients`,
+    `reconcile#Recipient`, `build#CampaignDelivery`; get#Send answers `delivery` and `control`. Refusals in each description.
+  - `MarketingSends.js` (P8 carry-overs): preparation creates the recipients in one bulk create (F205) and copies the attachments beside the
+    prepared body (F200: ATTACHMENT_UNAVAILABLE, ATTACHMENT_TOO_LARGE at 10 MB); the test's daily limit is counted under the send's lock
+    (F203); the send's reply-to goes with each message (the build answers it, the ledger applies it over the profile's).
+  - `MarketingEligibility.js`: classifyPeople takes `availableOf` (the dispatch's check, with no user, takes disabled and merged parties as
+    not available; F157's personal contacts were settled by the preparer). `MarketingWorkspace.js`: the sends due and failed or uncertain
+    deliveries cards, Upcoming's scheduled sends, a dispatcher's delivery attention rows.
+  - The ledger (owner contract, Comms; `MessageDeliveries.js` and `MessageServices.xml` P9 blocks): queue#Delivery's
+    `consentOrganizationPartyId` and `consentContactMechId` (organizationTopicConsent), a build's `replyToAddresses`, resolve#Delivery's
+    reach and resolution (reviewerReaches); `MessageDeliveryReports.js` receipts' reach.
+- BOSS:
+  - Screens: SendDetail's control (Release the primary for an approved send, Resume, More: Delivery and recipients, Pause, Cancel send) and
+    Delivery box; `Shared/CampaignDelivery` (new; DeliveryRows with state and address filters, Retry failures as its row selection, the CSV
+    and PDF report) mounted at `Sends/CampaignDelivery`; `Sends/RecipientDetail` (new: the header with Reconcile or Retry, Recipient,
+    Attempts, the receipts); both hidden in Sends; Home's places and rows' record parameters; `template/MarketingSends.xml` (a P9 block:
+    releaseSend, pauseSend, cancelSend, retryRecipients, reconcileRecipient); `Marketing.js` link paths.
+  - `BossSetupMarketingData.xml` (a P9 block): MESSAGE_DELIVERY_REVIEW to BOSS_MARKETING_DISPATCH, in its bundle.
+- Specs:
+  - Mantle `test/marketing/Dispatch` (new, 6 features, 3.8 s: a release refused unapproved, to an author, to another organization's
+    dispatcher and with the relay disabled, then released, a second release answering the first; five messages each with the
+    List-Unsubscribe and List-Unsubscribe-Post headers, the link, the VERP sender and the send's reply-to, the list rows given their
+    Message-IDs, the send completed, addresses masked for a dispatcher; a list withdrawal, a suppression and a changed address skipped with
+    their reasons, the others sent, a member who joined after preparation never added; the one-person team's release, refused at 500 and
+    with the flag off; a single-use list held by one send, freed by a cancellation before any hand-off; a page claimed again after its lease
+    ends hands each recipient off once, a stopped worker's delivery answered, pause and cancel stopping new claims with the in-flight count;
+    an uncertain delivery reconciled by a reviewing dispatcher with evidence, refused without the permission, to another organization and
+    without evidence); `test/party/DeliveryLedger` (+1 feature, 0.1 s: a topic delivery within an organization sent on the organization's
+    purpose grant, refused after a global withdrawal, the same delivery without the organization keeping the list's rule);
+    `MarketingScope` (Home's P9 cards and the dispatcher's attention source); `MarketingApprovals` (its decision lookups name the kind: a send
+    of another spec may share a campaign's id).
+  - mr-boss `MarketingDelivery` (new, 1 feature, 0.4 s: CampaignDelivery's one qvt render for the dispatcher of the December newsletter
+    released for its schedule, the address masked and no name); `MarketingAccess` (RecipientDetail opened by a dispatcher, refused a reader;
+    about +0.1 s); the client walk `test/client/Marketing/MarketingSendWalk` (new, Marketing's one regression walk, 9.1 s: the author makes a
+    send from the Garden newsletter template through the Use link's New send dialog, prepares it and asks; the approver approves; the
+    dispatcher releases it and sees one sent) in `test/client/suite.js`.
+  - Acceptance, written and not run: `test/acceptance/Marketing/MarketingDispatchScenario` (3 features, scenarios 6 and 7: author, approver
+    and dispatcher each their part; forty recipients, a stop after a hand-off leaving one delivery uncertain, the rest sent once, the
+    dispatcher's reconciliation on RecipientDetail, nothing resent, the unsubscribe header and link; a duplicate bounce report changing no
+    count).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle Dispatch (6 of 6), Sends, DeliveryLedger, DeliveryReports,
+  MarketingScope, Eligibility, MarketingApprovals, Segments, MarketingSubscriptions, SalesQuoteIssue, ContactListSend, SendingProfiles,
+  Consent, Audiences, CartRecovery, StoreReviews, MessageTemplates, Suppressions (113 features, 112 passed: MarketingApprovals' lookup by a
+  shared id, fixed, then Dispatch and MarketingApprovals 11 of 11), ShopCheckout, SalesQuoteResponse, SalesPortal, StoreCheckout (22 of 22);
+  mr-boss MarketingDelivery, MarketingSends, MarketingAccess, MarketingCampaigns, MarketingTemplates, MarketingLists, MarketingSegments,
+  MarketingImport, AdminRegistries, RecordFiles, SalesQuoteSend, QuickCreate (63 of 63, 17.5 s of features); mr-pass Outbox, ShopAccount
+  (16 of 16); the client walk MarketingSendWalk (1 of 1, 9.1 s, its spec under 15 s). `moqui lint --screens`: 141 flagged sites, as before,
+  none in Marketing; parse failures 0. Prettier clean on the changed JavaScript. Not run: test-apps, the acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P9" table; ss-inventory has no row for P9's screens.
+- Design edits: design-marketing §5 (the as-built paragraph after RecipientDetail); design-drawers-commons' Mailboxes row (owner contract:
+  the topic consent within an organization, the build's reply-to, the reviewer's reach and resolution, the receipts' reach).
+- Findings, numbered by the lead F206 to F216 in order:
+  - the ledger's natural key holds the execution key in the eventKey (`CampaignSend:<send>:<key>`), so a send's deliveries are counted by
+    a prefix of it (the code over the plan above);
+  - MESSAGE_DELIVERY_REVIEW's every-organization reach is a system administrator's only now (receipts, resolution, the mail queue's
+    reconciliation): an owner contract change of Comms, needed to grant it to the dispatcher;
+  - the releaser may be neither an author nor the approver (but under the flag): the plan names the author only;
+  - the dispatch's recheck reads the recipient's own membership, consent, suppression, solicitation and address and the frequency cap, not a
+    withdrawal by another person at the same address (P5's DESTINATION_WITHDRAWN, settled at preparation); the ledger rechecks the
+    recipient's consent and the suppressions at each attempt;
+  - a cancelled or paused send's deliveries already with the ledger (queued or retrying) still go out, as design §5 says; the UI states
+    their count; the build suppresses one whose recipient left the topic or whose address changed;
+  - a send with an uncertain delivery stays Sending until it is reconciled; the frequency cap counts the organization's campaign-send
+    deliveries only (P11's automation steps are not yet a source);
+  - a profile with no site gives the /u/ link from the root of the release's request; a send released with no web request (none in P9)
+    would get a relative link;
+  - throughput: 20 pages of 100 a send a run, a run every two minutes by default, the profile's throttle applied by the ledger;
+  - ContactListCommStatus is stored CeReady at the hand-off and given its Message-ID by the next sweep (the ledger does not call back);
+  - the golden walk opens the New send dialog by the Use link's address with the campaign chosen (the template list's Use is an icon
+    button the walk did not match by its text), to stay under 15 s a spec;
+  - MarketingApprovals looked up its decisions by target id alone, which a send of another spec run before it can share.
+- For the lead:
+  - budget share: mr-mantle about 3.9 s (Dispatch 3.8 s, DeliveryLedger +0.1 s); mr-boss server about 0.5 s (MarketingDelivery 0.4 s,
+    MarketingAccess +0.1 s); mr-boss client 9.1 s (MarketingSendWalk; about 14 s of spec time with its three sign-ins), over the plan's
+    estimate of about 8 s for the client budget: the user's agreement is needed for the 1.1 s beyond it;
+  - merge hot spots (Sales P16 and P19 beside): mr-mantle `service/mantle/party/MessageDeliveries.js` (the header paragraph, queue's
+    consentJson, consentOf's first branch and return, a P9 block after consentOf, the attempt's reply-to line, resolveDelivery's reach and
+    fields, recoverMailOutcome's reach, the exports), `service/mantle/party/MessageServices.xml` (queue#Delivery's two parameters before
+    bodyParameters, resolve#Delivery's description, find#DeliveryReceipts' description), `MessageDeliveryReports.js` (receipts'
+    everyOrganization), `entity/MessageDeliveryEntities.xml` (a P9 block at the end), `entity/MarketingEntities.xml` and
+    `data/MarketingSeedData.xml` (P9 blocks after P8's), `service/mantle/marketing/CampaignSendServices.xml` (get#Send's outputs, a P9 block),
+    `MarketingSends.js` (prepare, testSend's lock, getSend, the exports), `MarketingEligibility.js` (classifyPeople's available),
+    `MarketingWorkspace.js`, `test/marketing/MarketingScope.spec.js`, `MarketingApprovals.spec.js`, `test/party/DeliveryLedger.spec.js` (a
+    feature at the end); mr-boss `data/BossSetupMarketingData.xml` (a P9 block), `screen/Marketing/Sends.xml`, `Sends/SendDetail.xml`,
+    `Home.xml`, `template/MarketingSends.xml`, `service/ironstone/marketing/Marketing.js` (linkPaths), `test/Marketing/MarketingAccess.spec.js`,
+    `test/client/suite.js` (after SalesPipelineWalk), `plan/usl-inventory.md`, `plan/design-marketing.md`, `plan/design-drawers-commons.md`,
+    this file. Not touched: Sales files, PASS, mr-moqui;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, the ledger's paragraph; no public endpoint is added): "A Marketing send
+    reaches its recipients only through `mantle.marketing.CampaignSendServices.release#Send` (MARKETING_DISPATCH, the send's organization, a
+    current approval at its revision, a ready promotional sending profile, the policy's audience limit; the releaser none of its authors nor
+    its approver but under the organization's one-person-team flag with fewer than 500 recipients) and the due dispatch, which hands only
+    the prepared recipients to the delivery ledger, each checked again just before (the topic's membership, consent, suppression and
+    solicitation, the address prepared, the frequency cap) and keyed by the send and its random execution key, so a recipient is handed
+    off once. The ledger checks the recipient's consent within the organization and every suppression at each attempt; each message carries
+    a List-Unsubscribe header and link from a token whose digest alone is kept. MESSAGE_DELIVERY_REVIEW (ADMIN's and Marketing's
+    dispatcher's) resolves and reads only the deliveries of the reviewer's organizations, every one for a system administrator.";
+  - the user's calls: the client budget beyond the plan's estimate (above); to confirm, the approver kept from releasing, and
+    MESSAGE_DELIVERY_REVIEW's narrowed reach.
+
+**Review Nov 14 (P9).** A fresh review of `mkt/p9` (mr-mantle 7a7b6cbc, mr-boss 3860abe1) against P9, §2, §4 and design §5, §15.2, §15.3
+and §18, as the first promotional hand-off, after merging master (Sales P16, P19 and follow-up 2) into both worktrees (clean; master
+did not touch the ledger's `MessageDeliveries.js`; no Rust).
+- Checked and sound:
+  - release (`release#Send`): MARKETING_DISPATCH on a send of the scope (another organization's RECORD_UNAVAILABLE), a current
+    MarketingDecision at the send's revision, the stamp read, `sendProblems` again (a preparation at the revision, an approved campaign,
+    a ready promotional profile), an eligible count within the policy's audience limit, each single-use topic or source list reserved
+    (the transaction rolls back on any later refusal), a second release answering the first; the CommunicationEvent carries the
+    approved subject and body (F8). Separation: the releaser is none of the revision's authors (creator, last material editor,
+    requester) nor its approver, admitted only by `selfApprovalAdmits` (the flag on and fewer than 500 counted now), recorded as
+    `selfDispatch` and in the change reason. Keeping the approver from releasing is right: design §5 keeps "campaign approval, content
+    approval and dispatch permission" separate and, without the flag, "approval and release stay with other people";
+  - dispatch: only CampaignRecipient rows of the current preparation are claimed (a new segment match is never added), under the
+    send's lock and a 15-minute lease in a transaction of their own; the campaign's approval and the profile's readiness stop a run
+    with a dispatchNote; each page is classified again by P5's rule with no user (disabled and merged parties unavailable), the address
+    against the one prepared (DESTINATION_CHANGED, never a substitute), the frequency cap; each hand-off under the recipient's lock and
+    the page's claim, the send still Sending, in a transaction of its own, a failure logged and the next going on; the ledger key
+    `CampaignSend:<send>:<execution key>` answers the delivery it holds, so a page claimed again after its lease, or a hand-off whose
+    recording failed, hands the recipient off once (spec'd); completion waits for no recipient waiting and no delivery queued,
+    retrying or uncertain; cancel and pause stop new claims and say what is in flight; a single-use list is freed only when nothing
+    was handed off;
+  - the ledger (owner contract): a topic delivery queued with `consentOrganizationPartyId` reads Marketing's evidenced rule at each
+    attempt (`organizationTopicConsent`, the same rows and order as `classifyPeople`: a purpose withdrawn globally or in the
+    organization, the list row withdrawn, the address's solicitation refused block; a list or purpose grant admits); one queued
+    without it (Commerce's review requests) is unchanged (DeliveryLedger, StoreReviews pass); suppressions keep the user's split (a
+    hard bounce every delivery, the rest promotional ones). A source's reply-to: of the nine ledger sources only
+    `build#CampaignDelivery` declares `replyToAddresses` among its out-parameters, so no existing source's message changes;
+    `resolve#Delivery` keeps who, when and the note, and its reach is the reviewer's organizations;
+  - MESSAGE_DELIVERY_REVIEW narrowed to the reviewer's organizations (resolve, receipts, the mail queue's reconciliation): a sound
+    security fix, needed before the grant to the dispatcher (else every organization's receipts and uncertain deliveries); only
+    ADMIN held it before, and ADMIN is the system administrator `reviewerReaches` admits everywhere, so no holder loses reach;
+    AdminMailQueue, DeliveryReports and DeliveryLedger pass;
+  - masking: find#Recipients, get#Recipient and the CSV and PDF report (the same service with every row) give the name, party and
+    whole address only to MARKETING_AUDIENCE_VIEW, the address filter only to them, no token, body or address in a diagnostic
+    (`noAddress`); RecipientDetail's and CampaignDelivery's titles use the masked text; Home's cards are counts, its attention rows a
+    dispatcher's;
+  - the message: the prepared content with the recipient's own values, the preheader and topic name encoded, the attachments read from
+    the copies made at preparation (F200), the reply-to as validated at store#Send; suppressed when the recipient left the topic or
+    the address changed. The request-derived root (the brief's question): `ec.web.getWebappRootUrl(true, null)` takes a request's
+    Host only when a `root-screen` pattern of the deployment names it, never another Host header (JS-Core-API), so it could not be
+    poisoned by a forged Host; R2 still puts a configured root first.
+- Fixed:
+  - R1 (medium; consent, the P8 review's question): another person's withdrawal at a recipient's address (P5's DESTINATION_WITHDRAWN)
+    was settled at preparation only, so a withdrawal after preparation by someone else at the address (a spouse's, a shared inbox's)
+    did not stop the hand-off, against §2 ("a withdrawal or suppression always wins") and the ledger rechecks only the recipient's own
+    consent. The page check (`checkPage`, `sharedWithdrawals`) now finds everyone who holds one of the page's addresses now (an email
+    by its text in any case, or the same contact mech), classifies them for the topic as the recipients are, and skips a recipient
+    whose address one of them withdrew at (DESTINATION_WITHDRAWN). Dispatch's withdrawal feature gains Fay, not on the topic, at
+    Eve's address in capitals, withdrawing after preparation: Eve skipped and not mailed; it fails on the unfixed code;
+  - R2 (medium; the unsubscribe link): a profile with no site took its /u/ root from the releasing request; one whose site does not
+    mount Account, or a send released with no request, gave the ledger's job no root, so the token's link was relative (no List-
+    Unsubscribe that works) or, with neither site nor root, create#UnsubscribeToken fell back to a site the recipient belongs to,
+    possibly another organization's (F75). `unsubscribeLink` now takes the profile's site only when it mounts Account, else a
+    configured root (the profile's relay's web base URL, the send template's web host or relay's web base URL, then the conf
+    webapp's root kept at the release), always passes it, refuses a release with no address for the link (NOT_READY) and suppresses
+    a build without one. Dispatch's first feature gives its relay a web base URL and checks the List-Unsubscribe and the body's link
+    under it, not the request's root; it fails on the unfixed code (the refusal is reachable only with no web request, which the spec
+    runner always has);
+  - R3 (low; failure tolerance): a page whose check threw (the classification or a lookup) handed every recipient a NOT_CLASSIFIED
+    verdict and skipped them for good (retry#Recipients takes only failed deliveries); now nothing is skipped, the run stops for that
+    send and the lease's end lets a later run check the page again; retry#Recipients answers "Could not be checked";
+  - R4 (low; coverage): no spec released as the approver; Dispatch's first feature now has the send approved by a holder of approve
+    and dispatch, whose release is refused SELF_DISPATCH;
+  - R5 (the client walk, the lead's question): 9.1 s, about 1.1 s over Marketing's ~8 s client estimate. The New send dialog now
+    chooses the organization's one sending profile a send may use, as it chooses the one organization (Sends' `newSendValues`, the
+    template's profile drop-down given `selected`), so the walk chooses only the topic; the render-problem check reads the delivery
+    poll's last text (the testkit checks each settle's text as well). Golden path kept whole (template Use, prepare, ask, approve,
+    release, delivered and completed). Five runs: 7.95, 8.62, 8.27, 8.10, 8.19 s (median 8.2 s). The steps left are the path's own
+    (prepare, approve and release are about 1.1 s each, the dialogs and their confirmations).
+- Findings, numbered by the lead F217 to F223 in order:
+  - the approver kept from releasing (beyond the plan's "the author"): kept, as design §5's separation; the user's confirmation;
+  - R1's recheck reads everyone at the address now, the stricter way (F201): a topic-only send's preparation reads no sharer and its
+    dispatch does; the ledger's build (each attempt, a retry) does not recheck another person's withdrawal, only the recipient's
+    own consent and every suppression;
+  - R2's refusal (NOT_READY, no address for the link) is reachable only by a release with no web request; a deployment with several
+    sites should give its sending profiles a site with Account or their relays a web base URL, else the links carry the conf
+    webapp's host;
+  - the walk's median 8.2 s is about 0.2 s over the estimate (up to 0.6 s in a slow run): the user's call, or the estimate raised;
+  - the New send dialog's profile default is a small UX change to Marketing's own screen, made for the walk;
+  - `resumeSend` takes no stamp and does not recheck the audience limit (each claim rechecks the campaign and the profile);
+    `resolveDelivery`'s `checkReach` is never passed (not a parameter); CampaignDelivery shows the Address filter to a masked reader,
+    which ignores it;
+  - the Built note's findings stand as written (the event key prefix, the reviewer's reach, the in-flight deliveries of a stopped
+    send, an uncertain delivery keeping the send Sending, throughput, the list rows' Message-IDs by the sweep, MarketingApprovals'
+    kind), but its "a send released with no web request would get a relative link" (R2: worse, another site's page; fixed).
+- Tests run (release, `--nobuild`, this worktree's runtime, after the merge and the fixes): mr-mantle Dispatch (6 of 6, 3.6 s of
+  features), DeliveryLedger, Sends, DeliveryReports, MarketingScope, MarketingApprovals, Eligibility, SalesQuoteIssue, StoreReviews,
+  CartRecovery, ContactListSend, Consent, MarketingSubscriptions, SendingProfiles (94 of 94, 23.0 s); R1's and R2's checks failing
+  on the unfixed `MarketingDispatch.js`; mr-boss MarketingDelivery, MarketingSends, MarketingAccess, MarketingCampaigns,
+  MarketingTemplates, AdminMailQueue, RecordFiles (26 of 26, 6.2 s); the client walk MarketingSendWalk (`--serve`, five runs above).
+  `moqui lint --screens` (release binary): 141 flagged sites as before, none in Marketing, parse failures 0. Prettier on the changed
+  JavaScript. Not run: test-apps, the acceptance suite (MarketingDispatchScenario's release goes through a web request, unchanged).
+- For the lead:
+  - budget share: mr-mantle about 3.7 s (Dispatch 3.6 s, DeliveryLedger +0.1 s); mr-boss server about 0.5 s, as the Built note;
+    mr-boss client about 8.2 s (MarketingSendWalk, from 9.1 s);
+  - merge hot spots: as the Built note, and `MarketingDispatch.js` (`unsubscribeLink`, release, `sharedWithdrawals`, `checkPage`,
+    dispatchSend, retryRecipients, buildDelivery), `CampaignSendServices.xml` (release#Send's, dispatch#Send's and
+    build#CampaignDelivery's descriptions), `MarketingEntities.xml` (`unsubscribeBaseUrl`'s description), `test/marketing/Dispatch.spec.js`;
+    mr-boss `screen/Marketing/Sends/Sends.xml` (newSendValues), `template/MarketingSends.xml` (NewSendForm's profile),
+    `test/client/Marketing/MarketingSendWalk.spec.js`, `plan/design-marketing.md` (§5's as-built paragraph: the recheck and the link);
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, the ledger's paragraph; no public endpoint is added), the Built note's
+    paragraph corrected: "A Marketing send reaches its recipients only through `mantle.marketing.CampaignSendServices.release#Send`
+    (MARKETING_DISPATCH, the send's organization, a current approval at its revision, a ready promotional sending profile, the
+    policy's audience limit, an address for the unsubscribe link; the releaser none of its authors nor its approver but under the
+    organization's one-person-team flag with fewer than 500 recipients, recorded) and the due dispatch, which hands only the prepared
+    recipients to the delivery ledger, each checked again just before (the topic's membership, consent, suppression and solicitation,
+    the address prepared, a withdrawal by anyone who holds the address now, the frequency cap) and keyed by the send and its random
+    execution key, so a recipient is handed off once. The ledger checks the recipient's consent within the organization and every
+    suppression at each attempt; each message carries a List-Unsubscribe header and link from a token whose digest alone is kept,
+    under the sending profile's site or a configured root (its relay's web base URL, else the conf webapp's), never a request's Host
+    header. MESSAGE_DELIVERY_REVIEW (ADMIN's and Marketing's dispatcher's) resolves and reads only the deliveries of the reviewer's
+    organizations, every one for a system administrator.";
+  - the user's calls: the client budget (about 8.2 s against the ~8 s estimate); to confirm, the approver kept from releasing,
+    MESSAGE_DELIVERY_REVIEW's narrowed reach, and the New send dialog's one-profile default.
+
 ### P10 — Experiments
 
 Design §5 ExperimentDetail; MKT-EXPERIMENT; gate 3.
@@ -933,6 +2815,202 @@ Design §5 ExperimentDetail; MKT-EXPERIMENT; gate 3.
 - **Usable when** (`test/acceptance/Marketing/MarketingExperimentScenario`; scenario 8): a two-variant send to a 20%
   sample goes out, a retry reassigns no one, the dispatcher releases the chosen winner to the remainder once, and a
   recipient who unsubscribed in between is not sent.
+
+**Built Nov 14 (P10).** mr-mantle and mr-boss on branch `mkt/p10` (hashes in the worker's reply), from master after P9's merge; mr-moqui
+unchanged, no Rust built. Built beside Marketing P11 (on `mkt/p11`) and Sales P20 (in review); the hot spots below.
+- Checked first (the code over the plan): P8's and P9's Built and Review notes, F190–F223 and §4 (the one-person-team flag under 500; the
+  5,000 cap for an interactive preview only), MarketingSends.js (prepare, revise, sendProblems, the test source), MarketingDispatch.js
+  (release, claim, checkPage, sweep, cancel, retry, build), MarketingApprovals.js (currentApproval, the send kind) and
+  MarketingEligibility.js evaluateSend. The code over the plan:
+  - the send and recipient flows had no state for a send whose samples are out while its remainder waits: CampaignSend gains "Sample
+    sent" (CsSampleSent: from Sending when the samples settle with recipients held, back to Sending at the winner's release or a retry of
+    the samples' failures, or Cancelled), CampaignRecipient "Held for the winner" (CrsHeld, never claimed by the dispatch; to Selected,
+    Skipped, Cancelled or Replaced);
+  - "each variant approved as content of the send": a variant is the parts of the send's content it changes (subject, preheader, body,
+    text; a part left as the send's is the send's, so variant A is the send's content until changed); setting up an experiment, changing
+    its sample, changing a variant's content or removing it calls the send's `revise`, which raises the revision and ends the approval, so
+    an approval always covers both variants as prepared. Sender variants are not built (the profile is the send's);
+  - "one stable assignment per normalized recipient at preparation": each eligible person by their normalized address, in the order of a
+    hash seeded by the experiment's id, A's equal share first, B's next, the rest held; the same audience prepared again assigns everyone
+    alike, and a sample recipient's variant is on its row and never changes (a dispatch retry or a page claimed again reassigns no one);
+  - "a remainder recipient withdrawn or suppressed since is dropped at dispatch": built stricter, as the lead asked ("the winner selection
+    never sending ... to anyone the audience no longer admits"): the winner's release evaluates the send's audience again (its lists and
+    segments less the exclusions, the topic's consent and suppressions, as the releasing dispatcher) and leaves out a held person it no
+    longer admits (AUDIENCE_LEFT) or one at a person or address the send already sent (ALREADY_SENT); no one is added; the dispatch then
+    checks each again just before its hand-off (P9's check);
+  - one live experiment a send, so the experiment services and ExperimentDetail take the send's id (design §2 names an experiment ID);
+  - choose#ExperimentWinner needs MARKETING_DISPATCH (design §1.1: D chooses and releases a winner); the separation from the authors and
+    the approver applies at the release, as release#Send's; the observation period runs from the later of the release and the schedule;
+  - the measure: unique clicks and conversions are not recorded before P15 and P20, so the results read "Not available" and the decision
+    shown stays undecided; the rule (`compare`: a tie, no observations or no tracking-enabled denominator stay undecided, else the variant
+    leading, informational) is in place for P15 and spec'd on the module.
+- Mantle:
+  - `entity/MarketingEntities.xml` (a P10 block after P9's): CampaignExperiment (the send, sample percent, measure, observation hours, the
+    counts at preparation, the winner chosen with its reason, its release: date, by whom, count, left out, self-dispatch; audited key
+    fields; the measure enumeration), CampaignExperimentVariant (label, name, its own parts, the prepared content and revision, the sample
+    count), CampaignRecipient `campaignExperimentVariantId` and `experimentRemainder`. `data/MarketingSeedData.xml` (a P10 block after P9's):
+    CsSampleSent, CrsHeld and their transitions.
+  - `MarketingExperiments.js` (new) under `CampaignSendServices.xml` (a P10 block after P9's): `store#Experiment` (action remove),
+    `store#ExperimentVariant`, `get#Experiment` (the results per variant from the ledger, the remainder, the decision, a release preview of
+    up to 2,000 held recipients for a dispatcher who may release, the measure options), `choose#ExperimentWinner`,
+    `release#ExperimentWinner`; refusals in each description.
+  - `MarketingSends.js` (P10 lines): prepare's assignment and the variants' preparation (VARIANTS_SAME, SAMPLE_TOO_SMALL), the earlier
+    preparation's held rows replaced too; sendProblems' experiment problems; preview#Send and test#Send of a variant (the test source builds
+    the variant as it is now, suppressed when the variant is no longer the send's); get#Send's `experiment`; `evaluateAudience` (prepare's
+    and the winner release's, lenient there about an archive); the `forExperiments` exports. `MarketingDispatch.js` (P10 lines): release
+    counts the held remainder toward the audience limit and the one-person team's count; sweep's Sample sent; cancel's held rows;
+    retry from Sample sent; build's variant content (a held recipient is never built); the delivery rows' variant and the held state;
+    `forExperiments` exports. `MarketingWorkspace.js`: the troubled sends read Sample sent.
+- BOSS:
+  - Screens: `Marketing/Sends/ExperimentDetail` (new; the record header with Set up the test, Choose the winner or Release the winner by
+    state and More: Open the send, Edit the setup, Choose again, Remove the test; Variants with each row's Edit and Test; Results with the
+    denominators, tracking coverage, clicks and conversions not available and the remainder; Winner), hidden in Sends; SendDetail's A/B test
+    box (state, sample, variants, Open the test; Set up an A/B test for a draft's editor) and the held count in its Delivery box; Sends'
+    Sample sent filter and board column; CampaignDelivery's held filter and Variant column; RecipientDetail's caption names the variant.
+    `template/MarketingSends.xml` (a P10 block: storeExperiment, storeExperimentVariant, chooseExperimentWinner, releaseExperimentWinner;
+    testSend passes the variant). `Marketing.js`: the link path.
+  - Demo (`BossZZMarketingDemoData.xml`, a P10 block at the end): a draft "Spring sale subject test" of the spring campaign with a 20%
+    experiment, variant B ("Urgent") changing the subject only.
+- Specs:
+  - Mantle `test/marketing/Experiments` (new, 3 features, 1.6–2.6 s: a reader's setup refused, identical variants refused, a script in a
+    variant refused, a subject-only variant, a 10% sample of ten refused, four sampled (two each) and six held, the same assignment after a
+    second preparation, a variant's change ending the approval; the release sending each sample its variant's subject and the remainder
+    nothing, Sample sent, a test of variant B marked TEST and in no result, clicks not available and the decision undecided, a choice before
+    the observation's end refused, `compare` undecided on a tie and leading otherwise; after the observation an author's choice refused,
+    another organization's experiment refused, a choice without a reason refused, a release without a winner refused, the winner chosen and
+    released to five with the one who withdrew left out (AUDIENCE_LEFT, not mailed), a second release with another key answering the first,
+    no sample recipient mailed again, the send completed, a choice after the release refused).
+  - mr-boss `MarketingSends` (+1 feature, 0.12 s: ExperimentDetail's one qvt render of the demo subject test for its author); `MarketingSpecLib`
+    (the id).
+  - Acceptance, written and not run: `test/acceptance/Marketing/MarketingExperimentScenario` (2 features, scenario 8: the author sets up a
+    20% two-variant test through SendDetail and ExperimentDetail, the approver approves, the dispatcher's release sends the samples, a second
+    run reassigns no one and sends nothing; after the observation a remainder subscriber unsubscribes, the dispatcher chooses B with a reason
+    and releases it once, the unsubscribed one not sent, no one mailed twice).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle Experiments (3 of 3), Sends, Dispatch, DeliveryLedger,
+  MarketingApprovals, MarketingScope, Eligibility, Segments (42 of 42 with Experiments; Experiments, Dispatch, Sends and MarketingScope again
+  after the last changes, 23 of 23, 9.4 s of features); mr-boss MarketingSends, MarketingDelivery, MarketingAccess, MarketingTemplates,
+  MarketingCampaigns, RecordFiles, QuickCreate (42 of 42 after the last changes); the client walk MarketingSendWalk (`--serve`, three runs:
+  8.99, 8.47, 9.69 s, with the P11 worker's runs on the same machine; the walk is unchanged, SendDetail gained the A/B test box). A throwaway
+  render of SendDetail (qvt, tui) and ExperimentDetail (tui, html) and a post of each ExperimentDetail and SendDetail transition passed
+  and was not kept. `moqui lint --screens`: 141 flagged sites, as before, none in Marketing; parse failures 0. Prettier clean on the changed
+  JavaScript. Not run: test-apps, the acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P10" table; ss-inventory has no row for P10's screen.
+- Design edits: design-marketing §5 (the as-built paragraph after ExperimentDetail).
+- Findings, numbered by the lead F224 to F233 in order:
+  - the flows' new states, Sample sent and Held for the winner (the code over the plan above);
+  - the winner's release evaluates the send's audience again as the releasing dispatcher: a person only the preparer could see (a personal
+    contact, F157) is left out, the stricter way, and the release costs a preparation's evaluation; an archived list or segment is still read
+    there, so an archive never holds a winner back;
+  - a variant changes parts of the send's content; a part cannot be made empty in a variant (empty is the send's); sender variants are not
+    built;
+  - clicks and conversions are not available before P15 and P20: every experiment's decision reads undecided until then; a person chooses;
+  - choosing the winner is a dispatcher's (no separation from the authors at the choice; it holds at the release); the observation runs from
+    the later of the release and the schedule;
+  - the audience limit and the one-person team's count read the whole prepared audience (samples and remainder) at both releases;
+  - the send's CommunicationEvent carries the send's own subject (variant A's unless A was changed); variant B's recipients' list rows name it
+    too;
+  - duplicate#Send does not copy an experiment;
+  - ExperimentDetail's release preview runs P9's page check over up to 2,000 held recipients on each render for a dispatcher who may release
+    (none otherwise);
+  - the demo gains a draft subject test (the plan listed no demo for P10).
+- For the lead:
+  - budget share: mr-mantle about 2.6 s (Experiments; 1.6 s in the last run); mr-boss server about 0.1 s (MarketingSends' ExperimentDetail
+    render); no client spec (MarketingSendWalk unchanged; 8.5 to 9.7 s in three runs on a loaded machine);
+  - merge hot spots (P11 beside appends to the same files): mr-mantle `entity/MarketingEntities.xml` (a P10 block after P9's),
+    `data/MarketingSeedData.xml` (a P10 block after P9's), `service/mantle/marketing/CampaignSendServices.xml` (get#Send's out-parameters,
+    preview#Send's, test#Send's and prepare#Send's parameters and descriptions, release#Send's description, a P10 block after P9's),
+    `MarketingSends.js` (prepare, sendProblems, previewSend, testSend, buildTest, getSend, evaluateAudience, the exports),
+    `MarketingDispatch.js` (releasedStatuses, the texts, recipientCounts, controlOf, release's counts, sweep, cancel, findRecipients'
+    states and rows, retry, build, the exports), `MarketingWorkspace.js` (troubledSends' states); mr-boss `data/BossZZMarketingDemoData.xml`
+    (a P10 block at the end), `template/MarketingSends.xml` (testSend's in-map, a P10 block after P9's), `screen/Marketing/Sends.xml` (a
+    subscreens-item, the comment), `Sends/SendDetail.xml` (a transition-include, the A/B test box before Decisions, the Delivery label, the
+    comment), `Sends/Sends.xml` (a state option, the board's columns), `Shared/CampaignDelivery.xml`, `Sends/RecipientDetail.xml`,
+    `service/ironstone/marketing/Marketing.js` (linkPaths), `test/Marketing/MarketingSends.spec.js`, `MarketingSpecLib.js`,
+    `plan/usl-inventory.md`, `plan/design-marketing.md`, this file. Not touched: `BossSetupMarketingData.xml`, Sales files, PASS, mr-moqui;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, the ledger's paragraph; no public endpoint is added), a sentence after P9's:
+    "A send's A/B experiment releases its two samples through release#Send as any send's recipients; its remainder reaches recipients only
+    through `mantle.marketing.CampaignSendServices.release#ExperimentWinner` (MARKETING_DISPATCH, the send's organization, a winner chosen
+    with a reason by a dispatcher after the observation period, the send's current approval at its revision and readiness; the releaser
+    none of its authors nor its approver but under the one-person-team flag with the whole audience under 500), once: the remainder is
+    checked against the send's audience evaluated again and against what the send already sent, so no one new is added and no one gets a
+    second message of it, and each is then checked again by the dispatch just before its hand-off. A setup or variant change ends the
+    send's approval.";
+  - the user's calls: none required; to confirm, the winner's release re-evaluating the audience (stricter than the plan's dispatch check),
+    choosing the winner as a dispatcher's, the Sample sent state, sender variants not built, and the client walk's timing on a loaded
+    machine.
+
+**Review Nov 14 (P10).** A fresh review of `mkt/p10` (mr-mantle a8edf7a7, mr-boss 69604a2b) against P10, §2, §4 and design §5
+ExperimentDetail, §14.1; master (Sales P20) merged into both first without conflict (mr-mantle 27317ca5, mr-boss c324165e; both sides kept).
+- Checked and sound:
+  - P9's guards across variants: each variant's content is checked as the send's (checkContent, PRIVATE_LINK) at store#ExperimentVariant
+    and again at preparation (subject, body, VARIANTS_SAME); setup, sample, variant change and removal call the send's `revise` (revision
+    raised, approval ended, back to draft); sendProblems adds the experiment's problems, so release#Send and the winner's release both
+    need the variants prepared at the send's revision; build#CampaignDelivery sends a recipient only its variant's prepared content at the
+    current preparation and suppresses a remainder row without a winner.
+  - One hand-off per recipient: the remainder rows are disjoint from the samples by construction (one eligible row per person and
+    address, assigned once), each row has its own execution key (the ledger key), claimPage reads only Selected rows under the lease, and
+    the winner's release skips a held person or address already handed off (ALREADY_SENT); the release locks the send and the experiment
+    and runs once (winnerReleasedDate), re-evaluating the audience as the releasing dispatcher (a missing segment refuses; no one added).
+  - Separation at both releases: release#Send and release#ExperimentWinner refuse an author or the approver unless the one-person flag
+    admits the whole prepared audience (samples and remainder); the choice is a dispatcher's with a reason after the observation period.
+  - The two states: Sample sent and Held are read by the sweep (Sample sent when only held rows remain), cancel (held rows cancelled),
+    retry (from Sample sent back to Sending), controlOf, findRecipients and CampaignDelivery (held filter, Variant column), troubledSends
+    (Home's attention), Sends' filter and board; pause stays Scheduled/Sending only (nothing is in flight in Sample sent); the due worker,
+    hand-off and claim read Sending and Selected only, so a held recipient is never handed off before the winner's release.
+  - The assignment: FNV-1a over the experiment id and the normalized address, ties by the address: deterministic across preparations
+    (spec'd), the samples equal and disjoint, SAMPLE_TOO_SMALL when a variant or the remainder gets no one.
+  - ExperimentDetail's release preview: checkPage only reads (classifyPeople, sharers, the frequency cap's deliveries); at most 2,000 held
+    rows in pages of 500, run only for a dispatcher who may release; the held total is counted apart.
+  - Scope: every service takes the send through sendOf under the caller's scope (missing and other organization's alike
+    RECORD_UNAVAILABLE); a reader's get#Experiment carries no variant bodies.
+- Fixed:
+  - R1 (medium; the winner's release). release#ExperimentWinner named no winner: a release raced by "Choose again" sent the other variant,
+    and a later call answered "released already" whatever winner its caller meant. It now takes `campaignExperimentVariantId` (the winner
+    read; ExperimentDetail passes it) and refuses another (WINNER_CHANGED) before the release and after it; a call naming the released
+    winner, or none, still answers the first whatever key. Spec'd (both refusals; fail on the unfixed code).
+  - R2 (medium; separation). A paused experiment's resume (and SendDetail's Resume offer) admitted an author under the one-person flag by
+    `releasedCount`, the samples only, so an author could resume and send a remainder of 500 or more released by another dispatcher. The
+    resume counts the larger of what was released and the whole prepared audience (unchanged for a send without an experiment). Not
+    spec'd (it needs 500 recipients); read in review.
+  - R3 (low; idempotency). A second release#Send of a send in Sample sent was refused STATUS_INVALID instead of answering the first
+    (P9's rule). Spec'd.
+  - R4 (low; the setup is the send's). Changing the measure or the observation period of an approved send kept its approval; the
+    observation decides when a winner may be chosen and released. Any change of the stored setup now ends the approval (storing the same
+    values changes nothing); ExperimentDetail's note and the service description say so. Spec'd (unchanged kept, a new period ends it).
+  - R5 (low; the winner's recheck). The lenient re-evaluation dropped an exclusion list no longer found, admitting whom it excluded; it
+    now refuses (RECORD_UNAVAILABLE), as a missing segment already did.
+  - R6 (low; the preview). Over 2,000 held, or when a page could not be checked, ExperimentDetail said "N of the M checked" and confirmed
+    "Release to X recipients" as if all were checked; it now says only part was checked (the release checks every one) and confirms "up
+    to X". SendDetail's A/B box no longer reads the variant bodies to show their subjects.
+- Findings, numbered by the lead F234 to F237 in order:
+  - the winner's release names the winner read (WINNER_CHANGED; R1); a paused experiment's resume counts the whole audience (R2);
+  - any change of an experiment's setup ends the send's approval, the measure and the observation period too (R4; the Built note had them
+    as the reading's);
+  - no attention row for a send in Sample sent waiting for a winner (troubledSends lists it only with a failed or uncertain delivery);
+  - release#ExperimentWinner's `operationKey` names nothing (the experiment is the identity), as release#Send's stamp.
+- Tests (release binary, `--nobuild`, this worktree's runtime): mr-mantle Experiments (3 of 3, about 2.1 s of features; the new checks
+  fail on the unfixed services), with Sends, Dispatch, DeliveryLedger, MarketingApprovals, MarketingScope, Eligibility, Segments (42 of
+  42, 13.2 s); mr-boss MarketingSends, MarketingDelivery, MarketingAccess, MarketingTemplates, MarketingCampaigns (14 of 14, 5.1 s); the
+  client walk MarketingSendWalk alone (`--serve`, two runs: 7.93, 7.97 s, load 3.5; under the ~9 s estimate, so nothing trimmed: SendDetail's
+  box costs one query for a send without an experiment). `moqui lint --screens`: parse failures 0, nothing in ExperimentDetail or
+  SendDetail. Prettier clean. Not run: test-apps, the acceptance suite (MarketingExperimentScenario unchanged: it names no winner, which
+  still answers).
+- For the lead:
+  - budget share as the Built note (mr-mantle Experiments about 2.1 s; mr-boss about 0.1 s); no client spec added;
+  - merge hot spots as the Built note, plus MarketingDispatch.js releaseSend's first-release states, controlOf's Resume count and
+    resumeSend (`resumeCount`), MarketingSends.js evaluateAudience, CampaignSendServices.xml store#Experiment's and
+    release#ExperimentWinner's descriptions and parameters, `template/MarketingSends.xml` releaseExperimentWinner's in-map;
+  - Attack-Surface: the worker's sentence holds with three corrections; as it should read: "A send's A/B experiment releases its two
+    samples through release#Send as any send's recipients; its remainder reaches recipients only through
+    `mantle.marketing.CampaignSendServices.release#ExperimentWinner` (MARKETING_DISPATCH, the send's organization, a winner chosen with
+    a reason by a dispatcher after the observation period and named by the releaser, the send's current approval at its revision and
+    readiness; the releaser none of its authors nor its approver but under the one-person-team flag with the whole audience under 500,
+    which a paused experiment's resume counts too), once: the remainder is checked against the send's audience evaluated again as the
+    releasing dispatcher and against what the send already sent, so no one new is added and no one gets a second message of it, and
+    each is then checked again by the dispatch just before its hand-off. Any change of the experiment's setup or a variant ends the
+    send's approval.";
+  - the user's calls: as the Built note's (the re-evaluated audience at the winner's release, the choice as a dispatcher's, Sample sent,
+    no sender variants), and R4 (the measure and observation period are approved content).
 
 ### P11 — Automation
 
@@ -973,6 +3051,255 @@ gate 4 (M4).
   approved and activated, a new subscriber gets step one once though the event arrives twice, a pause holds a due
   step and resume sends it within the cap, an unsubscribe ends the enrollment, and a store set to the automation
   sender sends one cart recovery, not two.
+
+**Built Nov 14 (P11).** mr-mantle and mr-boss on branch `mkt/p11` (hashes in the worker's reply), from master after P9's merge; mr-moqui
+unchanged, no Rust built. Built beside P10 (`mkt/p10`) and Sales P20 (in review) (the hot spots below).
+- Checked first (the code over the plan): P5's, P8's and P9's Built and Review notes, F90–F223 and §4's rows (the one-person-team flag; the
+  suppression split; one SECA `OrderPlacedRecordAttribution` with its handler made here); P2's approvals (MarketingApprovals.js, whose
+  targetKinds left the automation's slot and whose selfApprovalAdmits already refused an automation), P5's classifyPeople and the
+  segments' sources, P9's dispatch (checkPage, handOff, unsubscribeLink, the frequency cap over `MdsrcCampaignSend`), Commerce's
+  CartRecovery.js and the RecoveryPolicy sender (`choiceKind(["builtin"])`), EventServices get#FutureBusinessDay, BusinessTime.js's wall
+  times, the subscription requests (accepted with decidedDate, ALREADY_MEMBER), the order SECAs. The code over the plan:
+  - the owner identity (the lead's question, F157): an automation acts as the system for its organization within its approved
+    definition. Its admission and step runs run with no user (runAsSystem): P5's classifyPeople with no personal contact of any user,
+    disabled or merged party available; its trigger, goal and condition segments read only the party, contact and engagement sources, a
+    segment naming a Sales or purchase source (or whose parent does) refused when the rule or a step names it (SOURCE_UNAVAILABLE), so a
+    run answers the same whoever wrote or activated it;
+  - "a send step makes an ordinary CampaignSend recipient hand-off": each Send email step has a CampaignSend of the automation (status
+    `CsAutomation`, `marketingAutomationId`, `automationStepId`), copied from a template and prepared when the step is stored, which the
+    send services neither list, edit, prepare, approve nor release; a participant reaching the step becomes one of its CampaignRecipient
+    rows and is handed off through P9's own checks (MarketingDispatch.js `checkRecipients` and `handOffRecipient`, split out of checkPage
+    and handOff unchanged), so `build#CampaignDelivery`, the unsubscribe header and link, the ledger's consent within the organization and
+    the frequency cap (which now counts the automations' deliveries: F211) are the sends' own;
+  - the approval is P2's with targetKind automation (`automationKind`): asked of a draft, approved to Approved, never self-approved; the
+    activation (activate#Automation, MARKETING_DISPATCH) is apart from it as P9's release is: none of the revision's authors nor its
+    approver, no one-person-team exception (an automation has no recipient count); a resume is an activation of a paused one;
+  - "an active definition changes by effective-dated steps": store#Steps ends the rows in effect and starts the new set (each send step's
+    content copied again), and any change of the rule or steps raises the revision and returns the automation to draft; an enrollment
+    keeps the steps in effect at its admission (design §6) and runs again once the new revision is approved and activated;
+  - "consent, suppression, goal and campaign state rechecked before every effect": before each step a closed campaign stops the
+    enrollment, a campaign no longer approved or a sending profile ended or turned transactional pauses the automation (its pauseNote),
+    the goal met completes it, a topic withdrawal, an unsubscription, leaving the topic or a suppression stops it (design §6: unsubscribe
+    and suppression end pending work), and the channel's own withdrawal (the topic's purpose, the address's solicitation, no usable
+    address, no evidence) skips that channel's sends only; quiet hours, a profile not ready and the frequency cap postpone a send
+    (dueNote), never skip consent;
+  - triggers: a confirmed subscription is an accepted SubscriptionRequest of the topic decided after the first activation (a public
+    confirmation or a staff acceptance with evidence; ALREADY_MEMBER is no new subscription), read by a cursor; a segment trigger's
+    first scan after activation records the matches as a baseline; staff enrollment (enroll#Party) is a dispatcher's or an audience
+    editor's with evidence and an operation key, admitted at once by the same rule; the order trigger's events are filed by
+    TrackingServices.handle#OrderPlaced; the cart trigger reads the carts Commerce's recovery reads (CartRecovery.js `automationCarts`)
+    for its store when the store's sender is the automation, and needs the shopper's cart reminders (as built-in recovery does) and the
+    automation topic's marketing consent (as every send step does);
+  - waits: minutes and hours elapsed; days and business days keep the start's local time in the rule's zone (the next valid instant in a
+    daylight-saving gap), business days by get#FutureBusinessDay over the organization's WepHoliday events; the Simulation shows each due
+    time with its offset;
+  - readers: the automations and their enrollments are read by a Marketing reader who writes, approves or dispatches sends or reads
+    audiences (design §2: AutomationDetail A, V, D; EnrollmentDetail D, U; the list "app" was read as those), participants named for an
+    audience reader only;
+  - AutomationDetail's sections are boxes, as SendDetail's; Steps is a list with Add step and each row's Change (move up or down,
+    remove), the set stored again each time, not editable rows; the Simulation is a box with a start time and a sample person.
+- Mantle:
+  - `entity/MarketingEntities.xml` (a P11 block after P9's): MarketingAutomation (its status flow; revision, definition time, activation,
+    pause, end, admission cursor; audited key fields), MarketingAutomationStep (dated), AutomationSourceEvent (unique by automation and
+    source key), AutomationEnrollment (unique by automation, party and source key; its status flow), AutomationStepExecution (unique by
+    enrollment and step); CampaignSend `marketingAutomationId`, `automationStepId` and the status CsAutomation; MarketingPolicy
+    `automationMaxSteps` (ten when empty). The enumerations are in the entities' seed-data.
+  - `MarketingAutomations.js` (new) under `AutomationServices.xml` (new): find#, create#, get#Automation, store#EnrollmentRule,
+    store#Steps, preview#Automation, activate#, pause#, end#Automation, enroll#Party, find#Enrollments, get#Enrollment, stop#Enrollment,
+    the jobs run#AutomationAdmission (operation marketing.automation.admission.run) and run#AutomationSteps (marketing.automation.steps.run)
+    with collect#AdmissionEvents, admit#SourceEvent and process#EnrollmentStep; refusals in each description. `TrackingServices.xml`
+    (new) handle#OrderPlaced; `service/MarketingTracking.secas.xml` (new) OrderPlacedRecordAttribution (tx-commit on the placement, its own
+    transaction, failure logged). `data/MarketingAutomationSetupData.xml` (new, seed-initial): the two jobs with their JobRegistration
+    (MARKETING_DISPATCH) and RecoveryDescriptor.
+  - MarketingApprovals.js targetKinds.automation; MarketingSends.js `stepSend` (a P11 block) and its `forAutomation` exports, find#Sends
+    leaving CsAutomation out of every state; MarketingDispatch.js `checkRecipients` and `handOffRecipient` exported with
+    `unsubscribeLink`; MessageSendingProfiles.js exports `quietMinutes`.
+  - Commerce (owner contract): CartRecovery.js's sender `automation` (eligibility for the automation, `automationCarts`, `senderOptions`,
+    `automationSenderOffered`), get#CartRecoveryPolicy's `view.senderOptions`; StoreAdmin.js's recoverySender offers it while an active
+    automation of the store's organization has the store's cart trigger (AUTOMATION_UNAVAILABLE otherwise).
+- BOSS:
+  - Screens: `Marketing/Automations` (new area, menu 5; BOSS_MKT_AUTOMATIONS), `Automations/Automations` (AutomationFind, AutomationList,
+    NewAutomation), `Automations/AutomationDetail` (the record header with Request approval, Approve, Activate or Resume by state; More: Edit
+    enrollment rule, Enroll a person, Pause, End, the campaign; Enrollment rule, Steps, Simulation, Enrollments, Decisions),
+    `Automations/EnrollmentDetail` (Stop; Enrollment, Step history); `template/MarketingAutomations.xml` (the transitions and
+    NewAutomationForm); CampaignDetail's Automations box with New automation; the root's menu item and `g a`; Commerce's CheckoutSettings
+    sender drop-down from `senderOptions`.
+  - `Marketing.js`: the capability `automationRead` and area `automations`, record kinds `automation` and `enrollment`, choices
+    `automationStores` and `automationMembers`, the palette's automations (and its sends leaving out the steps' sends), the P11 link paths;
+    ContextServices get#Choices takes `marketingAutomationId`. `BossSetupMarketingData.xml` (a P11 block): BOSS_MKT_AUTOMATIONS for the
+    author, approver, dispatcher and audience groups, the automation approval notice's link. Demo (`BossZZMarketingDemoData.xml`, a P11
+    block): Retail's active three-step garden newsletter welcome (welcome, three days, tips) with Maya in its wait and Olive stopped at her
+    request after the welcome; its content the component files DemoWelcome.
+- Specs:
+  - Mantle `test/marketing/Automations` (new, 6 features, 3.3 s: a draft refused activation, the solo author's own approval refused under
+    the flag, an approver-dispatcher, the author and another organization's dispatcher refused activation, a dispatcher's activation and a
+    second one answered; a subscriber after the activation admitted once by two admission runs, one before it never, the welcome once with
+    its List-Unsubscribe under the relay's root; a restart that re-reads the send step replays nothing, a pause holds the due follow-up and
+    the resume sends it once, the enrollment completed; a topic withdrawal stops one enrollment while a refused solicitation skips the
+    other's send and leaves it waiting; staff enrollment refused an author and without evidence, a repeat key answered, the goal met
+    completing one, a stopped one not run again nor stopped twice, a new key ALREADY_ENROLLED; a day wait across New York's March gap
+    landing on 03:00 EDT with its offset shown, a business day from Friday landing on Monday's same time, a Sales goal segment refused,
+    another organization's automation missing, a reader refused; an order filing its event once and its customer sent once);
+    `test/order/CartRecovery` (+1 feature, 0.45 s: the automation sender refused without an active automation, offered and saved with one,
+    built-in recovery sending nothing then, the automation reading the idle cart and not a visit already handled).
+  - mr-boss `MarketingAutomations` (new, 2 features, 0.2 s: AutomationDetail's one qvt render for the dispatcher; EnrollmentDetail's one
+    html render for the audience manager); `MarketingAccess` (the capabilities `automationRead` and `automations` per group, the menus and
+    `g a`, EnrollmentDetail opened by the audience manager, Automations refused a reader, another organization's automation refused by
+    check#Record; about +0.1 s); `MarketingSpecLib` (menus, keys, the demo automation's ids).
+  - Acceptance, written and not run: `test/acceptance/Marketing/MarketingAutomationScenario` (4 features, scenario 9: the welcome sequence
+    written, approved and activated apart; a new subscriber welcomed once though the event is read twice; a pause holding the due tips and
+    the resume sending them once; an unsubscriber stopped before the tips; a store set to the automation sender sending one cart recovery,
+    built-in recovery none).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle Automations 6 of 6, CartRecovery 5 of 5, Dispatch, Sends,
+  MarketingApprovals, Eligibility, DeliveryLedger, StoreCheckout, MarketingScope, Campaigns (46 of 46, 20.1 s), ShopCheckout, SalesPortal,
+  SalesQuoteResponse, StoreReviews, MarketingSubscriptions, ContactListSend, Segments with Automations again (53 of 53); mr-boss
+  MarketingAutomations 2 of 2, MarketingAccess 7 of 7, CommerceCheckoutSettings, CommerceRecovery, MarketingCampaigns, MarketingSends,
+  MarketingDelivery (7 of 7). A throwaway walk of the screens' transitions (create, add and move steps, the rule, request, approve,
+  activate, enroll, pause), the two new choices and the palette, and renders of Automations, AutomationDetail (dispatcher, audience reader
+  with a sample person), EnrollmentDetail and CampaignDetail in qvt, tui and html passed and was not kept. `moqui lint --screens`: 141
+  flagged sites, as before, none in Marketing or CheckoutSettings; parse failures 0. Prettier clean on the changed JavaScript. Not run:
+  test-apps, the acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P11" table; ss-inventory has no row for P11's screens.
+- Design edits: design-marketing §6 (the as-built paragraph after EnrollmentDetail); design-commerce §8 (One sender per cart: the as-built
+  owner contract); design-crosscut §1.3's register (OrderPlacedRecordAttribution built, its handler's P11 part).
+- Findings, numbered by the lead F238 to F247 in order:
+  - the owner identity is the system within the approved definition (above): a personal contact of any user is never enrolled, and a
+    segment reading Sales or purchases is refused for a trigger, goal or condition; an automation needing Sales facts waits for a design
+    of an automation owner who signs in for its runs (as run#EtlMapping's saved owner);
+  - editing an active automation returns it to draft; its enrollments admitted earlier continue on the steps in effect at their
+    admission (approved at the earlier revision) once the new revision is approved and activated, as design §6 says; store#Steps copies
+    every send step's template content again, so a re-stored set takes the templates' current content;
+  - a send step's checks skip a channel withdrawal (the topic's purpose, the address's solicitation, no evidence) and stop the enrollment
+    on a topic withdrawal, an unsubscription or a suppression (design §6's two sentences read together); the dispatch's frequency cap
+    leaves out a step send's own earlier deliveries (a re-entered person's earlier delivery of the same step);
+  - the cart trigger's sends go to the automation's topic (a Marketing list) and need its marketing consent beside the store's cart
+    reminders; a shopper who turned on cart reminders only is not reached by an automation sender, where built-in recovery reaches them;
+  - the confirmed subscription trigger counts a staff acceptance with evidence as a confirmation (an accepted SubscriptionRequest), and
+    reads only those decided after the first activation; the segment trigger's first scan is a baseline (no one already matched is
+    enrolled); the segment universe's 5,000 cap leaves a scan with an admissionNote;
+  - the automations and enrollments are read by an audience reader too (EnrollmentDetail's D and U), not by a reader or analyst (design §2
+    listed Automations as the app's);
+  - a delivery already with the ledger when an enrollment stops still goes out unless its build finds the recipient off the topic or the
+    address changed (P9's build; F218's sharers are not rechecked there);
+  - no Home card, attention source or Today row for automations yet (stalled enrollments are Insights' alert, P20);
+  - the demo's stopped enrollment is a staff stop (Olive's unsubscription in November falls after her wait would have ended);
+  - CartRecovery's spec gains one feature (the plan names it); its earlier features are unchanged.
+- For the lead:
+  - budget share: mr-mantle about 3.8 s (Automations 3.3 s, CartRecovery +0.45 s); mr-boss server about 0.3 s (MarketingAutomations 0.2 s,
+    MarketingAccess +0.1 s); no client spec;
+  - merge hot spots (P10 on `mkt/p10` and Sales P20 beside): mr-mantle `entity/MarketingEntities.xml` (a P11 block after P9's end),
+    `service/mantle/marketing/MarketingDispatch.js` (checkPage split into checkRecipients, handOff into handOffRecipient, the exports),
+    `MarketingSends.js` (find#Sends' status condition, a P11 block before get#Send, the forAutomation export), `MarketingApprovals.js`
+    (targetKinds.automation, automationKind, the header and request comments), `CampaignServices.xml` (request#MarketingApproval's
+    description), `service/mantle/party/MessageSendingProfiles.js` (the export), `service/mantle/order/CartRecovery.js`,
+    `service/mantle/product/StoreAdmin.js` (recoverySender), `StoreAdminServices.xml` (two descriptions), `test/order/CartRecovery.spec.js`
+    (a feature at the end); new files AutomationServices.xml, TrackingServices.xml (P15 and P20 add to it), MarketingAutomations.js,
+    MarketingTracking.secas.xml, MarketingAutomationSetupData.xml, Automations.spec.js. mr-boss `data/BossSetupMarketingData.xml` and
+    `data/BossZZMarketingDemoData.xml` (P11 blocks at the ends), `service/ironstone/marketing/Marketing.js` (areas, areaReads, scope,
+    linkPaths, recordKinds, choiceSources incl. sendMembers' topic branch, searchFinds), `ContextServices.xml`, `template/MarketingParts.xml`,
+    `screen/Marketing.xml`, `Campaigns/CampaignDetail.xml`, `screen/Commerce/Settings/CheckoutSettings.xml`, `test/Marketing/MarketingAccess.spec.js`,
+    `MarketingSpecLib.js`, `plan/usl-inventory.md`, `plan/design-marketing.md`, `plan/design-commerce.md`, `plan/design-crosscut.md` (the §1.3 row), this file. MarketingSeedData.xml is
+    not changed (the enumerations are in the entities' seed-data);
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, the ledger's paragraph; no public endpoint is added): "A Marketing
+    automation reaches people only after `mantle.marketing.CampaignServices.decide#MarketingApproval` (MARKETING_APPROVE, never its
+    author's, the one-person-team flag not applying) and `mantle.marketing.AutomationServices.activate#Automation` (MARKETING_DISPATCH,
+    none of the revision's authors nor its approver, an address for the unsubscribe link). Its admission and step jobs run as the system
+    for its organization: no personal contact is enrolled and its segments read only party, contact and engagement facts. Each send step
+    hands one participant to the delivery ledger through the dispatch's checks (the topic's membership, consent within the organization,
+    suppression and solicitation, a withdrawal by anyone at the address, the frequency cap), once per enrollment and step, with the
+    List-Unsubscribe header and link. The order-placed handler (the SECA OrderPlacedRecordAttribution) only files an admission event, in a
+    transaction of its own.";
+  - the user's calls: the owner identity (the system, its segments without Sales or purchase sources); to confirm, the audience readers
+    reading automations, the cart automation's topic consent, and earlier enrollments continuing on their approved steps after a re-approval.
+
+**Review Nov 14 (P11).** A fresh review of `mkt/p11` (mr-mantle ae2e3e73, mr-boss 3e3e05ab) against P11, §2, §4 and design §6, §14.1,
+§15.3; master (Marketing P10, Sales P20) merged into both first (mr-mantle 61621cb4, mr-boss 4a694a12), both sides kept: P10's
+`forExperiments` export beside P11's `checkRecipients`/`handOffRecipient` (P10 left checkPage's body unchanged, so the split holds),
+the entities' P10 block before P11's, and the demo data, inventory, link paths and spec ids in order. Fixes mr-mantle fc72b0da, mr-boss
+103204a0.
+- Checked and sound:
+  - The order SECA: `OrderPlacedRecordAttribution` is a tx-commit rule, which the framework writes to the outbox in the placement's
+    transaction and runs on a service worker after the commit in a transaction of its own (`register_tx_rules`); the call is
+    `force-new` and `ignore-error`, and handle#OrderPlaced files at most one event per active order-trigger automation of the seller
+    (each failure logged), so a handler failure never rolls back, holds or slows a placement. Shop's, Sales' and Commerce's placement
+    specs pass (one SalesOrderApproval feature fails on master too: not P11's).
+  - Every step's rechecks: the campaign (closed stops; no longer approved pauses), the goal, the topic classification (withdrawal,
+    unsubscription, leaving the topic and a suppression stop; the channel's purpose, solicitation or evidence skip that send), the
+    sending profile (ended or transactional pauses; not ready and quiet hours postpone), then P9's own checks on the participant
+    (membership, consent within the organization, the suppression split, the shared-address withdrawal, the frequency cap, which
+    postpones); a CsAutomation send is refused by every send service's status gate (requireEditable, release's states, P10's
+    experiment states) and left out of find#Sends and the palette.
+  - Idempotency: events unique by automation and source key, enrollments by automation, person and source key, executions by enrollment
+    and step; process#EnrollmentStep locks the enrollment, so concurrent runs serialize and a restart finds the execution row; each
+    recipient row has its own execution key (the ledger key), so a re-entered person's second pass is a new delivery; failure tolerance
+    per automation, event and enrollment (`apart`).
+  - Approval and activation: P2's decision with targetKind automation, never self-approved (the flag never admits it: spec'd);
+    activation by a dispatcher who is none of the creator, the reviser, the requester or the approver, with no one-person exception (an
+    automation has no recipient count, so the flag's 500 bound cannot apply); any change of the rule, topic, sender or steps raises the
+    revision, ends the approval and returns it to draft; enrollments keep the dated steps in effect at their admission.
+  - Commerce's sender: `automation` offered and stored only while an active cart-trigger automation of the store's organization names
+    the store (AUTOMATION_UNAVAILABLE); built-in recovery sends nothing for such a store and the automation skips a visit built-in recovery
+    already sent for and marks each visit handled, so one sender per cart; Commerce's specs unchanged and passing.
+- Fixed:
+  - R1 (the user's call, Nov 14; §4). The build ran an automation as the system, its segments limited to party, contact and engagement
+    sources. It now runs as its saved owner, the dispatcher who last activated or resumed it (`activatedByUserId`): each admission and
+    step run signs the owner in (as run#EtlMapping and the scheduled supply plan do), checks again that the owner can sign in, holds
+    MARKETING_DISPATCH, works for the organization and can read every segment it names, and puts the user before it back; the trigger,
+    goal and condition segments may use Sales and purchase sources under the owner's access read at run time, and classifyPeople's "not
+    available" is the owner's (P5 review). An owner who lost any of it pauses the automation with the reason (pauseNote, the enrollment's
+    dueNote), never a wider or narrower run; a segment an older enrollment's step names that the owner can no longer read pauses it too.
+    Activation refuses a dispatcher who could not run it (NOT_READY), so a new activation makes its activator the owner; AutomationDetail
+    names the owner. handle#OrderPlaced still files its events as the system (it reads no segment). Spec'd: a Sales lead segment trigger
+    refused activation by a dispatcher without Sales, activated by one with it and admitting a new lead's contact as that owner, then the
+    owner's Sales permissions ended and the next step run pausing the automation with the reason, nothing sent and the run's user put back.
+  - R2 (medium; the step job). run#AutomationSteps read the first 50 active automations with no order, so from the 51st on no enrollment
+    ever ran. It now reads every active automation's due enrollments (up to 1,000 automations), the most overdue first, at most 100 an
+    automation and 200 a run. Not spec'd (it needs 51 automations); read in review.
+  - R3 (medium; the regression suite). The Automations spec used MarketingApprovals' prefix MKA, so in one run (test-apps) the second
+    spec's setup failed on duplicate parties; now MKO, its addresses too. Run together with the Marketing specs.
+  - R4 (low; the choice). `sendMembers` took a topic from `p.topicListId` without the organization check, for automationMembers; a
+    parameter get#Choices does not declare, but a choice source must not trust it. Both now call `topicMembers` with the topic their own
+    check found.
+- Findings, numbered by the lead F248 to F253 in order:
+  - the owner (R1): an automation runs as the dispatcher who last activated it, rechecked at each run, pausing when they lose access;
+    activation by a dispatcher who cannot read its segments is refused; staff enrollment admits as the owner (enroll#Party signs the owner
+    in and back within the caller's request, as SitePages' preview does); the Simulation evaluates as its caller (a caller without Sales
+    gets SOURCE_UNAVAILABLE for a Sales segment);
+  - the owner's scope is MarketingAccess.scope(), which narrows to the user's organization filter when one is set: an owner whose filter
+    leaves the automation's organization out pauses it (not exercised);
+  - "never two active for the same automation and person" is a check under the lock of the person's existing enrollments, not a
+    constraint: two events of one person admitted at once (enroll#Party beside the job) could make two;
+  - the cart trigger's send step does not check the cart again: a shopper who checked out after the visit was filed still gets the step's
+    mail unless a goal segment ends it (built-in recovery's build checks the cart);
+  - the subscription trigger's cursor reads acceptances decided at or after it: one committed late with an earlier decidedDate is missed;
+    acceptances while an edited automation was back in draft are admitted at its re-activation (the cursor is kept);
+  - the worker's findings stand otherwise (the store#Steps copy of current template content, the cart trigger's topic consent, audience
+    readers reading automations, a delivery already with the ledger when an enrollment stops, no Home card).
+- Tests (release binary, `--nobuild`, this worktree's runtime): mr-mantle Automations (7 of 7, about 3.2 s of features; the owner
+  feature fails on the unfixed build, which refused the Sales segment) with Experiments, Dispatch, Sends, CartRecovery,
+  MarketingApprovals, Eligibility, Segments, MarketingSubscriptions, MarketingScope, Campaigns, ContactListSend (74 of 74, 31.8 s);
+  ShopCheckout, StoreOperations, SalesOrderApproval, SalesQuoteResponse, SalesPortal, OrderLifecycle, OrderToCashBasicFlow, DeliveryLedger,
+  StoreCheckout (85 of 86: SalesOrderApproval's batch credit-hold feature, which fails the same on master's checkout); mr-boss
+  MarketingAutomations, MarketingAccess, MarketingSends, MarketingDelivery, MarketingCampaigns, MarketingSegments (16 of 16),
+  CommerceCheckoutSettings, CommerceRecovery, CommerceOrders (5 of 5); the client walk MarketingSendWalk (`--serve`, 8.84 s, near the
+  ~9 s estimate on a loaded machine). `moqui lint --screens`: parse failures 0. Prettier clean. Not run: test-apps, the acceptance suite.
+- For the lead:
+  - budget share: mr-mantle Automations about 3.2 s (one feature added, +0.4 s), CartRecovery as built; mr-boss as the Built note;
+  - merge hot spots as the Built note, plus MarketingAutomations.js (the owner: asOwner, ownerProblem, the runs) and Automations.spec.js's
+    prefix; SalesOrderApproval's failing feature is master's, for Sales;
+  - Attack-Surface (the ledger's paragraph; the worker's text corrected for R1): "A Marketing automation reaches people only after
+    `mantle.marketing.CampaignServices.decide#MarketingApproval` (MARKETING_APPROVE, never its author's, the one-person-team flag not
+    applying) and `mantle.marketing.AutomationServices.activate#Automation` (MARKETING_DISPATCH, none of the revision's authors nor its
+    approver, an address for the unsubscribe link). Its admission and step jobs run as its saved owner, the dispatcher who last activated
+    it, signed in for each run and checked again (able to sign in, MARKETING_DISPATCH, the automation's organization, every segment it
+    names readable, Sales and purchase sources under the owner's own access); an owner who lost any of it pauses the automation, and a
+    dispatcher who could not run it cannot activate it. Each send step hands one participant to the delivery ledger through the
+    dispatch's checks (the topic's membership, consent within the organization, suppression and solicitation, a withdrawal by anyone at
+    the address, the frequency cap), once per enrollment and step, with the List-Unsubscribe header and link. The order-placed handler
+    (the SECA OrderPlacedRecordAttribution) only files an admission event, as the system, after the placement commits, in a transaction
+    of its own.";
+  - the user's calls: R1 recorded in §4 (Nov 14); still to confirm as the Built note: audience readers reading automations, the cart
+    automation's topic consent, earlier enrollments continuing on their approved steps after a re-approval.
 
 ### P12 — Surveys and form publication, with PASS SubmitForm
 
@@ -1029,6 +3356,239 @@ survey invitation and results); MKT-FORMS, MKT-PUBLIC; stage M5.
   invitation once, an anonymous visitor answers the public form, a later change of an option leaves both responses
   reading as submitted, and the same form's case responses stay out of Marketing.
 
+**Built Nov 14 (P12).** mr-mantle, mr-pass and mr-boss on branch `mkt/p12` (hashes in the worker's reply), from master after P11's merge and
+the Rust 1.100 rebuild; mr-moqui unchanged, no Rust built. Built beside Sales follow-up 3 (a Sales spec fix only).
+- Checked first (the code over the plan): P7's, P11's and P5's Built and Review notes, F20, F21, F53, F70, F80, F90–F253 and §4; People's P16
+  builder as built (FormDefinitions.js, FormPurpose, SurveyApps.js, the four shared screens and their CS and People mounts), Commons'
+  FormPublication.js (`open#Publication`, the invitation guard), CaseFeedback.js (Customer Service's invitation, page and submit pattern),
+  ExternalAccess.js (the FormInvitation kind, scopePermissions and scopePages), MarketingPortal.js (P7's public pattern: one NotFound, the
+  attempt limits, the neutral receipt, `fileGroup`), P8's create#Send and P9's build#CampaignDelivery, P11's triggers, mr-pass's Feedback page
+  (moqui-form-when.js) and P7's Marketing pages. The code over the plan:
+  - the operations are camelCase, as P7's: `getMarketingForm` and `submitMarketingForm` (the plan's `marketing.getForm`, `marketing.submitForm`),
+    after P7's block in both schema copies and route lists, the answer in the three TOKEN_WRITES lists and let through anonymous by name in the
+    transport (an invitation's answer carries its token);
+  - the purposes: the survey is the framework's `DbfpSurvey` (registered for Marketing; no Marketing survey enum), the lead form `DbfpLead` and
+    registration questions `DbfpRegistration` (new), with `FppSurvey` (existing), `FppLead`, `FppRegistration` (new); a survey takes invited,
+    anonymous and account publications, a lead form and registration questions anonymous and account only;
+  - the shared builder's saveField passes no audience, and a new field is internal by default: FormPurpose gains `fieldAudienceEnumId`, the
+    audience every field of the purpose takes (Marketing's three: customer-visible), applied by FormDefinitionServices' save#FormField and a copy;
+  - option scores are `DbFormFieldOption.scoreValue` (a Mantle extend-entity on the framework's option), written as a third part of an option
+    line (`value | label | score`, a whole number 0–1000, a single choice only); a published option's new score ends it and starts an option of the
+    same value from now (a label alone still changes in place, audit-logged), so a summary reads each response's scores of its date;
+  - "create#Invitations (a send of P9 to an audience)": Marketing's create#Invitations makes an ordinary draft CampaignSend of the publication's
+    campaign naming it (`CampaignSend.formPublicationId`), approved and released as every send; build#CampaignDelivery makes each recipient's
+    FormInvitation once (key by send and party, recordEntityName CampaignSend) and a `MarketingSurvey` capability per attempt for their link (the
+    ledger keeps no token, as P7's verification), appended to the body as "Answer the survey" (a template variable may not be a link, P6), and
+    suppresses a recipient who answered or a closed survey. Commons' create#Invitations is the generic one (an editor names recipients);
+  - "hidden and unknown fields refused": Commons' accept#Submission refuses an unknown or internal field (FIELD_UNKNOWN) and a value for a field
+    its rules hide (FIELD_HIDDEN) before anything is kept; the page maps an unknown field and an oversized value to the neutral receipt (a page
+    never offers them) and a hidden one to what to fix (a visitor without JavaScript sees every question);
+  - "the repeat policy and request identity": FormSubmission's requestKey is the digest of the page's request key per publication, unique, with
+    a payload digest: the same answers answer the first, others REQUEST_KEY_REUSED; an invitation answers once (under its lock), an account
+    publication once per party under FprOnce; an anonymous one cannot tell people apart and takes each new key (design §10);
+  - Customer Service's two shared response screens gain a publication branch keyed on the registration's `publicationScope` (the case branch
+    unchanged; Customer Service's specs pass unchanged): Marketing's responses are read only through a FormSubmission of a Marketing publication,
+    so no case feedback is in reach whatever the form; SurveyFormDetail shows a registration's scores (`scores`) and its Distribution link;
+  - the readiness check "published list" is "published list or form" (a site that publishes only forms is ready), and the confirmation
+    template's check holds vacuously for a site offering no list;
+  - the subscription choice is the publication's `subscriptionListId` (a Marketing extend-entity on Commons' FormPublication), offered while that
+    list is offered on the site and filed through P7's `fileGroup` (pending, its verification message, the address limit) after the answer,
+    from an address typed beside it; recorded on the submission's effects;
+  - SurveyDistribution takes a form (its publications, New publication) or a publication; its design path stays.
+- Mantle:
+  - Commons (owner contract): `entity/FormPublicationEntities.xml` FormPublication `titleText`, `introText`, `completionMessage`,
+    `publishedDate`/`ByUserId`, `closedByUserId`, FormPurpose `fieldAudienceEnumId`, DbFormFieldOption `scoreValue`, the new FormSubmission (its
+    status FsbAccepted, FsbApplied, FsbEffectFailed), FppLead and FppRegistration; `FormPublication.js` and `FormPublicationServices.xml`
+    store#, preview#, close#Publication, create#Invitations, accept#Submission, and guardResponse also keeping a public submission's response;
+    `FormDefinitions.js` the scores (checkOptions, storeOptions, editRows, formAt's options, scoreOf) and the purpose's audience;
+    `ExternalAccess.js` the FormInvitation kind's `MarketingSurvey` scope (issuer MARKETING_DISPATCH or MARKETING_CONTENT_EDIT, its page the
+    organization's Marketing mount's SubmitForm).
+  - Marketing: `MarketingForms.js` (new) under `MarketingFormServices.xml` (new): get#FormScope, store#, publish#, find#Publications,
+    get#Publication, create#Invitations, find#Responses, get#Response, get#ResponseStats, and `invitationLink` for the build;
+    `MarketingPortal.js` getForm, submitForm and their effects, `MarketingPortalServices.xml` get#Form and submit#Form; `MarketingDispatch.js`
+    build#CampaignDelivery's invitation link; `MarketingAutomations.js` the form-submission trigger (AtrFormSubmitted, `formPublicationId`; a
+    submission by a known party after the cursor), AutomationServices' parameter; `entity/MarketingEntities.xml` a P12 block (FormPublication
+    `subscriptionListId`, CampaignSend and MarketingAutomation `formPublicationId`, AtrFormSubmitted); `data/MarketingSeedData.xml` a P12 block
+    (DbfpLead, DbfpRegistration and the three FormPurpose rows). PASS owner contracts: `ForumSchema.js`, `PassRoutes.js`, `PassApi.js`,
+    `PassAuthority.js`.
+- PASS: `screen/Marketing/SubmitForm.xml` and `.html.fancy` (PublicForm with `f_` inputs, moqui-form-when.js, the FormSubscription box;
+  FormReceipt), `service/pass/Schema.js` and `Routes.js` (copies of Mantle's), `Transport.js` (TOKEN_WRITES, the anonymous write),
+  `screen/Marketing.xml`'s comment, `docs/Deployment.md` (Marketing app: Forms), README.
+- BOSS: `screen/Marketing/Surveys.xml` (new area, menu 7, BOSS_MKT_SURVEYS, `g v`) mounting Shared/SurveyForms, SurveyFormDetail,
+  SurveyResponses, SurveyResponseDetail and the new `Surveys/SurveyDistribution.xml`; `SurveyApps.js` Marketing's registration (the third);
+  the shared screens' changes above; `Marketing.js` the capability `surveyRead`, area `surveys`, the P12 link paths; `BossSetupMarketingData.xml`
+  (a P12 block: BOSS_MKT_SURVEYS for the authors, audience managers and analysts); demo (`BossZZMarketingDemoData.xml`, a P12 block): Retail's
+  garden centre visit survey with its "good" option relabelled on 5 November, published to anyone on ZIZI_SHOP (with the garden newsletter as
+  its subscription choice) and by invitation through a sent invitation send, an anonymous response before the change and Maya's invited one after.
+- Specs:
+  - Mantle `test/party/FormPublications` (new, 5 features, about 0.8 s: a publication opens only a published form by an admitted access kind, a
+    draft or closed one takes no answer, the page carries no score, an outsider refused; an unknown field and a hidden field's answer refused, a
+    missing required one too, nothing kept, a public response locked; one request key one submission, other answers REQUEST_KEY_REUSED; an
+    invitation answers once; a response reads its option text and score as of submission after both change);
+    `test/marketing/MarketingForms` (new, 3 features, about 1.5 s: an author publishes on the organization's site, a reader, another organization's
+    author and site refused, the campaign linked; an invitation send's dispatch invites only the consenting member, whose link answers once and
+    a second answer keeps nothing, the non-consenting member gets nothing; an audience reader reads the two responses and the summary with each
+    response's scores, a report reader unnamed, a case's feedback on the same form unavailable, MARKETING_VIEW alone refused).
+  - mr-pass `test/Marketing/SubmitForm` (new, 3 features, about 0.5 s; fixtures `MarketingFixtures.js` forms()): SubmitForm's one html render; a
+    draft, closed, another site's publication and a forged link NotFound alike; an answer kept once; over the client's limit, oversized or with an
+    unknown field the same receipt and nothing kept; the two operations in both copies and route lists, the answer in the three lists.
+  - mr-boss `MarketingSurveys` (new, 2 features, about 0.6 s: SurveyDistribution's one qvt render for the author; the registration, the author
+    editing, the analyst reading the demo's two responses unnamed, on the services); `MarketingAccess` (the capabilities `surveyRead` and
+    `surveys` per group, the analyst's menu, the menus and `g v`); `MarketingSpecLib` (menus, keys, the demo survey's ids).
+  - Acceptance, written and not run: mr-boss `test/acceptance/Marketing/MarketingSurveyWalk` (3 features: scenario 11's form half and 12 through
+    the screens' transitions); mr-pass `test/acceptance/client/MarketingFormHttp` (2 features, plain requests: an anonymous answer with the
+    subscription choice filed pending; an invitation link a scanner reads, answered once; draft, closed and forged not available) with
+    `test/acceptance/MarketingFormFixtures` on PASS_HTTP (P7's organization, its Marketing target), in `client/suite.js`.
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle FormPublications 5 of 5, MarketingForms 3 of 3; FormDefinitions,
+  CaseFeedback, Reviews, Training, PeopleChecklists, SupportTemplates (27 of 27); Dispatch, Sends, Automations, MarketingSubscriptions,
+  Campaigns, PassAuthority, Experiments, MarketingScope, SalesPortal (56 of 56); mr-pass SubmitForm 3 of 3; MarketingAccess, Transport, ShopCart,
+  ShopCheckout, Forum, SupportAccess, SalesPortalAccess, Portals (36 of 36); mr-boss MarketingSurveys 2 of 2, MarketingAccess, MarketingAutomations,
+  MarketingCampaigns, CustomerServiceReports, CustomerServiceAccess, CustomerServiceFeedback, PeopleRecruiting, PeopleAccessLater (64 of 64; two
+  of them over 15 s in that run, below). A throwaway walk of SurveyDistribution's four transitions (store, publish, New invitation send, close)
+  and renders of Surveys, SurveyDetail, SurveyDistribution (a form, an invited publication, tui, html), Responses and ResponseDetail (qvt, tui)
+  passed and was not kept. `moqui lint --screens` (release): 141 flagged sites, as before, none in a new or changed screen; parse failures 0.
+  Prettier clean on the new and changed JavaScript (ExternalAccess.js was not clean before and is left as it was). Not run: test-apps, the
+  acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P12" table; ss-inventory's Survey rows gain Marketing's Implemented in.
+- Design edits: design-marketing §10 SurveyDistribution and §13 SubmitForm (as built); design-drawers-commons' form publication row (owner
+  contract: the services, FormSubmission, the scores, the audience, the scope).
+- Findings, numbered by the lead F254 to F263 in order:
+  - the operations are camelCase; the survey purpose is the framework's DbfpSurvey; FormPurpose gains fieldAudienceEnumId (the code over the
+    plan above);
+  - an invitation is an ordinary send of the publication's campaign (its promotional eligibility is the send's preparation and dispatch), its
+    FormInvitation made at the build and its link per attempt; a publication needs a campaign and a site before an invitation send;
+  - a published option's new score is a new option of the same value from now, so a response reads the score of its date; scores are whole
+    numbers 0–1000 on a single choice only (design §10's declared aggregation limits for negative or multi-select scores are not built);
+  - an anonymous publication cannot limit people (each new request key is a submission; FprOnce limits an invitation or an account); two
+    concurrent anonymous posts with one request key: the second fails on the unique key (Unavailable), not the first answer;
+  - the page answers an unknown field or an oversized value with the neutral receipt and a hidden field's answer with what to fix;
+  - the shared response screens' publication branch is an owner contract change of Customer Service's screens (its specs unchanged);
+  - the respondent of a response is named for an audience reader only; a report reader sees "A respondent";
+  - the form-submission trigger files only a submission with a known party (an invitation's recipient or a signed-in account); it is not spec'd
+    (it needs an activated automation and its owner);
+  - the demo's ZIZI_SHOP is a Commerce demo site left unpublished, so the demo publications' site check reads Missing until it is published
+    (as P7's offer);
+  - in one run of the mr-boss group CustomerServiceAccess (17.7 s) and PeopleAccessLater (21.6 s) passed the 15-second bound on a loaded
+    machine (other workers running); neither is changed by this phase beyond the shared screens; to check on master.
+- For the lead:
+  - budget share: mr-mantle about 2.3 s (FormPublications 0.8 s, MarketingForms 1.5 s); mr-pass server about 0.5 s (SubmitForm); mr-boss server
+    about 0.6 s (MarketingSurveys; MarketingAccess +0.1 s); no client spec;
+  - merge hot spots (Sales follow-up 3 beside, and P13/P14 next): mr-mantle `service/mantle/forum/ForumSchema.js` and `script/PassRoutes.js` (a
+    P12 block after P7's), `script/PassApi.js`, `script/PassAuthority.js` (TOKEN_WRITES' end), `entity/MarketingEntities.xml` and
+    `data/MarketingSeedData.xml` (P12 blocks at the ends), `entity/FormPublicationEntities.xml`, `service/mantle/party/FormPublication.js`,
+    `FormPublicationServices.xml`, `FormDefinitions.js`, `ExternalAccess.js` (the FormInvitation kind), `service/mantle/marketing/MarketingPortal.js`
+    (limits, readiness, a P12 section before the readiness), `MarketingPortalServices.xml`, `MarketingDispatch.js` (buildDelivery),
+    `MarketingAutomations.js` (triggers, triggerFor, collect), `AutomationServices.xml`; new MarketingForms.js, MarketingFormServices.xml,
+    FormPublications.spec.js, MarketingForms.spec.js. mr-pass `service/pass/Schema.js`, `Routes.js` (copies), `Transport.js`, `docs/Deployment.md`,
+    README, `test/Marketing/MarketingFixtures.js`, `test/acceptance/client/suite.js`; new SubmitForm page, spec and acceptance tests. mr-boss
+    `screen/Marketing.xml` (the Surveys item and key), `service/ironstone/marketing/Marketing.js` (areas, areaReads, scope, linkPaths),
+    `service/ironstone/shared/SurveyApps.js`, `screen/Shared/SurveyFormDetail.xml`, `SurveyResponses.xml`, `SurveyResponseDetail.xml`,
+    `data/BossSetupMarketingData.xml` and `data/BossZZMarketingDemoData.xml` (P12 blocks at the ends), `test/Marketing/MarketingAccess.spec.js`,
+    `MarketingSpecLib.js`, `plan/ss-inventory.md`, `plan/usl-inventory.md`, `plan/design-marketing.md`, `plan/design-drawers-commons.md`, this file;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, after PASS Marketing's subscription paragraph; no mr-moqui worktree): "PASS
+    Marketing's forms (`mantle.marketing.MarketingPortalServices` get#Form and submit#Form, `allow-remote="false"`, `authenticate="anonymous-all"`,
+    reached only as the PASS operations `getMarketingForm` and `submitMarketingForm` of the authority's allowlist) find the organization from the
+    site's `marketing` mount and a publication only of a Marketing purpose (survey, lead form, registration questions) of that organization, on
+    that site and open now: a public or signed-in accounts' one by its id, an invited one only by its link's token (an ExternalAccessCapability of
+    the FormInvitation kind, scope `MarketingSurvey`, a 48-character token whose digest alone is kept, made at each attempt of an invitation send's
+    delivery and ending with the publication or after 30 days; each lookup counts against the requester's limit, 100 in ten minutes); a site
+    without the mount, a draft, closed or another site's publication and a forged, expired or revoked token answer the same NotFound. The form is
+    the publication's as of now on the server (the customer-visible fields, never an internal field, a draft or a score); an answer goes through
+    Commons' `mantle.party.FormPublicationServices.accept#Submission`, which refuses an unknown or internal field and a value for a field its rules
+    hide, checks each value's type and length, keeps one FormSubmission per request key (the same answers answer the first, others are refused),
+    answers an invitation once under its lock and an account's publication once per party, and keeps the response as submitted (the framework's
+    update and delete of it are refused). `submitMarketingForm` is an anonymous write (the transport lets it through by name; the authority takes
+    it from a registered deployment as a TOKEN_WRITES operation) bounded by PASS's request key and limits per client (30 in ten minutes) and site
+    (1,000 an hour); over either, an answer over 64 KB, or one naming a field the page never offered gets the publication's same receipt and nothing
+    is kept. An email address typed beside an answer never identifies or subscribes anyone: the subscription choice is a separate public request
+    of the publication's list, filed after the answer through the subscription path (pending, its own verification message and limits). Staff
+    read responses only through `mantle.marketing.MarketingFormServices` (a reader of the purpose and organization, only submissions to a
+    Marketing publication, so no case feedback; the respondent named for an audience reader only). An invitation goes only to a recipient an
+    invitation send's preparation and dispatch admit (the topic's membership, consent within the organization, suppression), approved and
+    released as every send.";
+  - the user's call: none required; to confirm, an invitation as an ordinary approved send, scores as whole numbers on single choices only, the
+    respondent named for audience readers only, and a hidden field's answer told to the visitor rather than answered with the receipt.
+
+**Review Nov 14 (P12).** A fresh review of `mkt/p12` (mr-mantle e8171398, mr-pass 2ad9f8e, mr-boss 0604962c) against P12, §2, §4 and
+design §10, §13, §18, judged as a public, unauthenticated surface by P7's and Sales P13's reviews; master (Sales follow-up 3) merged into
+mr-mantle (a59e2a58: SalesOrderApproval's spec) and mr-boss (7b3b6068: the MaintenanceAccess split, MaintenancePlans), no conflict; mr-pass
+had nothing new. Fixes mr-mantle 6cec5686, mr-pass 3d6929a.
+- Checked and sound:
+  - The two operations: one NotFound for every miss (a site without the mount, a draft, scheduled, closed or another site's or
+    organization's publication, a form not of a Marketing purpose or not the organization's, an invited publication by id, a public one by
+    token) once R2 is in; `served` first, then the publication, then the limits (client 30 in ten minutes, site 1,000 an hour, P7's attempt
+    buckets in their own transactions); a token's lookup counted by ExternalAccess' own throttle (100 in ten minutes per requester) before
+    the digest lookup; the answer's values a map or bounded JSON text (65,536 characters); over a limit, oversized, an unknown or internal
+    field, a value over 4,000 characters, an invitation already answered: the publication's receipt and nothing kept. The page posts with
+    the session token (CSRF), its inputs `f_<name>` from the server's own field list; the PASS route is no-store with Referrer-Policy
+    same-origin and the shell's CSP (`script-src 'self'`, the framework's moqui-form-when.js); `.html.fancy` escapes every value, so an
+    author's title, introduction or option text cannot write markup. Nothing is echoed but the receipt, a field's title in what to fix,
+    and an invited publication's id is never sent to its page. GET only reads, so a mail scanner changes nothing.
+  - accept#Submission: unknown and internal fields refused before anything is kept (the purpose's customer-visible fields as of now), each
+    value of its type through checkValues, a hidden field's answer refused, the request key a per-publication digest with the payload's
+    digest (the same answers answer the first, other answers REQUEST_KEY_REUSED), an invitation answered once under its lock, the response
+    locked by the guard as an invited one is. The worker's "a hidden field's answer told to the visitor": the message names no question
+    ("Leave unanswered the questions that do not apply to your other answers") and the page already carries every customer-visible
+    question with its rules, so it discloses no structure; an internal field is FIELD_UNKNOWN and gets the receipt. Kept as built: the
+    receipt would tell a visitor without JavaScript their answer was kept when nothing was (the user's call, below).
+  - The subscription choice: the publication's list only while it is offered on that site (P7's `offerOf`), only when ticked with a valid
+    address under P7's address limit, filed through P7's `fileGroup` (pending, its own verification message, evidence naming the form and
+    site, a request key derived from the submission so a replay files nothing), after the answer and apart (a failure logged and recorded
+    on the submission, the answer kept); never a membership and never from an answer.
+  - create#Invitations: an ordinary draft CampaignSend of the publication's open campaign (create#Send's own checks), so P8's approval,
+    P9's preparation (topic membership, consent within the organization, suppression) and release apply unchanged; build#CampaignDelivery
+    adds the link only after its membership and address checks, the FormInvitation once per send and recipient, a capability of scope
+    MarketingSurvey per attempt (48 characters, digest only, ending with the publication or after 30 days), and suppresses a recipient
+    who answered or a survey not open; a case feedback link never opens a Marketing form (the scope and recordType are both checked).
+  - Staff reads: Marketing's responses only through a FormSubmission of a Marketing publication of the caller's organizations, so no case
+    feedback of the same form is reached; the respondent named for an audience reader only; scores read with the form of each response's
+    date. The shared response screens' publication branch is keyed on the registration and leaves the case branch as it was; Customer
+    Service's and People's specs (CustomerServiceFeedback, CustomerServiceReports, CustomerServiceAccess, PeopleRecruiting,
+    PeopleAccessLater) pass unchanged, and FormDefinitions and CaseFeedback in Mantle.
+  - The copies: ForumSchema.js and Schema.js, PassRoutes.js and Routes.js byte-identical; the three TOKEN_WRITES lists equal (diffed);
+    the transport lets `submitMarketingForm` through without a token by name, as P7's `requestSubscription`.
+- Fixed:
+  - R1 (medium; one submission per request key). Two concurrent posts of one request key to a public (or an account's) publication: the
+    second failed on FormSubmission's unique key at commit (an error, not the first's answer), and an account's once policy could admit two
+    answers of one party. accept#Submission now takes the publication's row lock (as an invitation's) before its second look for the key
+    and the once check, so the second answers the first. Spec'd in FormPublications: four threads post one key and each gets the one
+    submission (failed before the fix with the duplicate key).
+  - R2 (low; one NotFound). A link the ExternalAccess check refused answered "This link is not available", a good link of a closed or
+    another site's publication "This page is not available", so the operations' answers told a good token from a forged one. The check's
+    NotFound is now the page's own. SubmitForm's spec compared the draft's, closed's and other site's words but left the forged one out; it
+    now compares all five (failed before the fix).
+- Findings, numbered by the lead F264 to F268 in order:
+  - accept#Submission is `authenticate="anonymous-all"` and trusts the invitationId and partyId its caller verified; `allow-remote="false"`
+    keeps it off REST, and the Marketing page calls the JavaScript directly, as CaseFeedback's anonymous internal services are built;
+  - a published option's new score ends it and starts an option of the same value at the next sequence number, so the rescored option
+    moves to the end of the question's options (a relabel stays in place);
+  - the invitation link is made, and the FormInvitation marked sent with its attempt counted, before the build's later checks and the
+    attempt itself, so a delivery suppressed after it (no unsubscribe address) or failed still reads as sent (Responses' "Delivered");
+  - the option score parser applies to every purpose's builder: a non-Marketing option line ending "| <number>" now stores a score
+    (unused there) instead of keeping it in its label;
+  - the worker's findings stand (the operations camelCase, the purposes, the invitation as an ordinary send, scores 0–1000 on single
+    choices, an anonymous publication taking each new key, the respondent named for audience readers, the trigger not spec'd, the demo
+    site unpublished); its concurrent anonymous one is R1.
+- Tests run (release binary, `--nobuild`, this worktree's runtime, after the merge): mr-mantle FormPublications (6 of 6, 1.3 s),
+  MarketingForms, FormDefinitions, CaseFeedback, MarketingSubscriptions, Dispatch, Automations (34 of 34, 43.7 s); mr-pass SubmitForm,
+  MarketingAccess, Transport, Portals (11 of 11, 29.3 s); mr-boss MarketingSurveys, MarketingAccess, CustomerServiceFeedback,
+  CustomerServiceReports, CustomerServiceAccess, PeopleRecruiting, PeopleAccessLater (61 of 61, 97.4 s). In that seven-spec run
+  PeopleAccessLater (18.7 s) and CustomerServiceAccess (18.1 s) passed the 15-second bound, as the worker saw; each alone is under it.
+  Prettier clean on the changed JavaScript. No screen changed; acceptance tests not run.
+- For the lead:
+  - budget share: mr-mantle FormPublications +0.4 s (the concurrent feature); the rest as the Built note;
+  - merge hot spots: as the Built note, plus `FormPublication.js` acceptSubmission (the lock) and `MarketingPortal.js` publicationOfPage;
+  - PeopleAccessLater and CustomerServiceAccess over 15 s beside other specs on a loaded machine: not P12's (the shared screens' change is a
+    branch they do not take); to check on master;
+  - Attack-Surface (mr-moqui, after PASS Marketing's subscription paragraph): the worker's paragraph is accurate with these corrections:
+    after "answer the same NotFound" add "(the link check's refusal answered in the page's own words)"; in "keeps one FormSubmission per
+    request key (the same answers answer the first, others are refused)" add "under the publication's or the invitation's lock, so a
+    concurrent repeat answers the first"; in "over either, an answer over 64 KB, or one naming a field the page never offered gets the
+    publication's same receipt" add "a value over 4,000 characters, or an invitation already answered"; and after "a value for a field its
+    rules hide" add "(the visitor is told to leave such questions unanswered, naming none)";
+  - the user's call (none blocking): a hidden question's answer told to the visitor (what to fix, naming no question) rather than the
+    receipt, which would drop a no-JavaScript visitor's answer silently; and the rescored option's place (the finding above).
+
 ### P13 — Leads and the Sales handoff
 
 Design §10 Leads and LeadRules, §12 LeadSources, §13 SubmitForm (its lead purpose), §15.3 (the capture job);
@@ -1065,6 +3625,220 @@ MKT-LEAD; SAL-CRM. Every part of this phase is a connection to Sales (§1).
 - **Usable when** (`test/acceptance/Marketing/MarketingLeadScenario`; scenario 11): a visitor's lead form on the PASS
   site becomes one lead in Sales' queue with the campaign as its source though the form is posted twice; with Sales'
   intake failing the response is kept and the retry makes one lead; the visitor is on no list.
+
+**Built Nov 14 (P13).** mr-mantle, mr-boss and mr-pass on branch `mkt/p13` (hashes in the worker's reply), from master after P12's merge;
+mr-moqui unchanged, no Rust built. Built beside P14 (content and landing pages) and follow-up 4 (spec timing splits).
+- Checked first (the code over the plan; F68): impl-sales P5's Built and Review notes and SalesIntake.js as merged: `store#LeadIntake`
+  takes organizationPartyId, sourceKind `formResponse` with sourceId (the response), operationKey (at most 60 characters), teamPartyId,
+  utmSource and utmMedium, marketingCampaignId, trackingCodeId, defaultDataSourceId (offered to the organization), the submitted name,
+  organization, email and phone, opportunityName, description and verified; a repeated key answers the first result (alreadyApplied)
+  only when the request digest matches (else OPERATION_KEY_CONFLICT), one source identity one intake, a duplicate joins the open lead of
+  the same email (duplicate, SlioDuplicate); a system caller (no user, or authorization off) is trusted for organization, team and
+  verified and checks only that the team is current, the tracking code and campaign exist (not their organization). P12's Built and
+  Review notes (accept#Submission, applySubmissionEffects, the FppLead purpose, publish readiness), Sales.js `mountRoots` (Marketing
+  already admitted for Leads, Leads/Accounts and Settings/LeadSources), Leads.xml, LeadSources.xml, SalesOpportunityForms.xml,
+  OpportunityDetail.xml, find#Opportunities' rows (the campaign as an id), create#/update#Opportunity (the campaign checked for existence
+  only, no tracking code), P11's job and recovery pattern. The code over the plan:
+  - "a publication of purpose lead ... with its default source and team queue": the publication's source and queue are its lead rule (one
+    current rule per publication), and a lead form opens only once its rule is current (a readiness check of publish#Publication);
+  - the rule's "allowed field mapping" is four fields (name, organization, email, phone) and a list of note fields, each a customer-visible
+    question of the form; "consent text" is the rule's notice, shown on the page above Send (it records no consent);
+  - "the Sales routing grant" (design §2 LeadRules: A, S) is not a permission: a content author (MARKETING_CONTENT_EDIT) of the
+    organization picks among its current sales teams and offered sources (the user's call, below);
+  - "TrackingServices.find#TrackingLinks (the codes from P15)": built here minimally (a campaign's TrackingCode rows for a Marketing reader
+    of its organization) for Sales' lead forms; P15 extends it. A lead form's handoff passes the publication's campaign and no tracking
+    code or UTM pair: SubmitForm carries none until P15's capture;
+  - "process#LeadCaptures" is the staff ReprocessCapture; the job is `run#LeadCaptures`, with `capture#FormSubmission` and
+    `hand#LeadCapture` its internal steps (each with `operation` and `operation-ref`);
+  - "Leads ... mounted with Marketing's campaign and source filters": Sales' LeadList gains the campaign filter (Marketing's campaigns, for a
+    Marketing reader) beside its source filter, in both mounts, and the campaign column shows `campaignName` from find#Opportunities.
+- Mantle:
+  - `entity/MarketingEntities.xml` (a P13 block): MarketingLeadRule (package `mantle.marketing.lead`; the source kind MlsFormPublication,
+    trigger MltFormSubmitted, team, source, mapping, condition, notice; dated, `replacesLeadRuleId`), MarketingLeadCapture (unique by rule
+    and source event and by operation key; MlcPending, MlcHandedOff, MlcSkipped, MlcFailed; attempts, next try, reason, the lead and intake,
+    duplicate, reprocessed by and why) and the view MarketingLeadCaptureCount; `data/MarketingLeadSetupData.xml` (new, seed-initial): the
+    ServiceJob run_MarketingLeadCaptures (every five minutes), its JobRegistration and RecoveryDescriptor (MARKETING_CONTENT_EDIT).
+  - `service/mantle/marketing/MarketingLeads.js` (new) under `MarketingFormServices.xml` (a P13 block): find#LeadRules, get#LeadRule,
+    store#LeadRule, preview#LeadRule, find#LeadCaptures, get#LeadHandoffs, process#LeadCaptures, run#LeadCaptures, capture#FormSubmission,
+    hand#LeadCapture; `TrackingServices.xml` find#TrackingLinks. The handoff runs as the system (`runAsSystem`) in Sales' own transaction
+    under the capture's lock and key `mkt-lead:<leadCaptureId>`, with the publication's organization and campaign, the rule's team and
+    source, the answers to the questions published at submission (`formAt` of the submission's date), an email answer that is no address
+    dropped and noted, notes as "question: answer" lines, and verified only when the invitation's or the signed-in account's address equals
+    the email answered. A failure keeps the answer and the capture (its reason, a wait doubling from five minutes to a day, for 30 days).
+  - `MarketingPortal.js`: get#Form's `notice` for a lead form; applySubmissionEffects queues `capture#FormSubmission` after commit
+    (`registerOnCommit`), never in the answer's transaction. `MarketingForms.js` readinessOf: a lead form's current rule.
+  - Sales (owner contract): `SalesOpportunities.js` create#/update#Opportunity take `trackingCodeId` (a code of the deal's campaign,
+    TRACKING_INVALID; kept as a SalesOpportunityTracking row, never removed) and refuse another organization's campaign (CAMPAIGN_INVALID; a
+    legacy campaign of no organization passes); find#Opportunities' rows gain `campaignName` (one query), get#Opportunity `trackingCodeId`
+    and `trackingText`; `OpportunityServices.xml` the interface's `trackingCodeId`.
+- BOSS:
+  - `screen/Marketing/Leads/LeadRules.xml` and `LeadRuleDetail.xml` (new): LeadRuleList with New lead rule; the rule's header (End in
+    More), Lead rule (a change at its revision starts a new rule), Preview, Handoffs with Try again (ReprocessCapture, a reason).
+    `screen/Marketing/Leads.xml`: LeadRules and LeadRuleDetail, Leads and Accounts for a Sales reader only, LeadRules the default tab of a
+    user who reads no Sales, and the Sales context call `force-new` (finding below); `screen/Marketing.xml` the Leads item for authors and
+    the administrator; `screen/Marketing/Settings.xml` Sales' LeadSources (SALES_CONFIGURE) with Sales' context for this root.
+  - `Marketing.js`: `leadRuleRead`, area `leadRules`, links Leads/LeadRules, Leads/LeadRuleDetail, Settings/LeadSources.
+  - `CampaignDetail.xml` the Results box (get#LeadHandoffs, any Marketing reader); `SurveyDistribution.xml` a lead form's Lead handoff box.
+  - Sales' files, each in a marked Marketing block (owner contract): `Sales.js` choice sources `campaigns` and `trackingCodes` (over
+    Marketing's services as the user; none without MARKETING_VIEW), `ContextServices.xml` get#Choices' `marketingCampaignId`,
+    `template/SalesParts.xml` passing it; `Pipeline/Leads.xml` the campaign filter and name column; `template/SalesOpportunityForms.xml`
+    NewLead's campaign and tracking code; `Pipeline/OpportunityDetail.xml` Edit's campaign and tracking code (the stored value for anyone
+    else) and the header's tracking code; `Settings/LeadSources.xml` UtmSourceMap's source and medium from Marketing's vocabulary.
+  - `data/BossSetupMarketingData.xml` (a P13 block: BOSS_MKT_LEAD_RULES, the authors' ALWAYS); demo (`BossZZMarketingDemoData.xml`, a P13
+    block): Retail's garden plan request (a lead form) on ZIZI_SHOP for the spring campaign, its rule to Retail East with the website
+    enquiry source, and one answer of 10 November whose handoff failed and is no longer tried by the job (Try again makes its lead).
+- PASS: `screen/Marketing/SubmitForm.html.fancy` the notice above Send (`FormNotice`), `SubmitForm.xml`'s comment; `docs/Deployment.md`
+  (Marketing app: Lead forms). No operation added: the schema and route copies and the TOKEN_WRITES lists are unchanged.
+- Specs:
+  - Mantle `test/marketing/LeadCapture` (new, 4 features, about 1.2 s: an author routes a lead form to a team, a reader, another
+    organization's author and another organization's team refused, unknown and unmapped refused, one rule a form, the form opens only with
+    it and shows its notice; an answer posted twice under one key is one capture and one lead in the team's queue with the campaign and
+    source, the draft phone question and the unmapped budget never reach Sales, a second answer of the same email joins the lead, the job
+    adds nothing, a reader without Sales sees the counts and no lead id, another organization's reader refused, no subscription request,
+    consent or contact made; with the team ended the handoff fails and keeps the answer, the job leaves it until its time and then makes the
+    one lead, a reprocess needs the permission and a reason and leaves a handed-off capture alone; a lead takes a campaign of its
+    organization and a code of that campaign only, and find#TrackingLinks is the organization's).
+  - mr-boss `MarketingLeads` (new, 2 features, about 0.5 to 0.9 s: LeadRules' and LeadRuleDetail's one qvt render each for the author;
+    the author's Leads tabs, Sales' Leads telling them they read no leads, the reader's handoff counts, Sales' campaign choices for a
+    Marketing reader only); `MarketingAccess` (the capabilities `leadRuleRead` and `leadRules`, the author's and administrator's menus);
+    `MarketingSpecLib` (menus, the demo lead ids).
+  - Acceptance, written and not run: mr-boss `test/acceptance/Marketing/MarketingLeadScenario` (3 features, stepwise: scenario 11's lead
+    half through the screens' transitions: the lead form built, routed and opened; posted twice, one lead in East's queue with the
+    campaign; Sales' intake failing, the answer kept, Try again making the one lead; the visitor on no list).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle LeadCapture 4 of 4, with SalesLeadIntake,
+  SalesOpportunities, SalesLeadQualify, MarketingForms, FormPublications, MarketingSubscriptions, Campaigns (36 of 36); mr-boss
+  MarketingLeads 2 of 2, with MarketingAccess, MarketingCampaigns, MarketingSurveys, MarketingLists, SalesIntake, SalesOpportunities,
+  SalesHome, SalesSettings, SalesAccess (44 of 44); mr-pass SubmitForm, MarketingAccess, Transport (8 of 8). A throwaway walk (renders of
+  Settings/LeadSources qvt and tui, SurveyDistribution of the demo lead form, LeadRuleDetail tui and for the administrator, LeadRules tui,
+  a survey's publication as a lead rule (not available), Sales' OpportunityDetail and Leads, CampaignDetail html for a reader; Try again
+  through its transition making the demo capture's lead in Retail East; a rule change through storeLeadRule replacing the rule) passed and
+  was not kept. `moqui lint --screens` (release): 141 flagged sites, as before, none in a new or changed screen; parse failures 0.
+  Prettier clean on the new and changed JavaScript. Not run: test-apps, the acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P13" table; ss-inventory has no row for these screens.
+- Design edits: design-marketing §10 Leads and LeadRules, §12 LeadSources, §13 SubmitForm (as built); design-sales §3 Leads and §9
+  UtmSourceMap (owner contract).
+- Findings, numbered by the lead F269 to F279 in order:
+  - the publication's default source and team queue are its lead rule, one current rule per lead form, and a lead form opens only with
+    one (the code over the plan above); a changed rule is a new rule from now, so an answer is captured by the rule in effect when it was
+    submitted and older answers are never captured again;
+  - no "Sales routing grant": a content author routes a lead form to any current sales team of the organization with any source offered
+    to it (the user's call, below);
+  - a lead form's handoff carries no tracking code or UTM pair (SubmitForm has none until P15), so the UTM map never decides a form lead's
+    source yet; find#TrackingLinks is a minimal read here, for Sales' choices, that P15 extends;
+  - `verified` is true only when an invitation's or the signed-in account's address equals the email answered; an anonymous lead form's
+    inquiry is always unverified, so Sales' purge blanks it if it never qualifies;
+  - an email answer that is not an address is left out of the inquiry (the lead is made without it) and noted on the capture;
+  - Sales' owner contract tightened: create#/update#Opportunity refuse another organization's campaign (a legacy campaign of no
+    organization passes; store#LeadIntake's system path still checks existence only), take a tracking code of the deal's campaign, and
+    keep it (a code is added, never removed);
+  - a failed capture is retried by the job for 30 days from its capture (a wait doubling to a day), then only by an author's Try again;
+    the registered recovery re-runs the job, which takes only what is due;
+  - the capture after commit and the job's collection may meet on one answer: one fails on the unique key and is logged, no second
+    capture is made;
+  - Marketing's Leads area called Sales' context without `force-new`: for a user who reads no Sales the refusal marked the request's
+    transaction for rollback, so any transition under Leads failed ("Transaction marked for rollback"); latent since P3 (its transitions
+    were Sales readers'), fixed here in Leads.xml and the new Settings call;
+  - a capture names its Sales lead only to a caller who can open it in Sales, and Marketing mounts no OpportunityDetail, so the lead shows
+    as an id; the preview's sample for a reader without MARKETING_AUDIENCE_VIEW is made of the questions, and the duplicate outcome is
+    Sales' policy in words, never looked up (no Sales record disclosed);
+  - Marketing's Settings is the Marketing administrator's and LeadSources needs SALES_CONFIGURE, so only a user holding both sees it
+    there (the demo marketing.admin does not).
+- For the lead:
+  - budget share: mr-mantle about 1.2 s (LeadCapture); mr-boss server about 0.5 to 0.9 s (MarketingLeads; MarketingAccess unchanged in
+    time); mr-pass none; no client spec;
+  - merge hot spots (P14 beside, P15 next, follow-up 4): mr-mantle `entity/MarketingEntities.xml` (a P13 block after P12's),
+    `service/mantle/marketing/MarketingFormServices.xml` (a P13 block at the end), `TrackingServices.xml` (find#TrackingLinks, P15's file),
+    `MarketingPortal.js` (getForm's notice, applySubmissionEffects; P14's embedded forms may touch it), `MarketingForms.js` (readinessOf),
+    `service/mantle/sales/SalesOpportunities.js` (campaignFor, trackingFor, the list's campaignName, get#Opportunity),
+    `OpportunityServices.xml` (the fields interface); new `MarketingLeads.js`, `data/MarketingLeadSetupData.xml`,
+    `test/marketing/LeadCapture.spec.js`. mr-boss `screen/Marketing.xml` (the Leads item), `screen/Marketing/Leads.xml`,
+    `screen/Marketing/Settings.xml`, `screen/Marketing/Campaigns/CampaignDetail.xml` (actions and the Results box), `screen/Marketing/
+    Surveys/SurveyDistribution.xml`, `service/ironstone/marketing/Marketing.js` (areas, areaReads, scope, linkPaths), Sales' `Sales.js` (a
+    block after P19's), `service/ironstone/sales/ContextServices.xml` (get#Choices), `template/SalesParts.xml`, `screen/Sales/Pipeline/
+    Leads.xml`, `OpportunityDetail.xml`, `template/SalesOpportunityForms.xml`, `screen/Sales/Settings/LeadSources.xml`,
+    `data/BossSetupMarketingData.xml` and `data/BossZZMarketingDemoData.xml` (P13 blocks at the ends), `test/Marketing/MarketingAccess.spec.js`,
+    `MarketingSpecLib.js`, `plan/usl-inventory.md`, `plan/design-marketing.md`, `plan/design-sales.md`, this file; new LeadRules and
+    LeadRuleDetail screens, MarketingLeads spec and MarketingLeadScenario. mr-pass `screen/Marketing/SubmitForm.html.fancy`, `SubmitForm.xml`,
+    `docs/Deployment.md`;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, after PASS Marketing's forms paragraph; no mr-moqui worktree): "A lead
+    form's answer reaches Sales only through Marketing's lead rule, never from the request: once `submitMarketingForm` has kept an answer
+    to a publication of the lead purpose, `mantle.marketing.MarketingFormServices.capture#FormSubmission` runs after the request commits
+    (on a service worker, in a transaction of its own; the page's answer and receipt never wait on it) and the capture job
+    `run_MarketingLeadCaptures` takes up any it missed; each captures the answer once per rule (MarketingLeadRule, a content author's of the
+    publication's organization: MARKETING_CONTENT_EDIT) and `hand#LeadCapture` hands it to Sales' `mantle.sales.OpportunityServices.store#LeadIntake`
+    as the system (`runAsSystem`), which trusts the organization, team and verification a system caller gives. So every value comes from
+    Marketing's records: the organization and campaign from the publication, the team (a current sales team of that organization, checked
+    when the rule is saved and by Sales at each handoff) and source (offered to it) from the rule, the inquiry's name, organization, email,
+    phone and notes only from the answers to the customer-visible questions published when the answer was submitted that the rule maps (an
+    unmapped, internal or unpublished answer never reaches Sales), and `verified` only when an invitation's address or the signed-in
+    account's address equals the email answered (a typed address identifies nobody). The handoff carries the capture's own operation key,
+    so a repeat (the job, an author's Try again with a reason, a second post under the same request key, which keeps no second answer)
+    answers Sales' first lead; a second answer with the same email joins the open lead as Sales' review item and is never told to the
+    visitor. A failed handoff keeps the answer and records a reason code (never an answer); nothing subscribes anyone. Staff read the rules,
+    captures and counts only through MarketingFormServices (the rules for a content author or the Marketing administrator, the counts for
+    any Marketing reader of the organization), and a capture names its Sales lead only to a caller who can open it in Sales.";
+  - the user's call: whether choosing a lead rule's sales team needs a Sales permission (design §2 says "Sales routing grant"; built: any
+    Marketing content author of the organization routes to any of its current teams); none blocking.
+
+**Review Nov 14 (P13).** mr-mantle and mr-boss fixed on `mkt/p13` (one commit each, "Marketing P13 review: …"); mr-pass unchanged;
+master had nothing newer to merge. Read against the phase text, §2, §4, design §10/§12/§13/§15.3 and impl-sales P5's intake contract.
+- Checked and sound:
+  - the handoff: `inquiryOf` takes the organization and campaign only from the publication, the team and source only from the rule, the
+    inquiry's fields only from mapped customer-visible questions published at the submission's date (`formAt`), and `verified` only from
+    the invitation's address (the invitation checked to be the publication's when the answer was accepted) or the signed-in account's
+    (`partyId` set from the session for account access, never the request); nothing of the submission decides organization, team or
+    verification, and a source not matching its rule is SOURCE_MISMATCH;
+  - idempotency: one capture per rule and source event (unique MKT_LEAD_CAP_EVENT) and per key (MKT_LEAD_CAP_KEY); the after-commit
+    capture and the job meeting on one answer roll the loser's own transaction back (`apart`, `registerOnCommit` on a worker), leaving no
+    row or error state, so the winner's capture or the next run decides; `hand#LeadCapture` locks the capture and a handed-off or
+    skipped one answers as it is; Sales also keeps one intake per source identity (the response), so even a lost capture row makes no
+    second lead. Failure tolerance per rule and per capture; the 30-day window both for collection and for retries (`nextAttemptOf`
+    null after 30 days, then only Try again);
+  - Sales' owner contract: create#/update#Opportunity refuse another organization's campaign and take a code of the deal's campaign;
+    SalesOpportunities, SalesLeadIntake and the BOSS Sales specs pass unchanged. A campaign of no organization still passing is right:
+    every campaign made through Marketing has its organization (X12); only pre-IronStone seed rows lack one, and naming one discloses
+    no more than the deal's own campaign text did;
+  - Marketing users on Sales' screens: the campaign and tracking-code choices go through find#Campaigns and find#TrackingLinks as the
+    user (Marketing scope), only for MARKETING_VIEW, under `choiceOrganization` (the user's Sales scope); Edit and NewLead show the stored
+    value (not posted) to anyone else; LeadList's filter only narrows Sales' own scoped find; LeadSources under Marketing Settings is
+    Sales' screen with Sales' own checks (SALES_CONFIGURE writes) and Marketing's vocabulary read as the user;
+  - force-new: every other cross-app `get#SharedContext` call with `ignore-error` already uses `transaction="force-new"` (Supplier360,
+    SupplyPlanning, BillOfMaterialsCompare, Commerce Home and CheckoutSettings, ThemeDetail); the root panels' `check#Record` with
+    `ignore-error` throw right after a refusal, so a rollback mark there changes nothing;
+  - the captures name a Sales lead only through `opportunityOf` under the caller's Sales scope; the preview's sample for a non-audience
+    reader is the questions; handoff counts are Marketing's own rows by organization.
+- Fixed:
+  - R1 (medium; the user's call of Nov 14, 2026, recorded in §4 and design §10 LeadRules): choosing or changing a lead rule's team now
+    needs SALES_TEAM_MANAGE in the organization (TEAM_PERMISSION); without it an author keeps the rule's team or takes Sales' SalesPolicy
+    default team, or saves no team, which hands each lead to the default team in effect at the handoff (TEAM_REQUIRED when Sales has
+    none). get#LeadRule answers `canChooseTeam`, the default and the team's words; LeadRuleDetail shows the team read-only without the
+    permission (a new rule posts the default). LeadCapture's first feature checks an author refused a named team and a changed team,
+    refused no team with no default, saving to the default, and a sales manager setting East (each fails on the unfixed code); the
+    acceptance MarketingLeadScenario routes as the author while a Retail sales manager for that step, after the author alone is refused;
+  - R2 (low): the capture job read a rule's first 500 answers of the window and then dropped the captured ones, so once a busy form had
+    500 captured answers in 30 days its later uncaptured ones were never reached by the job; it now pages past captured answers (at most
+    500 captured per rule a run, 40 pages).
+- Findings, numbered by the lead F280 to F282 in order:
+  - the handoff's request digest includes values that can change between attempts (the localized "Inquiry" in the lead's name, the
+    publication's title, an account's address, and with R1 Sales' default team): only if Sales committed an intake and the capture's
+    own update was then lost would a retry answer OPERATION_KEY_CONFLICT and stay failed (the lead exists, by the source identity);
+    rare, left as built;
+  - the after-commit capture and the job colliding log an error for the loser (harmless, nothing kept); counted once as failed in that
+    run's totals;
+  - the Built note's findings stand as written, except the "Sales routing grant" one, now R1.
+- Tests (release, `--nobuild`, this worktree's runtime): mr-mantle LeadCapture, SalesLeadIntake, SalesOpportunities, MarketingForms 16 of
+  16 (LeadCapture 4 features about 1.5 s); mr-boss MarketingLeads and MarketingAccess 9 of 9 (4.9 s together); acceptance MarketingLeadScenario
+  3 of 3 (run because it changed). `moqui lint --screens`: parse failures 0, no new flagged site. Prettier clean on the changed JavaScript.
+- For the lead:
+  - budget share: as the Built note (LeadCapture about +0.3 s for R1's calls);
+  - merge hot spots: as the Built note, plus `MarketingLeads.js` (teamChooser, queueOf, the job's paging), LeadCapture.spec.js's first
+    feature, LeadRuleDetail.xml's team field, MarketingLeadScenario's routing step, §4 (a row after the automation owner's) and design
+    §10 LeadRules;
+  - Attack-Surface: the worker's paragraph is accurate with one correction for R1: replace "the team (a current sales team of that
+    organization, checked when the rule is saved and by Sales at each handoff)" with "the team (a current sales team of that
+    organization chosen by a sales manager, SALES_TEAM_MANAGE, or else Sales' own default team, checked when the rule is saved and by
+    Sales at each handoff)"; the rest stands;
+  - the user's call: answered (R1).
 
 ### P14 — Content, blog posts and landing pages
 
@@ -1103,6 +3877,244 @@ post); MKT-CONTENT, MKT-COLLAB, MKT-PUBLIC.
   scenarios 10 (its page half) and 19): an author writes a post with text and one from a page, adds and removes a
   category, links it to a campaign and drafts a newsletter from it; a storeless landing page is published and a
   visitor subscribes from it; a private draft linked to a campaign is not public.
+
+**Built Nov 14 (P14).** mr-mantle, mr-boss and mr-pass on branch `mkt/p14` (hashes in the worker's reply), from master after P12's merge;
+mr-moqui unchanged, no Rust built. Built beside P13 (leads, `mkt/p13`) and Sales follow-up 4.
+- Checked first (the code over the plan): P6's, P7's and P12's Built and Review notes, F22, F23, F40, F47, F63, F107, F90–F268 and §4;
+  Commerce's site page services (SitePages.js: every staff read and write bound to the Shop mount's store and `COMMERCE_*`), the
+  shared Pages and PageDetail screens and their tabs (Commerce's context service called directly, Commerce's choices), Shop's page
+  read (ShopCatalog getPage over get#SitePage, `$richText` sanitized on the page), the framework's WikiServices (create#WikiBlog,
+  update#WikiBlog, get#UserWikiSpaces, get#WikiPageAccess; WikiBlogFindView), P8's create#Send, store#SendContent and prepare#Send,
+  P3's list template binding (ContactListEmail.wikiPageCategoryId), Customer Service's Knowledge mount, MarketingPortal.js (P7's and
+  P12's public pattern: `served`, one NotFound) and mr-pass resolve#Route. The code over the plan:
+  - the PASS operation is camelCase, `getMarketingPage` (GET `marketing/page`, read only, in no TOKEN_WRITES list), after P12's
+    block in both schema copies and route lists (byte-identical);
+  - "create#WikiBlog and update#WikiBlog are called as built": Marketing's writes go through a T service of its own,
+    `store#BlogPost`, which checks MARKETING_CONTENT_EDIT and the wiki's write right to the space (and that a page named is the
+    space's and readable) and then calls them as built; create#WikiBlog from an existing page checks nothing itself;
+  - "find#BlogPosts over WikiBlogFindView": that view joins every category (a row a category, a post with none left out), so the
+    list is over `mantle.marketing.content.BlogPostView` (WikiBlog and its page), in the spaces get#UserWikiSpaces answers and the
+    pages restricted on their own only for a user they admit;
+  - the detail screens are siblings, `Content/BlogPostDetail` and `Content/PageDetail` (as ListDetail and MessageTemplateDetail),
+    not the design's nested paths; design §2 says so;
+  - Content is every Marketing reader's (design §2: the app's): no area deny group; the capability `contentRead` (anyRead) and the
+    menu entry (index 6) and key `g o`;
+  - the storeless mount: a page's app is its mount's; Marketing's pages are worked through the mount's organization
+    (MarketingAccess.js's scope), MARKETING_CONTENT_EDIT edits and publishes (no separate approval or review: Commerce's page editor,
+    which the shared PageContent tab is, offers no Request review, and publication is a dated, audited act with an operation key),
+    the text in the organization's page space (new `mantle.marketing.content.MarketingPageSpace`, restrictUpdate, as a store's
+    ProductStoreWikiSpace); a landing page takes no policy role and no template (ROLE_RESERVED, TEMPLATE_UNKNOWN); find#SitePages and
+    a new page's store#SitePage take `app` (shop by default, so Commerce is unchanged); a page read by sitePageId is read in its own
+    mount's app; a missing or out-of-scope page now answers RECORD_UNAVAILABLE before a missing edit or publish permission
+    (Commerce's specs pass unchanged);
+  - "Shared/Pages and Shared/PageDetail take their context from the mounting app (F22)": a registry, mr-boss
+    `service/ironstone/shared/PageApps.js` (Commerce's and Marketing's rows: context and choices services, the site page app, the
+    capabilities that show edit and publish, the PageDetail route, store pages or not, words), as SurveyApps.js is for the survey
+    builder; the screens' own `choices` transition calls the registration's choices service (Marketing's gains `sites`);
+  - "a page embeds a published list, form or event by its registered ID": a paragraph of its own `[[subscribe LIST_ID]]` or
+    `[[form PUBLICATION_ID]]` (at most five); getMarketingPage answers the page in parts and PASS renders a list offered on the site
+    as a subscribe box posting to Subscribe (its request, consent box and receipt) and an open form publication as a card linking
+    SubmitForm (not its questions inline), anything else as nothing; the Event component is P16's;
+  - newsletter assembly: a send names a blog category (`CampaignSend.postCategoryId`), chosen when ContentDetail's Create draft send
+    makes it (`create#ContentSend`: the category given, else the topic list's newsletter category of P3's template binding, else the
+    post's first); prepare#Send takes the category's approved posts as of then (a publish date reached and a published page
+    version, newest ten), records each with the version it read (`CampaignSendPost`) and appends them to the prepared body and
+    text, escaped (no `$` or `#` reaches the locked renderer); POSTS_NONE when there is none; a post's link is its space's
+    `publicBlogUrl` plus its id (PASS Publishing renders blogs later). A landing page's Create draft send is a send with the
+    page's public link (a published page only);
+  - a campaign's link to a page is its CampaignContent; CampaignAssociation's page kind (CakPage) stays KIND_UNAVAILABLE (F107);
+  - the demo's wiki pages cannot be rows (their text is a versioned file), so a demo loader, `ironstone.marketing.DemoServices
+    .load#ContentDemo` over MarketingDemo.js, called from BossZZMarketingDemoData.xml in its transaction (data, as Customer Service's
+    and Knowledge's demo loaders are; §4 names ContextServices as Marketing's only ironstone service);
+  - the readiness check "published list or form" is "published list, form or page".
+- Mantle:
+  - `entity/MarketingEntities.xml` (a P14 block): CampaignContent (CampaignContentKind: blog post, landing page, wiki page, file),
+    MarketingPageSpace, CampaignSend `postCategoryId` and `campaignContentId`, CampaignSendPost, the view BlogPostView.
+  - `MarketingContentServices.xml` over `MarketingContent.js` (new, T): find#, get#, store#CampaignContent, find#BlogPosts,
+    get#BlogPost, store#BlogPost, add#BlogCategory, remove#BlogCategory, create#ContentSend; `postsFor` and `recordPosts` for
+    `MarketingSends.js` prepare#Send.
+  - Owner contract (Commerce, F23): `public/SitePages.js` (pageApps, appScope, siteOf with the mount's app, scopeMounts, pageOf by
+    the page's mount, organizationSpaceOf, landingOnly), `ThemeServices.xml` (`app` on find# and store#SitePage),
+    `SiteServices.xml` (publish#SitePage's comment).
+  - `MarketingPortal.js` get#Page (pageParts, the readiness's live pages) and `MarketingPortalServices.xml`; `ForumSchema.js` and
+    `script/PassRoutes.js` (getMarketingPage).
+- PASS: `screen/Marketing/Page.xml` and `.html.fancy` (the page, its text sanitized again, its components), resolve#Route's
+  `pages/{route}` for a marketing mount, `Schema.js` and `Routes.js` (copies of Mantle's), `screen/Marketing.xml`'s comment,
+  `docs/Deployment.md` (Marketing app: Landing pages), README.
+- BOSS: `screen/Marketing/Content.xml` (the area, menu 6) with Content, ContentDetail, BlogPosts, BlogPostDetail (new), LandingPages
+  and PageDetail (Shared/Pages and Shared/PageDetail), Knowledge and KnowledgeTui (Commons'); `template/MarketingContent.xml`
+  (storeContent, createContentSend, storeBlogPost, add/removeBlogCategory; LinkContentForm, ContentSendForm); CampaignDetail's Content
+  box; `Shared/Pages.xml`, `Shared/PageDetail.xml`, `PageDetail/PageRoute.xml` over PageApps.js; `Marketing.js` (contentRead, the P14
+  link paths, the content record kind, the choices sites, blogSpaces, blogCategories, spacePages, contentSources),
+  `ContextServices.xml` and `template/MarketingParts.xml` (the choices' parameters), `screen/Marketing.xml` (Content, `g o`);
+  demo: `DemoServices.xml` and `MarketingDemo.js` (new), BossZZMarketingDemoData.xml's P14 block: Retail's garden blog (Marketing
+  Author writes it; public at the shop's blog address) with three posts in "Garden news" (two published, one draft), the roses post
+  linked to the spring campaign as a newsletter article, and the spring garden landing page on ZIZI_SHOP's Marketing mount with an
+  embedded subscribe box for the garden newsletter, published and linked to the campaign.
+- Specs:
+  - Mantle `test/marketing/MarketingContent` (new, 3 features, about 0.8 s: a draft post's link publishes nothing, a reader, another
+    organization's author and another's private post refused; a category write refused without the space's write right and without
+    MARKETING_CONTENT_EDIT; a newsletter drafted from the post takes the category's approved post at preparation with the version
+    it read, leaving its publish date, its page's published version and the sent date alone); `test/public/SitePages` (one feature
+    added, about 0.65 s: a Marketing author's landing page on the marketing mount in the organization's page space, no template,
+    another organization's mount and author refused, a Commerce designer neither edits nor publishes it, the author edits no Shop
+    page, published and read at `/marketing/pages/spring`, each app's list without the other's pages).
+  - mr-pass `test/Marketing/MarketingPages` (new, 2 features, about 0.1 s): Page's one html render (no store, its text sanitized: no
+    script or event handler, the subscribe box for the offered list only, nothing for an unoffered list or an unknown form),
+    resolve#Route's `pages/spring`; a draft, an unknown route and a site without the mount NotFound alike; the operation in both
+    copies and route lists and in no TOKEN_WRITES list.
+  - mr-boss `MarketingContent` (new, 2 features, about 0.7 s): BlogPostDetail's one qvt render for the author; the shared screens'
+    Marketing registration on PageApps.js and the context and choices services (no render of Shared/Pages), the demo landing page
+    listed for a reader, another organization's author refused; `MarketingAccess` (contentRead per group, Content in the menus, `g o`)
+    and `MarketingSpecLib` (menus, keys, the content demo's ids).
+  - Acceptance, written and not run: mr-boss `test/acceptance/Marketing/MarketingContentWalk` (4 features: scenario 10's page half
+    and 19 through the screens' transitions); mr-pass `test/acceptance/client/MarketingPagesHttp` (a visitor subscribes from the
+    published page's box, a draft and an unknown page 404) with `test/acceptance/MarketingPagesFixtures` on PASS_HTTP, in
+    `client/suite.js`.
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle SitePages, ThemeAuthoring, ShopCatalog, MarketingContent,
+  Sends, Dispatch, Experiments, MarketingSubscriptions, MarketingForms, Campaigns, PassAuthority, ShopCheckout (72 of 72); mr-pass
+  MarketingPages, MarketingAccess, SubmitForm, Forum, Transport, Portals, Smithy, ShopPreview, ShopCart (61 of 61); mr-boss
+  MarketingContent, MarketingAccess, MarketingCampaigns, CommerceSitePages, CommerceAccess, MarketingSurveys, MarketingSends (34 of 34);
+  after Prettier MarketingContent, SitePages, Sends, MarketingSubscriptions; MarketingPages, Forum; MarketingContent, MarketingAccess
+  again (50 of 50). A throwaway walk of Content, ContentDetail (a post and a page), BlogPosts (qvt, html), LandingPages, PageDetail
+  with its Route and Text tabs (tui), Knowledge (tui), CampaignDetail and the tui of BlogPostDetail, ContentDetail and Content, and a
+  reader's Content without Link content, passed and was not kept. `moqui lint --screens` (release): 141 flagged sites, as before,
+  none in a new or changed screen; parse failures 0. Prettier (mr-moqui's config) on the new JavaScript and the changed files that
+  were clean (SitePages.js was not and is left as it was). Not run: test-apps, the acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P14" table; ss-inventory's Wiki rows (EditWikiBlog, WikiBlogs, EditWikiPage)
+  gain Marketing's Implemented in.
+- Design edits: design-marketing §2 (the two sibling paths), §8 LandingPages and BlogPostDetail (as built), §13.1
+  (getMarketingPage), §14.1 CampaignContent; design-commerce §5's per-app table and the owner contract (the registry, the
+  storeless mount).
+- Findings, numbered by the lead F283 to F289 in order:
+  - the code over the plan above: the camelCase operation, store#BlogPost, BlogPostView, the sibling paths, Content for every
+    reader, the page registry, the embed syntax and the form card, the newsletter category on the send, CakPage unavailable, the
+    demo loader;
+  - a landing page is published by its author (MARKETING_CONTENT_EDIT edits and publishes), with no review or approval step;
+  - a send's posts are appended to its prepared body only: the draft preview and test message show the author's own text, and an
+    experiment's variants (P10) do not get them;
+  - the PASS landing page is no-store (its subscribe box carries the session token), so a shared cache never keeps it; there is no
+    sitemap or robots for the marketing mount;
+  - a Shop menu may link a landing page (an SdtPage destination of any enabled mount of the site), as built;
+  - a blog post's public link assumes the space's `publicBlogUrl` takes the post's id; the blog itself is PASS Publishing's, later;
+  - P15's hook: the landing page's campaign is its CampaignContent (CckSitePage), and Page.xml names where P15 records a tracking
+    code's visit; nothing tracking is built here.
+- For the lead:
+  - budget share: mr-mantle about 1.5 s (MarketingContent 0.8 s, SitePages +0.65 s); mr-pass server about 0.1 s (MarketingPages);
+    mr-boss server about 0.7 s (MarketingContent; MarketingAccess unchanged); no client spec;
+  - merge hot spots (P13 beside, P15 next): mr-mantle `entity/MarketingEntities.xml` (a P14 block after P12's), `ForumSchema.js` and
+    `script/PassRoutes.js` with mr-pass `Schema.js` and `Routes.js` (a P14 entry after P12's: P13's lead purpose may add beside it),
+    `service/mantle/marketing/MarketingPortal.js` (a P14 section before the readiness, the readiness check, the operations table),
+    `MarketingPortalServices.xml`, `MarketingSends.js` (prepare#Send), `service/mantle/public/SitePages.js` (Commerce's; the scope
+    section rewritten), `ThemeServices.xml`; mr-boss `screen/Marketing.xml` (the Content item, `g o`), `Marketing.js` (capabilities,
+    linkPaths, recordKinds, choiceSources), `ContextServices.xml` and `template/MarketingParts.xml` (the choices' parameters),
+    `screen/Marketing/Campaigns/CampaignDetail.xml` (a Content box after Automations; P13 adds handoff counts to Results),
+    `data/BossZZMarketingDemoData.xml` (a P14 block at the end), `test/Marketing/MarketingSpecLib.js` and `MarketingAccess.spec.js`
+    (menus, keys, capabilities), `screen/Shared/Pages.xml`, `PageDetail.xml`, `PageDetail/PageRoute.xml`, `plan/usl-inventory.md`,
+    `plan/ss-inventory.md`, `plan/design-marketing.md`, `plan/design-commerce.md`, this file; mr-pass `service/pass/RouteServices.xml`,
+    `test/Marketing/MarketingFixtures.js`, `test/acceptance/client/suite.js`, README, `docs/Deployment.md`. P15 adds TrackingLinks
+    under `screen/Marketing/Content.xml`'s subscreens;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, after PASS Marketing's forms paragraph; no mr-moqui worktree): "PASS
+    Marketing's landing pages (`mantle.marketing.MarketingPortalServices.get#Page`, `allow-remote="false"`,
+    `authenticate="anonymous-all"`, read only, reached only as the PASS operation `getMarketingPage` of the authority's allowlist, in
+    no TOKEN_WRITES list) find the organization from the site's `marketing` mount (a published site, an internal organization) and
+    a page only of that mount by its route, through the site page services' `get#SitePage`: the binding's exact published wiki
+    version in its window; a site without the mount and a draft, scheduled, withdrawn or unknown page answer the same NotFound (the
+    page a 404). The page's Markdown is made clean HTML by the authority (`cleanHtml`) and sanitized again on the page by the theme's
+    rich text rule (no script, event handler or style), under PASS's default no-store headers and the shell's CSP; no stored HTML
+    or expression runs. A component is embedded only by a paragraph naming an id (`[[subscribe ID]]`, `[[form ID]]`, at most five),
+    which the page renders through `getMarketingPublication` or `getMarketingForm`, so only a list offered or a form open on that
+    site shows and a draft or another organization's record shows nothing; a subscribe box posts Subscribe's own request with its
+    limits and neutral receipt. Staff write landing pages through `mantle.public.ThemeServices` and
+    `mantle.public.SiteServices.publish#SitePage`, which take a page's app from its mount: a Marketing mount's page needs
+    MARKETING_CONTENT_EDIT in the mount's organization (Marketing's scope), a Shop's its store and `COMMERCE_*`, so neither app's
+    users reach the other's pages; the text is a page of the organization's page space (restricted updates, written by those
+    services alone as the system after their checks). Blog posts are written through `mantle.marketing.MarketingContentServices`,
+    which checks MARKETING_CONTENT_EDIT and the wiki's own write right to the space before `create#WikiBlog`, `update#WikiBlog` and
+    a category's entity write; a campaign's link to content publishes nothing, and a newsletter send takes only posts with a
+    published page version and a reached publish date, escaped into the locked body.";
+  - the user's call (none blocking): a landing page published by its author with no review step; a blog post's public link built
+    from the space's blog address; the demo loader as a second ironstone.marketing service.
+
+**Review Nov 14 (P14).** A fresh review of `mkt/p14` (mr-mantle b0e796ad, mr-pass 4fdc402, mr-boss 5c29ce71) against P14, §2, §4 and
+design §8, §13.1, §14.1, judged as a public surface by P7's and P12's reviews; master (the P12 §4 row) merged into mr-boss (5d21ae61), no
+conflict; mr-mantle and mr-pass had nothing new. Fixes mr-mantle 6b58f7cf, mr-pass 55f6441.
+- Checked and sound:
+  - getMarketingPage and Marketing/Page: `served` first (a published site, an internal organization's marketing mount), the route
+    shape checked before the read, then get#SitePage by the enabled mount, route and locale: the binding's exact published wiki version
+    in its window, else one NotFound (a draft, scheduled, withdrawn or unknown page and a site without the mount answer the same words;
+    the page is a 404). The authority's body is ammonia's allow-list (`cleanHtml`) and every html part is cleaned again on the page
+    (`sanitizeRichText`, the same allow-list): no script, event attribute, style attribute, SVG or MathML, and no `javascript:` or `data:`
+    URL; a part split mid-element is closed by the parser. `.html.fancy` escapes the title and every component value. Headers: PASS's
+    default policy (Shared/Headers.js) is no-store, Referrer-Policy same-origin and the shell's CSP. The answer is the page's title, SEO,
+    route, URL, version and parts: nothing else of the organization. An embed shows only through getMarketingPublication (the list's
+    explicit offer on that site: `offerOf`, never the first topic of another list) or getMarketingForm (open on that site), so a draft,
+    unoffered or another organization's id renders nothing; at most five.
+  - The owner contract on SitePages.js: a page's app is its mount's (`pageOf` by the page's own mount row), never the caller's; a
+    Shop page still needs COMMERCE_VIEW and the store (StoreAdmin's scope), a Marketing one a Marketing reader of the mount's
+    organization, and edit or publish the app's permission; a new page takes `app` (shop by default) and is created only on the scope's
+    own mount (`siteOf` refuses a mount of another app or another organization); find#SitePages lists only the app's mounts' pages. A
+    Commerce designer cannot edit or publish a landing page, a Marketing author no Shop page or another organization's landing page
+    (SitePages spec). Landing pages refuse a template or policy role; the scheduled publication runs as its scheduler with the same
+    check. The organization's page space is made with restrictUpdate and no creator row, refused if it loses restrictUpdate, and written
+    only as the system after the services' checks, so neither Knowledge nor store#BlogPost reaches its pages.
+  - store#BlogPost, add# and remove#BlogCategory: MARKETING_CONTENT_EDIT and the wiki's write right before create#WikiBlog,
+    update#WikiBlog and the entity write, all `allow-remote="false"`; no BOSS screen or service calls create#WikiBlog, update#WikiBlog or
+    the WikiBlogCategory entity otherwise (the only other callers are mr-marble's SimpleScreens Wiki screens, outside BOSS, as before).
+    find#BlogPosts follows get#UserWikiSpaces and the page's own view rule; a link to content checks the source for the caller and the
+    campaign's organization (a site page by its mount's organization) and publishes nothing.
+  - Newsletter assembly: posts read as of preparation (a published page version, a reached publish date), each recorded with the
+    version read (CampaignSendPost); publishDate, the published version and sentDate untouched (spec). Preparation is only of a draft and
+    its body is a fixed file that approval covers (P8's prepared revision), so a post edited after approval changes nothing sent; a re-
+    preparation is a new revision needing approval again. Appended text is escaped (no `$`, `#` or markup reaches the locked renderer).
+  - The demo loader: `allow-remote="false"`, refused for a signed-in user who is not a system administrator, otherwise as john.doe with
+    authorization off (Customer Service's and Knowledge's pattern); demo rows and wiki pages only, idempotent by fixed id.
+  - Access: Content every Marketing reader's (`contentRead` = anyRead), edits gated on contentEdit in the services; the content record
+    kind by the link's organization; the choices (sites of the scope's organizations, writable spaces, viewable pages) checked again by
+    the services.
+- Fixed:
+  - R1 (high): a newsletter took every approved post of its blog category, including a post of a private space or a page restricted
+    on its own: its title and summary went into the prepared body (only the link was left out), to every recipient and to the author's
+    preview. WikiPageCategory is global, so any author could name a category another space's private posts are in. postsFor now takes only
+    posts in a space and on a page with no view restriction (design §8 Knowledge: Marketing cannot publish a private space by linking
+    it); POSTS_NONE says so. MarketingContent's newsletter feature puts a published private post in the category (it failed before).
+  - R2 (low): store#BlogPost's update, a post from an existing page and the category writes checked the space's write right only, not
+    the page's own (a page with restrictUpdate whose WikiPageUser rows leave the writer out), while get#BlogPost's canEdit asked both;
+    all three now need both. A new MarketingContent feature (failed before).
+  - The PASS spec's page text gains a `javascript:` link, a `data:` URL, an SVG with onload and a style attribute, none of which reaches
+    the page's article (it passed before: the hardening is sound; the check is new).
+- Findings, numbered by the lead F290 to F293 in order:
+  - publication without approval (design §8): the design does not require a review or approval before a landing page or a blog post is
+    public. LandingPages' crosscut row gives "create, edit, preview, request review, publish with the content grant", and ContentDetail
+    says "Request review uses the existing wiki review flow; only the owner-approved version may be publicly bound". As built,
+    MARKETING_CONTENT_EDIT publishes a landing page's chosen version (the owner's binding, dated and audited, with an operation key), which
+    meets "owner-approved" read as the owner's publication; but the Request review action of the crosscut row is not built for landing
+    pages (the shared PageContent tab offers none, and the page space's restrictUpdate keeps the wiki review flow's reviewer from the
+    page). A blog post's public version is the page's published version, which any writer of the page sets in Knowledge, with or without
+    a review. The user's call: leave publication as the content grant's act (and drop "request review" from the crosscut row), add an
+    optional Request review to PageDetail, or require an approved review before publish#SitePage binds a landing page's version;
+  - blog categories are global (WikiPageCategory), so one organization's newsletter takes another organization's public posts in a
+    category of the same name, and create#ContentSend takes any category id; as the framework's model is, with no organization on a
+    wiki space;
+  - BlogPost's small image (design §8 NewBlogPost and BlogPost: image upload with thumbnail) is not built;
+  - the Built note's others stand as written (the preview and test message without the posts, experiments' variants without them, no
+    sitemap or robots for the marketing mount, a Shop menu linking a landing page, the blog link from `publicBlogUrl`, P15's hook).
+- Tests (release binary, `--nobuild`, this worktree's runtime): mr-mantle MarketingContent (4 of 4, about 1.0 s of features; both new
+  checks failed on the unfixed code first), SitePages (10), Sends (8), ThemeAuthoring (7), ShopCatalog (5); mr-pass MarketingPages (2 of 2,
+  0.1 s; the new check made to fail once to see it assert), MarketingAccess (3); mr-boss MarketingContent (2), CommerceSitePages (4),
+  CommerceAccess (15), MarketingAccess (7): 66 of 66. Prettier (mr-moqui's config) on the changed JavaScript. No screen changed (no lint);
+  no acceptance test run.
+- For the lead:
+  - budget share: mr-mantle MarketingContent about 1.0 s (one feature added, +0.2 s over the Built note); mr-pass and mr-boss as the
+    Built note;
+  - merge hot spots: as the Built note, plus `MarketingContent.js` (postsFor, requirePageWrite) and its spec;
+  - Attack-Surface: the Built note's paragraph is right with four changes: "sanitized again on the page by the theme's rich text rule
+    (no script, event handler or style)" becomes "(ammonia's allow-list: no script, event or style attribute, SVG, `javascript:` or
+    `data:` URL)"; "under PASS's default no-store headers and the shell's CSP" adds "and a same-origin referrer policy"; "checks
+    MARKETING_CONTENT_EDIT and the wiki's own write right to the space" becomes "to the space and the post's page"; and "a newsletter send
+    takes only posts with a published page version and a reached publish date" adds "in a space and on a page with no view restriction";
+  - the user's calls: publication without a review (above); the Built note's (a blog post's public link from the space's blog address,
+    the demo loader as a second ironstone.marketing service).
 
 ### P15 — Tracking links and capture
 
@@ -1145,6 +4157,307 @@ MKT-TRACKING, MKT-CONSENT; gate 5.
   frontend; a consenting recipient's click shows on the send and a refusing one's does not; Commerce's Home shows
   the store's visits.
 
+**Built Nov 14 (P15).** mr-mantle, mr-boss and mr-pass on branch `mkt/p15` (hashes in the worker's reply), from master after P13's and
+P14's merges; mr-moqui unchanged, no Rust built. Built beside a framework wiki page-name fix (mr-moqui WikiServices, mr-boss Knowledge),
+whose files this phase does not touch.
+- Checked first (the code over the plan): P13's and P14's Built and Review notes, P7's and P12's public-surface reviews, F31, F55, F79,
+  F87, F90–F293 and §4 (the Nov 14 row on a landing page's review); TrackingCode and its native joins (MarketingEntities.xml), P13's
+  minimal find#TrackingLinks and Sales' use of it, P8's CampaignRecipient `tracked` (PcpTracking at preparation) and P6's sending
+  profile tracking policy (MtrNone, MtrConsented), P9's build#CampaignDelivery (each attempt renders the recipient's message, with its
+  unsubscribe and P12's invitation link), P10's experiment results (`observedOf` null until P15), P14's Page.xml hook, PASS's Facade.js,
+  Transport.js (`routeOf`'s anonymous writes), Mantle's PassApi.js and PassAuthority.js (the TOKEN_WRITES lists), web scripts
+  (docs/interfaces/Web-Scripts.md: no host-to-site binding for a servlet, `declineSession`, cookies by header), the request log's
+  redaction (a token route's path and any query parameter named like a secret, `token` among them), Commerce's Home and Reporting.js.
+  The code over the plan:
+  - "the redirect and the pixel ... with two schema operations ... whose only fields are the code or token, the visitor key, the site
+    and the kind": built so (`resolveTrackingLink`, GET `marketing/tracking/link`: siteId, code, token; `recordTrackingEvent`, POST
+    `marketing/tracking/event`: siteId, code, token, visitorKey, kind), mapped to TrackingServices `resolve#TrackingLink` and
+    `record#TrackingEvent` (camelCase as P12's and P14's), after P14's block in both schema copies and route lists (byte-identical);
+    the event is an anonymous write in the three TOKEN_WRITES lists and Transport's `routeOf` lets it through with no token (as
+    `requestSubscription`); the read is in none;
+  - the site: a web script has no conf binding of its host to a site (the public-site resolution binds `resolvedSiteId` for the screens
+    only) and a remote frontend has no Mantle to look one up, so the site id is in the link's path: `/trk/{siteId}/{publicCode}` and
+    the pixel `/trk-o/{siteId}?token=`; the authority answers a code only for its own link's site (another site's is NotFound). The
+    paths `/trk` and `/trk-o` are servlet patterns of every host of the deployment (a finding below);
+  - "a send's links are rewritten at preparation to personalized opaque tokens": at each attempt, in build#CampaignDelivery (the
+    prepared, approved body is left as it is; a token per attempt, as the unsubscribe and invitation links are), and only the message's
+    tracking links of the organization are rewritten (the author pastes a link's public address); a link's token rides in a `token`
+    query parameter, which the request log redacts, its digest alone kept (MarketingTrackingToken, ninety days); an expired token's link
+    still works, as an anonymous click; other links of the body stay as written;
+  - "the pixel" for a recipient with PcpTracking under a profile that tracks consenting recipients only; it sets no cookie;
+  - "kind" values: click, open, visit, and two known automated fetches, `fetch` (a link or the pixel) and `visitFetch` (a page carrying a
+    code), recorded with `automated` Y; the script decides automation (a HEAD, a prefetch header, a scanner's, crawler's or command-line
+    user agent, or none);
+  - "an opaque visitor key ... no cookie or visitor key without tracking consent where the design requires": the design's "site
+    tracking choices" do not exist in PASS, so this build adds the organization's own (MarketingPolicy `visitorKeys`, off by default,
+    Campaign defaults' "Visitor keys") and honors the browser's (Global Privacy Control, Do Not Track); a consenting recipient's
+    personalized link may set it too; the key is stored as its digest only (the user's call below);
+  - "the privileged external allowlist": MarketingPolicy `trackingDomains` (Campaign defaults' "Tracking link hosts", MARKETING_CONFIGURE,
+    at most twenty host names); "the site's hosts" are the live PublicSiteHost names of every site with an enabled mount targeting the
+    organization or one of its stores;
+  - store#MarketingPolicy never declared `testAddresses` (P8 put the parameter on store#CampaignBudget by mistake), so Campaign defaults'
+    test addresses were dropped on save; moved to store#MarketingPolicy beside the two new settings (a finding below);
+  - "LinkObservations R.get#TrackingLinkResults": part of get#TrackingLink here for an author or a report reader (aggregates only); the
+    report service is P20's;
+  - who writes: MARKETING_CAMPAIGN_EDIT (a campaign's link, the author group's) on an open campaign at the revision read; every Marketing
+    reader reads (design §2 TrackingLinks: app); TrackingLinkDetail is a sibling, `Marketing/Content/TrackingLinkDetail` (design §2 says
+    so);
+  - "TrackingCodeVisit written too when the request has a local visit": when `ec.user.visitId` names a Visit (a page on the authority
+    itself); the redirect declines its session, so its events have none;
+  - Commerce's Home shows the stores' visits (count#StoreVisits); Online sales' visits are left for P20 with conversion (a finding below);
+  - "PASS Marketing pages carrying a tracking code call the same operation": Page (`/marketing/pages/{route}?tc={code}`) records a page
+    visit with the key the browser already holds; the page sets no cookie;
+  - the landing page's review (§4 Nov 14): Marketing's approvals gain the page kind (MdtPage, topic MarketingPageReview), its revision the
+    count of the page's saved text versions (WikiPageHistory), the version name on the decision (MarketingDecision `targetVersionName`),
+    its authors whoever saved the current version and the requester; PageDetail shows the state and offers Request review and Review by
+    the services Marketing's registration names (PageApps.js), so the shared screen names no app; publishing neither waits for it nor
+    is stopped by a refusal.
+- Mantle:
+  - `entity/MarketingEntities.xml` (a P15 block after P14's): TrackingCode extended (organizationPartyId, siteId, publicCode unique,
+    destinationKindEnumId TdkSitePage or TdkUrl, sitePageId, safeUrl, utmSource, utmMedium, utmContent, disabled, createdByUserId),
+    MarketingTrackingEvent (MteClick, MteOpen, MteVisit; automated; visitorKeyHash; the recipient and send only for a consenting
+    recipient; visitId), MarketingTrackingToken, MarketingPolicy `trackingDomains` and `visitorKeys`, MarketingDecision
+    `targetVersionName` and MdtPage; `data/MarketingSeedData.xml` (a P15 block): the MarketingPageReview topic and its registration.
+  - `service/mantle/marketing/MarketingTracking.js` (new, K) under `TrackingServices.xml`: find#TrackingLinks (paged, the scope's
+    organizations, its rows keeping P13's `label` and `current`), get#TrackingLink (the public URL, the QR SVG, the observations),
+    store#TrackingLink, resolve#TrackingLink and record#TrackingEvent (public, NotFound for what they do not serve, limits per client
+    and code 30 in ten minutes and per site 20,000 an hour, an unexpected failure Unavailable), count#StoreVisits; `messageTracking`
+    (a message's links and pixel), `recipientClicks`, `uniqueClickers`, `trackingAllowed`. P13's findTrackingLinks left
+    MarketingLeads.js.
+  - `MarketingDispatch.js` build#CampaignDelivery calls messageTracking before the unsubscribe footer; get#Recipient's `clicksText`.
+    `MarketingExperiments.js` observedOf: a variant's tracked recipients who clicked. `MarketingEligibility.js` exports purposeState.
+  - `MarketingApprovals.js` the page kind (and a kind's own edit capability); `MarketingContent.js` pageKind and get#PageReview
+    (`MarketingContentServices.xml`); `MarketingPolicies.js` and `CampaignServices.xml` the tracking settings (testAddresses declared on
+    store#MarketingPolicy, removed from store#CampaignBudget).
+  - PASS's operations: `ForumSchema.js`, `script/PassRoutes.js`, `script/PassApi.js` and `script/PassAuthority.js` (TOKEN_WRITES).
+- PASS: `MoquiConf.xml` (new: the servlets PassTrackingRedirect at `/trk/*` and PassTrackingPixel at `/trk-o/*`, and their per-client
+  `<rate-limit>`s, 60 and 120 a minute); `script/TrackingLib.js`, `TrackingRedirect.js`, `TrackingPixel.js` (new); `Schema.js`,
+  `Routes.js`, `Transport.js` (the copies, TOKEN_WRITES and `routeOf`); `screen/Marketing/Page.xml` (a code's visit);
+  `docs/Deployment.md` (Marketing app: Tracking links; Remote frontend), README.
+- BOSS: `screen/Marketing/Content/TrackingLinks.xml` and `TrackingLinkDetail.xml` (new) under `Content.xml` (menu 5);
+  `template/MarketingTracking.xml` (new: storeTrackingLink, qrCode, TrackingLinkForm); CampaignDetail's Tracking links box;
+  RecipientDetail's clicks; Campaign defaults' two settings; `Marketing.js` (the link paths, the `trackingLink` record kind, the
+  `vocabulary` choice), `ContextServices.xml` and `template/MarketingParts.xml` (`vocabularyKindEnumId`); `Shared/PageDetail.xml` and
+  `PageApps.js` (the registration's review); `Campaigns/Approvals.xml` (the review topic); Commerce's `Home.xml` (Visits),
+  `Reporting.js` and `ReportingServices.xml` (homePeriod's visits); setup (`BossSetupMarketingData.xml`, a P15 block: the review notice's
+  link to PageDetail); demo (`BossZZMarketingDemoData.xml`, a P15 block): Retail's link vocabulary (sources poster and newsletter,
+  mediums qr and email, a content tag), its policy counting unique visitors with one external host allowed, and two links of the spring
+  campaign on ZIZI_SHOP, the poster's QR code to the spring landing page (`/trk/ZIZI_SHOP/SpringQr2026`) and the newsletter's link by
+  address.
+- Specs:
+  - Mantle `test/marketing/Tracking` (new, 4 features, about 1.4 s: an unregistered, plain-http, user-info and another site's
+    destination refused, an allowed external host and the organization's own site accepted, another organization's landing page and an
+    unoffered source refused, a reader and another organization's author kept out, the public URL and QR, a stale revision refused;
+    the capture's visitor key kept as its digest where the policy allows and dropped where it does not, another site's code NotFound,
+    an open with a code and a pixel without a token record nothing, a scanner's fetch apart and no visit; a disabled link answers its
+    safe destination whatever the request names, an unregistered safe destination refused, an ended link with none the neutral page; a
+    message gives a consenting recipient personalized links and the pixel, the token's digest kept for ninety days, and a refusing one
+    the direct destination escaped in HTML and no pixel, a click names the consenting recipient only while they allow tracking, a forged
+    or expired token names no one); `test/public/SitePages` (one feature, about 0.7 s: the review asked by an editor and refused to a
+    reader, the approver told, the editor's own decision SELF_APPROVAL, approved at the version, a new save unreviewed and the old
+    revision STALE_REVISION, published with no review); `test/marketing/Experiments` (P10's results read "0" clicks where they read
+    "Not available").
+  - mr-pass `test/Marketing/MarketingTracking` (new, 4 features, about 0.9 s: the redirect called as the container calls it records a
+    click with the key it sets (HttpOnly, Secure) and no party, the held key sent again, none for Global Privacy Control or a scanner, a
+    registered remote frontend's event taken as a token write and an unregistered one refused; a destination in the query never followed,
+    the facade refusing an input naming one, an unknown, another site's or a malformed code the neutral 404 echoing nothing; a client over
+    its limit redirected 32 times and 30 recorded; the operations in both copies and route lists, the event in the three lists, routed
+    as a POST with no token); `MarketingPages` (its one render carries a code: one page visit, no key, no party).
+  - mr-boss `MarketingTracking` (new, 2 features, about 0.6 s: TrackingLinkDetail's one qvt render for the author; the vocabulary choice,
+    a reader's capabilities, another organization's author refused, the record kind, Home's visits, the registration's review);
+    `MarketingSends` (ExperimentDetail's undecided reason with no accepted recipient) and Commerce's `CommerceAccess` (Home shows Visits
+    for the reader's store, whose site sells for it), the two cases the phase names; `MarketingSpecLib` (the link ids, Content's tabs).
+  - Acceptance, written and not run: mr-boss `test/acceptance/Marketing/MarketingTrackingScenario` (4 features, stepwise: New link to the
+    landing page through the transition, an unregistered destination refused; a scan through PASS's redirect and the page with the
+    code, one visitor by key; a consenting recipient's click on the send and a refusing recipient's direct link; Commerce's Home
+    visits); mr-pass `test/acceptance/client/MarketingTrackingHttp` (over HTTP, locally or through the remote frontend:
+    redirect, cookie, a query destination ignored, the page visit, the neutral 404, the pixel, one visitor key) with
+    `test/acceptance/MarketingTrackingFixtures` on PASS_HTTP, in `client/suite.js`.
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle Tracking, SitePages, Experiments, LeadCapture, Dispatch,
+  Sends, Campaigns, MarketingApprovals, MarketingContent, PassAuthority, Eligibility, SalesOpportunities, Automations, ShopCatalog,
+  ThemeAuthoring (86 of 86 across the runs); mr-pass MarketingTracking, MarketingPages, MarketingAccess, SubmitForm, Transport, Portals,
+  ShopCart, SalesPortalAccess, Forum (38 of 38); mr-boss MarketingTracking, MarketingContent, MarketingAccess, MarketingCampaigns,
+  MarketingSends, MarketingLeads, MarketingDelivery, MarketingTemplates, CommerceReports, CommerceSitePages, CommerceAccess,
+  SalesOpportunities (45 of 45); after Prettier the new specs again (43 of 43). A throwaway render of TrackingLinks (qvt, tui),
+  TrackingLinkDetail (tui; html for a reader), CampaignDetail (html), Campaign defaults (qvt), PageDetail under Marketing (qvt with
+  Request review and the review's state; tui), Commerce's Home (html, Visits), RecipientDetail and the qrCode transition (SVG) passed
+  and was not kept. `moqui lint --screens` (release): 141 flagged sites, as before, none in a new or changed screen; parse failures 0.
+  Prettier (mr-moqui's config) on the new and changed JavaScript that was clean (Commerce's Reporting.js and CommerceAccess.spec.js were
+  not and are left as they were; PASS's scripts follow Transport.js's style). Not run: test-apps, the acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P15" table; ss-inventory has no row for these screens.
+- Design edits: design-marketing §2 (TrackingLinkDetail's sibling path), §8 TrackingLinks and TrackingLinkDetail (as built), LandingPages
+  and PageDetail (the review), §12 CampaignDefaults (the tracking settings), §13.1 (the two operations and their paths);
+  design-commerce §3 Home (the Visits card as built).
+- Findings, numbered by the lead F294 to F301 in order:
+  - the code over the plan above: the site id in the link's path, tokens per attempt in the build rather than at preparation and only
+    for the organization's tracking links, the automated kinds, the organization's visitor-key policy and the browser's signals as the
+    site's tracking choices, the allowlist on MarketingPolicy, LinkObservations inside get#TrackingLink, MARKETING_CAMPAIGN_EDIT writing
+    links, the review as Marketing's approvals' page kind;
+  - store#MarketingPolicy dropped Campaign defaults' test addresses since P8 (the parameter was declared on store#CampaignBudget); fixed
+    here: a policy saved before this phase from Campaign defaults has no test list until it is saved again;
+  - `/trk` and `/trk-o` are servlet patterns on every host of a deployment, so they shadow a Smithy group or a root-mounted Shop page
+    route of those names; now reserved: the framework adds each declared servlet's first segment to `ec.web.reservedPaths` (mr-moqui fix/trkpaths), so a Smithy group, handle, site page, redirect or mount cannot take them;
+  - the visitor key is a first-party cookie set by the redirect: with the policy on, a browser without Global Privacy Control or Do Not
+    Track gets it with no consent banner (PASS has none); a jurisdiction needing prior consent for analytics cookies should leave the
+    policy off, which still counts visits and clicks without unique visitors (the user's call below);
+  - opens: a pixel fetch by a mail provider's image proxy is counted as an open (a known scanner's is set apart); opens are not shown in
+    LinkObservations (a link's) and wait for P20's send reports;
+  - Online sales' visits are not built (Home's are); with conversion they wait for P20's `Marketing.Visits` and attribution;
+  - CampaignDetail's Tracking links box and RecipientDetail's clicks are not rendered by a regression spec (CampaignDetail's one render
+    is MarketingCampaigns', which does not look for the box); a send's unique clicks are shown per recipient and per experiment variant,
+    not yet on SendDetail;
+  - a send's tracked links are those whose public address the author pasted; a plain link in the body is never counted, by design (no
+    destination a link of the organization does not register).
+- For the lead:
+  - budget share: mr-mantle about 2.1 s (Tracking 1.4 s, SitePages +0.7 s); mr-pass server about 0.9 s (MarketingTracking; MarketingPages
+    unchanged); mr-boss server about 0.6 s (MarketingTracking); no client spec;
+  - merge hot spots: mr-mantle `entity/MarketingEntities.xml` (a P15 block after P14's), `data/MarketingSeedData.xml` (a P15 block at the
+    end), `ForumSchema.js` and `script/PassRoutes.js` with mr-pass `Schema.js` and `Routes.js` (a P15 entry after P14's), the three
+    TOKEN_WRITES lists (`Transport.js`, `PassApi.js`, `PassAuthority.js`) and Transport's `routeOf`, `MarketingDispatch.js`
+    (build#CampaignDelivery, get#Recipient), `MarketingApprovals.js` (targetKinds), `MarketingContent.js` (pageKind, operations),
+    `MarketingContentServices.xml`, `CampaignServices.xml` and `MarketingPolicies.js` (the policy's parameters), `MarketingExperiments.js`,
+    `MarketingLeads.js` (findTrackingLinks removed), `TrackingServices.xml` (P20 adds record#OrderAttribution), `test/public/SitePages.spec.js`;
+    mr-boss `screen/Marketing/Content.xml` (P15's items), `Campaigns/CampaignDetail.xml` (a Tracking links box before Decisions),
+    `Campaigns/Approvals.xml` (the topics), `Settings/CampaignDefaults.xml`, `Sends/RecipientDetail.xml`, `Marketing.js` (linkPaths,
+    recordKinds, choiceSources), `ContextServices.xml`, `template/MarketingParts.xml`, `Shared/PageDetail.xml`, `shared/PageApps.js`,
+    Commerce's `Home.xml`, `Reporting.js`, `ReportingServices.xml` and `test/Commerce/CommerceAccess.spec.js`, `data/BossSetupMarketingData.xml`
+    and `data/BossZZMarketingDemoData.xml` (P15 blocks at the ends), `test/Marketing/MarketingSpecLib.js` and `MarketingSends.spec.js`,
+    `plan/usl-inventory.md`, `plan/design-marketing.md`, `plan/design-commerce.md`, this file; mr-pass `MoquiConf.xml` (new),
+    `screen/Marketing/Page.xml`, `test/Marketing/MarketingPages.spec.js`, `test/acceptance/client/suite.js`, README, `docs/Deployment.md`;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, after PASS Marketing's landing pages paragraph; no mr-moqui worktree):
+    "PASS Marketing's tracking redirect and pixel are web scripts of mr-pass (`script/TrackingRedirect.js` at `/trk/*`,
+    `script/TrackingPixel.js` at `/trk-o/*`, registered by mr-pass's own `MoquiConf.xml` on the authority and on a remote frontend
+    alike, each with a per-client `<rate-limit>`, 60 and 120 a minute, when per-client web protection is on). Each declines the session
+    (`ec.web.declineSession()`: no session cookie, token or Visit), runs as the anonymous request, and reaches the authority only through
+    PASS's facade and transport (in process, REST or gRPC) by two operations of the allowlist whose only fields are the site, the code
+    or token, the visitor key and the kind: `resolveTrackingLink` (`mantle.marketing.TrackingServices.resolve#TrackingLink`, read only,
+    in no TOKEN_WRITES list) and `recordTrackingEvent` (`record#TrackingEvent`, an anonymous write the transport lets through by name and
+    the authority takes from a registered deployment as a TOKEN_WRITES operation), both `allow-remote="false"`,
+    `authenticate="anonymous-all"`. A link is `/trk/{siteId}/{code}`: the code is random and the authority answers it only for a
+    published site that is the link's own (another site's, an unknown or a malformed code is the same NotFound, a neutral 404 page that
+    echoes nothing). The destination comes only from the link: its registered destination, a landing page of its organization's
+    Marketing mount or an https address on a host of a site that serves the organization or on the organization's allowlist (both
+    checked when staff save the link through `store#TrackingLink`, MARKETING_CAMPAIGN_EDIT in the campaign's organization; no user
+    name, no other scheme), with its own UTM values; a disabled or ended link goes to its safe destination, checked the same way, or to
+    the neutral page. No query parameter but `token` is read, so a destination, fallback or return address in the request is never
+    followed, and the facade refuses an operation input naming one. The redirect sets nothing but the visitor key, a random first-party
+    `mkt_vk` cookie (HttpOnly, SameSite=Lax, Secure over https, a year) set by a `Set-Cookie` header only when the organization's policy
+    counts unique visitors (off by default) or the link is a consenting recipient's, never for a browser sending Global Privacy Control
+    or Do Not Track or for a known automated fetch; the authority keeps only its digest and never a party id. Responses are no-store
+    with no referrer. Recording is limited by the authority per client and code (30 in ten minutes; a registered frontend's forwarded
+    visitor address) and per site (20,000 an hour); over a limit, and whenever recording fails, the visitor is still redirected (or
+    given the image) and nothing is kept. A known scanner, crawler, prefetch or HEAD is recorded apart as automated and is never a
+    conversion. A send's message carries personalized links and the pixel only for a recipient who allows tracking (PcpTracking) under
+    a sending profile that tracks consenting recipients: each attempt's 40-character token rides in a `token` query parameter (redacted
+    from the request log), its digest alone kept for ninety days; the recipient is named on an event only while they still allow
+    tracking, checked when it comes; an expired or forged token names no one. Every other recipient gets each link's direct
+    destination and no pixel. A landing page's address with a link's code (`?tc=`) records a page visit with the key the browser
+    already holds, through the same operation; the page sets no cookie. Staff read links and their aggregate observations through
+    `mantle.marketing.TrackingServices` (any Marketing reader of the organization; the observations for an author or a report reader;
+    no person), and Commerce reads its stores' visit counts through `count#StoreVisits` after its own store check.";
+  - the user's call (none blocking): whether a site's visitor key needs a visitor's prior consent (a banner) rather than the
+    organization's policy and the browser's signals; whether `/trk` and `/trk-o` should join the framework's reserved paths (mr-moqui);
+    the landing page's review as built (advisory: publishing never waits for it).
+
+**Review Nov 15 (P15).** A fresh review of `mkt/p15` (mr-mantle 436488f8, mr-pass 05e164b, mr-boss 4025e199) against P15, §2, §4 and
+design §8, §13.1, §18, judged as the most exposed public surface so far; master (the wiki page-name fixes: mr-boss Knowledge and
+QuickCreate, then mr-mantle and mr-boss combining marks and NFC) merged into mr-mantle and mr-boss twice, no conflict; mr-pass had
+nothing new. Fixes mr-mantle 1b8ccb88, mr-pass 76461ba, mr-boss (this note's commit).
+- Checked and sound:
+  - the redirect is never an open redirect: TrackingRedirect.js reads only the path's site and code and the `token` parameter; the
+    destination is resolve#TrackingLink's alone, from the link's row: a published landing page's URL (PublicApps.pageUrl, the site's
+    canonical host from the database, never the request's Host) or the registered `redirectUrl`, with the link's own UTM values; a
+    disabled or ended link its `safeUrl`. store#TrackingLink checks both (https only, no user info, no whitespace, quotes, angle
+    brackets or control characters, at most 2,000 characters; a host of a site with an enabled mount targeting the organization or one
+    of its stores, preview hosts excluded, or on MarketingPolicy `trackingDomains`, MARKETING_CONFIGURE); the script redirects only an
+    `https://` value with no whitespace, so no header splitting. A query destination, `next`, `redirect` and the facade's extra input
+    are ignored or refused (spec'd);
+  - the site in the path cannot cross organizations: a code answers only when the link's own `siteId` is the path's and the site is
+    published (another site's, an unknown, a malformed code and an unpublished site are one NotFound, the same neutral 404 that echoes
+    nothing); a link's site is chosen at save among the sites whose Marketing mount targets the campaign's organization; the pixel's
+    organization is the site's Marketing mount's and its token must be that organization's;
+  - the pixel and record#TrackingEvent: no PII in a URL (a random 10-character code, a 40-character token whose SHA-256 alone is kept,
+    ninety days, redacted from the request log by the framework's `token` rule); the visitor key's digest alone kept, never a party id;
+    the recipient named only for a token of a `tracked` recipient who allows tracking (PcpTracking) when the event comes; known
+    automated fetches (HEAD, prefetch headers, scanners, crawlers, command-line agents, no agent) set apart as `automated` and never a
+    visit; limits per client and code (30 in ten minutes; a registered frontend's forwarded visitor address through requesterKey) and per
+    site (20,000 an hour) on the authority, token lookups 100 in ten minutes per client, and the servlets' per-client `<rate-limit>`s
+    (`/trk/**` and `/trk-o/**`, a pattern guard.rs supports); over a limit or on any failure the redirect or image is still answered
+    and nothing kept; both scripts `declineSession()`; an unexpected failure of a public operation is Unavailable with its words logged
+    and not returned;
+  - the cookie: `mkt_vk`, random, Path=/, Max-Age a year, HttpOnly, SameSite=Lax, Secure whenever the request is https (the framework's
+    `secure` honors a trusted proxy's X-Forwarded-Proto), set only when the authority says the organization's `visitorKeys` is on or the
+    token is a consenting recipient's, never with Sec-GPC or DNT, never for an automated fetch; the pixel and the landing page set none;
+  - personalized links: a token per attempt only for a `tracked` recipient under an MtrConsented profile who allows tracking at the
+    attempt, scoped to the recipient's send and organization; a forwarded link lets its holder do nothing but have a click (or open)
+    attributed to the recipient while they still allow tracking: the token authorizes no other operation (its digest prefix is its own,
+    apart from the unsubscribe and invitation tokens), is not passed to the destination, and the redirect is no-referrer; an expired,
+    forged or withdrawn recipient's token names no one;
+  - the new mr-pass MoquiConf.xml exposes only the two scripts (TrackingLib.js is loaded by them, not served); the framework's default
+    conf declares MoquiServlet explicitly, so a remote frontend with only framework, webroot and PASS keeps its screens beside them;
+    the operations: `resolveTrackingLink` a GET any caller may make through PassApi (it answers what the redirect answers), and
+    `recordTrackingEvent` a POST that PassApi takes from a registered deployment as a token write or from a browser session with its
+    CSRF token, the same limits applying; both `allow-remote="false"`;
+  - schema and route copies byte-identical (Schema.js and ForumSchema.js, Routes.js and PassRoutes.js); the three TOKEN_WRITES lists
+    equal; Transport's routeOf lets `recordTrackingEvent` through with no token;
+  - the landing page's review (§4 Nov 14): advisory, nothing in publish#SitePage reads it; bound to the text version (the revision is
+    the count of the page's saved WikiPageHistory versions, the version name kept on each decision, a save after a request makes the
+    request and its decision STALE_REVISION); separation: whoever saved the current version and the requester never decide it, and
+    selfApprovalAdmits never admits the page kind, so the one-person-team flag does not either; PageDetail shows the actions from the
+    registration's capabilities only, the services checking again;
+  - store#MarketingPolicy's `testAddresses` fix (finding 2): declared on store#MarketingPolicy, removed from store#CampaignBudget;
+  - find#TrackingLinks, get#TrackingLink and store#TrackingLink check the reader's or author's scope and the campaign's organization
+    (missing and another organization's are one RECORD_UNAVAILABLE), MARKETING_CAMPAIGN_EDIT on an open campaign at the revision read;
+    observations are aggregates for an author or a report reader; count#StoreVisits checks each store through StoreAdmin first;
+  - specs: Mantle Tracking, mr-pass MarketingTracking and mr-boss MarketingTracking test what they claim; screens one render each.
+- Fixed:
+  - R1 (medium; mr-pass TrackingRedirect.js, mr-mantle MarketingTracking.js recordPublic): a disabled or ended link with no safe
+    destination answered the neutral page but first set the visitor cookie and recorded a click, so it differed from an unknown code (a
+    Set-Cookie header and a second call) and a disabled link went on counting; record#TrackingEvent recorded events of a disabled, ended
+    or not yet started link from any caller. Now the redirect answers a link with no destination exactly as an unknown code (the same
+    page, no cookie, nothing recorded), records and sets a key only for a current link (`available`), and record#TrackingEvent keeps
+    nothing for a link that is not current. Specs: mr-pass (a disabled link's page equals the unknown code's, no cookie, no event) and
+    Mantle (a disabled and an ended link's click recorded false); both fail on the unfixed code;
+  - R2 (low; MarketingTracking.js messageTracking): a send's tracking link was matched on any host, so an author's
+    `https://elsewhere.example/trk/{site}/{code}` carried the recipient's token to that host; now a link's address is rewritten only on
+    a live host of its own site and anything else is left as written. Spec (a mirror host's link keeps no token); fails on the unfixed
+    code;
+  - R3 (low; specs only): the Mantle Tracking spec's "expired" case could not fail (it read `visitorKeys`, true by policy); it now
+    clicks with the expired token while Ann still allows tracking and finds her not named; Campaigns' policy case stores
+    `testAddresses` and `trackingDomains` through store#MarketingPolicy and reads them back (finding 2 had no spec);
+  - R4 (low; mr-boss MarketingTracking.xml storeTrackingLink): clearing a link's source, medium, content tag or type kept the old
+    value (`|| null` sent nothing); the four now pass the empty value, which the service stores as none. Campaign defaults' "Tracking
+    link hosts" tooltip says a host's subdomains are included, as store#TrackingLink matches them.
+- Findings, numbered by the lead F302 to F307 in order:
+  - the Built note's findings stand as written; the user's calls of Nov 15 are in §4 (the visitor key as built, no banner, a banner in
+    §7; `/trk` and `/trk-o` reserved in the framework as a follow-up). The framework's reserved list also lacks the default conf's own
+    `/search` and `/dashboard` servlets: the follow-up could derive the reserved segments from every declared servlet pattern;
+  - a token is scoped to its recipient, send and organization, not to the links of its message: a holder may append it to another
+    tracking link of the same organization and have that click attributed to the recipient (while they allow tracking). Nothing else
+    follows from it;
+  - a link's destination and safe destination are checked when saved: a host later removed from the allowlist, or a site whose mount
+    no longer serves the organization, still receives the link's visitors until the link is saved or disabled;
+  - an allowlist entry admits its subdomains (`partner.example` admits `shop.partner.example`), so an entry for a shared hosting
+    domain would admit every tenant under it; MARKETING_CONFIGURE only;
+  - a pixel's limit is per client across all pixels (30 in ten minutes): a mail provider's image proxy fetching for many recipients
+    from one address has most opens dropped (opens are not yet reported, P20);
+  - a link's end date cannot be cleared from the form (an empty Timestamp is no parameter, so the old one is kept); disabling is the
+    way back.
+- Tests (release binary, `--nobuild`, this worktree's runtime, after the second master merge): mr-mantle Tracking (4 of 4), Campaigns
+  (7 of 7), Dispatch (6 of 6), Experiments (3 of 3); mr-pass MarketingTracking (4 of 4), MarketingPages (2 of 2); mr-boss
+  MarketingTracking (2 of 2), MarketingCampaigns (1 of 1); each run about 27-38 s with startup. Tracking and MarketingTracking with the
+  fixes reverted failed on R1 and R2's checks. `moqui lint --screens` (release): 141 flagged sites as before, parse failures 0. Prettier
+  (mr-moqui's config) clean on the changed Mantle JavaScript. Not run: test-apps, the acceptance suite.
+- For the lead:
+  - budget share: unchanged in effect (a few hundredths of a second on Tracking and MarketingTracking);
+  - merge hot spots: as the Built note's, plus `test/marketing/Campaigns.spec.js` (the policy case);
+  - Attack-Surface: the worker's paragraph is right but for two sentences: replace "a disabled or ended link goes to its safe
+    destination, checked the same way, or to the neutral page." with "a disabled or ended link goes to its safe destination, checked
+    the same way when saved, or to the neutral page, and records nothing and sets no key; with no safe destination its answer is the
+    unknown code's.", and after "Every other recipient gets each link's direct destination and no pixel." add "A message's link is
+    personalized only on a live host of its own site.";
+  - the user's calls: none open (the Nov 15 rows in §4).
+
 ### P16 — Events and registration setup, with the PASS Event page
 
 Design §9 Events, EventDetail and RegistrationSetup, §13 Event; MKT-EVENT (its offer part), MKT-FORMS; stage M6.
@@ -1174,6 +4487,242 @@ Design §9 Events, EventDetail and RegistrationSetup, §13 Event; MKT-EVENT (its
 - **Usable when** (`test/acceptance/Marketing/MarketingEventSetupWalk`): `marketing.events` makes an event with a
   campaign, sets two ticket types and questions, publishes it, and the PASS Event page shows the offer; the
   calendar's own permissions still decide who edits the event.
+
+**Built Nov 15 (P16).** mr-mantle, mr-pass and mr-boss on branch `mkt/p16` (hashes in the worker's reply), from master after gate 5;
+mr-moqui unchanged, no Rust built. Built beside the framework follow-up reserving `/trk` and `/trk-o`, whose files this phase does not touch.
+- Checked first (the code over the plan): P12's, P14's and P15's Built and Review notes, F28–F30, F33, F71, F80, F107, F146, F90–F307 and §4;
+  Commons' calendar as built (EventServices create#Event, check#EventAccess, get#EventInstances and the series' occurrences, EventManager,
+  WorkEffortRecurrence, WorkEffortProduct; Commons' EventDetail and People's mount of it; the framework's create#CallLink and Maintenance's
+  video call), FormPublication.js and FormDefinitions.js (the registration purpose DbfpRegistration, FppRegistration), MarketingPortal.js
+  (served, the one NotFound, the readiness, the page's embeds), the price resolver (get#ProductPrice), the gateway bindings
+  (PaymentGatewayOrganization, ProductStorePaymentGateway, PartyAcctgPreference invoicePayGatewayConfigId) and the attempt coordinator's
+  PapEventRegistration (P17's). People's projected calendar kind and the room booking are not used here: an event's rooms stay EventDetail's
+  (book#Resource under the calendar's rule), and the campaign calendar is P21's. The code over the plan:
+  - "a Commons event's owner may be a person" (F107): the event's organization is kept by a new `mantle.work.registration.RegistrationEvent`,
+    made once by `store#RegistrationEvent` for an events manager of the organization who may edit the event (the calendar's rule; another
+    organization later is ORGANIZATION_FIXED), which also makes the campaign link (CampaignAssociation CakEvent) to an open campaign of that
+    organization; CampaignServices' store#CampaignAssociation now admits CakEvent by that organization (CakPage stays KIND_UNAVAILABLE; P2's
+    Campaigns spec now checks the page kind). The events manager group holds no MARKETING_CAMPAIGN_EDIT, so the link is made by E, not by
+    C.store#CampaignAssociation as the design's NewEvent row reads;
+  - "EventRegistrationPolicy (one occurrence's dated offer)": one row per occurrence (unique event and occurrenceStart, the start a series'
+    rule gives the occurrence; an event that does not repeat has one, matched to its dates now), changed in place at the revision read with
+    its fields audit-logged and `policyRevision` counted, its terms' changes after publication counted in `termsRevision` (P17 keeps the one
+    a registration accepted), not a new dated row a change: the capacity domain is the occurrence's, so a row a change would split it.
+    Statuses ErpDraft, ErpPublished, ErpClosed with their transitions; `close#Registration` is added (the plan names no unpublish);
+  - "capacity below held and confirmed refused" needs the places: `EventRegistration` is defined now with only what the checks count (offer,
+    ticket type, attendee, buyer, state, hold end; statuses EvrHeld, EvrPending, EvrConfirmed, EvrWaitlisted, EvrExpired, EvrCancelled, no
+    transitions), every write P17's; a seat is taken by EvrHeld while its hold lasts, EvrPending and EvrConfirmed (`SEAT_STATES`);
+  - "its price source": a ticket type keeps no amount: EtpFree, or EtpProduct with a ticket product the organization owns (not inventoried,
+    sales allowed) priced by `get#ProductPrice` in the organization's currency (find#PartyAcctgPreference, its settings' when it has none)
+    and of the offer's store when it names one; a product with no price is "No price" and blocks publishing (readiness `prices`);
+  - "a payment gateway of the organization": the offer's store's (ProductStorePaymentGateway) when it names one, else the organization's
+    invoice gateway when it is bound, else its first binding in effect (P17 may choose otherwise; the readiness only asks that one exists);
+  - "the registration form (a publication of purpose registration, P12)": `store#RegistrationForm` names a published DbfpRegistration form
+    of the organization and writes its FormPublication (FppRegistration, anonymous, many, the offer's site, context the offer, open while the
+    offer is) itself after its checks: Commons' store#Publication asks the form's editor (MARKETING_CONTENT_EDIT), which an events manager is
+    not; a new form closes the earlier publication; the questions are asked of each attendee or the buyer once, with a consent text;
+  - "a ready profile for the notices": the offer's named transactional profile, else the organization's ready one (a promotional profile
+    never sends them); a notice's template is a Comms template of the organization in use, a promotional template never a transactional
+    notice;
+  - the PASS operation is camelCase, `getMarketingEvent` (GET `marketing/event`: siteId, registrationPolicyId), after P15's in both schema
+    copies and route lists (byte-identical), read only, in no TOKEN_WRITES list; the page is `Marketing/Event?offer={id}` (as SubmitForm's
+    `?publication=`), a 404 for every miss as Page's; a landing page embeds `[[event ID]]` as a card linking it (P14's embed table);
+  - "EventDetail, Commons' EventDetail included ... with the tabs Registration setup, Registrations and Check in": Commons' EventDetail is
+    mounted as it is (People's way) and gains a small owner-contract hook, `eventAppLinks` (links above its tabs, a list the mounting area sets,
+    data never a right, a request parameter left out); Marketing's Events area gives a registration event its Registration setup (P17 and
+    P18 add theirs). Its tabs still link Commons' own route, as under People;
+  - "the video link of an online occurrence through EventDetail's Add video call": `add#EventVideoCall` (a framework call link as the event's
+    `infoUrl`, once) on RegistrationSetup's More menu, not on Commons' screen; the public page says "online" and never shows the link;
+  - Events is every Marketing reader's (design §2: app) with no area deny; RegistrationSetup is the events managers' (`eventSetupRead`,
+    "Not available" otherwise); menu index 7 between Content and Surveys (Surveys 8, Leads 9), key `g e`, quick create `marketingEvent`;
+  - the Marketing app's readiness check is "published list, form, page or event".
+- Mantle:
+  - `entity/EventRegistrationEntities.xml` (new, `mantle.work.registration`): RegistrationEvent, EventRegistrationPolicy (statuses and
+    transitions, question scopes), EventTicketType (price sources), EventCommunicationSchedule (triggers, recipients), EventRegistration
+    (its states).
+  - `service/mantle/work/EventRegistrationServices.xml` over `EventRegistrations.js` (new, E): find#Events, get#EventSetup,
+    store#RegistrationEvent, store#RegistrationPolicy, store#TicketType, store#RegistrationForm, store#CommunicationSchedule,
+    publish#Registration, close#Registration, add#EventVideoCall; exports SEAT_STATES, seatsTaken, occurrenceOf, priceOf, gatewayOf,
+    readinessOf, publicView, liveOffersOf, organizationOfEvent for P17 and the portal.
+  - `MarketingCampaigns.js` (CakEvent), `MarketingPortal.js` (get#Event, the `[[event]]` embed, the readiness), `MarketingPortalServices.xml`
+    (get#Event), `ForumSchema.js` and `script/PassRoutes.js` (getMarketingEvent).
+- PASS: `screen/Marketing/Event.xml` and `.html.fancy` (new: PublicEvent, every value escaped, the description and terms as text
+  paragraphs), `Page.xml` and `Page.html.fancy` (the event card), `Schema.js` and `Routes.js` (copies), `screen/Marketing.xml`'s comment,
+  `docs/Deployment.md` (Marketing app: Events), README.
+- BOSS: `screen/Marketing/Events.xml` (new area) with `Events/Events.xml` (EventFind, EventList, NewEvent), `Events/RegistrationSetup.xml`
+  (the header with the primary by state and More, the offer choice of a series, Offer, Readiness, Ticket types, Registration questions,
+  Notices) and Commons' EventDetail mounted; `template/MarketingEvents.xml` (new: createEvent, storeOffer, storeTicket, storeQuestions,
+  storeNotice, publishOffer, closeOffer, addVideoCall; NewEventForm); `QuickCreate/NewEvent.xml` (new, QuickEvent); CampaignDetail's
+  Events box; `Commons/Calendar/EventDetail.xml` (the eventAppLinks hook); `Marketing.js` (eventRead, eventSetupRead, the P16 link paths,
+  the `event` record kind, the choices ticketProducts, registrationForms, eventStores, eventTemplates, eventProfiles, eventCalendars);
+  `screen/Marketing.xml` (Events, `g e`, the quick create), Surveys' and Leads' menu indexes; demo (`BossZZMarketingDemoData.xml`, a P16
+  block): Retail's spring planting webinar (free, online, 100 seats with a waitlist) and rose pruning workshop (twelve seats, Standard
+  $45.00 and Members $30.00 by their ticket products), both organized by Marketing Events manager, linked to the spring campaign and
+  published on ZIZI_SHOP; the webinar's call link by a second demo loader, `ironstone.marketing.DemoServices.load#EventDemo`
+  (MarketingDemo.js `loadEvents`, its token in no row).
+- Specs:
+  - Mantle `test/work/EventRegistrationSetup` (new, 3 features, about 1.3 s: an events manager who may edit the event offers it with a
+    campaign link once, a reader, another organization's manager and a manager who may not edit the event refused, the events of the
+    campaign listed; a series' occurrence required and checked, one offer an occurrence, the seats and a ticket's places never below the
+    places held or confirmed (an ended hold not counted), the other occurrence's seats apart; a ticket product of another organization
+    refused, a paid ticket NOT_READY without a gateway and published with one, a stale revision refused, the public view's allow-listed
+    keys, a draft, another site's and a closed offer NotFound); `test/marketing/Campaigns` (the association feature's kind is now CakPage).
+  - mr-pass `test/Marketing/MarketingEvents` (new, 2 features, about 0.05 s of features; fixtures `MarketingFixtures.js` events()): Event's
+    one html render (title, description escaped, dates, place, online without the link, prices from the product, a full ticket's waitlist,
+    terms; no internal name, note or call link), the answer's keys; a draft, closed, past, another site's, a site without the mount and an
+    unknown offer NotFound alike; the operation in both copies and route lists and in no TOKEN_WRITES list.
+  - mr-boss `MarketingEvents` (new, 2 features, about 0.5 s: RegistrationSetup's one qvt render for the events manager; the campaign's
+    events for a reader, the record kind, the ticket product choice, a reader's "Not available" setup and another organization's author
+    refused, the context's capabilities and link); `MarketingSpecLib` (the menus with Events, `g e`, the event ids).
+  - Acceptance, written and not run: mr-boss `test/acceptance/Marketing/MarketingEventSetupWalk` (4 features, stepwise: New event with the
+    campaign; the offer, two ticket types, questions an author published, Publish; the PASS Event page as a visitor; the calendar's rule on
+    who edits the event and the organization kept).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle EventRegistrationSetup, Campaigns, MarketingSubscriptions,
+  MarketingContent, SitePages, PassAuthority, CalendarServices (all passed); mr-pass MarketingEvents, MarketingPages, SubmitForm,
+  MarketingAccess, Transport, MarketingTracking (all passed); mr-boss MarketingEvents, MarketingAccess, MarketingCampaigns, EventDetail,
+  Calendar, PeopleRecruiting, MarketingContent (all passed); after Prettier the new specs and their neighbours again (91 of 91). A throwaway
+  copy of the acceptance walk and renders of Events (qvt, tui), RegistrationSetup (tui; html for the webinar), EventDetail under Marketing
+  (qvt, with the Registration setup link), CampaignDetail (html, the Events box) and QuickEvent (qvt, tui) passed and was not kept.
+  `moqui lint --screens` (release): 141 flagged sites, as before, none in a new or changed screen; parse failures 0. Prettier (mr-moqui's
+  config) on the new and changed JavaScript. Not run: test-apps, the acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P16" table and the calendar services' Implemented in (Marketing/Events/EventDetail,
+  NewEvent); ss-inventory's EventDetail and MyCalendar NewEventForm rows.
+- Design edits: design-marketing §3 (CampaignDetail's event link), §9 Events, EventDetail and RegistrationSetup (as built), §13 Event (as
+  built), §14.1 RegistrationEvent; design-drawers-commons §7 (the EventDetail hook, an owner contract).
+- Findings, numbered by the lead F308 to F313 in order:
+  - the code over the plan above: RegistrationEvent keeping the organization and the campaign link made by E, one offer row per occurrence
+    changed in place with its revisions, EventRegistration defined now with its seat states only, no amount on a ticket type, the gateway
+    rule, the question publication written by E, `close#Registration`, the camelCase operation and `?offer=`, the EventDetail hook, Add video
+    call on RegistrationSetup;
+  - an event that does not repeat has its offer matched to its dates now, so moving the event in the calendar moves the offer; a series'
+    occurrence is matched by the start its rule gives it, within 31 days of a changed instance's own start (a changed instance moved further
+    no longer matches, and the offer's readiness says "no longer an occurrence"); changed dates' notices are P17's job;
+  - EventDetail's tabs (Overview, Attendees, Reminders, Files, Chatter) link Commons' own route, as under People's mount, so a click there
+    leaves Marketing's menu;
+  - the demo's ZIZI_SHOP is unpublished (as P7's, P12's and P14's demos), so the two demo offers' pages are Not Found until it is
+    published; the webinar's call link lasts 90 days (the framework's most), shorter than a later event would need;
+  - the occurrence choice of a series lists the next 24 occurrences in 400 days; a later one cannot be offered yet;
+  - a time zone is typed (validated against the server's zones), not chosen from a list.
+- For the lead:
+  - budget share: mr-mantle about 1.3 s (EventRegistrationSetup); mr-pass server about 0.05 s of features (MarketingEvents; its fixtures in
+    setup); mr-boss server about 0.5 s (MarketingEvents; MarketingAccess unchanged); no client spec;
+  - merge hot spots (P17 next): mr-mantle `entity/EventRegistrationEntities.xml` and `EventRegistrations.js` (P17 adds the registration
+    writes), `service/mantle/forum/ForumSchema.js` and `script/PassRoutes.js` with mr-pass `Schema.js` and `Routes.js` (a P16 entry after
+    P15's), `MarketingPortal.js` (a P16 section, the embed pattern, the readiness), `MarketingPortalServices.xml`, `MarketingCampaigns.js`
+    (associationKinds), `test/marketing/Campaigns.spec.js`; mr-boss `screen/Marketing.xml` (Events, `g e`, quick create), `Surveys.xml` and
+    `Leads.xml` (menu indexes), `Marketing.js` (capabilities, linkPaths, recordKinds, choiceSources), `Campaigns/CampaignDetail.xml` (an
+    Events box after Tracking links), `screen/Commons/Calendar/EventDetail.xml` (the hook; any Commons calendar work), `MarketingDemo.js`
+    and `DemoServices.xml`, `data/BossZZMarketingDemoData.xml` (a P16 block at the end), `test/Marketing/MarketingSpecLib.js`,
+    `plan/usl-inventory.md`, `plan/ss-inventory.md`, `plan/design-marketing.md`, `plan/design-drawers-commons.md`, this file; mr-pass
+    `screen/Marketing/Page.xml` and `.html.fancy`, `test/Marketing/MarketingFixtures.js`, README, `docs/Deployment.md`;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, after PASS Marketing's tracking paragraph; no mr-moqui worktree): "PASS
+    Marketing's Event page (`mantle.marketing.MarketingPortalServices.get#Event`, `allow-remote="false"`, `authenticate="anonymous-all"`,
+    read only, reached only as the PASS operation `getMarketingEvent` of the authority's allowlist, in no TOKEN_WRITES list, rendered at
+    `/marketing/Event?offer={id}`) finds the organization from the site's `marketing` mount (a published site, an internal organization)
+    and answers an event registration offer (EventRegistrationPolicy) only when it is published, of that organization, on that site, for an
+    occurrence of an event not cancelled that has not ended; a site without the mount, a draft, closed, past or another site's or
+    organization's offer and an unknown or malformed id answer the same NotFound (a 404). The answer is allow-listed: the offer's public
+    title and description (never the event's own name or notes), the occurrence's dates in the offer's zone, its place or that it is online
+    (never the call link, which goes to registrants only), each ticket's name, its price text from the ticket product's own prices (no amount
+    is stored on the offer) and advisory availability, whether registration is open and the terms; no attendee, organizer, room, budget,
+    campaign, work effort or party id. The page escapes every value and shows the description and terms as text, under PASS's default
+    no-store headers, the shell's CSP and a same-origin referrer policy; a landing page shows an offer only through the same operation
+    (`[[event ID]]`). Staff set registration up through `mantle.work.EventRegistrationServices`, which asks MARKETING_EVENT_MANAGE in the
+    event's organization (kept by RegistrationEvent, made only by an events manager who may edit the event under the calendar's own rules)
+    for every write and a Marketing read for every read, another organization's event or offer answering as a missing one, each write at the
+    revision read; publishing asks a published site of the organization's Marketing mount, a ready transactional sending profile and, for a
+    priced ticket, a payment gateway of the organization or its store.";
+  - the user's call (none blocking): the events manager linking an event to a campaign without the campaign edit permission (the link changes
+    no plan); the offer changed in place with its revisions rather than a dated row a change; the eventAppLinks hook on Commons' EventDetail.
+
+**Review Nov 15 (P16).** A fresh review of `mkt/p16` (mr-mantle f52b6209, mr-pass 09572f6, mr-boss 689a53f5) against P16, §2, §4 and
+design §3, §9, §13; master (Marketing P15's close, the reserved-paths follow-up, Smithy's search at `-/search`, the wiki names
+follow-ups) merged into all three first: mr-mantle and mr-boss clean, mr-pass one conflict in `docs/Deployment.md` (P15's reserved
+`/trk` sentence beside P16's Events paragraph, both kept). Schema and route copies byte-identical after the merge. Fixes mr-mantle
+5c0a0bb7, mr-boss (this note's commit); mr-pass only the merge.
+- Checked and sound:
+  - the Event page: `getMarketingEvent` reads only (allow-remote false, in no TOKEN_WRITES list); `served` asks a published site whose
+    `marketing` mount targets an internal organization, then publicView asks the offer published, on that site, of that organization,
+    for an occurrence of an event not cancelled that has not ended: every miss (unpublished site, no mount, draft, closed, past, another
+    site's or organization's, unknown, malformed at the page's own pattern) is the one NotFound; the answer is allow-listed (spec'd by its
+    keys): no attendee, organizer, room, campaign, budget, party or call link, availability as words, never a count; `Event.html.fancy`
+    escapes every `${}` (the `.html.fancy` renderer), the description and terms as text paragraphs, no form or script, PASS's default
+    no-store and CSP; a landing page's `[[event ID]]` is a card only when the same operation answers for that site;
+  - scope: every E service asks MARKETING_EVENT_MANAGE (writes) or a Marketing read, and the event's organization from RegistrationEvent
+    (made only by a manager who may edit the event, an internal organization of the caller's), missing and another organization's one
+    RECORD_UNAVAILABLE; each named record is the organization's (site by an enabled Marketing mount targeting it, store, ticket product,
+    template, sending profile, registration form); writes at the revision read under the offer's row lock; CakEvent in
+    store#CampaignAssociation by RegistrationEvent's organization against the campaign's;
+  - capacity: SEAT_STATES (held while its hold lasts, pending, confirmed) counted per offer and per ticket type, a waitlisted, expired or
+    cancelled place never; the offer's seats and a ticket's capacity never below them; publish readiness names each missing check;
+    close#Registration once, closing the question publication, the places kept;
+  - the registration questions' publication written by E is confined to a published DbfpRegistration form owned by the offer's
+    organization, on the offer's site, its context the offer, open only while the offer is published, closed with it;
+  - the eventAppLinks hook on Commons' EventDetail: links only from the mounting area's context (Marketing's Events always-actions, after
+    check#Record), relative URLs only; People's and Commons' mounts set none; EventDetail, Calendar and PeopleRecruiting pass unchanged;
+  - the demo: rows in the demo data file only; `load#EventDemo` allow-remote false, refusing a signed-in user who is not a system
+    administrator (MarketingDemo.js asDemoAdministrator), idempotent;
+  - specs test what they claim; RegistrationSetup one qvt render, PASS Event one html render.
+- Fixed:
+  - R1 (medium; mr-mantle EventRegistrations.js storeRegistrationEvent, mr-boss MarketingEvents.xml, CampaignDetail.xml, Marketing.js):
+    an events manager linked an event to a campaign without MARKETING_CAMPAIGN_EDIT, a change of the campaign by someone the design
+    gives no campaign right (design §9 NewEvent names C.store#CampaignAssociation; §1.1 E is registration and attendees only). The link
+    is now made through C.store#CampaignAssociation (its scope, open campaign and organization checks, once) for a caller who also holds
+    MARKETING_CAMPAIGN_EDIT, else CAMPAIGN_EDIT_REQUIRED and nothing kept. NewEvent shows the campaign field only to a campaign editor
+    and createEvent refuses a campaign before any calendar event is made; CampaignDetail's New event is for a manager who also edits
+    campaigns, and a new "Link an event" (the campaign's editor; choice `registrationEvents`) links a registration event of the
+    organization. Specs: Mantle (an events manager refused with nothing kept, the author's link, a manager who edits campaigns linking
+    once), mr-boss (createEvent with a campaign refused and no event made; the choice for the author and none for the manager); both fail
+    on the unfixed code. The acceptance walk's first step now makes the event without the campaign and has the author link it (changed,
+    not run);
+  - R2 (medium; mr-mantle MarketingPortal.js publicationOfPage): a published offer's question publication (FppRegistration, anonymous,
+    on the site) was also served by PASS SubmitForm and a landing page's `[[form ID]]`, so anyone could answer an offer's questions with
+    no registration, answers P17 could not tie to an attendee (design §9: a response belongs to its attendee registration). A
+    publication whose context is an EventRegistrationPolicy is now NotFound there. Spec (get#Form on the offer's publication NotFound);
+    fails on the unfixed code;
+  - R3 (low; EventRegistrations.js storeRegistrationForm): the questions' consent text, which a registrant accepts with the terms,
+    changed after publication without raising termsRevision. It now does; spec (terms then consent after publication: revision 2);
+  - R4 (low; EventRegistrations.js getEventSetup): the event's own notes (WorkEffort.description) went to any Marketing reader of the
+    organization whatever the calendar's visibility; now only to a viewer of the event (check#EventAccess canView);
+  - R5 (low; Commons EventDetail.xml): a request carrying `eventAppLinks` as a JSON body's list passed the "not text" test; a request
+    carrying the name now shows no app links.
+- Findings, numbered by the lead F314 to F321 in order:
+  - the Built note's findings stand but the first: the campaign link is the campaign's change (R1), not E's;
+  - an offer changed in place keeps only a counter of its terms (termsRevision); the accepted words survive only in the policy row and
+    the audit log. P17 should keep on each registration the termsRevision it accepted and the accepted text (or a snapshot row per terms
+    revision written when it rises), not rely on EntityAuditLog as evidence;
+  - the capacity checks lock the offer's row (forUpdate); P17's reservation must take the same lock (offer, then ticket type) so a
+    capacity change and a reservation serialize;
+  - after publication store#RegistrationPolicy accepts a closing date past the occurrence's end, and store#TicketType a ticket capacity
+    above the offer's seats (its description says "within the offer's seats"); the readiness checks the window at publish only;
+  - the public availability says "Full: join the waitlist" when the waitlist is on even when its limit is reached;
+  - a ticket type with places taken may be ended (its places stay counted in the offer); P17 decides what its holders see;
+  - find#Events and get#EventSetup give a registration event's name, dates and place to every Marketing reader of the organization,
+    whatever the calendar's visibility (its notes now follow it, R4);
+  - an author may still publish registration questions alone through Commons (P12's registration purpose); only an offer's own
+    publication is kept off SubmitForm.
+- Tests (release binary, `--nobuild`, this worktree's runtime, after the master merge): mr-mantle EventRegistrationSetup (3 of 3, about
+  1.9 s of features), Campaigns (7 of 7), CalendarServices, MarketingForms, FormPublications, MarketingContent (all passed); mr-pass
+  MarketingEvents, MarketingPages, SubmitForm, MarketingAccess (10 of 10); mr-boss MarketingEvents (2 of 2), EventDetail, Calendar,
+  MarketingCampaigns, MarketingAccess, PeopleRecruiting (53 of 53 with MarketingEvents); each run about 24-32 s with startup.
+  EventRegistrationSetup with R2 reverted failed on its get#Form check. `moqui lint --screens` (release): parse failures 0, no flagged
+  site in a changed screen. Prettier (mr-moqui's config) on the changed JavaScript. Not run: test-apps, the acceptance suite (the
+  changed MarketingEventSetupWalk included).
+- For the lead:
+  - budget share: mr-mantle EventRegistrationSetup about 1.9 s (was 1.3); mr-boss MarketingEvents about 0.9 s (was 0.5); mr-pass
+    unchanged;
+  - run mr-boss `MarketingEventSetupWalk` (changed by R1) with the acceptance suite;
+  - merge hot spots: as the Built note's, plus mr-mantle `MarketingPortal.js` publicationOfPage, mr-boss `CampaignDetail.xml` (the
+    Events box's Link an event), `Marketing.js` (choice `registrationEvents`), `template/MarketingEvents.xml` (createEvent's campaign
+    guard), `screen/Commons/Calendar/EventDetail.xml` (the hook's guard);
+  - Attack-Surface: the worker's paragraph is right but for its last sentence's staff part; replace "Staff set registration up through
+    `mantle.work.EventRegistrationServices`, which asks MARKETING_EVENT_MANAGE ... for every write and a Marketing read for every read,"
+    with the same words and then add, after "each write at the revision read;": "an event's campaign link is the campaign's own write
+    (`CampaignServices.store#CampaignAssociation`, MARKETING_CAMPAIGN_EDIT); an offer's registration questions are a form publication of
+    the organization that SubmitForm never serves on its own (answered only with a registration);";
+  - the user's calls: R1 reverses the worker's choice (an events manager linking a campaign without its edit permission): the user may
+    prefer the worker's, which is one line back in storeRegistrationEvent; the offer changed in place with its revisions is sound for
+    capacity if P17 keeps the accepted terms (above); the eventAppLinks hook is an owner contract that adds no right.
 
 ### P17 — Registrations, tickets and payment, with PASS Register and Registration
 
@@ -1241,6 +4790,291 @@ Design §9 RegistrationSetup's order rules, Registrations and RegistrationDetail
   on, a paid registration shows pending with its place held until the order is approved from Sales' Awaiting
   approval list, and then shows its ticket.
 
+**Built Nov 15 (P17).** mr-mantle, mr-pass and mr-boss on branch `mkt/p17` (hashes in the worker's reply), from master after P16's
+merge; mr-moqui unchanged, no Rust built.
+- Checked first (the code over the plan): P16's Built and Review notes (F308–F321) and §4; impl-sales P7 (X1: SalesTax.js `order`, which
+  taxes a storeless part only with an address), P9, P11 (`autoApprove#Order`, SalesOrders.js `approvalWaits`, OrderPlacedAutoApprove),
+  P13 and P17; Shop's checkout (ShopCheckout.js freeze, authorize, apply, place, refresh) and Accounting's attempt coordinator
+  (PaymentAttempts.js, PapEventRegistration); `check#OrderPreApprove`; ExternalAccess.js; the delivery ledger (`queue#Delivery`, a
+  source's build); MarketingPortal.js (served, limits, SubmitForm's pattern); the schema, route and TOKEN_WRITES copies; mr-pass's
+  Marketing pages and Shared/Portal.js. The code over the plan:
+  - "EventRegistration (one per attendee; ... the order, item and payment references ...)": a request is its own record,
+    `EventReservation` (buyer, PASS's request key unique per offer with a hash of its values, terms revision, order, payment, the return
+    key's digest), each attendee an EventRegistration; the accepted words are kept once per terms revision in `EventRegistrationTerms`
+    and each registration names its revision (P16 review: not the audit log). `EventRegistrationAction` is the history (states, code
+    revision, reason, operation key) and `EventRegistrationContent` the files host. A new state `EvrReview` (paid after the hold ended,
+    no seat) with the transitions every move needs;
+  - "start#RegistrationPayment makes the attempt for the held order": the order is made at the payment's start and placed only once the
+    attempt's verified result is approved (Shop's order of steps), so no unpaid ticket order is ever placed and listed in Sales' Awaiting
+    approval; its placement's own SECA (OrderPlacedAutoApprove) runs `autoApprove#Order`, so the approval is never a status write of
+    Marketing's. The registrations follow the order by a new SECA on OrderHeader's status (`EventRegistrationOrderStatus`, in the
+    order's transaction): Approved confirms the pending places once, Cancelled or Rejected cancels them;
+  - "taxed through the organization's gateway by X1": X1 taxes a storeless part only at an address, so the order part's address is the
+    event's facility's postal address, else the organization's own (PostalShippingOrigin, Primary, Billing); an online event with
+    neither is untaxed;
+  - "unless the order carries a pre-approval warning": `check#OrderPreApprove`'s built-in sales checks (a new customer; a missing or
+    untrusted shipping address) warned on every first-time storeless ticket order, so none would ever auto-approve. A storeless order of
+    purpose `OrpEventRegistration` now skips those two checks (nothing ships; a store's settings turn them off for its orders); Sales'
+    own warnings, credit and the approval setting still stop it (Mantle OrderInfoServices.xml, an owner contract written into
+    design-sales §5; the user's call to confirm);
+  - "a refund handed to Accounting and shown pending": handed to the payment services after the commit, with the registration's
+    operation key: `release#SinglePayment` of an authorization once none of its places is left, else `refund#SinglePayment` of the place's
+    line and its tax once taken; refunded on the provider's success, else `ErfFailed` (Accounting's to finish), never retried blind; a
+    partial cancellation of an authorization not yet taken waits (requested) and the job hands it over once it is captured;
+  - "MyRegistration with the ticket and entry QR": the entry code is never stored (its digest and revision are), so a code cannot be
+    shown again: each ticket notice attempt and each "Show my entry code" (getRegistration with showTicket and a fresh request key, a
+    POST) issues a new code and revokes the last; the QR is the built barcode helper's;
+  - the PASS operations are camelCase POSTs, as P12's and Shop's capability reads: `reserveRegistration` (anonymous, the plan's
+    `marketing.reserveRegistration`), `completeRegistration`, `startRegistrationPayment`, `getRegistration`, `cancelRegistration`, all
+    in the three TOKEN_WRITES lists (PassAuthority, PassApi, mr-pass Transport, identical), the remote transport exempting
+    `reserveRegistration` from its session rule as `requestSubscription`; schema and route copies byte-identical;
+  - "by verified account or a registration-scoped capability": the ExternalAccess kind `EventRegistration` names a reservation
+    (scopes RegistrationView, RegistrationCancel), issued only by the registration services (at the reservation, once, and in each
+    receipt), `self: true` for the buyer's verified account; the page keeps a token in the session and drops it from the address;
+  - the registration and lead-rule triggers of P11 and P13 are not built (they need the offer named on MarketingAutomation and
+    MarketingLeadRule and their screens; attendance waits for P18's check-in) — see the findings;
+  - the demo: ORG_ZIZI_RETAIL has no accounting preference of its own (it rolls up to ORG_ZIZI_CORP), so a Retail row naming LOCAL
+    would cut its rollup for every other setting; not added (the workshop's ticket order is untaxed in the demo; the user's call).
+- Mantle:
+  - `entity/EventRegistrationEntities.xml` (a P17 block: EventRegistration's fields, EvrReview and transitions, the refund states;
+    EventReservation, EventRegistrationTerms, EventRegistrationAction, EventRegistrationContent); `data/MarketingSeedData.xml` (source
+    MdsrcEventRegistration, EmailTemplate MANTLE_EVENT_REGISTRATION, order purpose OrpEventRegistration); `data/EventRegistrationSetupData.xml`
+    (new: jobs `run_EventRegistrations` every two minutes and `run_EventRegistrationNotices` every fifteen, their JobRegistration and
+    RecoveryDescriptor); `service/EventRegistration.secas.xml` (new).
+  - `service/mantle/work/EventRegistrationServices.xml` (a P17 block: find#, get#, reserve#, complete#, confirm#, cancel#, correct#Registration,
+    change#Registrations, start#RegistrationPayment, check#RegistrationAccess, create#EventRegistrationContent, run#RegistrationHolds,
+    run#RegistrationNotices and the internal handle#RegistrationOrderStatus, offer#WaitlistPlaces, refund#, refresh#RegistrationPayment,
+    queue#RegistrationNotice, build#RegistrationDelivery) over three new modules: `EventRegistrationPlaces.js` (reserve under the offer's
+    and tickets' locks, complete, confirm, cancel once, waitlist offers in order, hold expiry, the order's status, the staff reads and
+    writes), `EventRegistrationPayments.js` (the order, the attempt, the verified result, placement, refunds, the job's part) and
+    `EventRegistrationNotices.js` (receipts, tickets, offers, cancellations and the schedules as ledger deliveries); `EventRegistrations.js`
+    exports `publicFacts` and `profileOf`.
+  - `MarketingPortal.js` (a P17 section: reach, the view, the five operations; `subscriberOf` exported), `MarketingPortalServices.xml`;
+    `ForumSchema.js`, `script/PassRoutes.js`, `PassAuthority.js`, `PassApi.js`; `ExternalAccess.js` (the kind); `CommunicationServices.xml`
+    (the host's visibility and files); `OrderInfoServices.xml` (above); `MarketingWorkspace.js` (Home's registrations card: places taken
+    against the seats of the published offers to come).
+- PASS: `screen/Marketing/Register.xml` and `.html.fancy` (RegistrationChoice, RegistrationAnswers, RegistrationPayment, RegistrationReceipt),
+  `Registration.xml` and `.html.fancy` (MyRegistration with Show my entry code, CancelRegistration), `Registrations.js` (the session's
+  capability, the calls); the Event page's Register link; `Schema.js`, `Routes.js`, `Transport.js`; `screen/Marketing.xml`'s comment;
+  `docs/Deployment.md` (Registrations), README.
+- BOSS: `screen/Marketing/Events/Registrations.xml` (RegistrationFind, Attendees with row selection for Cancel and Send again,
+  StaffRegistration) and `RegistrationDetail.xml` (the header with Confirm by state and More: Correct or substitute, Send again, Cancel;
+  Registration facts, the terms accepted, Answers' link, the history) over `template/MarketingRegistrations.xml` (new); Events' subscreens
+  and EventDetail's Registrations link; RegistrationSetup's More › Registrations; Home's card link; `Marketing.js` (registrationRead, the
+  link paths, the `registration` record kind); `RecordFilesServices.xml` (the host).
+- Specs:
+  - Mantle `test/work/EventRegistrations` (new, 6 features, about 1.5 s): two requests for the last seat held and waitlisted, the hold
+    expired once and the waiting place offered and confirmed with its terms' words kept; a storeless ticket order taxed through the
+    organization's gateway (two lines, 84.80), approved with no store, one payment for two starts and one confirmation for two results;
+    a staff cancellation (a reader and another organization's manager refused, a stale revision refused, twice STATUS_INVALID) releasing
+    one seat and refunding 42.40; a payment after the hold ended left for review with no seat while another visitor holds it, and a
+    calendar RSVP no seat; with the approval setting on the order placed, the place pending with no end and no code until the order is
+    approved, then confirmed; a cancelled order cancelling its place and offering the waiting one; a client's reservations past its
+    limit refused and holding nothing. `test/marketing/MarketingScope` (Home's registrations card now available).
+  - mr-pass `test/Marketing/MarketingRegistration` (new, 3 features, about 0.3 s; fixtures `MarketingFixtures.js` registrations()):
+    Register's one html render; a capability reads and cancels only its own reservation, a forged, another site's and a bad return key
+    the one NotFound; the places' allow-listed keys, no answer, credential or party id; the client limit; the operations in both schema
+    copies and route lists and in the three TOKEN_WRITES lists alike.
+  - mr-boss `MarketingRegistrations` (new, 2 features, about 0.6 s): RegistrationDetail's one qvt render of a staff registration of the
+    demo webinar for the events manager; a reader's "Not available" (html), the record kind, another organization's author refused, the
+    list, the context's links and capability.
+  - Acceptance, written and not run: mr-boss `test/acceptance/Marketing/MarketingRegistrationScenario` (5 features, stepwise: the free
+    webinar's ticket with the video link; the race; the paid registration taxed with no store; cancellation from RegistrationDetail with
+    the refund and the waitlist offer; the approval setting on, approved, then the ticket); mr-pass `test/acceptance/MarketingRegisterFixtures`
+    and `test/acceptance/client/MarketingRegisterHttp` (in `suite.js`: register from the Event page, Registration by the receipt's
+    link, the race and a cancellation offering the waiting place, a forged link).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle EventRegistrations, EventRegistrationSetup,
+  SalesOrderApproval, StorelessOrderTax, PaymentAttemptPurpose, PassAuthority, MarketingSubscriptions, SalesPortal, AccountingPortals,
+  MarketingScope, RecordVisibility, ContentRecords, ShopCheckout, CalendarServices, Campaigns (all passed); mr-pass MarketingRegistration,
+  MarketingEvents, MarketingAccess, SubmitForm, MarketingPages, ShopCart, SalesPortalAccess, Transport (all passed); mr-boss
+  MarketingRegistrations, MarketingEvents, MarketingAccess, EventDetail, Calendar, MarketingCampaigns, SalesOrders (all passed); after
+  Prettier the new specs and their neighbours again (24 of 24). `moqui lint --screens` (release): 141 flagged sites, as before, none in a
+  new or changed screen; parse failures 0. Prettier (mr-moqui's config) on the new and changed JavaScript (ExternalAccess.js was not
+  clean before and is left). Not run: test-apps, the acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P17" table (and check#OrderPreApprove's change); ss-inventory has no baseline
+  registration form to map.
+- Design edits: design-marketing §9 RegistrationSetup's order rules, Registrations and RegistrationDetail (as built), §13 Register and
+  Registration (as built), §14.1 EventReservation and EventRegistrationTerms; design-sales §5 (the storeless ticket order's
+  pre-approval checks, an owner contract).
+- Findings, numbered by the lead F322 to F331 in order:
+  - the code over the plan above: the reservation and terms records, the order placed after the verified payment, the order-status
+    SECA, EvrReview, refunds through the payment services, the code never stored and shown anew, the camelCase POST operations, the
+    EventRegistration kind naming a reservation;
+  - `check#OrderPreApprove` skips the new-customer and shipping-address warnings for a storeless ticket order; without it no first-time
+    buyer's ticket order would ever auto-approve with the approval setting off (the user's call);
+  - the registration and lead-rule triggers of P11 and P13 are not built: they need a field naming the offer on MarketingAutomation and
+    MarketingLeadRule, their screens' choices and a source cursor over confirmed registrations; attendance's trigger waits for P18;
+  - the demo's Retail has no accounting preference of its own, so no tax gateway was named for it (the plan's demo row) and the
+    workshop's ticket orders are untaxed in the demo; the acceptance scenario uses its own organizations;
+  - Register follows a provider page by address only; a gateway whose hosted step is a posted form (Authorize.Net Accept Hosted, Shop's
+    PaymentRelay) is not offered on Register yet;
+  - a partial cancellation of a payment only authorized waits for the capture to refund; the order's line is not cancelled, so the
+    order's total stays as paid; a hold that ends while the payer is at the provider leaves the unplaced order open (a late success is
+    review, refunded or seated by staff, never automatically);
+  - a price changed between the reservation and the payment's start is charged at the new price without a review step (Shop's
+    checkout reviews it);
+  - each ticket notice attempt and each Show my entry code revokes the earlier code, so an earlier email's code stops working;
+  - the public cancellation is allowed until the occurrence starts whatever the cancellation terms say (they are words, not a rule);
+  - Register posts an attendee's questions only for a publication open with the offer; a registration's answers open in Surveys'
+    ResponseDetail, whose own access decides who reads them.
+- For the lead:
+  - budget share: mr-mantle about 1.5 s (EventRegistrations); mr-pass about 0.3 s of features (MarketingRegistration; its fixtures in
+    setup); mr-boss server about 0.6 s (MarketingRegistrations); no client spec;
+  - merge hot spots: mr-mantle `entity/EventRegistrationEntities.xml` (the P17 block; P18 adds check-in), `EventRegistrationServices.xml`,
+    `EventRegistrationPlaces.js` (`issueCode`, `registrationOfCode` for P18), `MarketingPortal.js` (a P17 section before livePagesOf, the
+    operations table and exports), `MarketingPortalServices.xml`, `ForumSchema.js`, `script/PassRoutes.js`, `PassAuthority.js`,
+    `PassApi.js`, `ExternalAccess.js` (a kind before SalesOrder), `CommunicationServices.xml` (host rows), `OrderInfoServices.xml` (Sales'
+    file), `MarketingWorkspace.js` (the card), `data/MarketingSeedData.xml` (a P17 block), `test/marketing/MarketingScope.spec.js`; mr-pass
+    `Schema.js`, `Routes.js`, `Transport.js`, `screen/Marketing/Event.*`, `test/Marketing/MarketingFixtures.js`,
+    `test/acceptance/client/suite.js`, README, `docs/Deployment.md`; mr-boss `screen/Marketing/Events.xml`, `Events/RegistrationSetup.xml`,
+    `Home.xml`, `Marketing.js`, `RecordFilesServices.xml`, `test/Marketing/MarketingSpecLib.js`, `plan/usl-inventory.md`,
+    `plan/design-marketing.md`, `plan/design-sales.md`, this file;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, after PASS Marketing's Event page paragraph; no mr-moqui worktree): "PASS
+    Marketing's registration (`mantle.marketing.MarketingPortalServices` `reserve#Registration`, `complete#Registration`,
+    `start#RegistrationPayment`, `get#Registration` and `cancel#Registration`, each `allow-remote="false"`, `authenticate="anonymous-all"`,
+    reached only as the PASS operations `reserveRegistration`, `completeRegistration`, `startRegistrationPayment`, `getRegistration` and
+    `cancelRegistration` of the authority's allowlist, all POSTs in the three TOKEN_WRITES lists, rendered at `/marketing/Register` and
+    `/marketing/Registration`) finds the organization from the site's `marketing` mount and reserves only on an offer published on that
+    site, open now; a reservation is an anonymous write bounded by PASS's request key (a repeat answers the first; the same key with
+    other values is refused) and the authority's limits (ten a client in ten minutes, 500 a site an hour, five a buyer's address an
+    hour), past which it is refused alike and holds nothing; the buyer is a party made or matched by the address without saying which.
+    Its places are held or waitlisted together under the offer's and its tickets' row locks, so the seats are never oversold. Every
+    later operation is reached by the reservation's capability (ExternalAccess `EventRegistration`, scopes RegistrationView and
+    RegistrationCancel, its token answered once to the reserving request or put in a receipt, stored as a digest only and kept in the
+    visitor's session, never in an address), by the buyer's own verified account, or for the payment provider's return by the
+    reservation's reference and a return key (its digest only), which reads the state alone; an unknown, expired or another site's
+    capability and a bad key answer the same NotFound, and every token lookup counts against the requester's limit first. The payment
+    is Accounting's typed attempt (PapEventRegistration) with the gateway's operation key, its amount the native order's total (the
+    ticket products' own prices, X1's or the store's tax), never a value from the request; the browser's return confirms nothing: the
+    verified result is applied under the offer's lock, and a success after the hold ended takes no seat. The answer names each place's
+    attendee, ticket and state, the payment and refund state and the event's public facts; never another attendee's answers, an entry
+    code's digest, the order's lines or a party id. An entry code is issued only to a confirmed place's ticket or by Show my entry code (a
+    POST with a fresh request key), shown once, stored as a digest with a revision, each new code revoking the last; the link to join an
+    online event goes to a confirmed place only. A cancellation needs the RegistrationCancel scope, a confirmation and a request key,
+    before the occurrence starts. Staff registrations go through `mantle.work.EventRegistrationServices`, which asks
+    MARKETING_EVENT_MANAGE in the offer's organization for every read and write (another organization's registration answering as a
+    missing one), each write at the revision read; the registration's files and Chatter are its events managers' only.";
+  - the user's calls: the storeless ticket order's pre-approval exemption (above); the demo's tax gateway for Retail (a Retail
+    accounting preference would cut its rollup to Corp); where the registration triggers of P11 and P13 go (P18 with attendance, or a
+    follow-up); whether Register should take Accept Hosted's posted form as Shop's PaymentRelay does.
+
+**Review Nov 15 (P17).** A fresh review of `mkt/p17` (mr-mantle 42ac5091, mr-pass 7f1235d, mr-boss 9468b975) against P17, §2, §4 and
+design §9, §13, §14.1; master had nothing newer for any of the three (no merge). Schema and route copies byte-identical, the three
+TOKEN_WRITES lists equal (before and after the fixes). Fixes in mr-mantle, mr-pass and mr-boss (this note's commits).
+- Checked and sound:
+  - seats: every path that takes, frees or moves a seat takes the offer's row lock and then its ticket types' (`lockOffer`, P16's order):
+    reserve (the request key looked up again under the lock), complete, the payment's result (`apply`), hold expiry (each in its own
+    transaction, the row re-read under the lock), waitlist offers, staff confirm, correct, cancel and the order-status SECA; a place's
+    state changes once under the lock, so a seat is freed once (a second cancel is STATUS_INVALID, a second result changes nothing).
+    New check: six threads reserving the last two seats at once get two held and four waitlisted;
+  - payment: the order and the promised payment are made at the payment's start and committed with Accounting's attempt before the
+    provider is asked; the amount is the order's own total (the ticket products' prices, X1's or the store's tax), never a request
+    value; the order is placed only after the verified result moved every place to pending under the lock; the browser's return only
+    triggers a lookup; the return key reads the state alone (`limited` view, every other operation NotFound by it); a success after a
+    hold ended is EvrReview with no seat and the order unplaced; refunds go through release#/refund#SinglePayment with the
+    registration's or payment's operation key (the payment services answer a repeat key with the first response), gated on
+    ErfRequested; cancel#Order touches no payment, so a Sales cancellation and Marketing's refund never both refund;
+  - check#OrderPreApprove: the exemption is `!productStoreId && orderPurposeEnumId == 'OrpEventRegistration'`, a purpose only
+    EventRegistrationPayments.js sets and no BOSS screen exposes; every other order takes the same checks as before (SalesOrderApproval,
+    AccountingCredit, ShopCheckout, StorelessOrderTax unchanged and passing). The user kept it (§4 Nov 15); a new check has a Sales
+    order rule's warning keep a ticket order placed and its place pending, and fails with the exemption widened to every check;
+  - PASS: every miss of reach (no token, a forged, expired, another site's or organization's capability, a bad return key, a signed-in
+    user who is not the buyer) is the one NotFound; token lookups count against ExternalAccess's requester throttle and the return key's
+    against `throttleLookup`; reserve's limits (client, site, address) are taken only for a new request key and refuse alike holding
+    nothing; forms carry the session token; the capability is digest-only, answered once to the reserving request, and a link's token
+    is read once into the session with the address replaced; the views are allow-listed (no answer, code digest, order line or party
+    id); the operation keys of showTicket and cancel; ExternalAccess `EventRegistration` resolves the reservation's organization and
+    buyer; schema, routes and TOKEN_WRITES equal;
+  - staff: every E service asks MARKETING_EVENT_MANAGE in the offer's organization, another organization's registration answering as
+    a missing one; writes at the revision read; the Chatter and files host the events managers' only; the batch tolerant per item;
+  - specs test what they claim; RegistrationDetail one qvt render, Register one html render.
+- Fixed:
+  - R1 (high; mr-mantle EventRegistrationNotices.js buildDelivery): each attendee's ticket mail carried the reservation's link, a
+    capability of the whole reservation with RegistrationView and RegistrationCancel, so any attendee with an address of their own could
+    cancel every other place (and its refund) and issue a new entry code for another attendee's place, revoking theirs. The link now goes
+    in the buyer's ticket only; another attendee's ticket has their own code. Spec (a waiting pair's guest's ticket has no token, the
+    buyer's has); fails on the unfixed code;
+  - R2 (medium; EventRegistrationPlaces.js offerWaitlist): the waitlist was offered place by place, so a reservation's places, reserved
+    together, could be split: a completed paid reservation paid for its first offered places, and a later offered place could never be
+    paid (startPayment answers the approved payment, the order is placed) and cycled through holds; and a completed free waiting
+    reservation (a staff entry may complete while waiting; the operation accepts it) was held on offer with nobody left to confirm it.
+    A reservation's waiting places are now offered together in waitlist order (one that does not fit waits and none passes it), and a
+    completed free one is confirmed at once. Spec (one seat free: the pair waits and the single place behind it does not pass; two
+    free: the pair confirmed together); fails on the unfixed code;
+  - R3 (medium; EventRegistrationPayments.js startPayment and quoteOf, MarketingPortal.js, both schema copies, mr-pass Register): a price
+    changed between the reservation (or a waitlist offer weeks later) and the payment was charged with nothing shown first (the
+    payment step showed no amount before Pay). The view now gives the amount due (the tickets' prices now, before tax) and its key;
+    Register shows it and Pay sends `priceKey`, required by startRegistrationPayment; a price changed since is Conflict PRICE_CHANGED
+    with the new amount and nothing is made or charged (design §9 "price/seat preview", "confirms exactly the held allocation"; Shop's
+    checkout reviews a changed price likewise). Staff's start#RegistrationPayment is unchanged. Spec (a changed price refused with the
+    new amount and no payment, a missing key refused, the new key charging 53.00 with tax);
+  - R4 (low; EventRegistrationPlaces.js handleOrderStatus): an order's approval confirmed its held places as well as its pending ones,
+    with no check of the hold or the payment; now a held place only while its hold lasts and its payment is received.
+- Built in this review on the user's calls (§4 Nov 15), each its own commits:
+  - Accept Hosted on Register (mr-mantle EventRegistrationPayments.js paymentForm, MarketingPortal.js getRegistrationPaymentForm,
+    MarketingPortalServices.xml, both schema and route copies, the three TOKEN_WRITES lists; mr-pass `Marketing/RegistrationRelay`,
+    Register's pay and payment step, Shared/Headers.js, Deployment): a pending payment whose provider page takes a posted form token
+    gets the page's address and a fresh token from the authority on each visit, by the capability or the buyer's account only (the
+    return key and another site NotFound), only while every place it pays for is held; the return key is made anew for the page's
+    return address (the reservation keeps its digest); the relay posts it with the payer's press (PASS's Marketing pages carry no
+    script), the one Marketing route whose CSP adds Authorize.Net's form-action. The return reads the state and the verified result
+    decides, as before. The test gateway gains its shape (PaymentTestServices hostedForm#PaymentAuthorization, get#HostedPaymentForm;
+    StoreCheckout's PgtTest capability names it; Shop offers it nowhere). Spec (a fresh token each call, the return address on the
+    site's canonical Register with a new key that reads the state alone, the form refused by the return key and another site, the
+    result confirming, the form gone after);
+  - the demo's tax gateway (mr-boss BossZZMarketingDemoData.xml): ORG_ZIZI_CORP's accounting preference names LOCAL, inherited by
+    every Ziziwork organization without its own. It changes no total today: the local gateway taxes only where the seller or one it
+    rolls up to has nexus and a rate, and only Ziziwork Sales (its own preference) has one; X1 taxes a storeless part only at an
+    address, and Retail and the workshop have none. Taxed demo ticket orders also need a Utah nexus for Retail or Corp and an address
+    (Retail's, or a facility for the workshop); a Retail or Corp nexus would tax ZIZI_RETAIL's Shop orders to Utah too (the store's
+    LOCAL uses the seller's nexus), so it is left for the user (below). Sales StorelessOrderTax, SalesQuoteIssue, SalesOrderApproval,
+    StorelessOrderConfirmation, Shop's ShopCheckout, ShopCart and ShopOperations and EventRegistrations pass unchanged;
+  - P18's phase text names the registration and attendance triggers (the user's call).
+- Findings, numbered by the lead F332 to F337 in order:
+  - nothing captures a ticket order's authorized payment: a storeless ticket order is never invoiced or shipped, and capture happens in
+    apply#OrderPaymentsToInvoice (or Shop's digital fulfilment), so the organization's money stays an authorization that lapses at the
+    gateway, and a partial cancellation's refund (ErfRequested, waiting for a capture) waits forever. Design §15 says Marketing adds no
+    invoice or capture processor, so this is Accounting's or Sales' to settle (invoice and capture on approval, as Shop's digital lines
+    do); the user's call;
+  - the cancellation terms are words only (design §9 RegistrationPolicy, §13 CancelRegistration): a buyer may cancel until the
+    occurrence starts and every paid cancellation hands a full refund over, whatever the terms say. Enforcing them needs a structured
+    rule on the offer (cancel until an offset before the start, refundable or not, a fee); the design defines none, so it is kept and
+    put to the user (the worker's finding stands);
+  - the entry code rotates at every issue (each ticket delivery attempt, Send again, Show my entry code, a substitution): kept, since the
+    plan asks for the digest and revision only and no keyed derivation exists for a stable code; a stable code per revision needs the
+    code kept encrypted or a server-keyed HMAC (framework). Note that the buyer's Show my entry code revokes the code mailed to that
+    attendee;
+  - a placement that fails five times leaves its places pending (holding their seats) with the payment authorized, seen only as the
+    reservation's failureMessage and the log; no staff list or alert names it;
+  - the ExternalAccess kind lets an events manager issue a reservation capability through the generic issue service (its permission
+    list), though its comment says only the registration services issue it;
+  - a closed offer's waiting places are never ended (the job ends a published offer's at the start only).
+- Tests (release binary, `--nobuild`, this worktree's runtime): mr-mantle EventRegistrations (12 of 12, about 2.8 s of features; six
+  new features), SalesOrderApproval, StorelessOrderTax, ShopCheckout, PassAuthority, EventRegistrationSetup, PaymentAttemptPurpose,
+  AccountingCredit, SalesQuoteIssue, StorelessOrderConfirmation, AuthorizeNetGateway (all passed); mr-pass MarketingRegistration,
+  Transport, MarketingEvents, ShopCart, ShopOperations, ShopAccount (passed); mr-boss MarketingRegistrations (passed); each run about 23-27 s with startup. With R1 and R2 reverted, their two features failed. `moqui lint --screens`: parse
+  failures 0, nothing flagged in a changed screen. Prettier (mr-moqui's config) on the changed JavaScript. Not run: test-apps, the
+  acceptance suite (MarketingRegistrationScenario's pay helper changed for priceKey, not run).
+- For the lead:
+  - budget share: mr-mantle EventRegistrations about 2.8 s (the worker's 1.5 s plus the six checks); mr-pass and mr-boss unchanged;
+  - merge hot spots: the Built note's, plus `ForumSchema.js` / mr-pass `Schema.js` (startRegistrationPayment's `priceKey`,
+    getRegistrationPaymentForm), `PassRoutes.js` / `Routes.js` and the three TOKEN_WRITES lists (getRegistrationPaymentForm), mr-mantle
+    `PaymentTestServices.xml` and `StoreCheckout.js` (the test gateway's posted form), mr-pass `Register.xml`, `Register.html.fancy`,
+    `Shared/Headers.js` (the relay's route), `docs/Deployment.md`, mr-boss `data/BossZZMarketingDemoData.xml` (a P17 block);
+  - Attack-Surface: the worker's paragraph is right but for three points. Replace "kept in the visitor's session, never in an address"
+    with "kept in the visitor's session; a receipt's or the buyer's ticket's link carries it once (`?token=`), read into the session and
+    the address replaced"; after "...its token answered once to the reserving request or put in a receipt" add "or the buyer's ticket
+    (never another attendee's)"; and after "never a value from the request;" add "the payment step shows the tickets' prices and Pay
+    sends that amount's key, a changed price refused (PRICE_CHANGED) and nothing charged;"; and add the operation
+    `getRegistrationPaymentForm` (`get#RegistrationPaymentForm`, in the TOKEN_WRITES lists) to the list, with: "a provider page that
+    takes a posted form (Accept Hosted) gets a fresh token from `getRegistrationPaymentForm` by the capability or the buyer's account
+    only, while the places are held, posted from `/marketing/RegistrationRelay`, the one Marketing route whose CSP allows Authorize.Net's
+    form-action; the return key is made anew for its return address and reads the state alone";
+  - the user's calls made (§4 Nov 15): the exemption kept, the triggers in P18, the demo's Corp gateway, Accept Hosted on Register
+    (all recorded and built above). Still the user's: a Utah nexus and an address for Retail or Corp so the demo's ticket orders are
+    actually taxed (it taxes ZIZI_RETAIL's Shop orders to Utah too); capture of the ticket order's payment; structured cancellation
+    terms; a stable entry code.
+
 ### P18 — Check-in
 
 Design §9 CheckIn; MKT-EVENT; CX-DEVICE; gate 6. Admin P18's shared devices are built (F83).
@@ -1257,6 +5091,9 @@ Design §9 CheckIn; MKT-EVENT; CX-DEVICE; gate 6. Admin P18's shared devices are
   display group `BOSS_MARKETING_CHECKIN_DEVICE` holding a new `MARKETING_CHECKIN` permission and a bundle opening
   CheckIn, its transitions and the two services alone, which `preview#CheckIn` and `checkIn#Registration` accept
   beside `MARKETING_EVENT_MANAGE` for the device's occurrence only. Staff still check in under their own sign-in.
+- **Registration triggers** (the user's call, Nov 15; from P17): "registered for an event" and "attended" for MarketingAutomation
+  (P11) and MarketingLeadRule (P13): the offer named on each, their screens' choices, a source cursor over confirmed registrations
+  and over attendance facts, each fired once per registration.
 - **Specs:** Mantle `test/work/EventCheckIn` (a second scan answers the first; a cancelled, unconfirmed or
   wrong-event ticket refused; a substituted attendee's old credential refused; an override recorded with its
   reason; a `MARKETING_CHECKIN` holder refused another occurrence); BOSS `MarketingAccess` gains the device group's
@@ -1264,6 +5101,251 @@ Design §9 CheckIn; MKT-EVENT; CX-DEVICE; gate 6. Admin P18's shared devices are
 - **Usable when** (`test/acceptance/client/Marketing/MarketingCheckInWalk`, at 390 px; scenario 14): `marketing.events`
   checks in an attendee by code and another by name on a phone without horizontal scrolling, a repeat shows the
   first time, a cancelled ticket is refused, and cancelling the event stops its pending reminders.
+
+**Built Nov 15 (P18).** mr-mantle and mr-boss on branch `mkt/p18` (hashes in the worker's reply), from master after P17's merge; mr-moqui
+and mr-pass unchanged, no Rust built. Built beside Marketing follow-up 1 (`mkt/fix1`: capture, cancellation terms, stable entry codes), whose
+files (EventRegistrations.js, EventRegistrationPlaces.js, EventRegistrationPayments.js) this phase does not touch: check-in calls
+`registrationOfCode` only.
+- Checked first (the code over the plan): P16's and P17's Built and Review notes (F308–F337), §4 (Nov 13: the door tablet; Nov 15: the
+  triggers here, the stable codes in follow-up 1), F83 and §5 Q7; Admin P18's shared devices (docs/security/Shared-Devices.md,
+  SecurityEntities.xml DeviceRouteGroup and DeviceCredential, `UserSecurityChecks.currentDevice()`); People's clocking kiosk
+  (impl-people P30: BossSetupData.xml's PEOPLE_CLOCKING, BOSS_DEV_PPL_CLOCKING, BOSS_PEOPLE_KIOSK, ClockingKiosk.xml's island page,
+  KioskIdentity.js's device check, PeopleKiosk and KioskIdentity specs); EventRegistrationPlaces.js (`registrationOfCode`, the states,
+  EventRegistrationAction); MarketingAutomations.js (the triggers' cursors, the run-as-owner rule) and MarketingLeads.js (rules,
+  captures, the job); Sales' SalesIntake.js source kinds; the scan-input contract (xml-form-3.xsd, screen/scan.rs). The code over the
+  plan:
+  - "one attendance fact per registration": a record of its own, `EventAttendance` (the registration its key; offer, event,
+    organization, attendee, ticket, method EamCode, EamLookup or EamOverride, the state then, the code's revision, reason, device, who,
+    when, operation key), written once under the registration's row lock, with an `EraCheckedIn` action in the registration's history;
+    a repeat answers the first result and writes nothing. P20 and the attended triggers read it;
+  - "the eligibility in words": confirmed enters; already checked in (when), unknown or replaced code, wrong event, cancelled, expired,
+    waitlisted, pending, unconfirmed (held), review, event cancelled and a closed door are refused with a reason code and words. The plan
+    names no check-in window: the door is open from a day before the occurrence's start to twelve hours after its end (constants in
+    EventCheckIn.js; the user's call);
+  - "a manager's override with a reason that never invents a payment": an events manager may admit a held or pending place (a seat it
+    occupies, not confirmed) with a reason, which records the attendance and changes neither its state nor its payment; a wrong event,
+    a cancelled, expired, waitlisted or review place, a cancelled event and a closed door are never overridden;
+  - "staff check-in by search with a reason" (the lead's note): `preview#CheckIn` with a term finds the offer's places by the attendee's
+    name or address or the registration id (twenty at most), staff only, and a check-in without the code needs a reason (EamLookup);
+  - "an entry credential or an attendee lookup": the entry code goes through the scan-input's resolver, `resolve#EntryCode`, whose match
+    is the code itself with the decision as its label and detail (EntryDecision), so Confirm posts the code to `checkIn#Registration`
+    (RecordEntry) with the scan's id as its operation key; no code is ever put in an address or the session;
+  - "the device's occurrence": the route group's fixed parameter is `registrationPolicyId` (an offer is one occurrence); Mantle accepts
+    MARKETING_CHECKIN only in the request of a registered device whose route group names that parameter, fixed to the offer, its display
+    account the request's user and of the offer's organization (Mantle names no BOSS route group); MARKETING_CHECKIN anywhere else is
+    DEVICE_REQUIRED, another offer RECORD_UNAVAILABLE;
+  - "the door tablet sees only what check-in needs": the desk (title, occurrence, how many are in), the scan and a decision naming the
+    attendee by first name and initial and the ticket; no search, buyer, payment, answers or staff names (the design names no form of
+    the name: the user's call);
+  - "rate-limited": every lookup and check-in counts against the door's limit, 60 a minute per device (or staff user), through the
+    framework's attempt buckets (`org.moqui.public.AccountServices.record#Attempt`, as PASS Marketing's limits), RATE_LIMITED past it;
+  - "the shared door tablet ... a display group BOSS_MARKETING_CHECKIN_DEVICE ... and a bundle": as People's kiosk: the route group
+    MARKETING_CHECKIN (home `/apps/Marketing/Events/CheckIn`, a day's idle timeout), its allow-list BOSS_DEV_MKT_CHECKIN (CheckIn, its
+    checkIn and scanResolve transitions), the display group with MARKETING_CHECKIN and the artifact group BOSS_MKT_CHECKIN_DEVICE (the
+    screen, two transitions and the three services, not inheritable); the Marketing root calls no `get#SharedContext` for a device's
+    request (`marketing.device`), serves it no record panel, and Events lets it through to CheckIn alone; CheckIn's html mode is People's
+    bare island page. MARKETING_CHECKIN is seeded by Mantle with an ADMIN grant, as PEOPLE_KIOSK_PUNCH;
+  - "RegistrationDetail's Attendance": the history P17 built ("Attendance and history") shows the check-ins; a Checked in fact (when,
+    how, by whom, why) comes from the new `get#Attendance`;
+  - "the offer named on each, their screens' choices, a source cursor ... each fired once per registration": MarketingAutomation gains
+    `registrationPolicyId` (an offer of the automation's organization) and the triggers AtrRegistered and AtrAttended, read from the
+    activation on by the admission cursor over confirmed places (`confirmedDate`) and attendances (`checkInDate`), the source key
+    `registered:`/`attended:` and the registration, so each files once; the run-as-owner rule is unchanged. A lead rule's source may be an
+    offer (MlsRegistrationOffer, triggers MltRegistered and MltAttended, one current rule per offer and trigger, team and source alone);
+    the capture job captures each confirmed place or attendance once (MlcsRegistration, MlcsAttendance; a new internal
+    `capture#EventRegistration`) and hands Sales the attendee's own name and address (else the reservation's when they bought it), the
+    event, date and ticket in the notes and the registration's campaign, never verified. Sales' `store#LeadIntake` takes the source kinds
+    `eventRegistration` and `eventAttendance` (SlisEventRegistration, SlisEventAttendance; an owner contract written into design-sales).
+    Screens: NewAutomation and AutomationDetail's EnrollmentRule offer the two triggers and an Event choice (`registrationOffers`);
+    LeadRules' New lead rule also routes an event's attendees, and LeadRuleDetail shows an offer's rule with the team and source only.
+- Mantle:
+  - `entity/EventRegistrationEntities.xml` (a P18 block: EventAttendance, EventAttendanceMethod, EraCheckedIn); `entity/MarketingEntities.xml`
+    (a P18 block: MarketingAutomation `registrationPolicyId`; the trigger, source kind and capture source enumerations);
+    `data/MarketingSeedData.xml` (a P18 block: MARKETING_CHECKIN); `data/SalesIntakeData.xml` (the two intake sources).
+  - `service/mantle/work/EventCheckIn.js` (new) and `EventRegistrationServices.xml` (a P18 block: preview#CheckIn, checkIn#Registration,
+    resolve#EntryCode, get#Attendance); `MarketingAutomations.js` (the offer triggers, `collectOffer`), `AutomationServices.xml`;
+    `MarketingLeads.js` (offer rules, `inquiryOfRegistration`, `captureRegistration`, the job's offer loop, the offer preview; the team
+    and source checks shared as `checkRouting`), `MarketingFormServices.xml` (capture#EventRegistration; the offer parameters);
+    `sales/SalesIntake.js`, `OpportunityServices.xml` (the source kinds).
+- BOSS: `screen/Marketing/Events/CheckIn.xml` (new: the offer choice of an event, the desk, EntryLookup with scan-input, AttendeeLookup
+  with each place's decision and Check in or Admit anyway; the island page for html); `screen/Marketing.xml` (the device branch),
+  `Events.xml` (CheckIn, the device through, EventDetail's Check in link), `RegistrationDetail.xml` (Checked in), `RegistrationSetup.xml`
+  (Check in); `Marketing.js` (checkInRead, the link path, the choice `registrationOffers`); `template/MarketingAutomations.xml`,
+  `Automations/AutomationDetail.xml` (the triggers and Event); `Leads/LeadRules.xml`, `LeadRuleDetail.xml` (an event's rule);
+  `data/BossSetupMarketingData.xml` (a P18 block: the route group, the allow-list, the display group, its artifact group and bundle).
+- Specs:
+  - Mantle `test/work/EventCheckIn` (new, 3 features, about 0.9 s; a spec-local door tablet through `EventCheckInSpecScreen.xml`): a
+    code checks in once and a second scan answers the first (one fact, one action, the code's revision), cancelled, pending,
+    waitlisted, wrong-event, closed-door and unknown codes refused, a substituted attendee's old code (correct#Registration) naming no
+    one, nothing written for any of them; staff find Ivy by name and check her in with a reason (none: REASON_REQUIRED), a pending place
+    refused plainly and admitted by an override with its reason (its state and payment unchanged), a waitlisted override refused, a
+    reader PERMISSION_DENIED, another organization's manager RECORD_UNAVAILABLE, MARKETING_CHECKIN off a device DEVICE_REQUIRED; at the
+    tablet a code checks in with "Finn D.", the request's user the display account and the fact naming the device, a lookup and a
+    check-in by id refused, another occurrence RECORD_UNAVAILABLE, a wrong-event ticket refused. `test/marketing/Automations` (a feature,
+    about 0.55 s: a confirmed place and its attendance each file one admission event and enroll Kim, a waitlisted place nothing, another
+    organization's offer refused). `test/marketing/LeadCapture` (a feature, about 0.3 s: an event's attended rule hands Rosa's attendance
+    to Sales once over two job runs, with her name, address, team and campaign, unverified; a reader and another organization's author
+    refused; a second rule of the trigger RULE_EXISTS).
+  - mr-boss `MarketingAccess` (a feature, about 0.2 s: a display account of Retail with the door bundle alone and a tablet of
+    MARKETING_CHECKIN fixed to the demo webinar's offer; CheckIn's bare page, the one html render, and its island, the one qvt render,
+    with the desk and the scan and no attendee search; the fixed parameter wins over another offer asked; a scan of no ticket refused
+    with its words; Home, Events, Registrations, RegistrationSetup, a choices transition and the /qapps shell refused by the route gate;
+    the registry feature now expects the door bundle and MARKETING_CHECKIN's one holder).
+  - Acceptance, written and not run: mr-boss `test/acceptance/Marketing/MarketingCheckInFixtures` (Retail's open evening under way
+    with Nora's, Pia's and Owen's places, the codes kept for the walk; cancelling an event stops its pending reminders) and
+    `test/acceptance/client/Marketing/MarketingCheckInWalk` (390 px: Nora by code after the decision shows, the repeat, Owen refused,
+    Pia by name with a reason, no sideways scroll), both in `test/acceptance/client/suite.js`.
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle EventCheckIn, Automations, LeadCapture, EventRegistrations,
+  EventRegistrationSetup, SalesLeadIntake, MarketingScope (41 of 41); mr-boss MarketingAccess, MarketingEvents, MarketingRegistrations,
+  MarketingLeads, MarketingAutomations, EventDetail (31 of 31); each run about 25-40 s with startup. A throwaway spec (not kept) rendered
+  CheckIn for the events manager (tui and qvt, the offer choice, a search), a reader's "Not available", RegistrationSetup, LeadRules,
+  LeadRuleDetail of an event, Automations and RegistrationDetail, and checked in a staff registration through the screen's transition
+  (checked in, the repeat's "already checked in at", an unknown code's words). `moqui lint --screens` (release): parse failures 0;
+  143 flagged sites (master 141): CheckIn's actions and the Marketing root's device branch use the framework's `UserSecurityChecks` and
+  `WebUtilities` globals (static-class), as People's kiosk and root do. Prettier (mr-moqui's config) on the new and changed JavaScript.
+  Not run: test-apps, the acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P18" table; ss-inventory has no baseline check-in form to map.
+- Design edits: design-marketing §6 (AutomationDetail as built: the registration triggers), §9 CheckIn (as built), §10 LeadRules (an
+  event offer's rule), §14.1 EventAttendance; design-sales §3 (the intake's event source kinds, an owner contract).
+- Findings, numbered by the lead F338 to F344 in order:
+  - the code over the plan above: EventAttendance as its own record with its method; the check-in window; the override limited to held
+    and pending places; the tablet's first name and initial; staff-only lookup; the device bound by the route group's fixed
+    `registrationPolicyId`; the rate limit by attempt buckets; Attendance as the history with a fact; the offer triggers' cursors and the
+    lead rules' event source and its Sales source kinds;
+  - an override of a held free place leaves the place held: its hold may still expire after the check-in (the attendance stays); a
+    cancellation after a check-in leaves the attendance of a cancelled place. Neither changes the other, by design of "never invents";
+  - P12's form-submission trigger (AtrFormSubmitted) has no choice in NewAutomation or AutomationDetail (P12 built the rule, not the
+    screen); not added here;
+  - an event's lead rule hands Sales no registration answers (the questions), only the attendee's name and address and the event in the
+    notes; mapping the questions is later. Event captures come from the capture job alone (every five minutes), not after the commit;
+  - the triggers name one offer (one occurrence): a series wants one automation or rule per occurrence;
+  - the demo has no occurrence under way and no door tablet (Admin registers one), so the demo webinar's door says it is not open; the
+    acceptance walk makes its own offer;
+  - the spec and the acceptance fixture make codes with EventRegistrationPlaces.js `issueCode` (follow-up 1 changes how codes are made:
+    see the hot spots).
+- For the lead:
+  - budget share: mr-mantle about 1.75 s (EventCheckIn 0.9 s, Automations +0.55 s, LeadCapture +0.3 s); mr-boss server about 0.2 s
+    (MarketingAccess); no client spec;
+  - merge hot spots: with follow-up 1, `test/work/EventCheckIn.spec.js` and `test/acceptance/Marketing/MarketingCheckInFixtures.spec.js`
+    call `issueCode(registrationId)` and expect `{code}` and a reissue to revoke (the substitution through correct#Registration); a
+    changed signature or a stable code that is the same on reissue needs those lines followed; EventCheckIn.js relies on
+    `registrationOfCode(code)` answering null for a replaced or revoked code. mr-mantle `entity/EventRegistrationEntities.xml`,
+    `EventRegistrationServices.xml`, `entity/MarketingEntities.xml`, `data/MarketingSeedData.xml` (P18 blocks at the end),
+    `MarketingAutomations.js`, `AutomationServices.xml`, `MarketingLeads.js` (much moved by Prettier around ruleView and storeLeadRule),
+    `MarketingFormServices.xml`, Sales' `SalesIntake.js`, `SalesIntakeData.xml`, `OpportunityServices.xml`, `test/marketing/Automations.spec.js`,
+    `test/marketing/LeadCapture.spec.js`; mr-boss `screen/Marketing.xml` (the device branch in always-actions), `Events.xml`,
+    `Events/RegistrationDetail.xml`, `Events/RegistrationSetup.xml`, `Marketing.js` (capabilities, linkPaths, choices),
+    `data/BossSetupMarketingData.xml` (a P18 block), `template/MarketingAutomations.xml`, `Automations/AutomationDetail.xml`,
+    `Leads/LeadRules.xml`, `Leads/LeadRuleDetail.xml`, `test/Marketing/MarketingAccess.spec.js`, `test/acceptance/client/suite.js`,
+    `plan/design-marketing.md`, `plan/design-sales.md`, `plan/usl-inventory.md`, this file;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, after PASS Marketing's registration paragraph; no mr-moqui worktree):
+    "Marketing's event check-in (`mantle.work.EventRegistrationServices` `preview#CheckIn`, `resolve#EntryCode`, `checkIn#Registration`
+    and `get#Attendance`, each `allow-remote="false"`, reached from mr-boss `Marketing/Events/CheckIn` and its `checkIn` and
+    `scanResolve` transitions) is kept by an events manager (MARKETING_EVENT_MANAGE in the offer's organization, another organization's
+    offer answering as a missing one) under their own sign-in, or by an event's shared door tablet: a registered device of the route group
+    MARKETING_CHECKIN, whose allow-list admits CheckIn, its `checkIn` and `scanResolve` transitions alone and whose registration fixes
+    the request parameter `registrationPolicyId` to one offer (an occurrence), its requests running as a display account that holds the
+    bundle BOSS_MARKETING_CHECKIN_DEVICE alone (MARKETING_CHECKIN, no Marketing root grant: the root builds no context for a device and
+    serves it no record panel). The services accept MARKETING_CHECKIN only in such a device's request: the device row's display account
+    is the request's user, its route group names that parameter, its value is the offer asked and the display account belongs to the
+    offer's organization; MARKETING_CHECKIN anywhere else is refused (DEVICE_REQUIRED), another offer answers as a missing one. An entry
+    code is looked up only by its digest (`registrationOfCode`), never stored, put in an address or kept in the session (the
+    scan's answer is a message and the screen loads again empty); an unknown, replaced or revoked code names no one. A place is checked
+    in once, under its row lock (one EventAttendance per registration; a repeat answers the first result), only when it is confirmed, of
+    that offer, its event not cancelled and the door open (a day before the start to twelve hours after the end); an events manager may
+    find an attendee by name or address and check them in with a reason, or override a held or pending place with a reason that changes
+    neither its state nor its payment; the door tablet checks in by code only and is answered the decision, the ticket and the attendee
+    as a first name and initial, never a search, buyer, payment, answers or staff names. Every lookup and check-in counts against the
+    door's limit (60 a minute per device or staff user, the framework's attempt buckets), past which it is refused (RATE_LIMITED)
+    looking nothing up.";
+  - the user's calls: the check-in window (a day before to twelve hours after); the tablet showing a first name and initial; the
+    override limited to held and pending places (a waitlisted or review place admitted would pass the seats); ADMIN holding
+    MARKETING_CHECKIN as it holds PEOPLE_KIOSK_PUNCH.
+
+**Review Nov 15 (P18).** A fresh review of `mkt/p18` (mr-mantle 237372df, mr-boss 073c9427) against P18, §2, §4 (Nov 13, Nov 15),
+F83, §5 Q7 and design §6, §9, §10, §14.1; master had nothing newer for either repository (no merge). Fix in mr-mantle (this note's
+commit); mr-boss changed only by this note.
+- Checked and sound:
+  - the door tablet: Mantle accepts MARKETING_CHECKIN only when `UserSecurityChecks.currentDevice()` names a credential whose display
+    account is the request's user, whose route group's `parameterName` is `registrationPolicyId`, whose `parameterValue` is the offer
+    asked and whose display account's party is of the offer's organization; anywhere else DEVICE_REQUIRED, another offer
+    RECORD_UNAVAILABLE. The framework puts the registered value in place of a request's (Shared-Devices.md step 5) and Mantle compares
+    the device row's value again, so a sent `registrationPolicyId` cannot move the tablet; the spec's `askOffer` proves the second
+    check alone. The allow-list BOSS_DEV_MKT_CHECKIN names CheckIn, `checkIn` and `scanResolve` by name, not inheritable; the display
+    bundle holds MARKETING_CHECKIN, the three services (not `get#Attendance`) and no Marketing root grant; the root builds no context
+    for a device and refuses it the record panels; Events lets it through to CheckIn alone; the screen's `onDevice` never offers the
+    search. People's kiosk (KioskIdentity.js `deviceOfRequest`, BossSetupData's PEOPLE_CLOCKING, ClockingKiosk's island page) followed
+    line for line; a display account cannot hold ADMIN or another privileged group (device.rs), so ADMIN's MARKETING_CHECKIN opens
+    nothing but DEVICE_REQUIRED off a device;
+  - what the tablet sees, on every path: the desk (title, occurrence, count, open or not; no expected count), the decision with the
+    attendee as first name and initial and the ticket, an attendance's time and method (no staff name, no reason, no state); every
+    refusal's words are the reason alone (an unknown, wrong-event, cancelled, pending or waitlisted code is refused by
+    `resolve#EntryCode` before Confirm with no name); no term, no check-in by id, no override (PERMISSION_DENIED before any lookup);
+  - "wrong event" against "unknown code": WRONG_EVENT is decided before the attendee is read and tells the tablet only that the code
+    is someone's current ticket elsewhere, never whose, which event or its state; the person holding a code already knows it, codes are
+    long random digests looked up by `registrationOfCode` and every scan counts against 60 a minute per device, so it is no
+    enumeration aid. Judged acceptable; folding it into CODE_UNKNOWN would only cost the door a useful answer;
+  - once per registration: `checkIn#Registration` re-reads the place `forUpdate` and decides after the lock (the place's offer, its
+    state and the attendance read inside), EventAttendance's key is the registration (a racing second insert fails rather than
+    doubles), a repeat answers the first fact and writes nothing; the transition calls it in a transaction of its own and turns a
+    refusal into a message, no code kept in the session or an address. The rate limit (`record#Attempt` in its own transaction, key by
+    device or staff user) is taken before any lookup on every path but the bare desk;
+  - the window and overrides: the window (a day before the start to twelve hours after the end) is checked for eligible and
+    overridable places alike; an override needs `override`, a reason and a held-live or pending place, records EamOverride with the
+    state then and changes neither state nor payment; staff check-in by name needs a reason (EamLookup); the expected revision is
+    honoured;
+  - automations: AtrRegistered and AtrAttended need an offer of the automation's organization (`triggerFor`, on create and on
+    `store#EnrollmentRule`, where a changed offer is material), `collectOffer` runs inside the owner's run as P11 and P12's triggers do,
+    files `registered:`/`attended:` plus the registration so each registration enrolls once (fileEvent's source key), and keeps P12's
+    cursor shape (`>=` the cursor, ordered, 200 a run);
+  - lead rules: an offer's rule is the content authors' of its organization (`storeOfferRule`: covers, one current per offer and
+    trigger, team and source by `checkRouting`, which is P13's check moved, not changed); the job captures each registration once per
+    rule (capture keyed by rule, kind and registration; a replaced rule's window ends at its thruDate and the new one's begins at its
+    fromDate); `inquiryOfRegistration` re-checks rule, offer, organization and confirmation or attendance, sends the attendee's own name
+    and address (the reservation's only when the attendee is its buyer), `verified: false` always, no answers; Sales' change is two
+    `sourceKinds` entries and two enumerations, an addition no existing caller sees (SalesLeadIntake passes unchanged);
+  - the two lint sites (`UserSecurityChecks.currentDevice()` in Marketing.xml and CheckIn.xml, `WebUtilities.encodeHtml` in CheckIn's
+    bare page) are the documented host globals People.xml and ClockingKiosk.xml use the same way; acceptable, no other way to ask for
+    the device from a screen;
+  - screens: one html render (the bare page) and one qvt render (the island) of CheckIn in MarketingAccess, no route fixture, no sweep;
+    the AttendeeLookup's html text is never reached (the page section is qvt/tui only).
+- Fixed:
+  - R1 (medium; mr-mantle `EventCheckIn.js` `doorOf`): the services asked the Marketing scope first, so a door tablet whose display
+    account had been given an events manager's group (not privileged, so the framework allows it) became a staff door at the device:
+    the attendee search, check-in by id with any reason, overrides and full names, all through the allow-listed `checkIn` transition.
+    A shared device's request is now always the tablet's, whatever its display account holds. Spec EventCheckIn's tablet feature
+    gives the display group MARKETING_VIEW and MARKETING_EVENT_MANAGE for four calls (search, by id, an override, a scan showing
+    "Finn D."): refused and initial-only; the check fails on the unfixed code.
+- Findings, numbered by the lead F345 to F348 in order:
+  - R1 above;
+  - the worker's list stands (EventAttendance its own record, the window, overrides for held and pending only, first name and
+    initial, staff-only search, the device by the fixed parameter, attempt buckets, the offer triggers and Sales source kinds; an
+    overridden held place may still expire and free its seat while the attendee is in, so a sold-out door can admit one more than its
+    seats; P12's form trigger has no screen choice; no answers to Sales; one occurrence per trigger; no demo door);
+  - the offer triggers' cursor, as P12's, stalls if more than 200 places share one `confirmedDate` (or attendances one `checkInDate`)
+    to the millisecond: each run re-reads the same 200, all filed. Unreachable today (a reservation has ten places at most, confirmations
+    and check-ins are one at a time); a tie-break on the registration id would close it for both triggers;
+  - no spec runs two check-ins of one place concurrently; the row lock and EventAttendance's key make it safe by construction.
+- Tests run (release, `--nobuild`, this worktree's runtime): mr-mantle EventCheckIn (3 of 3, 1.0 s; also run on the unfixed
+  EventCheckIn.js: the new check fails), Automations (8 of 8), LeadCapture (5 of 5), SalesLeadIntake (4 of 4); mr-boss MarketingAccess
+  (8 of 8); each about 23-27 s with startup. Prettier on the changed JavaScript. No screen changed (no lint run).
+- For the lead:
+  - budget share: mr-mantle EventCheckIn about +0.05 s over the worker's 0.9 s; otherwise as the Built note;
+  - follow-up 1 (`mkt/fix1`): it keeps `issueCode(registrationId)` and `registrationOfCode(code)` but derives the code per credential
+    revision from a keyed digest with the offer's encrypted secret. EventCheckIn.spec.js's `offer()` and MarketingCheckInFixtures make
+    offers by `make` with no secret and call `issueCode` then expect `{code}`, and the substitution case (correct#Registration) expects
+    the old code to name no one; whichever merges second must check that a spec-made offer gets a secret (or `issueCode` makes one) and
+    that a substitution raises the revision. EventCheckIn.js itself needs only `registrationOfCode` to answer null for an old revision;
+  - merge hot spots: as the Built note, plus `test/work/EventCheckIn.spec.js` (the `promoted` helper and the tablet feature's checks);
+  - Attack-Surface: the worker's paragraph is right with one addition after "the display account belongs to the offer's organization":
+    "A device's request is always the tablet's, whatever its display account holds (an events manager's group given to it adds
+    nothing at the device)." Also "An entry code is looked up only by its digest ... never stored" means the code; its digest is
+    stored, as P17's paragraph says;
+  - the user's calls, none unsafe: the window (a day before to twelve hours after; generous, but a check-in is only an attendance
+    fact and a day-early scan at a door is unlikely); first name and initial (the least a door can greet by; safe); overrides for held
+    and pending only (safe and the right line: a waitlisted or review place has no seat; the user should know an overridden held place's
+    hold can still expire, above); ADMIN holding MARKETING_CHECKIN (safe: ADMIN is privileged, so never a display account, and off a
+    device the permission is DEVICE_REQUIRED; as PEOPLE_KIOSK_PUNCH).
 
 ### P19 — Promotions, Customer360 and engagement
 
@@ -1294,6 +5376,231 @@ Design §7, §10 Customer360 and ContactDetail; MKT-CAMPAIGN (associations), MKT
 - **Usable when** (`test/acceptance/Marketing/MarketingPromotionsWalk`): an author with Commerce's promotion permission
   links a store promotion to a campaign and generates codes from Marketing; one without it sees the link read only;
   Customer360 shows a contact's sends and registrations and no order to a user without the Sales reader's right.
+
+**Built Nov 15 (P19).** mr-mantle and mr-boss on branch `mkt/p19` (hashes in the worker's reply), from master after P18's merge; mr-moqui
+and mr-pass unchanged, no Rust built. Built beside P20 (`mkt/p20`): the hot spots below.
+- Checked first (the code over the plan): P17's and P18's Built and Review notes, §4, F82 and F91; Sales P3's merge (PartyMerge.js `rules()`,
+  DuplicateServices.xml `merge#Parties` and its Sales move block) and Customer360's Sales branch (template/SalesCustomer360.xml); P14's
+  page registration (PageApps.js), the model here; Commerce's promotion screens, `ironstone.commerce` Commerce.js and Mantle's
+  StorePromotions.js and StoreAdmin.js scopes; P2's `store#CampaignAssociation` (CakPromotion was admitted with the campaign's edit alone).
+  The code over the plan:
+  - "the promotion mounts take their context from the mounting app": a registration per app, mr-boss `service/ironstone/shared/PromotionApps.js`
+    (as P14's PageApps.js): context and choices services, the choice names (stores, customers, campaigns), the capabilities that show
+    the edits and the order links, the product choices, the customer check and whether the app links campaigns. The four screens read it
+    in always-actions and no longer declare `appRoot`, so the app root is the mounting root's, never a request parameter (Commerce's
+    behaviour and specs unchanged). Commerce's registration is its context, choices, Products' catalog choices and its customer check as
+    built; Marketing's offers the stores of the user's Marketing organizations within Commerce's store scope (StoreAdmin.js, so a
+    store-limited staff member's own), its own product and customer choices (Mantle's rules: a product of the organization or shared, a
+    Customer-role directory party) and no order link;
+  - "the Commerce promotion permissions still decide every read and write": Mantle's StorePromotionServices are unchanged; the Promotions
+    menu entry needs `COMMERCE_VIEW` with a Marketing read and shows only when such a store exists (a menu-include over Marketing.js
+    `promotionsShown()`: the root's menu condition reads no screen context); `promotionEdit` is `COMMERCE_PROMOTION_EDIT`;
+  - "a campaign-link section through store#CampaignAssociation": a promotion's link, added or ended, now also needs Commerce's
+    `COMMERCE_PROMOTION_EDIT` with `COMMERCE_VIEW` and the store's scope (the association kind's `guard`), so "one without it sees the
+    link read only" holds in Mantle; a new `find#CampaignAssociations` lists a record's current links of the caller's campaigns with
+    canEnd and canLink; P2's label read `promotionName`, which ProductStorePromotion does not have (now `itemDescription`);
+  - "Customer360 with Marketing's Engagement tab primary": one page with no tab bar, as Commerce's (F91: the shared tab bar lists every
+    app's tabs, so a tab would bring Accounting's, Customer Service's and Sales' empty tabs); the Accounting tabs' conditions leave out
+    Marketing. Paths `Marketing/Customers/Customer360` and `Marketing/Contacts/ContactDetail`, hidden from the menu, the audience readers'
+    (design §2: U); Sales' Marketing mount row maps `Accounts/Customer360` and `Accounts/ContactDetail` to them (F64; SalesAccess's
+    expected keys follow). The record check is a new `contact` kind (a directory party, not another user's personal contact, internal or
+    disabled, shared or owned by an organization of the scope), which also admits the contact record's notes and files panels under the
+    Marketing root (`mantle.party.Party` joins the panel hosts, as Sales');
+  - "get#Engagement ... each source answered only with its own permission and omitted without it": eight sources, each named in
+    `omittedSources` without its permission (never zero): campaigns MARKETING_VIEW; memberships, sends, opens and clicks, consent
+    MARKETING_AUDIENCE_VIEW; form answers MARKETING_AUDIENCE_VIEW or MARKETING_REPORT_VIEW (the purposes' view permissions); registrations
+    MARKETING_EVENT_MANAGE; promotion use Commerce's COMMERCE_VIEW and store scope; each within the caller's organizations (or one named),
+    a failed source named and the rest answered; opens and clicks only while the person allows tracking in the send's organization now
+    (P15); no answer text, order, invoice, payment or opportunity is read. Its module is MarketingEngagement.js (P20 touches
+    MarketingWorkspace.js; the service is a P19 block at the end of MarketingWorkspaceServices.xml);
+  - "ContactDetail, Commons' contact form mounted with Add to list (P3) and the Consent link": the Consent link is P3's in
+    template/ContactRecord.xml; Add to list files `request#Subscriptions` for the one party (pending until the person confirms);
+  - "the party merges": refusals and moves in a module of Marketing's own, mantle/marketing/MarketingPartyMerge.js, called from PartyMerge.js
+    `rules()` and from `merge#Parties` in place of its ContactListParty, PartyConsent and ContactListToken lines. Refused, naming the
+    record: an active enrollment (ENROLLMENT_ACTIVE), an ended one whose automation and source the kept party also has (ENROLLMENT_CONFLICT:
+    the unique key), a live registration (held, pending, confirmed, waitlisted, review) of an occurrence that has not ended
+    (REGISTRATION_ACTIVE; one of a past occurrence moves) and a recipient waiting in an unfinished send (RECIPIENT_PENDING: it would reach
+    the kept party twice; not in the plan's text, the user's call). Memberships: on a collision of current rows on one list and role the
+    more restrictive state goes to the kept party's row (unsubscribed over pending unsubscription or rejected over invalid over a live
+    state; between live states the kept party's stands) and the merged row moves ended. Consent: the history moves, and a withdrawal is
+    recorded (`record#PartyConsent`, new source PcsMerge) wherever MarketingEligibility's `purposeState` finds the merged party's withdrawal
+    undone on the kept party, at each of the kept party's addresses that is the same address (an email ignoring case, a phone by its parts:
+    the merge attaches no duplicate address, so a withdrawal keyed to the merged party's contact mechanism would otherwise reach nothing).
+    Segment members move, an exclusion winning; subscription requests, import rows, recipients (tracking events and tokens name the
+    recipient, not the party), automation source events and ended enrollments, campaign people, list send statuses, registrations
+    (attendee and buyer), reservations, attendance and form submissions (lead captures name the submission) move. MessageSuppression is by
+    address (no party field): it follows the address and needs no move. MessageDelivery, FormInvitation and ExternalAccessCapability stay
+    their owners' (F82, §7).
+- Mantle: `service/mantle/marketing/MarketingPartyMerge.js`, `MarketingEngagement.js` (new); `party/PartyMerge.js` (the Marketing refusals in
+  `rules()`), `party/DuplicateServices.xml` (`merge#Parties`' description and the Marketing move in place of three lines);
+  `entity/PartyEntities.xml` (PcsMerge); `marketing/MarketingCampaigns.js` (the promotion guard, `findAssociations`, the label),
+  `CampaignServices.xml` (store#CampaignAssociation's description, a P19 find#CampaignAssociations); `MarketingWorkspaceServices.xml` (a P19
+  block: get#Engagement).
+- BOSS: `service/ironstone/shared/PromotionApps.js` (new); `screen/Shared/Promotions.xml`, `PromotionDetail.xml` (the Campaigns box, its
+  choices, linkCampaign and endCampaignLink, catalogChoices by registration), `PromoCodes.xml`, `PromoCodeDetail.xml` (choices and the
+  customer check by registration); `screen/Marketing/Promotions.xml`, `Customers.xml`, `Contacts.xml`, `Contacts/ContactDetail.xml`,
+  `template/MarketingCustomer360.xml` (new); `screen/Marketing.xml` (Promotions, Customers, Contacts; the Party panel host),
+  `Campaigns/CampaignDetail.xml` (Promotions box); `screen/Shared/Customer360.xml` (the Marketing branch) and seven Accounting tabs' conditions;
+  `service/ironstone/marketing/Marketing.js` (promotionRead, promotionEdit, promotions, customerRead, `promotionStoreIds`, the link paths,
+  the contact and promotionCustomer kinds, the choices promotionStores, promotionCustomers, promotionProducts, promotionCampaigns and
+  promotions, `promotionsShown`), `ContextServices.xml` (productStoreId on get#Choices); `service/ironstone/sales/Sales.js` (Marketing's
+  mount row).
+- Specs:
+  - Mantle `test/marketing/Engagement` (new, 3 features, about 0.4 s): a reader gets campaigns alone and the seven others named, never
+    zero; an audience reader sees their organization's list, send, one open and one click and consent, and after a tracking withdrawal the
+    send stays and the opens go; another organization's user sees only its own send, list, campaign and registration and is refused
+    asking for the other (ORGANIZATION_DENIED); an events manager sees the place; no Marketing read PERMISSION_DENIED, a missing party
+    RECORD_UNAVAILABLE. `test/marketing/CampaignPromotions` (new, 1 feature, about 0.4 s): an editor with Commerce's promotion permission
+    links and ends, one without it (same parameters) PERMISSION_DENIED and reads the link with canEnd false, another store's promotion and
+    another organization's campaign RECORD_UNAVAILABLE, the other organization sees no link. `test/party/ContactBooks` gains a feature
+    (about 0.08 s): an active enrollment refuses the merge (ENROLLMENT_ACTIVE, naming it), then a confirmed place on a coming occurrence
+    (REGISTRATION_ACTIVE), and with both ended the merge keeps the merged party's unsubscription over the kept party's later acceptance
+    (the merged row moved ended), records withdrawals for the kept party's same address (a case variant) and for tracking, keeps an
+    exclusion, leaves nothing on the merged party and moves the enrollment and the registration.
+  - mr-boss `test/Marketing/MarketingPromotions` (new, 4 features, about 1.1 s): the promotion stores and promotions offered to the
+    promotions author (Retail's store, not Services'), nothing to an author without Commerce's read, the Promotions menu for the one and
+    not the other; PromotionDetail's one qvt render in Marketing (the Campaigns box with the running campaign's link, its purpose, Link to
+    a campaign and End link); Customer360's Marketing branch, one qvt render (Maya's lists, Contact record, the sources not shown named,
+    no Accounting box); Marketing's ContactDetail, one qvt render (the record and Add to list). The promotions author is a spec group
+    (MarketingSpecLib `promotionsAuthor`: BOSS_MARKETING_AUTHOR with COMMERCE_VIEW and COMMERCE_PROMOTION_EDIT, no Commerce root).
+    `MarketingAccess`'s system menu gains Promotions (ADMIN holds Commerce's read); `Sales/SalesAccess`'s Marketing links gain the two
+    rows.
+  - Acceptance, written and not run: mr-boss `test/acceptance/Marketing/MarketingPromotionsWalk` (the promotions author links a promotion to
+    the running campaign from PromotionDetail and generates three codes from PromoCodes; an author without Commerce's permission is refused
+    the promotion screen, sees the link on CampaignDetail without Link a promotion and is refused ending it; Customer360 shows Maya's sends
+    and her webinar place to the Marketing administrator and no Accounting or order figure).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle Engagement, CampaignPromotions, ContactBooks, SalesAccounts,
+  ShopCart, ShopCustomer, CrmMiscServices, Contacts, Campaigns, EventRegistrationSetup, MarketingForms, Consent, ContactListSend,
+  MarketingScope (115 of 115); mr-boss MarketingPromotions, MarketingAccess, CommercePromotions, MarketingCampaigns, SalesAccess,
+  MarketingLeads, MarketingLists, AccountingCollections, AccountingReceivables, CustomerServiceAccess, CustomerServiceReports,
+  CustomerServiceWarranty, CustomerServiceOrders, InsightsRecords, ProjectsAccess, SalesAccounts, CommerceOrders (all passing); each run
+  about 25-50 s with startup. `moqui lint --screens` (release): parse failures 0, 143 flagged sites (P18's 143; one new site in
+  ContactDetail rewritten). Prettier (mr-moqui's config) on the new and changed JavaScript but ContactBooks.spec.js, which was not
+  Prettier-clean before. Not run: test-apps, the acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P19" table; ss-inventory's eleven ProductStore/Promotion rows name Marketing's mounts.
+- Design edits: design-marketing §2 (PromoCodeDetail a sibling), §7 and §10 (as built: the registration, the link's rights, Customer360 on
+  one page, the sources and their permissions, ContactDetail, the merge guards); design-commerce §7 (as built: the per-app registration,
+  an owner contract); design-crosscut §3.2's Marketing row.
+- Findings, numbered by the lead F370 to F375 in order:
+  - the code over the plan above: the promotion registration (PromotionApps.js) and no `appRoot` parameter on the four screens; the
+    promotion link's Commerce guard in Mantle and find#CampaignAssociations; P2's `promotionName` label; Customer360 on one page (F91);
+    the Customers and Contacts paths and the contact record kind; the eight engagement sources and their permissions; the merge module,
+    its four refusals (RECIPIENT_PENDING beyond the plan's text), the restrictive membership rule, the consent withdrawal by address and
+    PcsMerge; MessageSuppression needs no move;
+  - a merged party's withdrawal at an address the kept party does not have stays on the moved rows only; nothing reaches that address
+    through the kept party, and if the address is later added to the kept party under a new contact mechanism its withdrawal does not
+    follow (a consent keyed by contact mechanism, not by address);
+  - a Sales reader without MARKETING_AUDIENCE_VIEW who opens Sales' Accounts under Marketing's Leads now follows an account to Marketing's
+    Customer360, which refuses them (PERMISSION_DENIED); before, the account showed unlinked. The account link could stay unlinked for
+    them (Accounts.xml reads `sharedLinks` only), Sales' owner file;
+  - the Customer360 tab bar (F91) stays the owner's or the framework's fix; Marketing's branch avoids it by having no tabs;
+  - the contact record's notes and files are open under the Marketing root to an audience reader for any directory party of their
+    organizations or shared, as Sales opens them for its accounts' contacts;
+  - the promotion screens' product choices under Marketing are Mantle's product rule (owner organization or shared), not Products'
+    catalog search (Products' context admits no Marketing root).
+- For the lead:
+  - budget share: mr-mantle about 0.9 s (Engagement 0.4 s, CampaignPromotions 0.4 s, ContactBooks +0.08 s); mr-boss server about 1.1 s
+    (MarketingPromotions); no client spec;
+  - merge hot spots (P20 beside): mr-mantle `service/mantle/marketing/MarketingWorkspaceServices.xml` (a P19 block at the end),
+    `MarketingCampaigns.js` (the CakPromotion guard, `findAssociations` before "the flow", the operations table), `CampaignServices.xml` (a
+    P19 service before start#Campaign), `party/PartyMerge.js`, `party/DuplicateServices.xml`, `entity/PartyEntities.xml`; mr-boss
+    `screen/Marketing.xml` (two subscreens items and the panel host line: P20's Reports item lands beside them),
+    `Campaigns/CampaignDetail.xml` (a Promotions box before Events; P20's Results tab is near), `service/ironstone/marketing/Marketing.js`
+    (capabilities after checkInRead, `promotionStoreIds` before `required`, linkPaths after CheckIn, record kinds after content, choice
+    sources after emailTemplates, the module's export), `ContextServices.xml`, `test/Marketing/MarketingSpecLib.js` (systemMenu, a
+    `promotionsAuthor` helper at the end: a P20 Reports menu item changes the same menu lists), `screen/Shared/Customer360.xml` and its
+    seven Accounting tabs, `service/ironstone/sales/Sales.js` (Marketing's mount row) and `test/Sales/SalesAccess.spec.js`, the inventories,
+    design-marketing, design-commerce, design-crosscut, this file;
+  - Attack-Surface: no public endpoint and no PASS operation added; nothing to add;
+  - the user's calls: the restrictive order of list memberships (between live states the kept party's stands, so a pending row on the
+    merged party does not downgrade the kept party's acceptance); RECIPIENT_PENDING refusing a merge while the merged party waits in a send
+    (rather than moving the recipient and risking a second message); a live registration of a past occurrence moving rather than refusing;
+    Customer360 on one page with no tab bar; the Customers and Contacts areas the audience readers' alone (design §2's U), so an events
+    manager without audience view sees registrations only through Registrations.
+
+**Review Nov 15 (P19).** A fresh review of `mkt/p19` (mr-mantle be65cde3, mr-boss c52e8f0b) against P19, §2, §4, F22, F64, F82, F91
+and design §2, §7, §10, X15; master (P18, follow-ups 1 and 2) merged into both first, clean. Fixes in mr-mantle and mr-boss (one
+"Marketing P19 review" commit each; this note and design §10's as-built paragraph in mr-boss's).
+- Checked and sound:
+  - the merge guards' coverage: every Marketing and registration entity with a party field (MarketingEntities, EventRegistrationEntities,
+    FormPublicationEntities, PartyConsent) is moved, refused or by design not the party's: tracking events and tokens name the
+    recipient or a visitor hash, lead captures the submission, ContactListCommStatus keeps no party in its key, the entry code is
+    derived from the registration and its revision (not the attendee, so a moved place's ticket still checks in),
+    MarketingDecision.decidedByPartyId is staff audit, MessageSuppression follows the address; contact-mechanism references
+    (preferred, recipient, reservation email) keep naming the shared ContactMech, and eligibility reads only the kept party's current
+    addresses, so a duplicate address the merge did not attach is never sent to through them. The refusals run in `rules()` before
+    anything changes, read with authorization and entity filters off (PartyMerge's `unfiltered`, Sales P3's R1 lesson), and fail
+    with their reason codes through EntityLib's convention; the moves run inside merge#Parties' disabled block. ENROLLMENT_CONFLICT is
+    practically unreachable (every source key names its record, `segment:` its party) and harmless. Commons' and Sales' merge specs
+    are unchanged (ContactBooks only appended to; SalesAccounts untouched);
+  - the promotion mounts: `appRoot` is the mounting root's always-actions value; probed with `appRoot=Accounting` sent to
+    Marketing's Customer360 and the Marketing branch still rendered, so a request value does not override the root's. PromotionApps.js
+    is data, never authority: Mantle's StorePromotionServices are unchanged and check COMMERCE_VIEW, COMMERCE_PROMOTION_EDIT and the
+    store scope; the link guard on `store#CampaignAssociation` (add and end) asks Commerce's edit and the store scope beside the
+    campaign's edit; Commerce's promotion specs and screens' behaviour unchanged (CommercePromotions passes);
+  - get#Engagement: organization scope (the caller's covered organizations, one named through requireOrganization), a missing party
+    and another user's personal contact alike RECORD_UNAVAILABLE, omitted sources named (never zero), a failing source named while the
+    rest answer, opens and clicks only while `trackingAllowed` holds now; promotion use reads the party's order items for promotion,
+    code, date and discount only and returns no order, which is Commerce's data under COMMERCE_VIEW and its store scope; no
+    opportunity, invoice or payment is read;
+  - the worker's five choices, none unsafe: (1) between live membership states the kept party's stands: no withdrawal is lost by it;
+    (2) RECIPIENT_PENDING refusing is the conservative side (dispatch's recheck would skip a merged party, but a moved recipient could
+    reach a kept party who is also selected); (3) a live registration of a past occurrence moves: nothing is checked in after the
+    occurrence, and its order moves with merge#Parties; an offer with no dates refuses; (4) Customer360 on one page avoids F91's tab bar;
+    (5) Customers and Contacts the audience readers' follows design §2's U (an events manager has Registrations).
+- Fixed:
+  - R1 (high, mr-mantle): the consent rule kept only the merged party's withdrawal; the kept party's own withdrawal was undone by the
+    merged party's later grant (combined history, newest row wins), so a person who had withdrawn on the kept record became sendable
+    after the merge. MarketingPartyMerge.js `moveConsents` now records a PcsMerge withdrawal wherever either party's withdrawal is
+    undone (the kept party's at its own key). ContactBooks' merge feature: the kept party's SMS withdrawal survives the merged party's
+    later grant;
+  - R2 (medium, mr-mantle): a moved list membership or campaign person whose key (fromDate) met a kept party's row was dropped (two
+    duplicates added in one transaction share the timestamp), so a current unsubscription met by an ended kept row was lost; a
+    segment member whose kept row had ended was dropped. Such a row now moves a millisecond later (`createMoved`), and a current
+    segment member replaces the kept party's ended one (an exclusion still wins). The feature's third list proves it (fails before);
+  - R3 (medium, mr-mantle): get#Engagement's campaigns source, MARKETING_VIEW's, listed the campaigns the person was sent, registered
+    for or answered with that fact ("sent, registered"), a person-level read that is MARKETING_AUDIENCE_VIEW's and
+    MARKETING_EVENT_MANAGE's (MarketingAccess `audienceRead`). A campaign now comes only from the sources the caller may read, and
+    the source is omitted for a campaign reader alone. Engagement's first feature: the reader gets no source, the events manager
+    "registered" only, the audience reader "sent" only;
+  - R4 (medium, mr-boss): the `contact` record kind admitted any directory party shared or owned by the scope's organizations, so an
+    audience reader opened Customer360, ContactDetail and the record's notes and files (the root's panel host) of every shared
+    person and organization in the directory, suppliers and staff included; Sales opens only its accounts and their contacts. It now
+    also asks that the party be in the scope's audiences (Marketing.js `audienceParty`: a list member of a non-mailbox list, a
+    subscription request, segment member, recipient, registrant or Marketing form submitter of an organization of the scope).
+    MarketingPromotions' Customer360 feature: a new shared person is refused, Maya admitted (fails before);
+  - R5 (low, mr-boss): Sales' Accounts under Marketing's Leads linked every account to Marketing's Customer360 and ContactDetail, which
+    refuse a user without MARKETING_AUDIENCE_VIEW (the worker's finding); Sales.js's Marketing mount row now gives the two links only
+    with that permission (`pathPermissions`), so the rows show unlinked otherwise, as before P19. SalesAccess: the rep without
+    audience read gets the three P3 links, the administrator the two P19 ones (fails before).
+- Findings, numbered by the lead F376 to F380 in order:
+  - R1–R5 above;
+  - Marketing's Promotions list and PromoCodes list show every promotion of Commerce's store scope (find#Promotions takes one store or
+    all), not only the stores of the user's Marketing organizations that its choices offer; the two scopes coincide for a member of
+    their organizations and differ only for a COMMERCE_ALL_ORGANIZATIONS or MARKETING_ALL_ORGANIZATIONS holder, and Mantle still
+    decides every read, so it adds no right; a store filter in Mantle's find is Commerce's owner change;
+  - with R4, an account under Leads with no Marketing record (no list, send, registration or form) opens a "not available"
+    Customer360 for an audience reader; adding it to a list goes through Accounts' bulk Add to list (P3), not ContactDetail;
+  - the worker's withdrawal-by-address finding stands (a merged party's withdrawal at an address the kept party lacks stays on the moved
+    rows only, keyed by contact mechanism; a suppression by address is the durable stop);
+  - the worker's other findings (the registration, the Customer360 tab bar, the product choices) are as described; the notes and files
+    finding is R4, the Sales-reader link finding R5.
+- Tests run (release binary, `--nobuild`, this worktree's runtime, after the master merge and the fixes): mr-mantle Engagement,
+  ContactBooks (26 of 26 with the fixes' checks, about 31 s with startup), CampaignPromotions, SalesAccounts, ShopCustomer, Consent,
+  MarketingScope (38 of 38, 33 s); mr-boss MarketingPromotions, SalesAccess, MarketingAccess, CommercePromotions, MarketingLeads (33 of
+  33, 40 s), SalesAccounts, MarketingCampaigns, MarketingLists, AccountingReceivables, CustomerServiceAccess, CommerceOrders (30 of 30,
+  33 s). Each new check run against the unfixed code and failing (ContactBooks' memberships, MarketingPromotions' stranger,
+  SalesAccess' links). Prettier clean on the changed JavaScript (ContactBooks.spec.js excepted, as before). No screen changed, so no
+  lint. Not run: test-apps, the acceptance suite (MarketingPromotionsWalk unchanged by the fixes: Maya is a list member).
+- For the lead:
+  - budget share: about +0.05 s mr-mantle (Engagement's first feature calls three more users; ContactBooks' feature a send and a list
+    more), about +0.05 s mr-boss (one person and two record checks in MarketingPromotions, one context call in SalesAccess);
+  - merge hot spots beside P20: mr-mantle `MarketingPartyMerge.js`, `MarketingEngagement.js`, `MarketingWorkspaceServices.xml` (one
+    description), `test/party/ContactBooks.spec.js`, `test/marketing/Engagement.spec.js`; mr-boss `service/ironstone/marketing/Marketing.js`
+    (the contact kind and `audienceParty` before `const SEND`), `service/ironstone/sales/Sales.js` (the mount row and sharedContext),
+    `test/Sales/SalesAccess.spec.js`, `test/Marketing/MarketingPromotions.spec.js`, design-marketing §10, this file;
+  - the user's calls: whether Customer360 and ContactDetail under Marketing should also open a party Marketing has no record of (R4
+    narrowed them to the audiences, as the record's notes and files open on the same check); the worker's five choices stand.
 
 ### P20 — Attribution, reports and Insights
 
@@ -1347,6 +5654,322 @@ MKT-TRACKING (attribution), MKT-REPORT.
   PASS is attributed once; a partial refund reduces attributed revenue once; an Insights reader opens
   CampaignPerformance from the catalog and a user without Marketing's report permission does not see it.
 
+**Built Nov 15 (P20).** mr-mantle and mr-boss on branch `mkt/p20` (hashes in the worker's reply), from master after P18's merge; mr-moqui
+unchanged, no Rust built. Built beside P19 (`mkt/p19`; the hot spots below).
+- Checked first (the code over the plan): P10's, P11's, P13's, P15's, P17's and P18's Built and Review notes, §4 (the one SECA and its
+  handler, the visitor key as built), F34, F85, F87 and F90–F348; impl-sales P19's Built note (the funnel's `count#SalesVisits` contract)
+  and P20's (the keyword typing of derived document fields); P11's `handle#OrderPlaced` and the SECA, P15's MarketingTracking.js (events,
+  visitor-key digests, `trackingAllowed`, the redirect declining its session so a click has no local visit), Sales' SalesAccess
+  (`isSalesOrder`, `orderOf`), SalesOpportunityOrder, OrderItemBilling and ReturnItem, the ledger's MessageDelivery (eventKey
+  `CampaignSend:{send}:…`, state and receipt), Mantle's BusinessEvents.js, Insights' Registry.js (catalogue, attention, flow targets,
+  metrics), the report engine's business datasets (Monitoring.md: admission, ReportScopePolicy), Maintenance's and Sales' shipped
+  datasets, alerts and digests. The code over the plan:
+  - "the most recent eligible consented tracking event of the order's visitor key or party": an order carries no visitor key today. Built
+    as its identity on the authority: the order's local visit (`OrderHeader.visitId`, set at cart creation) and the visitor keys that
+    visit's events carried (a landing page with the link's code, recorded in the same session), plus the customer as a send recipient who
+    allows tracking (PcpTracking, checked when deciding); eligible events are non-automated clicks and page visits of a link of the
+    seller within the link's `trackableLifetime` (30 days when it names none); never an open; ties by the lower tracking code id. A
+    remote PASS's checkout carries no key to the order, so through a remote frontend only the recipient path attributes (a finding);
+  - every placed order gets one decision in force, an unattributed one too (basis MobNone), so the job asks once; a purchase order, a
+    template or an internal customer's order gets none (`isSalesOrder`); the order row is locked while deciding;
+  - "TrackingCodeOrder (one row per order and type)": written beside a tracking-event decision, the code's type (INTERNAL when none),
+    never billable; MarketingOutcomeLink (new) keeps the decision, its basis, evidence (event, link, opportunity) and evidence time, and a
+    staff correction (`correct#OrderAttribution`, MARKETING_CONFIGURE, a reason, the decision read) ends it and starts a successor;
+  - "orders and invoiced revenue read from Sales' and Accounting's registered metrics": the reports read the attributed orders' own rows
+    (OrderHeader grandTotal as Sales.OrderValue counts it, OrderItemBilling amount × quantity as invoiced, completed ReturnItems as
+    returns), by currency, rather than calling the metrics' services, which answer organization totals, not an order set (a finding);
+  - "the incremental aggregation with its watermark": built as a whole recompute (rebuildable) of the open and recently closed campaigns'
+    numSent and qualifiedLeadCount, the stalest first, 500 a run, with a watermark row of the run; the reports themselves are live;
+  - "retention (expired import files and rows …)": P4's job already purges the files; this phase clears a purged import's row names and
+    masked addresses (outcomes kept), removes unconfirmed public requests a week past their expiry with their tokens, tracking events past
+    the organization's `statisticsRetentionDays` (none without it; never one an attribution names) and expired link tokens;
+  - "`report/boss-marketing-deliveries.json` and `boss-marketing-audience.json`": their documents are mr-boss
+    `data/BossMarketingReportData.xml` (as Maintenance's): campaign deliveries of the ledger (MessageDelivery, source MdsrcCampaignSend:
+    no recipient, address or parameters) and Marketing list memberships (ContactListParty, never a mailbox: no member); their row filter
+    is Mantle's `MarketingReportServices.get#ReportRowFilter`, the ReportScopePolicy `MantleMarketingScope` (a report reader's Marketing
+    organizations); no expression field (the keyword lesson does not arise);
+  - "alert templates (a failure or complaint spike, a bounce rate over a threshold, uncertain deliveries older than N hours)": counts
+    over the delivery dataset per organization (complaints in a day, hard bounces in a day, uncertain deliveries older than 24 hours); a
+    rate would need a ratio query the templates do not take (a finding);
+  - "attention providers (sends awaiting approval, failed and uncertain deliveries, held registrations)": one count service,
+    `get#AttentionCounts`, four providers; "held registrations" are those paid and waiting for the organizer (EvrPending) or for review
+    (EvrReview);
+  - "flow targets for the customer map's Marketing steps": `Marketing.Campaigns` and `Marketing.Sends`; the customer flow's "Finds us"
+    step now opens Campaigns with Campaign performance as its report (it was information only);
+  - "Assist: AgentToolExposure rows for get#CampaignPerformance and preview#Audience's aggregates": CampaignPerformance's alone
+    (Assistant Y, MCP N); `preview#Audience` answers names and whole addresses to an audience reader, so exposing it would hand Assist
+    addresses (a finding);
+  - "Commerce: conversion on Home and OnlineSales": Online sales gains "Visits and campaign orders" (visits, orders, orders per visit,
+    orders a campaign is the primary attribution of and their value by currency, the latest six periods) over `count#StoreVisits` and
+    the new `count#StoreConversions`; Home keeps P15's Visits card (a finding);
+  - "Home's cards complete": two cards for a report reader, the last 30 days' visits and orders from campaigns; "ExperimentDetail's
+    conversions": each variant's conversions (orders attributed to its tracked recipients' own clicks or visits), and the measure
+    "Conversion rate" now compares them;
+  - the campaign-sent annotation: Mantle's business event `CampaignSent` (BusinessEvents.js), registered by `release#Send` and
+    `release#ExperimentWinner` (recordId `{send}:winner`) after their commit, the marker at the release (or its scheduled time);
+  - Reports sits before Settings in the menu (menu-index 11; Settings moved to 12), as design §1.2 orders them.
+- Mantle:
+  - `entity/MarketingEntities.xml` (a P20 block at the end): MarketingOutcomeLink (MokOrder; MobTrackingEvent, MobOpportunity, MobStaff,
+    MobNone), MarketingCampaign `qualifiedLeadCount` and `summaryDate`, MarketingReportWatermark.
+  - `service/mantle/marketing/MarketingAttribution.js` (new) under `TrackingServices.xml` (`handle#OrderPlaced` now files the automation
+    events and then calls `record#OrderAttribution` as a probe, each failure logged apart; a P20 block at the end: `record#`,
+    `correct#OrderAttribution`, `run#OrderAttributions` with `operation`).
+  - `service/mantle/marketing/MarketingReports.js` and `MarketingReportServices.xml` (new): `get#ReportCatalog`, `get#CampaignPerformance`,
+    `get#DeliveryAnalysis`, `get#AudienceGrowth`, `get#Attribution`, `get#TrackingLinkResults`, `count#Visits`, `count#SalesVisits`,
+    `count#StoreConversions`, `get#ReportRowFilter`, `get#AttentionCounts`, `run#MarketingAggregation` and `run#MarketingRetention` (with
+    `operation`), all `allow-remote="false"`; past a limit TOO_MANY_RECORDS.
+  - `MarketingExperiments.js` (conversions, the measure), `MarketingDispatch.js` and `MarketingExperiments.js` (the CampaignSent
+    registration), `MarketingWorkspace.js` (Home's two cards, the `marketingReports` route), `party/BusinessEvents.js` and
+    `BusinessEventServices.xml` (CampaignSent).
+  - Data: `data/MarketingSeedData.xml` (a P20 block: the ReportScopePolicy MantleMarketingScope), `data/MarketingReportSetupData.xml`
+    (new: the jobs run_MarketingOrderAttributions every 15 minutes, run_MarketingAggregation hourly and run_MarketingRetention nightly,
+    their JobRegistrations, the attribution's RecoveryDescriptor).
+  - `test/sales/SalesPipelineReports.spec.js`: the funnel's visit step is now 0 (Marketing records none for that organization), not
+    "not available".
+- BOSS:
+  - Screens: `Marketing/Reports.xml` (the area, BOSS_MKT_REPORTS) with `Reports/Catalog.xml`, `CampaignPerformance.xml`,
+    `DeliveryAnalysis.xml`, `AudienceGrowth.xml` and `Attribution.xml` (options, the basis, CSV of each list, print; Attribution's Correct
+    for the administrator); `Marketing.xml` (Reports, the key g r, Settings at 12); `Campaigns/CampaignDetail.xml` (Results: the campaign's
+    performance from its start, children once, for a report reader); `Home.xml` (the reports route); `Sends/ExperimentDetail.xml` (its
+    comment); Commerce `Reports/OnlineSales.xml` and `service/ironstone/commerce/Reporting.js` (`trafficOf`).
+  - `Marketing.js` (a P20 entry in areas, areaReads, linkPaths; choices `reportCampaigns` and `reportSends`); Insights `Registry.js`
+    (Marketing among the owner names).
+  - Data: `BossSetupMarketingData.xml` (a P20 block at the end: BOSS_MKT_REPORTS; BOSS_MKT_DATASETS with the report readers' and Insights
+    groups' grants, the documents' groups, the admissions, classes, readiness and refresh rows; the four catalog entries; the metrics
+    `Marketing.Visits` and `Marketing.AttributedOrders`; four attention providers; the flow targets; Assist's tool and its grant);
+    `BossMarketingReportData.xml` (new: the documents and the BossMarketingReports feed).
+  - Reports: `boss-marketing-deliveries.json`, `boss-marketing-audience.json` (datasets), `boss-marketing-campaigns.json` (dashboard),
+    `boss-marketing-complaint-spike.json`, `boss-marketing-bounce-rate.json`, `boss-marketing-uncertain-backlog.json` (alert templates),
+    `boss-marketing-weekly-digest.json`; `insights-flowmap-customer.json` ("Finds us").
+- Specs:
+  - Mantle `test/marketing/Attribution` (new, 3 features, about 1.2 s: a Shop order by its visit and the key that visit carried (the
+    scanner's later fetch no evidence; a second call answers the first; TrackingCodeOrder once, not billable; the order still placed), a
+    Sales acceptance by its source opportunity, a direct order by a consenting recipient's click, a recipient without tracking consent and a
+    ticket whose only event is past the link's lifetime unattributed, a purchase order no decision; an order the call missed decided once
+    by the job; a later link edit changes nothing, and a correction refused to an analyst, another organization's administrator, without a
+    reason, for another seller's campaign and on a stale decision, then a successor with its user and reason). `test/marketing/MarketingReports`
+    (new, 7 features, about 1.8 s: a send's recipient and variant counts reconcile, accepted is not delivered, the untracked and the
+    automated out of the rates, the conversion; a parent counts its child once, ROI unavailable without a cost and across currencies, two
+    currencies never summed, a refund reduces the net once; attribution by campaign with unattributed apart and an order's row only for a
+    Sales reader; audience growth reconciling opening to closing with a merge apart and the reasons; another organization, a campaign of
+    it and a reader without the report permission refused, Sales' funnel visits for a Sales report reader and another organization's
+    refused, the row filter, the catalogue for Marketing's root only; the campaign-sent marker; the aggregation job's summaries).
+    `test/marketing/MarketingRetention` (new, 1 feature, about 0.1 s: an expired request and its token removed once and a confirmed one
+    kept, a request an import row names named as not removed while the rest is done, an import row cleared with its outcome kept, an old
+    event removed and one an attribution names kept, an expired token removed; a second run removes nothing).
+  - mr-boss `test/Marketing/MarketingReports` (new, 3 features, about 1.0 s: CampaignPerformance's one qvt render for the analyst; the
+    Reports tabs, the area refused to an author and open to a reader, Insights' catalog showing the four entries to an analyst who reads
+    Insights and none to an author; the registrations name existing services and screens, every shipped definition loads, no person field
+    in a document, and the audience dataset read through the engine is the analyst's own organization's whatever they ask).
+    Changed: `MarketingAccess` and `MarketingSpecLib` (the menus with Reports), `MarketingSends` (ExperimentDetail's conversions),
+    `test/Insights/InsightsHome` (the four providers), `InsightsAlerts` (the three templates), `test/Sales/SalesReports` (the funnel's
+    visits).
+  - Acceptance, written and not run: `test/acceptance/Marketing/MarketingReportsScenario` (3 features, stepwise: a Shop order from the
+    campaign's link and a Sales order from its lead each attributed once at placement; a partial refund reducing the net once and the four
+    reports reconciling; Campaign performance in the catalog for the instance administrator and not for an Insights reader, rendered for
+    the analyst); `test/acceptance/Insights/InsightsFlowMapsUsable` changed ("Finds us" now opens Campaigns).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle Attribution, MarketingReports, MarketingRetention,
+  Experiments, Dispatch, Automations, BusinessEvents, SalesPipelineReports, Campaigns, MarketingScope (46 of 46), Tracking, Sends (11 of
+  11); mr-boss MarketingReports, MarketingAccess, MarketingSends, MarketingCampaigns, MarketingTracking, MarketingAutomations,
+  MarketingEvents, InsightsAlerts, InsightsCatalog, InsightsFlowMaps, InsightsHome, InsightsDashboards, InsightsAccess, InsightsDatasets,
+  CommerceReports, CommerceAccess, SalesReports (all passing after the changes named). `moqui lint --screens` (release): 143 flagged
+  sites as on master after P18, none in a new or changed screen; parse failures 0. Prettier (mr-moqui's config) clean on the new and
+  changed JavaScript that was clean before (Insights' Registry.js and Commerce's Reporting.js were not and are left so). Not run:
+  test-apps, the acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P20" table; ss-inventory has no row for these screens.
+- Design edits: design-marketing §11 (as built, before §12); design-sales §8 (the funnel's visit step built); design-commerce §3
+  (OnlineSales' Traffic list); design-crosscut §1.3's register (the handler's P20 part).
+- Findings, numbered by the lead F386 to F397 in order:
+  - the code over the plan above: the order's identity is its local visit, the key that visit carried and the customer as a consenting
+    recipient; an unattributed decision recorded; amounts read from the attributed orders' own rows; the aggregation a whole recompute;
+    the datasets' documents in mr-boss; counts, not rates, in the alert templates; one attention count service; Reports before Settings;
+  - a remote PASS frontend's checkout carries no visitor key to the order (and its session no visit on the authority), so an order through
+    a remote frontend is attributed only through its customer as a consenting recipient, not "through its visitor key" as scenario 18
+    asks; PASS's checkout operation would need to pass the key's digest for the order (mr-pass and the facade's schema; not in this
+    phase's repositories);
+  - attribution through the visit needs the landing page (with the link's code) and the checkout in one session on the authority's host:
+    the redirect itself declines its session, so a click followed by a Shop page without the code links nothing;
+  - `preview#Audience` is not exposed to Assist: it answers names and whole addresses to an audience reader; an aggregate-only operation
+    (bucket counts) would be the tool;
+  - invoiced revenue is the attributed orders' OrderItemBilling (amount × quantity), returns their completed ReturnItems; design §11's
+    invoice-line allocation of split lines and credits beyond returns are not built;
+  - Audience growth counts the evidenced consent records of each list: a legacy member with no consent record is in "members now" and in
+    no opening or closing count;
+  - the delivery dataset has no campaign or send dimension (a delivery names its send only in its event key): campaign results by
+    campaign are the reports';
+  - Commerce's Home keeps P15's Visits card with no conversion figure; Online sales shows visits and campaign orders;
+  - the report readers see campaign totals (orders and their value by currency) without a Sales or Commerce read; an order's own row needs
+    one (design §2: R for the reports, source rights for drill-down);
+  - the demo has no campaign deliveries, events or attributed orders, so the reports read nearly empty on the demo; the acceptance scenario
+    makes its own;
+  - `get#TrackingLinkResults` is built and on no screen (TrackingLinkDetail keeps get#TrackingLink's observations);
+  - a pending request with an expiry that an import row names cannot be removed (its foreign key) and is named each night; imports file
+    requests without an expiry, so none is expected.
+- For the lead:
+  - budget share: mr-mantle about 3.1 s (Attribution 1.2 s, MarketingReports 1.8 s, MarketingRetention 0.1 s; SalesPipelineReports
+    unchanged); mr-boss server about 1.0 s (MarketingReports; MarketingAccess and InsightsHome unchanged in time); no client spec;
+  - merge hot spots (P19 on `mkt/p19` beside): mr-mantle `entity/MarketingEntities.xml` and `data/MarketingSeedData.xml` (P20 blocks at the
+    ends), `TrackingServices.xml` (handle#OrderPlaced, a P20 block at the end), `MarketingDispatch.js` (release#Send's registration),
+    `MarketingExperiments.js` (conversionsOf, the measure, the winner's registration), `MarketingWorkspace.js` (routes, two cards before
+    P3's audience card), `party/BusinessEvents.js`, `BusinessEventServices.xml`, `test/sales/SalesPipelineReports.spec.js`; new files
+    MarketingAttribution.js, MarketingReports.js, MarketingReportServices.xml, MarketingReportSetupData.xml, the three specs. mr-boss
+    `data/BossSetupMarketingData.xml` (a P20 block at the end), `screen/Marketing.xml` (the Reports item before QuickCreate, Settings'
+    menu-index, the key, the header comment), `service/ironstone/marketing/Marketing.js` (areas, areaReads, linkPaths, two choices at the
+    end), `screen/Marketing/Campaigns/CampaignDetail.xml` (actions' end, the Results box), `screen/Marketing/Home.xml` (places),
+    `test/Marketing/MarketingSpecLib.js` (the menus: P19's Promotions and Customers entries meet these lists) and `MarketingAccess.spec.js`,
+    `MarketingSends.spec.js`, `screen/Marketing/Sends/ExperimentDetail.xml` (comment), Commerce's `Reports/OnlineSales.xml` and
+    `Reporting.js`, Insights' `Registry.js`, `report/insights-flowmap-customer.json`, `test/Insights/InsightsHome.spec.js`,
+    `InsightsAlerts.spec.js`, `test/Sales/SalesReports.spec.js`, `test/acceptance/Insights/InsightsFlowMapsUsable.spec.js`,
+    `plan/usl-inventory.md` (a table before Order), `plan/design-marketing.md` (§11's as built), `design-sales.md`, `design-commerce.md`,
+    `design-crosscut.md`, this file;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`; no mr-moqui worktree), beside Marketing's tracking paragraph: "Marketing's
+    attribution and reports (`mantle.marketing.TrackingServices` record#OrderAttribution, correct#OrderAttribution, run#OrderAttributions;
+    `mantle.marketing.MarketingReportServices`, all `allow-remote="false"`). The decision is made by the order SECA's handler after the
+    placement commits and by the job, as the system, never from a request: the order's local visit and the visitor-key digests that visit's
+    events carried, or its customer as a recipient who allows tracking (PcpTracking) when deciding; never an automated fetch, an open or
+    a cross-device guess; a purchase order or an internal customer's order is never attributed. A correction needs MARKETING_CONFIGURE in
+    the seller's organization, the decision read and a reason, and ends the decision rather than changing it. The reports answer a report
+    reader (MARKETING_REPORT_VIEW) of the organizations of their Marketing scope with aggregates only (no person, address or token); an
+    attributed order's own row only to a reader who may see the order in Sales (SalesAccess orderOf) or as the store's Commerce order
+    reader; amounts never added across currencies; past a limit TOO_MANY_RECORDS. `count#Visits` and `count#SalesVisits` answer a
+    Marketing reader or a Sales report reader of the organization a count; `count#StoreConversions` checks each store through StoreAdmin.
+    Marketing's datasets (`boss-marketing-deliveries`, `boss-marketing-audience`) carry no recipient, member or address and are scoped by
+    `get#ReportRowFilter` (the ReportScopePolicy MantleMarketingScope: a report reader's Marketing organizations; another userId refused).
+    Assist's `marketing_campaign_performance` reads get#CampaignPerformance as the user (Assistant only). Retention removes unconfirmed
+    requests, old tracking events (never one an attribution names) and expired link tokens, and clears purged import rows' names.";
+  - the user's calls: the remote PASS visitor key (mr-pass's checkout passing the key to the order: a follow-up, or accept attribution
+    through a remote frontend by recipient only); an aggregate-only audience tool for Assist (or none); whether report readers without a
+    Sales or Commerce read should see campaign order totals (built: yes, aggregates).
+
+**Review Nov 15 (P20).** A fresh review of `mkt/p20` (mr-mantle 0134660b, mr-boss ccf19891) against P20, §2, §4 (Nov 11, Nov 15) and
+design §11, §15.3, §18; master merged in twice (P18's follow-ups 1 and 2 cleanly, then P19 in both repositories: mr-mantle cleanly,
+mr-boss with both sides kept in `screen/Marketing.xml`, `CampaignDetail.xml`, `Marketing.js`, `MarketingSpecLib.js` and
+usl-inventory; the menu indexes made distinct: Promotions 6, Content 7, Events 8, Surveys 9, Leads 10, Reports 11, Settings 12). Fixes
+in one commit per repository ("Marketing P20 review: …"); the user's two calls of Nov 15 recorded in §4, the audience tool built here.
+- Checked and sound:
+  - the writer never fails or holds a placement: the SECA is `tx-commit` with `force-new` and `ignore-error`, `handle#OrderPlaced`
+    runs the automation part and the attribution apart, each in its own try and the attribution as a probe (its own transaction and
+    error frame), so neither undoes the other or the order; one decision per order: `record#OrderAttribution` locks the order row
+    (`forUpdate`) before reading the decision in force, so the SECA's call and the job serialize and the second answers the first;
+    every placed sales order gets a row (MobNone included), so the job asks once; `isSalesOrder` keeps out purchase orders, templates
+    and internal customers (the spec's purchase order);
+  - the rule as built: non-automated clicks and page visits of a link of the seller with a campaign, within the link's lifetime (30 days
+    by default), never an open or a fetch, ties by code id, else the source opportunity's campaign of the seller (the order's or its
+    quote's), never a cross-device guess; TrackingCodeOrder once per order and type, `isBillable` N; the decision keeps its evidence, so
+    the spec's later link edit changes nothing; `correct#OrderAttribution` needs MARKETING_CONFIGURE in the seller (an analyst
+    PERMISSION_DENIED before any lookup, another organization RECORD_UNAVAILABLE), a reason, the decision read (STALE_REVISION), a
+    campaign of the seller, and ends the old row (thruDate, supersededByLinkId) rather than changing it;
+  - reports: every service starts with `reportScope` (MARKETING_REPORT_VIEW, an organization of the scope, ORGANIZATION_DENIED) and
+    checks a named campaign, send, list or link against it (RECORD_UNAVAILABLE); aggregates only (no party, name or address in any
+    answer; the reasons are the withdrawal's own comments, as design §11 asks); amounts are lists by currency and ROI needs one currency
+    equal to the cost's; an order's own row only through SalesAccess `orderOf` or the store's Commerce order read; past each limit
+    TOO_MANY_RECORDS, never a cut (the 200-row outcome page counts the rest as hidden);
+  - Sales' contract: `count#SalesVisits` takes and answers exactly impl-sales P19's parameters (SalesPipelineReports.js `visitService`,
+    through a probe as the user), a Sales report reader of the organization or a Marketing reader; `count#StoreConversions` checks each
+    store through StoreAdmin first; SalesPipelineReports, SalesReports and CommerceReports pass;
+  - the datasets: the row filter answers the signed-in user only (another `userId` PERMISSION_DENIED), match-none without the report
+    permission or organizations, and the field name is checked; both documents' organization field is a plain id field (keyword), no
+    expression field, so Sales P20's typing lesson does not arise; the analyst's forged query string still reads only their own
+    organization's totals (MarketingReports' third feature, now through `run#Query`); alert templates and the digest are engine
+    definitions that render as their owner over the owner's row filter (Insights' rule, unchanged here);
+  - Assist: `marketing_campaign_performance` is Assistant Y, MCP N, granted to the report readers alone, and the service checks the
+    permission and organization itself; the campaign-sent marker reads the send as stored (released, its organization), keyed by event
+    and record id so the winner's marker is its own.
+- Fixed:
+  - R1 (high; mr-boss `report/boss-marketing-audience.json`): the audience dataset's records were open to every reader (Marketing's
+    report readers and five Insights groups), and a membership record's key is ContactListParty's primary key, `contactListId::partyId::
+    fromDate`: `query#Documents` returned each member's party id as `_id`, whatever the document's fields left out. The dataset is now
+    `"rows": "restricted"` (no group holds `org.moqui.report.rows.boss-marketing-audience`), so readers get totals and
+    ROWS_RESTRICTED for the records. MarketingReports' third feature asserts the key's three parts and the refusal; it fails without the
+    change. The delivery dataset's key is the delivery id, no person, and stays open.
+  - R2 (medium; mr-mantle `MarketingAttribution.js`): tracking consent was read only on the recipient path, so an event recorded for a
+    recipient while they allowed tracking still attributed through the order's visit after they withdrew, and a customer who had
+    withdrawn tracking was attributed by their own visit's events. Now an event that names a recipient counts only while that
+    recipient's person allows tracking, and an order whose customer has withdrawn tracking with the seller takes no tracking event at
+    all (its source opportunity still counts). Attribution's first feature adds Eve (granted, then withdrawn: her own visit) and Dee's
+    visit carrying only Ben's recipient event: both MobNone; the check fails on the unfixed code.
+  - R3 (medium; `MarketingAttribution.js` `runOrderAttributions`): the job took the first 200 undecided orders of the last 30 days, and
+    purchase orders and internal customers' orders are never decided, so once 200 of them sat newest a run decided nothing, every run.
+    They are now passed over without taking a place (`skippedCount`; `maxOrders` caps the places). Attribution's second feature: with
+    two newer purchase orders and `maxOrders` 1 the missed order is decided; fails on the unfixed code.
+  - R4 (medium; mr-mantle `entity/MarketingEntities.xml`): `record#OrderAttribution` runs synchronously after every placement's commit
+    and reads MarketingTrackingEvent by `visitId` and by `visitorKeyHash`, neither indexed (nor retention's organization and date): a
+    table scan per order as the events grow. Indexes MKT_TRK_EVT_VISIT, MKT_TRK_EVT_KEY (key, date) and MKT_TRK_EVT_ORG (organization,
+    date) added to P15's entity.
+  - R5 (medium; mr-mantle `MarketingReports.js`; the worker's open question): small-cell disclosure is real. A report reader needs no
+    Sales or Commerce read, but may name a campaign's few recipients (an audience reader, a send to one or two people, an automation
+    step) and then reads one person's purchase from "1 order, $480". Built: an amount of fewer than 3 orders (one currency's orders of a
+    campaign, a link or the unattributed row) is withheld ("USD withheld (fewer than 3 orders)", amounts null, `withheld` true) unless
+    the reader may see each of those orders in Sales or Commerce; the order count is kept so the reports still reconcile; ROI over a
+    withheld net is "Too few orders to show". CampaignPerformance (and CampaignDetail's Results over it), Attribution's summary and
+    TrackingLinkResults; Commerce's `count#StoreConversions` answers store readers who see those orders already. MarketingReports' second
+    and third features read the same campaigns as the analyst (withheld) and the Sales reader (shown); they fail on the unfixed code.
+    Counts are not suppressed: they are what reconciles, and a conversion count without an amount was judged acceptable.
+  - R6 (the user's call of Nov 15, built): Assist's aggregate-only audience tool. Mantle `SegmentServices.count#Audience`
+    (MarketingEligibility.js `countAudience`): preview#Audience's matched, membership, excluded, eligible and untracked counts and each
+    bucket and reason with its count, never a row, name, address, party id or the preview's digests; MARKETING_AUDIENCE_VIEW in a Marketing
+    read (an author with send edit, who may preview, is refused) and preview#Audience's own scope checks of the topic and every source.
+    mr-boss: the AgentToolExposure `marketing_audience_counts` (Assistant Y, MCP N, AgclRead) and the artifact group
+    BOSS_MKT_ASSIST_AUDIENCE for the audience managers and the administrator. Counts are shown as they are: R5's rule withholds what a
+    reader could not see, and an audience reader can open the same people in Audience preview. Eligibility gains a feature (the buckets
+    equal the preview's, no address or party id in the answer, an author and a report reader refused, another organization's reader
+    RECORD_UNAVAILABLE).
+- Findings, numbered by the lead F398 to F401 in order:
+  - R1 to R6 above;
+  - the worker's list stands (the order's identity by its local visit, its key and the consenting customer; the unattributed
+    decision; amounts from the attributed orders' own rows; the aggregation a whole recompute; the datasets' documents in mr-boss; counts,
+    not rates, in the alerts; one attention service; Reports before Settings; split-line allocation and credits beyond returns not built;
+    the legacy member outside Audience growth's opening and closing; no campaign dimension in the delivery dataset; Commerce Home without
+    a conversion figure; the demo's empty reports; `get#TrackingLinkResults` on no screen; the import-row request named each night);
+  - amounts in the reports are summed as JavaScript numbers and rounded only for display (decimals per JS-Globals would be exact);
+    invoiced counts OrderItemBilling whatever its invoice's status (a cancelled invoice's billing still counts); neither fixed here;
+  - the remote PASS checkout's visitor key (the user's call of Nov 15) is the lead's follow-up: see "For the lead".
+- Tests run (release binary, `--nobuild`, this worktree's runtime, after the second merge): mr-mantle Attribution, MarketingReports,
+  MarketingRetention, Eligibility, SalesPipelineReports, Experiments, Tracking, BusinessEvents: 27 of 27 features, 33 s (feature time
+  6.6 s); mr-boss MarketingReports, MarketingAccess, MarketingPromotions, MarketingSends, MarketingCampaigns, InsightsHome,
+  InsightsAlerts, InsightsSettings, SalesReports, CommerceReports: 46 of 46, 40 s (feature time 15.7 s). Each new check run against the
+  unfixed code first and seen to fail. `moqui lint --screens` (release): parse failures 0, no new flagged site. Not run: test-apps, the
+  acceptance suite (MarketingReportsScenario unchanged, still not run).
+- For the lead:
+  - budget share: mr-mantle Attribution about 0.7 s (was 0.6), MarketingReports about 0.9 s (unchanged), Eligibility +0.2 s for count#Audience;
+    mr-boss MarketingReports unchanged (about 1.0 s);
+  - merge hot spots beyond the worker's list: mr-mantle `entity/MarketingEntities.xml` (three indexes inside P15's
+    MarketingTrackingEvent), `SegmentServices.xml` and `MarketingEligibility.js` (count#Audience at their ends); mr-boss
+    `data/BossSetupMarketingData.xml` (the audience tool at the end of P20's block), `screen/Marketing.xml`'s menu indexes (now 1 to 12,
+    each distinct);
+  - the user's call 1 (follow-up, mr-pass and mr-mantle): what `record#OrderAttribution` needs from a remote checkout is the visitor key's
+    digest on the order. The field: `visitorKeyHash`, the same digest P15 stores on events (MarketingTracking.js `digest("mkt-visitor:"
+    + visitorKey)`, to be exported), kept with the order, e.g. an extend-entity field `OrderHeader.marketingVisitorKeyHash` (or a
+    MarketingOrderVisitor row keyed by orderId). Where it arrives: PASS's checkout operation sends the raw visitor key (the frontend's
+    first-party cookie, `^[A-Za-z0-9_-]{16,64}$`) in the facade's checkout call to the authority (the facade's schema gains the
+    parameter), and the authority's checkout service writes the digest in the placement's own transaction, before `place#Order`, so
+    the SECA's call sees it; the raw key is never stored. The consent check, made by the authority when it stores the digest: the key is
+    kept only where P15 would have recorded it, the seller's MarketingPolicy `visitorKeys` Y or the customer allowing tracking with the
+    seller (`trackingAllowed(customer, null, seller)`), and never for a customer who has withdrawn tracking (R2's `trackingWithdrawn`);
+    `record#OrderAttribution` then reads events by that digest with identity "visitorKey" (one more `eventsWhere` call beside the visit's
+    keys), R2's recipient check still applying. The acceptance scenario's remote-PASS order then attributes by key;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`; no mr-moqui worktree), the worker's paragraph corrected: "Marketing's
+    attribution and reports (`mantle.marketing.TrackingServices` record#OrderAttribution, correct#OrderAttribution,
+    run#OrderAttributions; `mantle.marketing.MarketingReportServices`; `SegmentServices.count#Audience`; all `allow-remote="false"`). The
+    decision is made by the order SECA's handler after the placement commits and by the job, as the system, never from a request: the
+    order's local visit and the visitor-key digests that visit's events carried, or its customer as a recipient who allows tracking
+    (PcpTracking), consent read when deciding (an event of a recipient who no longer allows tracking is no evidence; a customer who
+    withdrew tracking is attributed by no tracking event); never an automated fetch, an open or a cross-device guess; a purchase order
+    or an internal customer's order is never attributed. A correction needs MARKETING_CONFIGURE in the seller's organization, the
+    decision read and a reason, and ends the decision rather than changing it. The reports answer a report reader
+    (MARKETING_REPORT_VIEW) of the organizations of their Marketing scope with aggregates only (no person, address or token); an amount
+    of fewer than three orders is withheld unless the reader may see each order in Sales (SalesAccess orderOf) or Commerce, and an
+    attributed order's own row needs the same read; amounts never added across currencies; past a limit TOO_MANY_RECORDS.
+    `count#Visits` and `count#SalesVisits` answer a Marketing reader or a Sales report reader of the organization a count;
+    `count#StoreConversions` checks each store through StoreAdmin. Marketing's datasets (`boss-marketing-deliveries`,
+    `boss-marketing-audience`) carry no recipient, member or address and are scoped by `get#ReportRowFilter` (the ReportScopePolicy
+    MantleMarketingScope: a report reader's Marketing organizations; another userId refused); the audience dataset's records are
+    restricted (a membership's key names its member), its readers get totals. Assist's `marketing_campaign_performance` reads
+    get#CampaignPerformance as the user and `marketing_audience_counts` reads `count#Audience` (bucket and reason counts only, an
+    audience reader of the topic's organization), both Assistant only, never MCP. Retention removes unconfirmed requests, old tracking
+    events (never one an attribution names) and expired link tokens, and clears purged import rows' names.";
+  - the user's calls: none open from this review (both of Nov 15 recorded in §4).
+
 ### P21 — Calendar, shell providers and Assist
 
 Design §3 Calendar, §1.3 (CX-ASSIST, CX-SYNC, the Comms hooks), §14.3 (Today, palette, notifications), QuickCreate;
@@ -1373,6 +5996,186 @@ MKT-SHELL, MKT-SYNC, MKT-ASSIST; gate 7.
 - **Usable when** (`test/acceptance/client/Marketing/MarketingCalendarWalk`): the calendar shows a campaign's window, a
   scheduled send and an event; dragging the event moves it and the send cannot be dragged; a phone subscribed to the
   collection lists the same items read only; the palette finds a campaign and a send by name.
+
+**Built Nov 15 (P21).** mr-mantle and mr-boss on branch `mkt/p21` (hashes in the worker's reply), from master after P20's merge and
+follow-up 3; mr-moqui and mr-pass unchanged, no Rust built. Built beside follow-up 4 (`mkt/fix4`) and P22 (`mkt/p22`; the hot spots below).
+- Checked first (the code over the plan): P16's to P20's Built and Review notes, §4 (every user's call), F47, F71, F86; Commons'
+  Calendar.qvue and its mounts (Projects' Plan/Calendar, People's TeamCalendar, Manufacturing's ResourceCalendar), Mantle's
+  `get#EventInstances`, `define#ProjectionOwner` and its owners (People's, Maintenance's), the Today contract (`get#UserTodayItems`),
+  the record-lookup and call-context interfaces (`org.moqui.comms.ProviderInterfaces`), Sales' providers (SalesComms.js, LogNote,
+  SendMessage), Marketing's root providers as P2–P20 left them. The code over the plan:
+  - most of the shell was already there: the palette (campaigns, segments, lists, sends, automations), QuickCampaign, QuickList,
+    QuickEvent and the three `assist-prompt`s (SendDetail's "Why were recipients excluded?" since P8), the three skills and Assist's
+    exposures over Mantle's user-facts provider (`mantle.party.UserFactServices`, Sales P6; P20's two tools). P21 adds the rest;
+  - "the read-only items of `MarketingWorkspaceServices.get#CalendarItems`" and "the events of authorized campaigns" through
+    `get#FullCalendarData`: one W service answers both (`get#CalendarItems`, MarketingCalendar.js, each source on its own and named when
+    it fails): campaign windows, scheduled sends, automation milestones (activation and end; a reader of automations), approved
+    publication dates (a campaign's blog post whose page has a published version, on its publish date; its landing page live or with a
+    scheduled version) and the events Marketing offers (registration events of the scope and events linked to its campaigns by
+    CakEvent), expanded by `get#EventInstances`: `get#FullCalendarData` reads calendars, parties and resources, not a campaign's events;
+  - "only an event is dragged": the screen's moveEvent (and cancelEvent) first asks the new `W.check#CalendarEvent` (an event the
+    scope's calendar holds, an instance through its series; anything else, a send among them, RECORD_UNAVAILABLE), then Commons'
+    `get#EventAccessInfo` edit rule and `update#EventOccurrence`; an event's canEdit is Commons' check, every other item read only;
+  - Calendar is Commons' component in its resource mode (no rail, no New), with four item kinds added to Calendar.qvue (campaign, send,
+    automation, publication: their colors and icons; Commons' owner contract, its comment says so); hidden from the menu: design §1.2's
+    "calendar shortcut" is Home's Calendar button and the key g k; the terminal twin is CalendarTui (four weeks);
+  - "the event maps of the authorized campaigns' windows, sends and milestones" (F71): `get#CampaignCalendar` answers the same sources
+    as the screen, events and publication dates included (design §19 MKT-SYNC names them), 30 days back to 180 ahead; admitted for
+    MARKETING_VIEW, so a report-only reader reads the screen (any Marketing read) and gets no collection;
+  - "Mantle `test/work/CalendarDav` gains the projected collection": no such spec exists; the collection's features are in the new
+    `test/marketing/MarketingCalendar`;
+  - "record-lookup", "call-context" and Today: `ironstone.marketing.ContextServices` gains `get#TodayItems`, `lookup#Records` and
+    `get#CallContext`, design §14.2's "shell registrations" of the ContextServices row (§2's "only" list of four predates them); Today's
+    sources are Mantle's (`W.get#TodayItems`: sends due by the end of the day or sending, approvals awaiting the approver, sends with a
+    failed or uncertain delivery in 30 days, offers still to come with registrations to review, each with a route key), and a source of
+    Mantle's that fails is an item naming it ("… could not be read just now"), so Today names it and shows the rest, besides the
+    framework naming a failing provider; a registration is found and carded by its id and offer, never its attendee;
+  - "the Today and palette sources complete": the palette gains the registration events (opening RegistrationSetup) and a registration
+    by its id (an events manager's); each find already fails alone, logged by name;
+  - "the 'Log as note' and 'Send as message' response actions": `Marketing/LogNote` (a campaign or a send: the record panel's hosts) and
+    `Marketing/SendMessage` (Comms' internal message, filed on the page's campaign or send when Marketing admits the user), as Sales';
+  - "`skill/aliases.json` (campaign, send, list, segment)": campaign, send and segment were there; list added; the campaign summary
+    skill reads the calendar (its screens and a step); two retrieval cases (a list's reach, the campaign's schedule on the Calendar).
+- Mantle:
+  - `service/mantle/marketing/MarketingCalendar.js` (new) under `MarketingWorkspaceServices.xml` (a P21 block at the end):
+    `get#CalendarItems`, `check#CalendarEvent`, `get#CampaignCalendar` (define#ProjectionOwner) and `get#TodayItems`, all
+    `allow-remote="false"`, read only.
+  - `data/MarketingSeedData.xml` (a P21 block at the end): the CalendarProjection `MarketingCampaigns`, "Campaign calendar".
+- BOSS:
+  - Screens: `Marketing/Calendar.xml` (Calendar.qvue; calendarSetup, calendarEvents, eventSummary, moveEvent, cancelEvent, respond) and
+    `Marketing/CalendarTui.xml` (new); `Marketing/QuickCreate/NewSend.xml`, `Marketing/LogNote.xml`, `Marketing/SendMessage.xml` (new);
+    `Marketing.xml` (a P21 block at the end of the subscreens; the quick create's send, today-source, record-lookup, call-context and
+    the two response actions before the keymap; the key g k at the keymap's end; the header comments); `Marketing/Home.xml` (the
+    Calendar shortcut); `Commons/Calendar.qvue` (the four kinds).
+  - `Marketing.js` (the P21 link paths at the end of linkPaths; the event and registration finds at the end of searchFinds; a P21 block
+    before the operations: routePaths and placeOf, lookup, partiesOfNumber, callContext, today; the operations and the export);
+    `ContextServices.xml` (a P21 block at the end; the header comment).
+  - Assist: `skill/aliases.json` (list), `skill/marketing-campaign-summary.md` (the calendar), `skill/marketing-audience-check.md` (two
+    aliases), `test/skill-retrieval.json` (two cases).
+- Specs:
+  - Mantle `test/marketing/MarketingCalendar` (new, 4 features, about 0.7 s: the organization's campaign window, scheduled send and
+    registration event and nothing of another organization (refused by name), a backwards range refused, a report reader's read; only an
+    event of the calendar is one a drag may move, a send and another organization's event refused; the Campaign calendar collection
+    listed for MARKETING_VIEW and not for a report-only reader, read only, holding the campaign, send and event and nothing of the other
+    organization, no address, a device PUT refused 403; Today's sends due for an author and none for a reader).
+  - mr-boss `test/Marketing/MarketingShell` (new, 4 features, about 1.7 s: Calendar's one qvue render and its calendarEvents transition
+    with the demo running campaign's window, its December send opening SendDetail and its webinar, another organization's campaign
+    absent, the send's drag refused (RECORD_UNAVAILABLE), CalendarTui's one html render; the root's providers (quick create's send, Today,
+    the answer actions, g k) and NewSend's one render with the campaign fixed, a reader told they write no sends; Today with a failing
+    provider named and Marketing's answered, no address or token, another app's user nothing; the palette's send, record-lookup's info,
+    links and a registration's card (never its attendee), call-context's upcoming registration for an events manager and none for a
+    reader, another organization's author shown nothing). Changed: `MarketingSpecLib` (the author's keys with g k).
+  - Acceptance, written and not run: `test/acceptance/client/Marketing/MarketingCalendarWalk` (4 features, stepwise, as the webinar's
+    organizer: the calendar from Home's shortcut with the campaign's window, its December send and the webinar; the webinar dragged to the
+    next day and moved, the send dragged and not moved, then opening SendDetail; an app password made on Sync and the Campaign calendar
+    listed over CalDAV with the campaign and send, the send's object read and its PUT refused 403; the palette finding the campaign and
+    the send; the webinar moved back in cleanupSpec).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle MarketingCalendar, MarketingScope, Dav, MaintenanceStack,
+  CommonsToday (39 of 39); mr-boss MarketingShell, MarketingAccess, MarketingCampaigns, MarketingSends, MarketingEvents, Schedules,
+  PublishedCalendar, TodayPanel (all passing); `moqui test mr-boss --skills` recall@3 1.00 (56 of 56), no strong false match (the
+  people-policy-question description warning as before). `moqui lint --screens` (release): 143 flagged sites as after P20, none in a new
+  or changed screen; parse failures 0. Prettier (mr-moqui's config) clean on the new and changed JavaScript. Not run: test-apps, the
+  acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P21" table; ss-inventory's MyCalendar NewEventForm row (the calendar moves the events,
+  creating none).
+- Design edits: design-marketing §3 Calendar and §14.3 QuickCreate (as built).
+- Findings, numbered by the lead F408 to F413 in order:
+  - the code over the plan above: one W service for the calendar's items and events (get#EventInstances, not get#FullCalendarData);
+    `check#CalendarEvent` before a drag; the resource mode with four new kinds in Commons' Calendar.qvue; Calendar hidden from the menu
+    (Home's shortcut and g k); the collection with events and publication dates; no test/work/CalendarDav (the new MarketingCalendar);
+    three more ContextServices (§2's list of four is stale); a failing Today source of Mantle's as a named item;
+  - Home's Upcoming still answers its events and publication-date sources "Not available" (since P1; MarketingAccess reads that text):
+    get#CalendarItems' sources could now answer them; left as they are (P23, or a follow-up, changes the spec with them);
+  - a third copy of the phone matching (`partiesOfNumber`: SalesComms.js, Maintenance's Stack.js, now Marketing.js): a Mantle helper
+    would serve all three;
+  - design §14.3 names EventRegistration a record-panel host, but the root admits only the campaign, the send and the contact (P17 did
+    not add it), so "Log as note" files on a campaign or a send, and a registration's page offers no note;
+  - a moved event's notification links Commons' EventDetail (as Projects' calendar does), not Marketing's mount;
+  - the demo's December send keeps a fixed date (2026-12-01, not load-relative): MarketingShell reads its range from the row, so it
+    passes on any day; the walk's collection holds it only while it is within 180 days of the run.
+- For the lead:
+  - budget share: mr-mantle about 0.7 s (MarketingCalendar); mr-boss server about 1.7 s (MarketingShell; MarketingAccess unchanged in
+    time); no client spec in the regression suite;
+  - merge hot spots (follow-up 4 and P22 beside): mr-boss `screen/Marketing.xml` (the P21 subscreens block at the end, the P21 providers
+    block before the keymap, g k at the keymap's end, both header comments), `service/ironstone/marketing/Marketing.js` (the end of
+    linkPaths and of searchFinds, the P21 block before `const operations`, the operations and export lines), `ContextServices.xml` (the
+    block at the end), `test/Marketing/MarketingSpecLib.js` (authorKeys), `screen/Marketing/Home.xml` (the header's actions),
+    `screen/Commons/Calendar.qvue`, `skill/*`, `test/skill-retrieval.json`, `plan/usl-inventory.md` (after P20's table),
+    `plan/ss-inventory.md`, `plan/design-marketing.md` (§3, §14.3), this file; mr-mantle `MarketingWorkspaceServices.xml` and
+    `data/MarketingSeedData.xml` (P21 blocks at the ends). SendDetail and BossSetupMarketingData.xml are untouched;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`; no mr-moqui worktree), beside Marketing's paragraphs: "Marketing's
+    campaign calendar (`mantle.marketing.MarketingWorkspaceServices` get#CalendarItems, check#CalendarEvent, get#TodayItems,
+    get#CampaignCalendar, all `allow-remote="false"`): dates and names of the campaigns, sends, automations, published content and
+    events of a Marketing reader's organizations, no recipient, attendee, address or token; a calendar drag moves only an event the
+    scope's calendar holds, through Commons' edit rule. The projected CalDAV collection `projected-MarketingCampaigns` ("Campaign
+    calendar") is read only (a device write refused 403) and admits a holder of MARKETING_VIEW. The shell's record-lookup and
+    call-context (ironstone.marketing.ContextServices) answer a campaign, send or registration only to a user Marketing shows it to,
+    a registration by its id, never its attendee.";
+  - nothing needs the user's call; gate 7 is yours.
+
+**Review Nov 15 (P21).** mr-mantle and mr-boss on `mkt/p21`, read line by line against the phase text, §2, §4 and design §3 Calendar,
+§1.3 and §14.3; no Rust, no framework change.
+- Checked and sound:
+  - organization scope on every item: each calendar source (campaign windows, sends, automation milestones, publication dates, events)
+    reads only the organizations of the caller's Marketing scope, a named organization outside it refused (ORGANIZATION_DENIED); the
+    events are the scope's registration events and its campaigns' CakEvent links, and a CakEvent link is made only to a registration
+    event of the campaign's own organization (MarketingCampaigns.js `associationKinds.CakEvent`), so no other organization's event
+    reaches a calendar; automations only for an automation reader, as AutomationServices ask; the reads mirror the record services
+    (anyRead for campaigns, sends, content and events);
+  - no attendee, address or token in any shell row: calendar items and the projection's event maps carry names, states and dates (the
+    projection leaves out an event's location); Today counts deliveries and registrations, never a recipient; the registration card,
+    palette row and call-context row name the registration by id and offer; record-lookup answers only a reader of the record's
+    organization (an events manager for a registration) and leaves the rest to other providers;
+  - only an event moves: Calendar's moveEvent and cancelEvent call `check#CalendarEvent` (an event the scope holds, an instance
+    through its series) before Commons' `get#EventAccessInfo` edit rule and `update#EventOccurrence`; a send, an automation or another
+    organization's event is RECORD_UNAVAILABLE and every non-event item is canEdit false; moving a registration event keeps its
+    offers right (a single event's occurrence is its own start; the notices job tells registrants of a moved occurrence);
+  - the projection: `admitted` only for MARKETING_VIEW (a report-only reader gets none), read only (a device PUT 403), its window 30
+    days back to 180 ahead bounded at 400 days; every P21 service `allow-remote="false"`;
+  - each provider fails by name alone: calendar and Today sources each in their own pushErrors block, a failure logged and named
+    (failedSources; Today's a "could not be read just now" item) while the rest answer; the palette's and lookup's finds each in a
+    try; Today answers another user's Today and a non-reader nothing;
+  - LogNote, SendMessage and NewSend re-check the record through `check#Record` in the transition (the form's hidden fields are the
+    client's), and Mantle's services check again; nothing is filed or sent before the user submits;
+  - the screens: Calendar has one qvue render and CalendarTui one html render in the regression suite; no route fixture; specs well
+    under 15 s.
+- Fixed:
+  - R1 (medium; the worker's provisional finding): Home's Upcoming still answered its events and publication-date sources "Not
+    available" seven phases after both were built, while P21's calendar reads exactly those sources. Mantle `MarketingCalendar.js`
+    exports `upcomingRows` (one calendar source from now through the next days as Upcoming rows) and `MarketingWorkspace.js`'s
+    `events` and `publications` sources run it over Upcoming's 60 days (a failure named as any source's); Home's places gain
+    `marketingEvent` (EventDetail) and `marketingContent` (ContentDetail). MarketingCalendar gains a feature (Upcoming's four sources
+    available, the organization's event listed with its route, another organization's absent; it fails on the unfixed code, where
+    the two sources are notAvailable) and MarketingAccess now reads that the author's Home shows no "Not available".
+  - R2 (low; tests): MarketingShell checked another organization only through record-lookup's info, and its `!send.movable` read a
+    field no item has. It now also checks that Services' author's calendarEvents over the send's and the webinar's days hold none of
+    Retail's campaign, send or webinar, and that their palette does not find Retail's December send; the empty check is gone.
+- Findings, numbered by the lead F414 to F418 in order:
+  - the demo's December send keeps a fixed 2026-12-01 date (the worker's finding, confirmed): MarketingShell reads its range from the
+    row and passes on any day, but the acceptance MarketingCalendarWalk's CalDAV feature finds the send only while it is within the
+    projection's default window (30 days back, 180 ahead), so from 2026-12-31 on its listing and object checks fail (the campaign's
+    window from about 2027-01-30), while its month views and drags, which read the row's date, keep working; the answer is the demo's send dates relative to the load, as follow-up 3 made the events',
+    which touches every spec that reads the December send (MarketingSends, MarketingApprovals and others): not this phase's, left;
+  - EventRegistration is not a notes-and-files record (design §14.3 names it a record-panel host; P17 did not add it), so "Log as
+    note" serves a campaign or a send: confirmed; the record host is P17's owner-contract work, not P21's, left for a follow-up;
+  - a third copy of the phone matching (`partiesOfNumber`, as SalesComms.js and Maintenance's Stack.js): confirmed, a Mantle helper
+    for the three belongs to a cross-app follow-up, not this phase;
+  - a moved event's notification links Commons' EventDetail, as Projects' calendar does (the worker's): acceptable, the event is the
+    calendar's;
+  - Today's Marketing feature in MarketingShell checks the group is present but not that the dispatcher gets an item (the demo has no
+    send due today); Mantle's MarketingCalendar covers the sends-due source.
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle MarketingCalendar (5 of 5, about 0.7 s), MarketingScope
+  (6 of 6); mr-boss MarketingShell (4 of 4, about 1.5 s), MarketingAccess (8 of 8). `moqui lint --screens` (release): Home.xml's
+  sites as before (none flagged new). Prettier clean on the changed JavaScript. Skills untouched by the review (no `--skills` run).
+  Not run: test-apps, the acceptance suite.
+- For the lead:
+  - budget share: mr-mantle MarketingCalendar about 0.7 s (one feature added, 0.04 s); mr-boss MarketingShell about 1.5 s;
+  - merge hot spots beside the Built note's: mr-mantle `MarketingWorkspace.js` (Upcoming's events and publications sources) and
+    `MarketingWorkspaceServices.xml` (get#Upcoming's description); mr-boss `screen/Marketing/Home.xml` (the header comment and the
+    places map), `test/Marketing/MarketingAccess.spec.js` (the Home assertion);
+  - the Attack-Surface paragraph the Built note gives stands as written; Home's Upcoming now adds the calendar's events and
+    publication dates (names and dates only) to a Marketing reader's Home;
+  - the user's call: whether the demo's sends get load-relative dates (the walk's collection feature depends on it).
 
 ### P22 — SMS
 
@@ -1410,6 +6213,238 @@ built (F19). SMS is in this build, last, after the first release's gate (§4).
   members goes out with its segment estimate shown at approval, a member's STOP removes them from the next send,
   and an organization with no messaging number sees SMS not ready while its email sends work.
 
+**Built Nov 15 (P22).** mr-moqui, mr-mantle, mr-boss and mr-pass on branch `mkt/p22` (hashes in the worker's reply), from master after
+P20's merge; the framework part first, in mr-moqui, committed apart ("Marketing P22: a conf-level sms-consent provider and a day limit
+per sending number for promotional texts"). Built beside follow-up 4 (`mkt/fix4`) and P21 (`mkt/p21`; the hot spots below).
+- Checked first (the code over the plan): §5 Q6 and §4 (Nov 11, Nov 13), F19, F57, F72–F74; P6's, P8's, P9's, P11's and P20's Built and
+  Review notes; the framework's Sms.js (check#SmsSend, send#SmsMessage, the opt-out), screen/shell.rs and service/shell.rs
+  (call#Providers), the Telnyx adapter (a direct text's outcomes); Mantle's ledger (MessageDeliveries.js), sending profiles,
+  suppressions, ConsentServices record#PartyConsent, MarketingEligibility.js (the SMS channel already classified there), MarketingSends.js,
+  MarketingDispatch.js, MarketingAutomations.js, MarketingPortal.js and AccountHub.js. The code over the plan:
+  - the conf-level provider is `screen-facade/shell-providers` in a component's MoquiConf.xml, with the app root's element names
+    (`<sms-consent name service sequence/>`), admitted for the hooks in `CONF_PROVIDER_HOOKS` (sms-consent alone; another is logged and
+    left out) and asked by call#Providers after the apps' providers for every caller, the system with no user included, with
+    authorization disabled (the trusted conf names it); an app's provider of the same name is asked in its place; Sms.js now asks
+    call#Providers with authorization disabled (a system text with no user was refused before reaching a provider);
+  - the day limit per sending number is VoicePolicy `smsMaxPromotionalPerNumber` (1000 when empty; System, Voice, Fraud), counted as
+    `promo:<number>`: a promotional text with no user counts there alone (not against `smsSystemMaxPerDay`, so a campaign never spends
+    sign-in codes' budget), one with a user there too beside the user's limits; no per-number override (a finding);
+  - send#SmsMessage also answers `deliveryOutcome` (retryable, permanent, uncertain) as send#EmailTemplate does, so the ledger maps its
+    answer without parsing reason codes; the ledger calls it in a transaction of its own (its refusal is an error that would otherwise
+    roll back the attempt's record);
+  - "an SMS sending profile bound to one of the organization's messaging numbers": a number is the organization's when it is one of its
+    current telecom numbers (E.164 from its country code, else the deployment's rules) and one of our numbers (moqui.call.PhoneNumber)
+    with a messaging bridge there and not disabled; Mantle had no link between an organization and a number (a finding);
+  - "phone numbers normalized from the contact's own country": the TelecomNumber's own country code, else the deployment's home country
+    (CallHandlingServices normalize#PhoneNumber); Geo has no telephone code, so a postal address's country is not used; the recipient's
+    key (MarketingEligibility.js phoneOf) is now that E.164 number (it was + and the digits, which for a number with no country code was
+    no number);
+  - the sms-consent answer counts a `PcpSms` grant of one of the organization's topics (the latest row of a list it owns) as consent with
+    it, beside the organization's and the global purpose rows (a topic subscriber holds only the list row); a global or organization
+    withdrawal says no;
+  - a STOP becomes the withdrawal through an EECA on the framework's `moqui.call.SmsOptOut` (on create and update, optedOut Y with
+    lastKeyword STOP), in its own transaction, a failure logged (the opt-out the framework keeps never waits on it); the withdrawal is the
+    organization's `PcpSms` purpose row (source PcsSmsReply), once, for every party holding the number, and one suppression (MsrSmsStop,
+    MssSmsReply) per organization that owns our number; START ends neither;
+  - a send's channel is its topic's (a list of phone numbers), so `channelEnumId` is checked against it rather than chosen; the text is
+    the content's text alternative (no subject, body, attachment, tracking or unsubscribe link; "Reply STOP to opt out" added when it has
+    no STOP), at most 1600 characters (the bridge's default); the release's unsubscribe-link check passes an SMS profile;
+  - "the configured cost estimate": the profile's `segmentCost` and its currency (the provider's price belongs with the number), times
+    the segments, a message and for the prepared recipients; the estimate is of the text with its variables unfilled;
+  - the day's limit reached is not a retryable try: the delivery waits for the next UTC day untried; a STOP (`optedOut`) or the hook's no
+    (`consentRequired`) is suppressed, never retried;
+  - "the Send SMS step in AutomationDetail": an automation's channel is its topic's, so an automation of a list of phone numbers has Send
+    SMS steps (AskSendSms, the template's text alternative) and refuses Send email there (CHANNEL_INVALID), and the reverse;
+  - "PASS Email preferences' SMS topics": the organization's offered text message topics are shown; one the person is on may be left (as
+    an email topic), one they are not on is named with how to join, never turned on there (turning it on would file the email address
+    for a list of phone numbers; it needs a phone number's own evidence);
+  - DeliveryAnalysis already has no open rate for SMS (P20); nothing changed there. An experiment stays email only (P10).
+- mr-moqui (framework): `screen/shell.rs` (CONF_PROVIDER_HOOKS, `conf_providers_of`, `conf_providers`), `screen/cache.rs` (ScreenConf
+  `providers`), `context/conf.rs` (the merge by hook and name), `service/shell.rs` (call#Providers and get#Providers with the conf's),
+  `moqui-conf-3.xsd`, ShellServices.xml, ProviderInterfaces.xml (sms#Consent); Sms.js (the counters, `promo:<number>`,
+  `deliveryOutcome`, the providers asked with authorization disabled), SmsServices.xml (check#SmsSend, note#SmsSent and release#SmsSend
+  take fromNumber and isPromotional), org/moqui/SmsServices.xml (deliveryOutcome), VoiceEntities.xml, Voice.js, VoiceServices.xml and
+  basic-comms `System/Voice/Fraud.xml` (smsMaxPromotionalPerNumber); docs `interfaces/SMS.md`, `tools/Comms.md` ("Provider hooks": the
+  conf's), `dev/JS-Framework-Services.md`. No host (ec.*) member, so no moqui-host.d.ts change.
+- Mantle: `service/mantle/party/MessageSms.js` and `MessageSmsServices.xml` (new: numbers, the SMS profile's checks, the estimate, the
+  sms-consent answer check#SmsConsent, the STOP's note#SmsKeyword), `entity/MessageSmsEntities.xml` (new: MessageSendingProfile
+  fromPhoneNumber, segmentCost, segmentCostUomId), `entity/SmsOptOut.eecas.xml` (new), `data/MessageSmsSeedData.xml` (new: MdcSms,
+  PcsSmsReply, MsrSmsStop, MssSmsReply, AskSendSms; their types load after an entity file's seed), `MoquiConf.xml` (the sms-consent
+  provider); P22 blocks in `MessageSendingProfiles.js` (the SMS profile, its readiness, numberOptions, forDelivery's fromNumber),
+  `MessageDeliveries.js` (attemptSms), `MessageSuppressions.js` (the SMS channel), `MessageServices.xml`, `MarketingSends.js` (the
+  channel, the text, the estimate, the SMS test, prepare's and approval's checks), `CampaignSendServices.xml` (smsEstimate, smsText),
+  `MarketingDispatch.js` (smsDelivery, the E.164 address, the unsubscribe-link check), `MarketingEligibility.js` (phoneOf),
+  `MarketingAutomations.js` (Send SMS), `MarketingPortal.js` and `public/AccountHub.js` (text message topics).
+- BOSS: `Shared/SendingProfiles.xml` (the channel and sender columns, New text message profile, the readiness's fix place),
+  `Marketing/Sends/Compose.xml` (the text, its estimate; no subject, body or attachment for SMS), `Sends/SendDetail.xml` (the estimate in
+  the Summary and the approver's dialog; the text in place of the body), `Automations/AutomationDetail.xml` (Send SMS), `Marketing.js`
+  (a P22 block: `smsReadyOrganizations`; `sendTopics` offers lists of phone numbers once an SMS profile is ready, `sendProfiles` names an
+  SMS profile).
+- PASS: `screen/Account/Hub.js` (the text message topics on Email preferences).
+- Specs:
+  - mr-moqui (Rust): moqui-channels `a_campaign_text_is_asked_of_the_conf_provider_and_counts_for_its_number` (a conf's sms-consent yes
+    sent, a no and no answer refused before the provider, a conf's inbox-source left out and get#Providers listing the conf's; a lost
+    answer uncertain and a 503 retryable for the caller's ledger; the number's day of promotional texts reached while a sign-in code still
+    goes, the system's budget unspent), moqui-core `a_components_conf_providers_merge_by_hook_and_name`; `cargo test -p moqui-channels`
+    11 of 11, moqui-core's conf and shell tests (20 of 20), clippy on both crates clean, rustfmt on the changed files.
+  - Mantle `test/marketing/SmsSends` (new, 8 features, about 1.9 s: an SMS profile refused a number the organization does not have and
+    ready only with the number's bridge; no SMS send without a ready SMS profile, an email profile refused for a text (PROFILE_CHANNEL);
+    no text without PcpSms on the topic, the estimate before approval, a delivery queued for a member without consent suppressed at the
+    attempt with no hand-off; the dispatch as the system passing Mantle's sms-consent and reaching the framework (the closed local port
+    retried, its count given back); an uncertain text not handed off again; the answer no for a number with consent to another
+    organization only and for a number no organization owns; a STOP withdrawing and suppressing once, a START ending neither and the next
+    preparation leaving the person out; an automation of a list of phone numbers taking Send SMS and refusing Send email). The provider
+    is the framework's Telnyx adapter at 127.0.0.1:9, so nothing leaves the machine; the provider's own answers are moqui-channels'.
+  - Acceptance, written and not run: mr-boss `test/acceptance/Marketing/MarketingSmsScenario` (4 features, stepwise: the administrator's
+    SMS profile on Retail's number, ready; a text send to the consenting members with its segment and cost estimate on SendDetail at
+    approval, each consenting member's text handed to the framework and the one without consent no recipient; a STOP removing the member
+    from the next send; Ziziwork Services with no messaging number refused a text send and offered no list of phone numbers while its
+    email send is made).
+- Tests run (this worktree's Debug binary, `target/debug/moqui`, built with CARGO_BUILD_JOBS=4, through the mr-moqui worktree's `./moq
+  ... --debug --nobuild` with MOQUI_RUNTIME=.claude/worktrees/mkt-p22/runtime; the shared release binary lacks the framework change):
+  framework Voice (13 of 13); mr-mantle SmsSends (8 of 8), Sends, Dispatch, Automations, Experiments, MarketingSubscriptions,
+  DeliveryLedger, SendingProfiles, Suppressions, Eligibility, Audiences, AudienceImport, Consent, MarketingReports, MarketingForms (85 of
+  85), ShopCustomer, ShopCheckout, CartRecovery; mr-boss MarketingSends, MarketingAutomations, MarketingDelivery, MarketingTemplates,
+  MarketingAccess, MarketingReports (19 of 19); mr-pass ShopAccount. `moqui lint --screens` (Debug): parse failures 0, 143 flagged sites
+  as on master, none in a changed screen. Prettier (mr-moqui's config) on the changed Mantle and BOSS JavaScript that was clean before
+  (MarketingEligibility.js and PASS's Hub.js were not and are left so). Not run: test-apps, test-framework, the acceptance suite.
+- Inventories: usl-inventory's "Added in Marketing P22" table; ss-inventory has no row for these screens.
+- Design edits: design-marketing §12 (as built, after P6's paragraph).
+- Findings, numbered by the lead F424 to F431 in order:
+  - the code over the plan above: the conf-level provider's form and authorization; the per-number limit as one policy value, a
+    campaign's texts apart from the system's budget; send#SmsMessage's deliveryOutcome; an organization's number as its telecom number
+    that is one of ours with a bridge; normalization from the number's own country code else the deployment's; topic grants counted by
+    the sms-consent answer; the STOP's EECA; a send's and an automation's channel from the topic; the cost a segment on the profile; the
+    day's limit waiting untried; Email preferences never turning a text topic on;
+  - Mantle had no relation between an organization and one of our numbers (moqui.call.PhoneNumber): an organization's messaging numbers
+    are its own telecom numbers that are ours; a number two organizations list belongs to both (the sms-consent answer asks every owner);
+  - a receipt for a campaign's text is still dropped (F73): the framework keeps no row of a direct text, so DeliveryAnalysis shows
+    hand-off outcomes for SMS (§7);
+  - no per-number override of the promotional day limit (one VoicePolicy value for every number), though 10DLC campaigns differ per
+    number;
+  - the estimate is of the text with its variables unfilled (a long first name may add a segment); the cost is the profile's configured
+    price, not the provider's;
+  - a person joins a text message topic only through an import or staff with evidence: PASS Marketing's public subscription (P7) offers
+    email topics, and Email preferences never turns a text topic on;
+  - a provider service written as an inline script finds its `toNumber` parameter shadowed by the scripts' global `toNumber` helper (it
+    must read `ec.context.toNumber`; Mantle's reads the parameter map);
+  - the uncertain SMS hand-off is set by hand in the Mantle spec (the framework's lost answer is moqui-channels' test; an app spec has no
+    provider that drops a connection: the adapter's HTTP client is moqui-lib's, outside the HTTP fixtures).
+- For the lead:
+  - budget share: mr-mantle about 1.9 s (SmsSends); mr-boss and mr-pass none (no regression spec changed); framework: two Rust tests
+    well under a second (moqui-channels about 0.2 s).
+  - merge hot spots: P21 (`mkt/p21`) beside: mr-boss `service/ironstone/marketing/Marketing.js` (a P22 block before `choiceSources`, and
+    `sendTopics` and `sendProfiles`), `screen/Marketing/Sends/SendDetail.xml` (P21's Assist prompt; P22's header comment, actions and the
+    Summary and content boxes), `plan/usl-inventory.md` (a table after P20's), `plan/design-marketing.md` (§12), this file; follow-up 4
+    (`mkt/fix4`) beside: mr-mantle `MarketingPortal.js` (topicView) and `public/AccountHub.js` (storeMarketing) may meet it. mr-mantle
+    `MarketingSends.js`, `MarketingDispatch.js`, `MarketingAutomations.js`, `MessageDeliveries.js`, `MessageSendingProfiles.js`,
+    `CampaignSendServices.xml` and `MessageServices.xml` (P22 blocks and branches), `MoquiConf.xml` (a screen-facade before
+    webapp-list); new files MessageSms.js, MessageSmsServices.xml, MessageSmsEntities.xml, SmsOptOut.eecas.xml, MessageSmsSeedData.xml,
+    SmsSends.spec.js, MarketingSmsScenario.spec.js. mr-moqui: the framework commit stands alone (moqui-core shell, conf and cache;
+    moqui-channels tests; Sms.js; docs); `./moq test-framework` has not run on it.
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`), beside the Comms providers' and Marketing's paragraphs: "A component's
+    MoquiConf.xml may register a provider of the hooks the framework asks for whoever acts (`screen-facade/shell-providers`; only
+    `sms-consent`, `CONF_PROVIDER_HOOKS`; any other element is logged and left out). call#Providers asks it after the apps' providers for
+    every caller, the system with no user included, with authorization disabled, since the deployment's conf names it: such a provider
+    answers only what its hook asks (Mantle's check#SmsConsent reads consent and suppression rows and answers yes or no, nothing else). A
+    promotional text counts against its number's day of promotional texts (VoicePolicy smsMaxPromotionalPerNumber, 1000), and one with
+    no user not against the system's own budget, so a campaign cannot use up sign-in codes. Marketing's texts
+    (mantle.party.MessageSmsServices, all `allow-remote="false"`; the ledger's SMS channel) are sent as the system from an SMS sending
+    profile's number, which must be one of the organization's telecom numbers that is one of ours with a messaging bridge
+    (MESSAGE_SENDING_CONFIGURE sets it); each text is checked for `PcpSms` consent on the send's topic and the SMS suppression before the
+    call, and again by the framework's sms-consent hook (yes only for a party holding the number with PcpSms granted with an organization
+    that owns the sending number and no suppression there); a STOP the framework keeps becomes a PcpSms withdrawal and a suppression (an
+    EECA on SmsOptOut, in its own transaction), and a START ends neither; a lost answer is uncertain and never resent; no link, token or
+    tracking in a text. PASS Email preferences may leave a text message topic, never join one.";
+  - the user's calls: whether a per-number override of the promotional day limit is wanted (built: one policy value); whether PASS should
+    offer joining a text message topic with a verified phone number (built: not offered; joined through an import or staff with
+    evidence); the receipt for a direct text (F73, §7) stays a framework ask.
+
+**Review Nov 15 (P22).** A fresh review of `mkt/p22` (mr-moqui e0575e91, mr-mantle cd8a193d, mr-boss ec1c08b5, mr-pass cb49476) against
+the phase, §5 Q6 and §4 (Nov 13), §2 and docs/dev/Practices-Rust.md, framework first. Fixes committed per repository as "Marketing P22
+review: …" (mr-moqui 45d68705, mr-mantle 981bde71); mr-boss (this note) and mr-pass otherwise unchanged.
+- Checked and sound:
+  - only `sms-consent` can be declared at conf level: `CONF_PROVIDER_HOOKS` gates both the merge (conf.rs, another element logged)
+    and the parse (`conf_providers_of`), and a nameless or serviceless one is left out; there is no general remote service
+    interface (allow-remote is read by nothing; REST and agent exposure are opt-in), so the authorization-disabled conf provider is
+    reached only through check#SmsSend's `consented`, which passes just the two numbers; Mantle's check#SmsConsent reads only;
+  - "a no from any provider wins": `consented` needs a yes and no false across the apps' and the conf's answers, so a conf provider
+    cannot widen an app's no nor an app's yes widen the conf's no (but see R1, R2); the apps' providers still run as the user's
+    apps (`require_authz` kept before `declared_providers`), and Sms.js's added `disableAuthz` on call#Providers changes nothing
+    there;
+  - a user-sent text is unchanged: the Telnyx adapter's in-room check passes no `isPromotional`, so no consent hook, and
+    check#SmsSend's number-grant check, destination class, opt-out and the user's and everyone's limits are as on master
+    (`countersOf` gives a user's non-promotional text `user:`, `all` and the `all` lock, as before);
+  - the per-number limit: `isPromotional` is set only by send#SmsMessage callers (internal); Mantle's attemptSms sets it from the
+    delivery's `transactional`, which every Marketing hand-off (handOffRecipient, sends, automations, tests) queues as false, and
+    queue#Delivery stores Y only when not told false; a non-promotional text with no user still counts `system` alone, so only a
+    consented promotional text leaves `smsSystemMaxPerDay`, and it then counts `promo:<number>` under that row's lock (reserve and
+    release use the same E.164 number); a promotional text cannot be relabelled non-promotional by anything outside the server;
+  - Mantle: the ledger's attempt checks the topic's consent and the SMS suppression before attemptSms; the sms-consent answer asks
+    only internal organizations that hold the sending number and a party holding the recipient number with PcpSms (purpose row of
+    that organization, else global, or a list row of a topic it owns) and no suppression of every organization or that one; STOP is
+    normalized by the framework (`lastKeyword` STOP for every stop word), the EECA calls note#SmsKeyword in its own transaction, one
+    withdrawal per party not already withdrawn and one suppression per owner (addFromIntake `created`), START and HELP change
+    nothing; an uncertain answer (and an exception from the call) is uncertain and goes to review, never resent; the day's limit
+    sets `nextAttemptDate` without `record`, so no attempt is counted and the framework counted nothing; a STOP or the hook's no is
+    suppressed; the text carries no unsubscribe link, token or tracking (smsDelivery and the test build only the rendered text with
+    recipientValues' names and the opt-out line); the SMS profile's number must be one of the organization's numbers with a bridge
+    (MESSAGE_SENDING_CONFIGURE, organization scope as for email profiles); `storeMarketing` never turns a text topic on and
+    changeTopics keeps lists of email only.
+- Fixed:
+  - R1 (low; framework) an app root's `sms-consent` provider with the conf provider's name was asked in its place (`conf_only`),
+    so for a user who may open that app the conf's no (Mantle's) was never asked. A conf provider is now asked whatever an app's
+    provider is named (call#Providers and get#Providers); moqui-core `a_conf_provider_is_asked_beside_an_apps_provider_of_the_same_name`
+    (an app's yes and the conf's no of one name both answer; fails on the unfixed code, one answer);
+  - R2 (low; framework) a failed sms-consent provider was left out and another's yes let the text go: `consented` now refuses when
+    call#Providers lists a failed part (fail closed, as a no). moqui-channels' campaign-text test gains a second conf provider that
+    fails on a number the first says yes to: refused consentRequired (checked to fail on the unfixed Sms.js: the text was sent);
+    docs Comms.md and interfaces/SMS.md say so;
+  - R3 (medium; Mantle) PASS Email preferences never showed a text message topic: `preferencesContext` takes `offersOf`, whose
+    `offerOf` keeps lists of email only, so topicView's text branch and PASS Hub.js's were dead code. `offerOf`/`offersOf` take
+    `withText`, which only preferencesContext passes; changeTopics, the public subscription page and the checkout's topics stay
+    email only. MarketingSubscriptions feature "a text message topic offered on the site is on the preferences page to leave, never
+    to join" (shown as MdcSms, turning it on files no membership or request, a member leaves it, turning it on again does not
+    rejoin, the public page does not offer it; fails on the unfixed code, no such topic);
+  - R4 (low; Mantle) `phoneOf` fell back to "+" and the digits when a number had no E.164 form, the guess the Built note says it
+    removed (a national number read as another country's); now no key, so the person has no number for a text. No spec (the
+    deployment's normalize#PhoneNumber answers every number the spec data can write).
+- Findings, numbered by the lead F432 to F435 in order:
+  - a text topic whose list policy names another purpose (storeSubscriptionPolicy accepts any PartyConsentPurpose; purposeOf takes
+    the policy's first) is checked at the ledger against that purpose, not PcpSms; the framework hook still needs PcpSms with the
+    organization, so nothing goes without PcpSms, but the topic's own PcpSms is then not what is checked. Refusing a non-PcpSms
+    purpose for a list of phone numbers would close it;
+  - an SMS send's test goes to an allowlisted number as a promotional text, so the hook refuses it (suppressed) unless the tester's
+    number holds PcpSms with the organization; no spec covers the SMS test;
+  - there is no deployment-wide cap on promotional texts with no user: each of our numbers has its own `smsMaxPromotionalPerNumber`
+    (1000), so the day's total grows with the numbers that have a bridge and a ready profile;
+  - the Built note's other findings stand (the organization's number as its telecom number, the receipt dropped F73, the estimate
+    with variables unfilled, the inline script's `toNumber` shadowing).
+- Tests (this worktree, Debug, CARGO_BUILD_JOBS=4; app specs `./moq test … --debug --nobuild` with this runtime):
+  - Rust: moqui-core `screen::tests::shell` (21 of 21, 7 s) and `a_components_conf_providers_merge_by_hook_and_name`;
+    moqui-channels (11 of 11, 1 s); clippy on both crates clean; rustfmt on the changed files;
+  - mr-mantle MarketingSubscriptions (6 of 6, the new feature 0.25 s), SmsSends (8 of 8), Eligibility (4 of 4), Dispatch (6 of 6),
+    Audiences (7 of 7), MarketingPartyMerge (3 of 3); mr-pass ShopAccount (3 of 3); framework Voice (13 of 13); each about 50-60 s
+    wall in Debug. Prettier (mr-moqui's config) on MarketingPortal.js and the spec
+    (MarketingEligibility.js was not clean before and is left so). Not run: test-apps, test-framework, acceptance.
+- For the lead:
+  - budget share: mr-mantle about 0.25 s more (MarketingSubscriptions); framework one Rust test of about 0.3 s;
+  - merge hot spots: mr-mantle `MarketingPortal.js` (offerOf, offersOf, preferencesContext: follow-up 4 touches topicView beside
+    it), `MarketingEligibility.js` (phoneOf), `test/marketing/MarketingSubscriptions.spec.js` (a feature at the end); mr-moqui
+    `service/shell.rs`, `screen/tests/shell.rs` (the tree's Open app gains an sms-consent provider and two test services), Sms.js
+    `consented`, docs Comms.md and SMS.md; the Attack-Surface paragraph the Built note proposes should drop "an app's provider of
+    the same name is asked in its place" and add that a failed sms-consent provider refuses;
+  - the user's calls, with a recommendation each:
+    - a per-number override of the promotional day limit: recommended later, not now. One policy value is a safe ceiling for the
+      first release; when a deployment registers numbers with different volumes (10DLC campaigns, verified toll-free), add an
+      optional `smsMaxPromotionalPerDay` on moqui.call.PhoneNumber (System, Voice, Numbers) that falls back to the policy value,
+      and consider a deployment-wide promotional cap beside it (the finding above);
+    - PASS joining a text message topic with a verified phone: recommended not now, as built. A verified PASS account proves an
+      email address, not the phone; marketing texts need the number holder's express consent, best evidenced by a confirmation the
+      number itself answers (a text "Reply YES to join"), which needs an inbound keyword hook the framework does not give Mantle
+      today (START ends nothing). Joining through an import or staff with evidence, and leaving by STOP or Email preferences,
+      covers the first release; a confirmed-by-text join can be its own later phase.
+
 ### P23 — Finish
 
 - The tui and server-static screen sweeps of Marketing, one acceptance test per mode (each screen's twin is built in
@@ -1425,6 +6460,1219 @@ built (F19). SMS is in this build, last, after the first release's gate (§4).
 - The inventories' **Implemented in** columns, the design's Impl column, crosscut §1.3's register and §2's registry
   rows, Remaining-Work; the mr-boss and mr-pass READMEs' Marketing lines and mr-pass `docs/Deployment.md`'s
   Marketing app section.
+
+
+**Built Nov 15 (P23).** mr-boss, mr-pass and mr-moqui (docs only) on branch `mkt/p23` from master after P22 and follow-up 5; mr-mantle's
+worktree unchanged. No Rust built. Built beside follow-up 6 (the demo sends' load-relative dates): no new acceptance test reads a
+demo send's date.
+- Checked first (the code over the plan): Sales P20's Built and Review notes (the pattern), P21's and P22's notes, follow-ups 4 and 5,
+  §16.3 and §18 of the design against the screens, the Marketing paragraphs of Attack-Surface against the services, operations,
+  routes and data (a read-only pass over mr-mantle, mr-pass and mr-boss), and the owners' designs against what each phase built for
+  them. The code over the plan:
+  - PASS Marketing has sixteen operations, not the eleven the phase text names: P7 four, P12 two, P14 one, P15 two, P16 one, P17 six
+    (mr-pass `service/pass/Schema.js`, routed in Mantle's `script/PassRoutes.js`); Attack-Surface names all sixteen correctly;
+  - follow-up 5 forwards the visitor key in `startRegistrationPayment`, not `completeRegistration` (§4's row says completeRegistration;
+    Attack-Surface and the code agree on startRegistrationPayment);
+  - §18: every output is built in the phase that names it but the survey results' CSV (P12's list); built here. The ticket is the
+    email and PASS Registration's page with its entry QR; no PDF of it is made (design §18's as-built note).
+- BOSS:
+  - `screen/Shared/SurveyResponses.xml`: Marketing's branch (publication scope, Marketing's alone) offers CSV on its Choices and
+    Responses lists, the same rows and columns as shown (the respondent as find#Responses names them); the case branch is unchanged.
+  - `test/Marketing/MarketingSpecLib.js` (a P23 block at the end and its export line): `mountedScreens` (every subscreens-item under
+    `screen/Marketing/` naming a screen outside it: Shared, Commons, Comms and Sales), `redirectScreens` (Newsletters and Segments,
+    the old placeholders' routes kept as redirects), `mountTabs`, `sweepMade` (a staff registration of the webinar, which the demo
+    has none of), `sweepRecords`, `sweepParameters` and `sweepExtras`.
+  - Acceptance tests (written, not run): `test/acceptance/Marketing/MarketingTui.spec.js` and `MarketingServerStatic.spec.js` (every
+    screen file under `screen/Marketing` but the two redirects, which must answer a redirect, the 26 mounts and the tabs their menus
+    show, on the demo's records and eleven second records in tui, as john.doe; the server-static sweep leaves out the qvue screens
+    and mounts); `MarketingAccessWalk.spec.js` (§16.3 scenario 1 and P23's review walk: a user of each Marketing group but the
+    administrator on each side, Retail's the demo users and Services' made by the spec in the same groups beside marketing.author2,
+    each side with a campaign, a list with a member of its own, a segment and a draft send under secret names and Retail a staff
+    registration; refused through 27 routes with their CSV, the plan print, Home and three reports for the other organization, the
+    storeCampaign and storeList transitions, the members' export and the audience import, the palette, four choices searched and
+    selected, check#Record of seven kinds, the files panel, Assist's two tools, Mantle's reads, finders and writes called directly,
+    the PASS operations (another organization's list answering as a missing one, a forged registration link alike), with each side's
+    author and the administrator as the control; Maya's address on the November newsletter's delivery, its CSV and RecipientDetail
+    masked for the six Retail groups without MARKETING_AUDIENCE_VIEW and shown to the audience manager; the survey results' CSV for
+    the analyst and not Services' author).
+  - Inventories: ss-inventory's 60 rows with a `Marketing/` **Designed in** path all name a Marketing screen; 21 filled (the contact
+    forms on Marketing/Contacts/ContactDetail's contact record, Customer360's engagement read only); usl-inventory's 143, nine filled
+    (the contact services, the calendar's occurrences through get#CalendarItems, get#FullCalendarData not called, the landing page's
+    publish on the mounted PageDetail); a header bullet in each.
+  - design-marketing: §2's Impl column names the phase that built each screen, each path checked (the list areas' defaults, ConsentDetail
+    as Comms' Consent's Contact tab, MessageTemplateDetail a sibling), with a header line naming the screens built beside §2's; §18's
+    as-built note.
+  - Owners' designs: design-crosscut §1.3's Marketing table (DeliveryReportIntake built, OrderPlacedRecordAttribution with P20's
+    attribution, the two event registration SECAs, SmsStopWithdrawsConsent) and the main register's row (the remote visitor key of
+    follow-ups 4 and 5), §2's rows of the screens Marketing built or mounts (the phase and the Marketing path); design-admin's
+    RegisterDevice row (Marketing's MARKETING_CHECKIN route group as built); design-drawers-commons' ledger paragraph (P22's SMS
+    attempt, the conf-level consent provider, STOP, the per-number limit); mr-pass design-shop (the checkout's news opt-in recorded
+    through Marketing's audience service since P7). The other owner contracts were already written by their phases (Comms' ledger
+    extensions P3–P9, Commons' form publication P12, Commerce's mounts and RecoveryPolicy P11–P20, Sales' bulk action and Consent link
+    P3 and P13–P20, Admin's registries P1–P4, Insights' P20).
+  - README: a Marketing paragraph.
+- PASS: `test/acceptance/client/MarketingPhonePages.spec.js` (written, not run; registered in `test/acceptance/client/suite.js`):
+  Subscribe and its receipt, VerifySubscription by a forged link, Email preferences by the known subscriber's link, the open survey on
+  SubmitForm, the landing page, the free offer's Event and Register and Registration by a forged link at 390 px, each with its
+  language, a level-one heading, a name for every visible control and an alternative for every image, none scrolling sideways; GETs
+  only, on the existing Marketing fixtures. README (Marketing's line: the lead page, a text topic left on Email preferences; the
+  acceptance list) and `docs/Deployment.md` (Email preferences' text topic; the registration's six operations in Remote frontend; a
+  new "Visitor key through a remote frontend" bullet: upgrade the authority before the PASS frontends, since follow-ups 4 and 5 add
+  `visitorKey` to submitCheckout and startRegistrationPayment and an older authority refuses a field it does not know).
+- mr-moqui: `docs/security/Attack-Surface.md` read against the built endpoints and corrected: landing pages embed events too (P16);
+  the shell providers (palette, record-lookup, call-context for events managers only, today-source, Log as note and Send as message;
+  P21); Marketing's texts sent by the ledger's SMS attempt with the consent and STOP services named (P22); get#Attendance an events
+  manager's alone, not the door tablet's (P18); event offers' lead rules (P18); the test message's number for a text send and the
+  stale "No P8 service" sentence removed; the unsubscribe link and header email-only, a text carrying its opt-out line (P22); the
+  order-placed handler filing the attribution too (P20); find#DeliveryReceipts by the reader's organizations for every reader (P9).
+  `plans/Remaining-Work.md`: a Marketing row; the Sales row's public lead form built by Marketing; the C4-SMS ask built on. README:
+  mr-pass's line names its apps.
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-boss MarketingAccess, MarketingSurveys, MarketingRegistrations,
+  CustomerServiceFeedback and CustomerServiceReports 17 of 17 (29 s run; the lib's new block and the shared Responses screen); no new
+  regression spec. `moqui lint --screens`: SurveyResponses' findings unchanged (the same pre-existing container lines, shifted by the
+  comment). `node --check` and Prettier on the new and changed JavaScript. Not run: ./moq test-apps, test-framework, the acceptance
+  suite (the four new acceptance specs included).
+- Findings, numbered by the lead F442 to F447 in order:
+  - the phase text's "eleven operations" is sixteen (above); §4's follow-up 5 row names completeRegistration where the code uses
+    startRegistrationPayment;
+  - Marketing has no section in mr-mantle `docs/Upgrading.md` (Sales and Maintenance have one): a database made before Marketing
+    loads its seed, setup and report datasets as any new component's, but nothing says so;
+  - the ticket has no PDF or print of its own (§18 names html-print/PDF): the PASS page is printable from the browser;
+  - Attack-Surface's lines the read found exact but loose, left as they are: "at most ten topics" answers NotFound past ten; "an
+    answer over 64 KB" is 65,536 characters of the values' JSON; resolveTrackingLink carries site, code and token;
+  - mr-mantle `service/mantle/party/MessageServices.xml` names the report ECA's file as `MantleConsent.emecas.xml`; it is
+    `MessageReports.emecas.xml` (a comment);
+  - the access walk's Services side has no event or registration of its own (Retail's registration is checked against Services'
+    users only); the private (non-directory) contact of scenario 1 is MarketingImportWalk's (the import cannot match it), not
+    repeated here.
+- For the lead:
+  - budget share: none (no regression spec added; MarketingSpecLib's block runs only from acceptance specs);
+  - merge hot spots: mr-boss `test/Marketing/MarketingSpecLib.js` (the end and its export line; follow-up 6 may touch its send ids'
+    comments), `screen/Shared/SurveyResponses.xml`, `README.md`, `plan/design-marketing.md` (header, §2, §18), `plan/design-crosscut.md`
+    (§1.3, §2, the attribution row), `plan/design-admin.md`, `plan/design-drawers-commons.md`, `plan/ss-inventory.md`,
+    `plan/usl-inventory.md`, this file's P23; mr-pass `test/acceptance/client/suite.js`, `README.md`, `docs/Deployment.md`,
+    `plan/design-shop.md`; mr-moqui `docs/security/Attack-Surface.md`, `plans/Remaining-Work.md`, `README.md`;
+  - the status line, once merged: "Nov 15, 2026 — Marketing built: P0–P23 and follow-ups 1–6 (stages M0–M8), the finish with the
+    screen sweeps, the access walk and the PASS pages at 390 px written, Attack-Surface, the inventories and the owners' designs
+    checked against the code, each phase reviewed by a fresh agent and merged on its focused specs. The full suites and the acceptance
+    tests run once at the end of the build.";
+  - nothing needs the user's call.
+
+**Review Nov 15 (P23).** Master (follow-up 6, the demo's campaign windows and the December send dated relative to the load) merged into
+mr-boss first, cleanly; mr-pass, mr-moqui and mr-mantle had nothing new on master. The acceptance tests were read against the routes,
+services, demo users and helpers and their expectations checked in a throwaway regression spec on this worktree's runtime (the sweep
+helpers' lists, the access walk's setup and each route, palette, choice, check, write, masking, CSV and PASS answer as the walk's
+users and the controls), deleted after; no acceptance test was run.
+- Checked and sound:
+  - The sweeps: MarketingTui and MarketingServerStatic are the only Marketing sweep in each mode (TuiRender and ServerStatic leave
+    Marketing out), in acceptance, with no regression render added. `mountedScreens` finds the 26 mounts (Notifications under
+    Approvals among them, its default item, as Approvals renders it anyway), `redirectScreens` Newsletters and Segments, `mountTabs`
+    PageDetail's four tabs and Customer360's; every `sweepRecords` key is a menu path under the root; `sweepMade` confirms a staff
+    registration of the webinar; nothing reads a demo send's date (follow-up 6 merged).
+  - The access walk's refusals, apart from the fixes below: every route of the other side leaks no secret (its users are refused or
+    shown nothing), the screen transitions answer RECORD_UNAVAILABLE or the transition's authorization, the direct Mantle reads and
+    writes RECORD_UNAVAILABLE, ORGANIZATION_DENIED or PERMISSION_DENIED, check#Record refuses each kind, the files panel refuses;
+    Assist's two registered tools (`marketing_audience_counts`, `marketing_campaign_performance`) refuse the other organization.
+  - The survey results' CSV (`screen/Shared/SurveyResponses.xml`, Marketing's publication branch): the same actions and rows as the
+    page, so the same access (find#Responses refuses another organization's form, RECORD_UNAVAILABLE, and the CSV is empty) and the
+    same naming (the analyst's rows read "A respondent" and "Anonymous"); the case branch has no CSV.
+  - Attack-Surface's ten corrections against the code: the `[[event ID]]` embed and the limit of five (MarketingPortal.js
+    embedPattern, embedLimit); `get#CallContext` an events manager's alone, at most 20, no address; `send#SmsMessage`, check#SmsConsent
+    and note#SmsKeyword (`allow-remote="false"`); `get#Attendance` requiring eventManage; the event offer's lead rule through
+    `capture#EventRegistration` with the buyer's address only when the attendee is the buyer; the test message's number; the
+    unsubscribe link email-only; handle#OrderPlaced filing the admission event and the attribution; find#DeliveryReceipts (the three
+    reviewer permissions, the member organizations, every one for a system administrator or MARKETING_ALL_ORGANIZATIONS). P20's,
+    P21's, P22's and follow-ups 4's and 5's paragraphs are all kept (their lines found unchanged or extended).
+  - Docs: mr-pass `docs/Deployment.md`'s deploy order (PassAuthority.js refuses an operation naming a field its schema lacks,
+    "Unsupported request field"), the six registration operations in all three TOKEN_WRITES lists; the READMEs and Remaining-Work's
+    Marketing row; the inventories' Implemented-in paths are built screens or Marketing's mounts of shared ones.
+  - MarketingPhonePages: the routes, fixtures (PASS_HTTP_MK_PREFS, PASS_HTTP_MR_OFFER_FREE, the "Open survey" publication, the
+    "spring" page) and GET-only reads match the existing Marketing HTTP walks; registered in the client suite.
+- Fixed in the review:
+  - R1 (major, a test that could not pass and a vacuous one): MarketingAccessWalk's PASS feature ran against ZIZI_SHOP closed (the demo
+    site is `disabled` until a walk publishes it, as P7's, P16's and P17's walks do), so the offered list's control answered NotFound
+    and every refusal compared equal for the wrong reason; the setup now publishes the site.
+  - R2 (major, a control that could not pass): the masking feature's control was the audience manager, who is refused Sends ("Sends are
+    for the Marketing authors, approvers and dispatchers"); the Marketing administrator is the control now, on all three views, and the
+    author, approver and dispatcher must open each with the address masked (`m***@zizi-customers.example`), the events manager,
+    analyst and reader refused, so masking is asserted and not only the address's absence.
+  - R3 (major, a control that could not pass): the walk's members had no preferred address, so the members' export wrote an empty
+    Address column (the export reads `preferredContactMechId`) and the audience manager's export control failed; the membership names
+    its address now (and a second run sets it on the existing row).
+  - R4 (moderate, non-disclosure checked without a working route): most routes, the palette and the choices were checked only for the
+    absence of a secret, which a broken route passes; the first feature now requires the Marketing administrator to see a secret of
+    each side on every route but Home, Attribution and Log as note (which name none), to find each side's campaign in the palette and
+    its records in the four choices, and to be admitted by check#Record of each kind. The transitions, the import and the direct writes
+    now require a refusal (RECORD_UNAVAILABLE, ORGANIZATION_DENIED, PERMISSION_DENIED, not authorized), not any error, so a stale
+    revision or a validation error no longer passes for one.
+  - R5 (minor): Attack-Surface's shell providers: the record-lookup answers a campaign, send or registration (the palette also lists,
+    segments and events), and the today-source lists by role the sends due, approvals, failed deliveries and registrations awaiting the
+    organizer of the user's organizations, not "the user's own"; mr-mantle `MessageServices.xml`'s bounce intake comment names
+    `MessageReports.emecas.xml`; MarketingTui's count comment names PageDetail's and Customer360's tabs (Consent has none in the menu).
+- Findings, numbered by the lead F448 to F452 in order:
+  - the phase text says eleven PASS operations; there are sixteen (the Built note is right); §4's follow-up 5 row names
+    completeRegistration where the code forwards the visitor key in startRegistrationPayment (a note here, §4 not edited);
+  - the plan's and the walk's "shown to the audience manager" for a send's recipients: Marketing's audience managers are refused Sends
+    entirely, so only the administrator (or a user in both an audience group and a sends group) reads a recipient's address; by
+    design as built, but no demo user but the administrator shows it;
+  - a list member with no preferred address exports an empty Address (the export reads only `preferredContactMechId`); the intake
+    paths set one, but a member loaded or adopted without it is blank in the export with nothing saying why;
+  - Marketing has no section in mr-mantle `docs/Upgrading.md` (the worker's finding; not written here: it needs the list of Marketing's
+    seed, setup and report files);
+  - the ticket has no PDF of its own (design §18 html-print/PDF), the worker's finding; the PASS page prints from the browser.
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-boss MarketingAccess, MarketingSurveys, MarketingRegistrations,
+  MarketingShell and CustomerServiceFeedback 18 of 18 (28 s run) after the merge; three runs of the throwaway probe (25–29 s, deleted).
+  Not run: the acceptance tests (MarketingAccessWalk changed here; the probe observed each changed assertion's data), test-apps,
+  test-framework.
+- For the lead:
+  - budget share: none (no regression spec added);
+  - merge hot spots: as the Built note's, plus mr-boss `test/acceptance/Marketing/MarketingAccessWalk.spec.js`, mr-mantle
+    `service/mantle/party/MessageServices.xml` (a comment) and mr-moqui `docs/security/Attack-Surface.md`'s shell-providers sentence;
+  - the walk leaves ZIZI_SHOP published, as the other Marketing walks do;
+  - nothing needs the user's call.
+
+### Follow-up 1 — Ticket capture, cancellation terms, stable entry codes and Retail's Utah tax
+
+The user's four calls of P17's review (§4 Nov 15): a ticket order's payment captured when the order is approved, through Accounting's
+invoice-from-order path; the cancellation terms a structured rule that online cancellation and refunds follow, with a staff override
+and a reason; one entry code per registration revision from a keyed derivation; the demo's Retail organization taxed in Utah. Branch
+`mkt/fix1` in mr-mantle, mr-boss and mr-pass; P18 (check-in) built beside it on `mkt/p18`.
+
+**Built Nov 15 (follow-up 1).** mr-mantle, mr-boss and mr-pass on branch `mkt/fix1` from master after P17's merge; mr-moqui unchanged,
+no Rust built.
+- Checked first (the code over the plan): P16's and P17's Built and Review notes and §4's four Nov 15 rows; impl-sales follow-up 2
+  (SalesRecurrence.js invoiceRecurringOrder, its SECA at tx-commit and the part lock); Accounting's create#FulfillmentInvoice
+  (Payables.js, the ordered basis, orderItemSeqIds) and apply#OrderPaymentsToInvoice (it captures a promised or authorized payment,
+  whole, then applies it); Shop's digital fulfilment (ShopFulfillment.js, an explicit capture then the invoice); SalesTax.js (X1 and the
+  store path: an authority with nexus and no destination or origin address refuses); the script host's keyed facilities. The code
+  over the plan:
+  - "check what keyed hashing the script host offers": `ec.resource.makeGrant`/`checkGrant` are HMAC-SHA256 but bind an expiry (now
+    plus a TTL), so they cannot give the same code twice; `ec.user.singleUseCodeHash` is a fixed-salt digest, not keyed. No host
+    member was added (this worktree has no mr-moqui): the code is a nested keyed digest over `ec.resource.digestText` (SHA-256 of the
+    secret and the inner SHA-256 of the secret, the registration and the revision, as HMAC nests it, the inner digest in hex since the
+    host gives hex), and the secret is an existing keyed facility: a per-offer random key in an `encrypt="true"` field
+    (EventRegistrationPolicy.entryCodeKey), so the database alone yields no code. A framework `hmac` member would replace one function
+    (EventRegistrationPlaces.js codeOf);
+  - "capture on approval ... create#FulfillmentInvoice or the path Shop's digital goods use": create#FulfillmentInvoice, whose payment
+    application captures; the SECA runs at tx-commit on a service worker, as Sales' does;
+  - "a cancellation deadline (days or hours before the occurrence's start)": kept in hours (a day is 24), shown in days when whole;
+  - "after the deadline online cancellation is refused, or allowed without refund if the design says": the design says neither, so it
+    is the offer's choice (lateCancelAllowed, off by default: refused);
+  - the rule binds a confirmed place only: a place held, pending the organizer's approval, waitlisted or under review was never sold
+    and is refunded in full whenever it is cancelled before the start;
+  - P17's test hosted gateway authorizes and captures at once (PgoAuthAndCapture), so nothing showed the missing capture: a hosted
+    test page that only authorizes is added and EventRegistrations' gateway uses it.
+- Capture on approval (Mantle): `EventRegistration.secas.xml` EventRegistrationApprovedInvoice (OrderHeader to OrderApproved, at
+  tx-commit, force-new, never failing the approval) calls the new internal `invoice#RegistrationOrder` (EventRegistrationPayments.js
+  invoiceOrder): a ticket order (OrpEventRegistration) has each approved part with nothing billed invoiced once, in its own transaction
+  under the part's lock, through create#FulfillmentInvoice (the lines of places cancelled before the approval left out), which captures
+  the authorized payment; each kept place records EraInvoiced; then a refund that waited for the capture is handed over. Two findings
+  of P17's code fixed on the way: an invoiced order whose places are all cancelled is no longer cancelled (cancel#Order took every
+  line's quantity to zero, so the last place's refund was computed as nothing, "A free place"); and a line taken to zero counts what
+  was billed of it.
+- Cancellation rule (Mantle): EventRegistrationPolicy `cancelDeadlineHours`, `refundPercent`, `lateCancelAllowed` (audited, part of
+  the terms: a change after publication raises termsRevision; store#RegistrationPolicy, DEADLINE_INVALID, REFUND_INVALID);
+  EventRegistrationTerms keeps the rule of each revision; EventRegistration `refundPercent`, decided at the cancellation; actions
+  EraRefundOverride and EraInvoiced. EventRegistrations.js cancelRuleOf, cancelRuleText (the rule in words: "You may cancel online up
+  to 2 days before the event starts, for a refund of 50% of the price. After that, cancellation is not available online; contact the
+  organizer."), the setup view's and the public view's `cancelRule`. EventRegistrationPlaces.js cancelTermsOf (what the accepted
+  revision's rule allows a place now), cancelPlaces with each paid place's percentage, staff cancel#Registration and change#Registrations
+  with an optional `refundPercent` (default the rule's as a buyer cancelling now would have it, nothing after the deadline; another is
+  an override recorded with the reason), get#Registration's `termsRefundPercent`, `canReissue`, `cancelRuleText`. Refunds
+  (refundPayment) at the place's percentage of its share (rounded to the currency), none when it is zero ("Not refundable under the
+  terms"); an authorization never captured is still released whole. MarketingPortal.js: the view's per-place `canCancel` and the
+  rule (the accepted revision's once completed, else the offer's), cancelRegistration cancels only what the rule allows,
+  CANCELLATION_CLOSED with nothing changed when none may be (or a named place may not).
+- Entry code (Mantle): EventRegistrationPlaces.js entryKeyOf (the offer's secret, made at publication by publish#Registration, else
+  once under the offer's row lock, read before the registration's row is locked), codeOf (the derivation, "EV" and 24 hex characters),
+  issueCode (the current revision's code, its digest written at a revision's first issue; a code made before follow-up 1 is replaced
+  by the next revision's; with an action the showing is recorded, EraTicketShown "Entry code shown"), reissueCode and the new staff
+  service `reissue#RegistrationCode` (MARKETING_EVENT_MANAGE, at the revision read, with a reason: the revision raised, EraCodeReissued,
+  the ticket sent again). A correction's or substitution's ticket now has a notice key of its own (the ledger kept the first ticket's
+  key once, so the corrected code was never mailed). registrationOfCode and issueCode keep P17's interface for P18.
+- PASS: Register's terms step, Event and Registration show the rule (`view.cancelRule`, `publicEvent.cancelRule`) above the free
+  words; Registration offers Cancel for the places the rule allows and says when none may be cancelled online; Show my entry code's
+  note says it is the ticket's code; `docs/Deployment.md` Registrations.
+- BOSS: RegistrationSetup's offer form (Cancel online until (hours before), Refund (%), After that) and the offer box's rule in words
+  (`template/MarketingEvents.xml` storeOffer); RegistrationDetail's Cancel with Refund (%) (the terms' percentage by default) and the
+  terms' rule in words, More › New entry code (`template/MarketingRegistrations.xml` reissueRegistrationCode), Send again's
+  confirmation ("the same entry code"), the refund's percentage in the facts.
+- Demo (mr-boss `BossZZMarketingDemoData.xml`, a follow-up 1 block): Retail's Utah nexus (on Sales' authority BOSS_SAL_TAX_UT) and a
+  Retail rate of 6.1 % (shipping taxed, as Sales'), and the ZIZI_RETAIL store's warehouse ZIRET_WH given Retail's Orem address as its
+  shipping origin (Retail already had a PostalShippingOrigin; the warehouse had only a primary address, and with a nexus the store path
+  refuses an order with neither a destination nor an origin, TAX_ADDRESS_MISSING); the workshop offer's rule (48 hours, 100 %) beside
+  its words. Taxed now: Retail's storeless orders to Utah (the workshop's ticket orders at Retail's own address, the workshop having no
+  facility) and the ZIZI_RETAIL store's orders to Utah or with no destination. Orders loaded as data keep their totals.
+- Specs whose totals changed, each listed:
+  - none of the Shop, Commerce, Sales storeless tax, Marketing registration or Insights/Accounting report specs run changed (below):
+    they use spec-local stores, sellers and fixtures, or Sales' own seller, or Retail orders loaded as data;
+  - Mantle's classic flows over ZIZI_RETAIL and Retail's storeless orders (OrderToCashBasicFlow, ReturnToResponseBasicFlow, OrderBulk)
+    took the Utah tax (e.g. order 55500's 200.68 became 201.72 with a tax line, renumbering the lines after it): the tax is correct for
+    a Utah seller, but those figures are Mantle's own and Mantle stands without BOSS, so each now suspends the BOSS demo's Retail nexus
+    for its run and restores it after (`test/order/DemoTaxNexus.js`), rather than taking BOSS's data into Mantle's expected values;
+  - PayTraceGateway failed before this follow-up too (with the follow-up's Mantle changes stashed and with the demo change reverted):
+    its storeless Retail order is retaxed at each line change since P17's review named LOCAL on ORG_ZIZI_CORP, deleting the tax lines
+    it writes; it now suspends that inherited gateway as well as the nexus for its run (DemoTaxNexus.js suspend({gateway: true})).
+- Specs:
+  - Mantle `test/work/EventRegistrations` (15 features, about 4.0 s, was about 2.8–3.0 s; three new): the paid order's approval
+    invoiced once (84.80) with its payment captured, a second invoice#RegistrationOrder billing nothing; a seller whose orders wait for
+    approval: two places authorized, one cancelled by the buyer (its refund waiting), the approval invoicing the kept line only (40.00),
+    capturing, and refunding the cancelled place's 40.00 from the capture; the rule: half of 42.40 refunded before a 48-hour deadline,
+    refused online after it with nothing changed (and canCancel false on each place), a late cancellation allowed by the rule with no
+    refund, staff's 100 % against the terms' 0 % recorded with the reason, a rule change raising termsRevision, a refund of 120 %
+    refused; the entry code: the same code shown twice, revision 1, neither the code nor the key in the registration, its actions or
+    the staff view, the code resolving to its registration, a reader's and a stale reissue refused, the manager's reissue raising the
+    revision (the old code resolving to nothing, the new one to the registration), a correction changing the next code. The spec's
+    gateway now only authorizes (hostedAuthorize#PaymentAuthorization, new in PaymentTestServices.xml). `test/work/EventRegistrationSetup`
+    (the public view's keys gain cancelRule).
+  - mr-pass `test/Marketing/MarketingRegistration` (4 features, about 0.2 s; one new): the answer states the rule (until the start,
+    then the accepted revision's 200 hours and 50 %), canCancel false past the deadline and cancelRegistration refused
+    (CANCELLATION_CLOSED, a Conflict) with every place still confirmed; the place keys gain canCancel. `test/Marketing/MarketingEvents`
+    (the keys gain cancelRule).
+  - mr-boss `MarketingRegistrations` (RegistrationDetail's one qvt render: the New entry code dialog, the terms' rule in words, the
+    refund field).
+  - Acceptance: none written or changed (the user's calls are rules, checked in the regression specs; MarketingRegistrationScenario's
+    cancellation step refunds a confirmed place of an offer with no rule, as before).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle EventRegistrations (15 of 15), EventRegistrationSetup,
+  SalesOrderApproval, StorelessOrderTax, ShopCheckout, PassAuthority, PaymentAttemptPurpose, AccountingCredit, StorelessOrderConfirmation,
+  MarketingScope, CalendarServices, SalesRecurrence (75 of 75), and the 53 Mantle specs that name ZIZI_RETAIL, ZIRET or ZIZI_SHOP with
+  the demo change (OrderToCashBasicFlow, ReturnToResponseBasicFlow, OrderBulk and PayTraceGateway failed and pass now, 72 of 72);
+  mr-pass MarketingRegistration, MarketingEvents, Transport, MarketingAccess (11 of 11); mr-boss MarketingRegistrations, MarketingEvents
+  (4 of 4), the 43 mr-boss specs that name ZIZI_RETAIL, ZIRET or ZIZI_SHOP with the demo change (355 of 357: ProductsPriceLists
+  and ProductsPricing fail alike with the demo change reverted, a price-date matter, not tax) and mr-pass's 13 Shop specs (33 of 33). `moqui lint --screens` (release): 141 flagged sites, as before, none in a changed screen; parse failures
+  0. Prettier (mr-moqui's config) on the changed JavaScript. Not run: test-apps, the acceptance suite.
+- Inventories: usl-inventory's P17 table gains reissue#RegistrationCode, invoice#RegistrationOrder and the test gateway's
+  hostedAuthorize#PaymentAuthorization.
+- Design edits: design-marketing §9 RegistrationPolicy and RegistrationChange rows and the order rules' "As built (follow-up 1)", §13
+  Registration as built, §14.1 EventRegistrationTerms.
+- Findings, numbered by the lead F349 to F356 in order:
+  - the code over the plan above: the keyed derivation over digestText with an encrypted per-offer secret (no host member), the rule
+    in hours, lateCancelAllowed as the offer's choice, the rule binding confirmed places only, the authorize-only test gateway;
+  - P17's code: the last place of an approved, paid ticket order was refunded nothing (cancel#Order zeroed its lines); fixed here by
+    not cancelling an invoiced order and by counting a zeroed line's billed quantity; such an order now stays approved with its invoice
+    and refund payments, and Accounting settles the invoice (a credit memo), which nothing does automatically;
+  - P17's code: a corrected or substituted attendee's ticket reused the first ticket's ledger key, so the new code was never mailed;
+    fixed (its own key);
+  - a capture that fails at the approval (a declined capture, an invoice Accounting refuses) is logged and leaves the order approved,
+    uninvoiced and the payment authorized; nothing retries it (the job does not look for approved, unbilled ticket orders), and a
+    partial cancellation's refund then waits;
+  - apply#OrderPaymentsToInvoice captures the whole payment, so a place cancelled before the approval is captured and refunded rather
+    than released; and a later cancellation's refund is a refund payment beside a paid invoice, never a credit memo;
+  - an offer published before follow-up 1 gets its secret at its first code, which changes the offer's row and so its revision: a
+    staff member saving the offer form opened before then is refused as stale once;
+  - the online refund percentage applies to a confirmed place's whole share, its tax included; a fee kept by the organizer is not
+    shown as a fee line anywhere (the refund is smaller);
+  - PayTraceGateway was failing on master since P17's review (its storeless Retail order retaxed by the inherited Corp gateway); now
+    insulated in the spec.
+- For the lead:
+  - budget share: mr-mantle EventRegistrations about +1.2 s (about 4.0 s); mr-pass MarketingRegistration about +0.01 s; mr-boss
+    unchanged; DemoTaxNexus adds a few updates to four Mantle specs;
+  - merge hot spots (P18 beside): mr-mantle `entity/EventRegistrationEntities.xml` (policy, registration and terms fields, three
+    actions), `EventRegistrationPlaces.js` (issueCode, reissueCode, registrationOfCode, the rule, cancelPlaces, staff cancel, the view
+    and exports), `EventRegistrationPayments.js`, `EventRegistrations.js` (the rule, publish's secret, the views), `EventRegistrationServices.xml`
+    (cancel#, reissue#, change#, get#, store#RegistrationPolicy, invoice#RegistrationOrder), `EventRegistration.secas.xml`,
+    `MarketingPortal.js` (the registration view and cancelRegistration), `MarketingPortalServices.xml`, `PaymentTestServices.xml`,
+    `test/work/EventRegistrations.spec.js` (a block at the end), four Mantle flows' setups and `test/order/DemoTaxNexus.js`; mr-pass
+    `screen/Marketing/Event.html.fancy`, `Register.html.fancy`, `Registration.xml` and `.html.fancy`, `test/Marketing/MarketingRegistration.spec.js`,
+    `MarketingEvents.spec.js`, `docs/Deployment.md`; mr-boss `screen/Marketing/Events/RegistrationDetail.xml`, `RegistrationSetup.xml`,
+    `template/MarketingRegistrations.xml`, `template/MarketingEvents.xml`, `data/BossZZMarketingDemoData.xml`,
+    `test/Marketing/MarketingRegistrations.spec.js`, `plan/design-marketing.md`, `plan/usl-inventory.md`, this file;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, PASS Marketing's registration paragraph; no mr-moqui worktree): replace
+    "A cancellation needs the RegistrationCancel scope, a confirmation and a request key, before the occurrence starts." with "A
+    cancellation needs the RegistrationCancel scope, a confirmation and a request key, before the occurrence starts and as the
+    cancellation rule of the terms the registration accepted allows (a confirmed place until its deadline, after it with no refund only
+    where the rule allows; else CANCELLATION_CLOSED and nothing changes); its refund is the rule's percentage of the place's share,
+    never a value from the request." and replace "An entry code is issued only to a confirmed place's ticket or by Show my entry code (a
+    POST with a fresh request key), shown once, stored as a digest with a revision, each new code revoking the last;" with "An entry
+    code is shown only in a confirmed place's ticket or by Show my entry code (a POST with a fresh request key); it is derived from the
+    registration and its credential revision with the offer's secret (an encrypted field, never shown), stored only as a digest with
+    the revision, the same for a revision and changed by a correction, a cancellation or a staff reissue (MARKETING_EVENT_MANAGE, with a
+    reason), each revoking the last;";
+  - the user's calls (none blocking): the rule binding confirmed places only (a never-sold place refunded in full); a late
+    cancellation as the offer's choice, off by default; Mantle's classic flows insulated from the demo's Retail nexus rather than
+    taking BOSS's tax into Mantle's figures; whether a framework `hmac` member should replace the nested digest (one function).
+
+**Review Nov 15 (follow-up 1).** A fresh review of `mkt/fix1` (mr-mantle 2eb94b4b, mr-boss cfe34a6d, mr-pass 99e3932) against the
+user's four calls (§4 Nov 15), §2 and design §9, §13, §14.1; master (P18, check-in) merged into mr-mantle and mr-boss (design §14.1's
+EventAttendance row and usl-inventory's P18 table kept beside follow-up 1's), mr-pass unchanged. Fixes committed per repository as
+"Marketing follow-up 1 review: …"; mr-pass and mr-moqui unchanged.
+- Checked and sound:
+  - capture: the tx-commit SECA (any order returns at once unless OrpEventRegistration), each part in its own transaction under its
+    row lock with the billing read again there (two approvals bill once), the cancelled places' lines left off, errors logged and
+    the approval untouched (it has committed); a refund waiting on the capture handed over after; Accounting's and Shop's specs
+    untouched (no shared code changed). Capturing the whole authorization and refunding a place cancelled before the approval is
+    apply#OrderPaymentsToInvoice's documented behaviour (its TODO) and the user's "through Accounting's path": kept, a finding
+    (the buyer sees a charge and a refund rather than a smaller charge; a provider fee may apply);
+  - the rule: the accepted revision's rule (EventRegistrationTerms per revision, termsRevision raised by a rule change after
+    publication), confirmed places only, the decision made before the lock and applied under it; past the deadline
+    CANCELLATION_CLOSED before anything is written (a named closed place refuses the whole request); staff's percentage validated
+    (0–100, two decimals), an override (a figure other than the terms') recorded as EraRefundOverride with the reason, staff free
+    after the deadline and the start. The refund is the percentage of the place's line and its tax: sound (the tax follows the
+    revenue kept), rounded to the currency; Accounting still sees a refund payment beside a paid invoice, never a credit memo (P17);
+  - the entry code: inner = SHA-256(key "\n" registrationId "\n" revision), code = "EV" + the first 24 hex of SHA-256(key "\n"
+    inner-hex). The key is 64 URL-safe base64 characters (384 random bits, `ec.user.randomString`: no "\n"), the registration id
+    a sequenced id and the revision an integer, so both inputs parse one way; the outer input is fixed-length; the inner digest is
+    never shown and the outer is truncated, so a length extension yields nothing usable (H(K‖H(K‖m)), a sound keyed construction
+    for this use). 96 bits of code, stored as `singleUseCodeHash` only. The key is in `encrypt="true"`, not audited, never in a
+    view (policyView, publicView, getRegistration, exports and the PASS answers list their fields), Assist, Marketing.js's palette
+    or a DataDocument; revocation by revision (a correction, substitution or reissue raises it, a cancellation clears the digest);
+    codeOf is one function, ready for the framework `hmac` member (the user's call below). The lazy secret (an offer published
+    before follow-up 1, the demo's workshop, a spec's `make`d offer such as P18's EventCheckIn) changes the offer's row once: a
+    staff form opened before is refused as stale once (the Built note's finding stands);
+  - access: reissue#RegistrationCode and the staff cancel's refundPercent behind MARKETING_EVENT_MANAGE at the revision read; the
+    code never answered to staff; PASS's canCancel per place from the same cancelTermsOf as the write.
+- Fixed:
+  - R1 (high) the capture was never applied: create#FulfillmentInvoice leaves the invoice InvoiceInProcess, so
+    apply#OrderPaymentsToInvoice captured the payment and then applied nothing ("Not applying payment … in status
+    InvoiceInProcess"); the spec checked the capture and the invoice total, not the application. invoiceOrder now finalizes each new
+    invoice and applies the order part's payments, as Shop's finalize step and create#SalesShipmentInvoices do, in a transaction of
+    its own after the invoice's, so a finalization Accounting refuses (posting not set up; the spec's organizations) keeps the
+    invoice and the capture and is logged for Accounting. Spec: the invoice kept in process when its finalization is refused;
+  - R2 (medium) a capture that failed or never ran at the approval was never retried: the holds job (reconcile) now invoices an
+    approved ticket order with nothing billed while its payment is still only authorized (the authorized payments with an order,
+    bounded), once under the part lock; a declined capture moves the payment out of Authorized and ends the retries. Spec: an
+    approval made without the order's services (no SECA) invoiced and captured by the job once, a second run billing nothing
+    (fails on the unfixed code: no `invoiced`);
+  - R3 (low) an entry code typed in lower case named no one (the digest is of the exact text): registrationOfCode tries the
+    upper-cased code after the exact one (a pre-follow-up random code still matches exactly). Spec: the lower-case code; the
+    reissued code naming no one after a correction (P18's substitution expectation);
+  - R4 (the user's call, Nov 15) OrderBulk and PayTraceGateway sell as spec-local internal organizations (OBULK_SELLER,
+    PT_SPEC_SELLER: no nexus, no organization above them, so no inherited gateway), their figures unchanged; OrderBulk's generated
+    order names that seller. DemoTaxNexus.js is kept, nexus only, for OrderToCashBasicFlow and ReturnToResponseBasicFlow: those are
+    one chain over POPC_DEFAULT (Retail's store, LOCAL) with OrderProcureToPayBasicFlow's stock received into Retail's ZIRET_WH and
+    posted to Retail's ledger, its customers (CustJqp owned by Retail), bank account and promotions, about 100 Retail references in
+    2,400 lines of data checks, and four specs depending on the chain's data (FinancialReports, AssetReservationMisc,
+    WorkPlanToCashBasicFlow, ShipmentReturnMisc); moving it needs a new organization with its own preference and ledger, a store
+    and warehouse with stock, and the chain's expected rows rewritten: not done here. Its suspension is safe meanwhile: cleanupSpec
+    runs even when setupSpec or a feature fails, a run's specs share a database serially (each `--workers` worker its own copy),
+    so no other spec sees the nexus missing; only a killed process leaves it off, on that run's database.
+- Findings, numbered by the lead F357 to F362 in order:
+  - the capture is made inside the invoice's transaction under the part's lock (the provider is asked while the part is locked;
+    Shop captures apart first); a slow provider holds that order part only;
+  - a ticket invoice is finalized at the approval: its InvoiceFinalized SECAs post it and may send the invoice email where the
+    organization has one, beside the registration's own receipt;
+  - the finalize-and-apply path's success is not covered by a regression spec (the spec's organizations have no posting); a demo
+    organization's ticket order (Retail's workshop) exercises it;
+  - the whole authorization captured and a place cancelled before the approval refunded from it (above);
+  - OrderToCashBasicFlow and ReturnToResponseBasicFlow still suspend Retail's nexus (R4);
+  - ProductsPriceLists and ProductsPricing (mr-boss) fail on master too (the main checkout, release): BossProductsDemoData's
+    BOSS_PRICE_SALES (15.00) ends and BOSS_PRICE_NEXT (16.00, "Scheduled next price") starts 2026-11-15 00:00, today, so the price
+    list's explanation reads 14.40 (16.00 less 10 %) for the expected 13.50 and the REST read lists BOSS_PRICE_NEXT, not
+    BOSS_PRICE_SALES: a date in the demo data, not tax and not this follow-up.
+- Tests (release, `--nobuild`, this worktree's runtime, after the merge): mr-mantle EventRegistrations, EventCheckIn, Automations,
+  LeadCapture (32 of 32; EventRegistrations 16 features, about 4.5 s), ReturnToResponseBasicFlow with its chain, OrderBulk,
+  PayTraceGateway (72 of 72, 7 specs); mr-boss MarketingRegistrations, MarketingAccess, MarketingEvents (12 of 12); mr-boss
+  ProductsPriceLists, ProductsPricing on the main checkout (21 of 23, the two date failures above). Prettier (mr-moqui's config)
+  on the changed JavaScript. Not run: test-apps, acceptance.
+- For the lead:
+  - budget share: mr-mantle EventRegistrations about +0.4 s over the Built note's (one feature); OrderBulk and PayTraceGateway
+    unchanged;
+  - merge hot spots: mr-mantle `EventRegistrationPayments.js` (invoiceOrder, reconcile), `EventRegistrationServices.xml`
+    (run#RegistrationHolds' `invoiced`), `EventRegistrationPlaces.js` (registrationOfCode), `test/order/OrderBulk.spec.js`,
+    `test/ext/PayTraceGateway.spec.js`, `test/order/DemoTaxNexus.js`; mr-boss this file and §4;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`, PASS Marketing's registration paragraph), the Built note's two
+    replacements corrected: "A cancellation needs the RegistrationCancel scope, a confirmation and a request key, before the
+    occurrence starts and as the cancellation rule of the terms the registration accepted allows (a confirmed place until its
+    deadline, after it with no refund only where the rule allows; else CANCELLATION_CLOSED and nothing changes); a confirmed
+    place's refund is the rule's percentage of its price and tax, a place not yet confirmed is refunded in full, never a value from
+    the request." and "An entry code is shown only in a confirmed place's ticket or by Show my entry code (a POST with a fresh
+    request key); it is derived from the registration and its credential revision with the offer's secret (an encrypted field,
+    never shown or listed), stored only as a digest with the revision, the same for a revision; a correction, a substitution or a
+    staff reissue (MARKETING_EVENT_MANAGE, with a reason) raises the revision and a cancellation clears it, each revoking the
+    earlier code;";
+  - the user's calls made (§4 Nov 15): the classic flows on a Mantle-owned seller (OrderBulk and PayTraceGateway done; the
+    OrderToCash chain left, R4); the framework `hmac` member for codeOf, the lead's in mr-moqui;
+  - the user's call open: whether the OrderToCash chain's move (R4) is worth its size, or the nexus suspension stays for it.
+
+### Follow-up 2 — The framework hmac member for entry codes, and demo dates relative to the load
+
+The user's two calls of Nov 15 (§4): a framework `hmac` host member replacing the nested digest of the entry code (codeOf), and the
+demo data dates that regression specs depend on made relative to the load (or far future), the specs reading as of a fixed date,
+starting with BOSS_PRICE_SALES/BOSS_PRICE_NEXT. Branch `mkt/fix2` in mr-moqui, mr-mantle and mr-boss.
+
+**Built Nov 15 (follow-up 2).** mr-moqui, mr-mantle and mr-boss on branch `mkt/fix2` from master after follow-up 1's merge.
+- Checked first (the code over the plan): the script host's digest members (`ec.resource.digestText`, archive.rs `textDigest`:
+  lower-case hex; `makeGrant`'s HMAC-SHA256 tag in files.rs, hex), EventRegistrationPlaces.js codeOf, issueCode and
+  registrationOfCode, the demo services that date data from the load (commons DemoServices.xml load#CommonsDemo and the others
+  called from data files) and the test fixture's snapshot key (moqui-host fixture.rs: the day of the load is part of it, so a
+  load-relative date is the same for every spec of a day's runs). The data loader has no now-relative attribute syntax; a demo
+  service called from the data file is the existing way. The code over the plan:
+  - `ec.resource.hmac(key, message, encoding)` returns lower-case hex like digestText (or unpadded base64url with "base64url"), and
+    refuses an empty key (a keyed digest without a key is a mistake, as makeGrant refuses one);
+  - `digestText` was missing from moqui-host.d.ts and is added beside `hmac`.
+- Framework (mr-moqui): `ec.resource.hmac` (crates/moqui-core/src/script/host/archive.rs `textHmac`, the shim in tools.rs);
+  docs/dev/JS-Core-API.md (the member and the `ec.resource` list); both moqui-host.d.ts (typegen and its testdata/expected).
+  Tests: archive.rs `hmac_sha256_matches_rfc_4231` (RFC 4231 cases 1, 2 and 6, a key longer than the block), and the script-level
+  check in framework_gaps_tests.rs `resource_digests_archives_and_line_windows` (case 2 in hex and base64url, an empty key refused).
+- Entry code (mr-mantle EventRegistrationPlaces.js codeOf): "EV" and the first 24 hex characters, upper-cased, of
+  `ec.resource.hmac(entryCodeKey, registrationId + "\n" + revision)`. No version marker: a stored digest is of the code shown, and
+  registrationOfCode looks a presented code up by its digest whatever made it, so a code issued under follow-up 1's construction
+  still checks in; issueCode, finding the stored digest is not the new derivation's, writes the next revision's code (as it already
+  did for P17's random codes), which revokes the old one at that showing. So existing codes rotate at their registration's next
+  showing (a ticket sent, Send again, Show my entry code), never silently: until then the old code works, and the showing answers the
+  new one. Pre-release, and the demo data stores no entry code digest, so this is acceptable without keeping the old construction.
+- Demo dates (mr-boss):
+  - BossProductsDemoData.xml: BOSS_PRICE_SALES (15.00) ends and BOSS_PRICE_NEXT (16.00, "Scheduled next price") starts on the first
+    day of the month after next at 00:00, relative to the load: the new `ironstone.products.DemoServices.load#ScheduledPriceDemo`
+    (service/ironstone/products/DemoServices.xml), called from the data file after the rows, moves the 2099-01-01 placeholders (a
+    load on Nov 15, 2026 switches on Jan 1, 2027; loading again moves it). ProductsPriceLists reads the explanation with `validDate`
+    2026-06-01 and ProductsPricing's REST read with `asOfDate` 2026-06-01, so each asserts 13.50 and BOSS_PRICE_SALES on any day.
+    Both failed on master from Nov 15 and pass now;
+  - the sweep (records dated from today to March 2027 in mr-boss's demo data, the specs that name them, and the area specs run, below):
+    nothing else fails today, and the near ones were judged safe: Maintenance's compressor oil service (Nov 17), the vendor walk and
+    room blackout (Nov 17), the handover booking (Nov 18, its list already read from 2026-11-12), Owen's leave (Nov 16–20, ranked
+    against the work's own window, not now), the rewind request (Nov 20), Room 201's draft plan (Nov 30, no spec), the warranties (the
+    spec sets them from now), the van's registration (Dec 31, no spec); MaintenancePlans' November obligation was fixed by Sales
+    follow-up 3 (thruDate 2026-11-13); Sales' Q4 forecast (named period), quotes and RFQ (no date check before Jan 31, 2027), Purchasing's
+    acknowledgement order (Nov 20, no lateness asserted of it), Marketing's campaigns (status "open", the selected one kept), the
+    December send (MarketingDelivery moves its schedule to a week from now), the fall fair import (Dec 12, its detail reads the same
+    once expired), People's leave year 2026 (explicit dates in PeopleLeave), Projects' milestones (no date check), Warehouse's forklift
+    service (Nov 15), Manufacturing's shutdown and People's stocktake holiday (no spec). mr-mantle's demo data has no date in the window,
+    and no mr-mantle or mr-pass spec names a BOSS demo record.
+- Tests run:
+  - Rust (Debug, CARGO_BUILD_JOBS=4, this worktree): `hmac_sha256_matches_rfc_4231`, `resource_digests_archives_and_line_windows`
+    (2 of 2); moqui-devkit's typegen tests (8 of 8, the expected moqui-host.d.ts); mr-mantle EventRegistrations (16 features) and
+    EventCheckIn with this worktree's Debug binary (`--debug --nobuild`, 19 of 19, 8.7 s of feature time in Debug);
+  - mr-boss (release, `--nobuild`, this worktree's runtime): ProductsPriceLists, ProductsPricing (23 of 23); the sweep, the 169
+    regression specs of Maintenance, People, Marketing, Sales, Purchasing, Projects, Products, Warehouse, Manufacturing and
+    CustomerService on 4 workers (933 of 935): SalesQuotes and SalesQuoteSend fail alike on master's runtime (below), not a date.
+  - Prettier (mr-moqui's config) on the changed JavaScript; rustfmt on archive.rs. Not run: test-apps, test-framework, acceptance.
+- Findings, numbered by the lead F363 to F366 in order:
+  - the code over the plan above (hex by default with an optional base64url, an empty key refused; no version marker for codes);
+  - existing entry codes of follow-up 1's construction rotate at their registration's next showing (the demo data stores none);
+  - SalesQuotes ("No tax: the seller has no tax gateway" not shown for Wingtip's quote) and SalesQuoteSend (propose#Quote refused,
+    ADDRESS_REQUIRED: the customer has no address to tax the quote at) fail on master too: Retail now has a Utah nexus and inherits
+    Corp's LOCAL gateway (follow-up 1's demo change), so Retail's quotes are taxed and need an address; a follow-up for Sales' specs
+    or demo (Wingtip given an address, or the specs' expectations), not done here;
+  - dates beyond December that specs depend on, next to turn: Marketing's webinar (2027-01-28) and workshop (2027-03-13, closing
+    03-12) offers that MarketingAccess and the Marketing specs register for; Wingtip's quote valid to 2027-01-31; PeopleLeave's
+    requests of 2027-04-06/07. Not changed (outside the call's Nov–Dec window).
+- For the lead:
+  - budget share: none (two parameters in two specs; the demo service runs once per load);
+  - merge hot spots: mr-moqui `crates/moqui-core/src/script/host/archive.rs`, `tools.rs`, `framework_gaps_tests.rs`, both
+    `moqui-host.d.ts`, `docs/dev/JS-Core-API.md`; mr-mantle `service/mantle/work/EventRegistrationPlaces.js` (codeOf); mr-boss
+    `data/BossProductsDemoData.xml`, `service/ironstone/products/DemoServices.xml` (new), `test/Products/ProductsPriceLists.spec.js`,
+    `ProductsPricing.spec.js`, `plan/design-marketing.md` (§13's entry code line), this file;
+  - the user's call: whether to give the beyond-December event and quote dates the same treatment now (events relative to the load
+    would need the offers' occurrences, closing dates and the PASS pages' expectations moved together).
+
+**Review Nov 15 (follow-up 2).** A fresh review of `mkt/fix2` (mr-moqui d8df3855, mr-mantle 1cef2308, mr-boss 99db0511) against the
+user's two calls (§4 Nov 15), §2 and docs/dev/Practices-Rust.md; master had nothing newer in any of the three. Fixes committed per
+repository as "Marketing follow-up 2 review: …"; mr-mantle unchanged. The lead's addition, made here: the Sales quote specs that
+failed on master since follow-up 1 gave Retail a Utah nexus (R3).
+- Checked and sound:
+  - `ec.resource.hmac`: HMAC-SHA256 through the `hmac` crate (RFC 2104; the three RFC 4231 vectors and the base64url form checked
+    again independently), key and message as the strings' UTF-8 bytes (a binary key is passed as its text, hex or base64, which is
+    then the key: documented as UTF-8), lower-case hex by default or unpadded base64url, any other encoding refused naming only the
+    encoding; an empty or null key refused with "an hmac needs a key", the key never in a message or log. A `leaf` method like
+    textDigest (it uses no ec state). Constant-time comparison is not this member's concern (it makes tags; the entry code is
+    compared by its stored digest). JS-Core-API.md (the member and the non-Java list), both moqui-host.d.ts (digestText added too)
+    and the typegen expected file agree;
+  - the entry code: "EV" + the first 24 hex (96 bits) of HMAC(entryCodeKey, registrationId "\n" revision), upper-cased. The key is
+    the HMAC key (no concatenation with the message), the message parses one way (a sequenced id, an integer); stored only as
+    `singleUseCodeHash`; registrationOfCode looks a code up by its digest whatever made it, so a follow-up 1 code checks in until
+    its registration's next showing, where issueCode finds the stored digest is not the new derivation's, raises the revision and
+    writes the new code (the old one stops matching then, as P17's random codes did). Pre-release and the demo stores no digest:
+    acceptable as the Built note says;
+  - the price demo: load#ScheduledPriceDemo (anonymous-all, allow-remote false, a signed-in caller must be ADMIN, as the other demo
+    loaders are internal) moves the 2099 placeholders to the first of the month after next at 00:00 in the server's zone, a
+    missing row logged and skipped; the specs read `validDate` / `asOfDate` 2026-06-01, which get#PriceExplanation and
+    find#ProductPrices honor. The worker's date sweep reads right where I sampled it (Maintenance, Sales, Marketing's December
+    send); the 2027 dates are below.
+- Fixed:
+  - R1 (low) nothing checked that load#ScheduledPriceDemo ran: with the specs reading as of a fixed date, a broken loader would
+    leave the 2099 placeholders and pass. ProductsPriceLists now checks BOSS_PRICE_SALES ends where BOSS_PRICE_NEXT starts, ahead
+    of now and within 63 days (fails on master's data, which switched today);
+  - R2 (low) `ec.resource.hmac`'s script-level test covered ASCII only: a non-ASCII key and message (é, é: the UTF-8 bytes,
+    checked against Python's hmac) and an unknown encoding refused, in framework_gaps_tests.rs;
+  - R3 (medium; the lead's addition) mr-boss SalesQuotes and SalesQuoteSend failed on master: follow-up 1's Utah nexus for Retail
+    with Corp's LOCAL gateway taxes Retail's storeless quotes, so OrderDetail no longer says "No tax: the seller has no tax
+    gateway" and propose#Quote refused ADDRESS_REQUIRED (Wingtip had no address). Wingtip Traders (the only Retail customer the
+    Sales specs quote or order for) has a Provo, Utah PostalShippingDest address (BOSS_SAL_WINGTIP_ADDR,
+    BossYSalesAccountsDemoData.xml), which create#Quote takes. The demo draft BOSS_SAL_QTE_WINGTIP keeps no address of its own: it
+    loads before Retail's nexus and gateway (BossZZMarketingDemoData.xml), so it carries no tax line, and with an address of its
+    own propose#Quote would skip the retax (refreshTax returns when the part has an address) and issue it untaxed; without one,
+    OrderDetail says "Tax by the seller's gateway … the quote has no address: choose the customer's in Edit quote" and a proposal
+    takes Wingtip's address and retaxes first (F151). Its data comment says so. SalesQuotes asserts that note and no "No tax";
+    SalesQuoteSend asserts the new quote is at Wingtip's address with a sales tax line (it failed on master before reaching that).
+- Findings, numbered by the lead F367 to F369 in order:
+  - existing entry codes of follow-up 1's construction rotate at their registration's next showing (as the Built note says);
+  - the demo quote BOSS_SAL_QTE_WINGTIP is untaxed as loaded (no tax line until a rep chooses the address or proposes it), since
+    Retail's gateway and nexus load after the Sales demo; giving it tax at load would mean taxing it after BossZZMarketingDemoData
+    or moving Retail's nexus into the Sales demo;
+  - dates beyond December that specs depend on, next to turn (the worker's list, not changed): Marketing's webinar offer
+    (2027-01-28) and workshop (2027-03-13, closing 03-12), which MarketingAccess and the Marketing specs register for; Wingtip's
+    quote valid to 2027-01-31; PeopleLeave's requests of 2027-04-06/07.
+- Tests (this worktree's runtime):
+  - Rust (Debug, CARGO_BUILD_JOBS=4): `cargo test -p moqui-core hmac` (7 of 7), `resource_digests_archives_and_line_windows` (after
+    R2), moqui-devkit typegen (8 of 8);
+  - mr-mantle EventRegistrations, EventCheckIn (Debug, `--debug --nobuild`, 19 of 19, 61 s wall in Debug); SalesQuoteIssue,
+    SalesQuoteDrafts (release, 12 of 12);
+  - mr-boss (release, `--nobuild`): before R3 ProductsPriceLists, ProductsPricing, SalesQuotes, SalesQuoteSend 25 of 27 (the two
+    Sales failures); after it SalesQuotes, SalesQuoteSend, SalesOrders, SalesQuoteTemplates, SalesApprovals, ProductsPriceLists,
+    ProductsPricing 32 of 32, and SalesOrderChanges, SalesQuoteAlert, SalesRecurrence, SalesAccess, SalesAccounts,
+    SalesQuoteRequests (the other specs that order or quote for Wingtip) passing with the address; ProductsPriceLists after R1
+    8 of 8. Prettier (mr-moqui's config) on the changed specs. Not run: test-apps, test-framework, acceptance.
+- For the lead:
+  - budget share: none measurable (one entity read in ProductsPriceLists, one count and one read in SalesQuoteSend);
+  - merge hot spots: mr-boss `data/BossYSalesAccountsDemoData.xml` (Wingtip), `data/BossZSalesDemoData.xml` (the Wingtip quote's
+    comment), `test/Sales/SalesQuotes.spec.js`, `SalesQuoteSend.spec.js`, `test/Products/ProductsPriceLists.spec.js`, this file;
+    mr-moqui `framework_gaps_tests.rs`;
+  - the user's call open (the Built note's): whether the 2027 event and quote dates get the load-relative treatment now.
+
+### Follow-up 3 — The 2027 demo dates specs depend on, relative to the load
+
+The user's call of Nov 15 (§4): the remaining demo dates that regression and acceptance specs depend on become relative to the load,
+as follow-up 2 did for the Products price switch: Marketing's webinar (2027-01-28) and workshop (2027-03-13, closing 03-12), Wingtip's
+quote valid to 2027-01-31, and PeopleLeave's requests of 2027-04-06/07 (F366, F369). Branch `mkt/fix3` in mr-boss (mr-mantle and
+mr-pass unchanged).
+
+**Built Nov 15 (follow-up 3).** mr-boss on branch `mkt/fix3` from master after follow-up 2's merge.
+- Checked first (the code over the plan): follow-up 2's loader (load#ScheduledPriceDemo: 2099 placeholders in the data file, moved by
+  a demo service called after the rows, in the server's zone; the test snapshot keyed by the load day); every spec and acceptance spec
+  that names the events, offers, ticket types or demo quotes, or the 2027 dates (grep of mr-boss, mr-mantle and mr-pass); the offer's
+  dated fields (occurrenceStart and End, closesDate; the check-in window is reckoned from the occurrence, EventCheckIn.js, with no
+  field of its own; no demo registration exists); the webinar's call link (P16's load#EventDemo, 90 days from the load); the order
+  part change rule (OrderPartHandleChange). The code over the plan:
+  - no mr-mantle or mr-pass spec depends on the BOSS demo's events: PASS's MarketingFixtures and Mantle's event specs make their own
+    offers dated from now, so the PASS expectations needed no change, and no BOSS regression spec asserts an event's date (they
+    register, render and scan); the dependency was the date passing;
+  - updating a demo quote's validity through update#OrderPart runs OrderPartHandleChange, which counts a new revision; the quote specs
+    act on revision 1 (SalesAccess, SalesApprovals), so the quote loader writes with entity ECA rules off, as the loaded row;
+  - Fabrikam's quote (valid to 2027-02-28, rendered by SalesQuotes and refused in SalesAccess) is moved with Wingtip's, the same case
+    a month later.
+- Demo (mr-boss):
+  - BossZZMarketingDemoData.xml: the events' and offers' dates are 2099 placeholders that the new
+    `ironstone.marketing.DemoServices.load#EventDatesDemo` (service/ironstone/marketing/DemoServices.xml, called before load#EventDemo)
+    moves together: the webinar to 18:00–19:00 on the first Thursday 70 days or more after the load day (inside its call link's 90
+    days), the workshop to 09:00–12:00 on the first Saturday 118 days or more after it, closing the day before at 17:00; each event's
+    estimated start and end are its offer's occurrence. A load on Nov 15, 2026 gives exactly the old dates (Thursday Jan 28 and
+    Saturday Mar 13, closing Friday Mar 12); loading again moves them. The story stands: an upcoming webinar, a workshop a few months
+    out;
+  - BossZSalesDemoData.xml: the two quotes' validThruDate are placeholders that the new `ironstone.sales.DemoServices.load#QuoteDatesDemo`
+    (service/ironstone/sales/DemoServices.xml, new, called after the Fabrikam quote) moves to 77 days (Wingtip) and 105 days
+    (Fabrikam) after the load day at 00:00 (Jan 31 and Feb 28, 2027 for a load on Nov 15); revision 1 kept;
+  - both loaders as load#ScheduledPriceDemo: anonymous-all, allow-remote false, a signed-in caller must be ADMIN, a missing row logged
+    and skipped.
+- Specs (mr-boss):
+  - PeopleLeave: its requests (spec data, not demo) fall on the first Tuesday 140 days or more ahead of the run (Tomas's morning) and
+    the Wednesday after (Ines's day), the calendar's range, the twin's date and its Earlier and Later around them (Apr 6 and 7, 2027 on
+    Nov 15, as before). Leave is not refused for a past day, but the year's turn would have aged the spec; Retail's holidays are on a
+    calendar nobody in the demo follows, so a Tuesday and a Wednesday are always charged;
+  - MarketingEvents checks the loader ran (a broken one would leave 2099 and pass, follow-up 2's R1): each event's start and end are
+    its offer's, the webinar a Thursday 18:00 ten to eleven weeks ahead, the workshop a Saturday 09:00 116 to 126 days ahead, closing
+    16 hours before; SalesQuotes checks Wingtip's validity ends 75 to 78 days ahead and Fabrikam's 103 to 106.
+- Acceptance specs that read these records (grep): MarketingRegistrationScenario registers for the demo webinar and reads its call
+  link, MarketingEventSetupWalk reads the events' owner; none hard-codes their dates or the quotes', so no expectation changed. Not
+  run, as the call said.
+- Not moved (no spec depends on them; for the lead): the spring campaign's thruDate (2027-01-31), its launch evening (Jan 10–12) and
+  Services' campaign (to Feb 28), the Sales opportunities' estimated close dates (Jan 31, Feb 28, Mar 15), Retail's holidays (Jan 4,
+  Jun 14). A load after January shows the workshop after its campaign's end, a story seam only.
+- Tests run (release, `--nobuild`, this worktree's runtime): MarketingEvents, SalesQuotes, PeopleLeave (9 of 9; the two new features
+  0.00 s each); every Marketing and Sales regression spec of mr-boss on 4 workers (34 specs, 95 of 95, 40.3 s of feature time); every
+  Insights and People spec (41 specs, 176 of 176); mr-pass MarketingEvents, MarketingRegistration, MarketingAccess (9 of 9); mr-mantle
+  EventRegistrations, EventCheckIn, EventRegistrationSetup (22 of 22). Prettier (mr-moqui's config) on the changed specs. Not run:
+  test-apps, test-framework, acceptance.
+- Findings, numbered by the lead F381 to F382 in order:
+  - the code over the plan above: no Mantle or PASS spec depended on the BOSS events, and moving a quote's validity through the
+    entity service raises its revision, so the loader runs without entity ECA rules; Fabrikam's quote is moved too;
+  - the dates left fixed (the campaigns', the opportunities', Retail's holidays): no spec depends on them; the spring campaign ends
+    Jan 31, 2027 whatever the load, so a later load shows its events after it.
+- For the lead:
+  - budget share: none measurable (two entity reads and two quote reads in two new features; the loaders run once per load);
+  - merge hot spots: mr-boss `data/BossZZMarketingDemoData.xml` (P16 block), `data/BossZSalesDemoData.xml` (P7 block),
+    `service/ironstone/marketing/DemoServices.xml`, `service/ironstone/sales/DemoServices.xml` (new), `test/Marketing/MarketingEvents.spec.js`,
+    `test/Sales/SalesQuotes.spec.js`, `test/People/PeopleLeave.spec.js`, this file. P19 and P20 touch none of these but this file;
+  - the user's call, if wanted: whether the campaigns' and opportunities' dates follow the load too (no spec needs it).
+
+**Review Nov 15 (follow-up 3).** A fresh review of `mkt/fix3` (mr-boss 92cc9f91; master had nothing newer) against the follow-up's
+text, §2, §4 (the Nov 15 call) and follow-up 2's loader pattern.
+- Checked and sound:
+  - both loaders are internal (`allow-remote="false"`, anonymous-all for data loading) and refuse a signed-in non-ADMIN, as
+    load#ScheduledPriceDemo; fixed IDs only, nothing supplied is trusted; a missing row is logged and skipped;
+  - quote dates with entity ECA rules off: on OrderPart the only rule is OrderPartHandleChange (handle#OrderPartChange: retax on an
+    address or customer change, else increment#OrderRevision), so turning rules off skips only the revision count, as intended. The
+    data feed (`note_touch`, so the order and quote search documents and Insights' feeds) and the audit log are separate from the
+    rule switch (moqui-entity `load_feed/eca.rs` gates the rules only), so the indexes see the new date; the previous switch state is
+    restored in `finally`;
+  - the event loader writes the events with rules on: WorkEffort's rules (project update, request sync, shell counts) are harmless
+    for an event; EventRegistrationPolicy has none, and its policyRevision is a service's, not a rule's;
+  - day arithmetic: the windows of both new features allow a load just before midnight and a DST change between load and event
+    (the quote window 75–78 days against 77 days less up to a day; the webinar 68–79, the workshop 116–126); the workshop closes
+    Friday 17:00 to Saturday 09:00, which no US or EU DST change falls in, so the spec's 16 hours holds;
+  - the webinar's call link: a fresh load puts the webinar 70–77 days out, inside the link's 90 days (2160 hours);
+  - PeopleLeave: no holiday reaches the chosen days. Employer holidays are WepHoliday rows owned by the organization and the demo
+    has none (BOSS_PPL_HOL_* are on BOSS_PPL_HOL_RETAIL, the calendar of a schedule nobody follows; Mantle's US holidays are on
+    HolidayUsaFed/Bank, assigned to no one); a Tuesday and a Wednesday are always working days of the standard week, never a
+    weekend; the twin's Earlier and Later are the given date ±14 days, as before;
+  - the two new features check the loaders ran (a broken loader leaves 2099 and fails them).
+- Fixed:
+  - R1 (medium): the event loader counted days and hours in the server's local zone (the script engine's `Date`), while PASS shows
+    the occurrence in the offer's zone (America/Denver): on this machine (America/Chicago) the demo webinar read Thu 17:00 and the
+    workshop's closing Fri 16:00 on PASS (checked before the fix), and on a UTC server it would read 11:00. The loader now takes the
+    load day in each offer's zone (`ec.l10n.format`), counts calendar days in UTC and reads the wall-clock hour back in the zone
+    (`ec.l10n.parseTimestamp`), DST kept. MarketingEvents checks the occurrence as `Thu 18:00` and `Sat 09:00` formatted in the
+    offer's zone (it fails on the unfixed loader). The old fixed rows had the same seam;
+  - R2 (low): the quotes' rows carried a 2099 placeholder validThruDate, so a reload of BossZSalesDemoData over a loaded database
+    changed the stored date and OrderPartHandleChange counted revision 2 (the header row resets 1 just before; checked with a store
+    of the row: unchanged or omitted fields count nothing, the placeholder counts one), breaking the specs that act on revision 1.
+    The rows now name no validThruDate and load#QuoteDatesDemo writes it.
+- Findings, numbered by the lead F383 to F385 in order:
+  - R1 and R2 above;
+  - the webinar's call link is made once (P16's webinarCall skips an event with an infoUrl), so a reload more than about two weeks
+    after the first load moves the webinar past the link's 90 days; a fresh load is always inside. Not fixed: telling an expired link
+    needs the CallLink row behind the path (its token is hashed); for the lead whether the demo loader should renew it;
+  - a quote loader failure: the two moves share the service's transaction, so a failing update rolls back both (fixed IDs, rare);
+    noted, not changed.
+- Tests run (release, `--nobuild`, this worktree's runtime): mr-boss MarketingEvents, SalesQuotes, SalesAccess, SalesApprovals,
+  PeopleLeave, MarketingAccess, MarketingRegistrations (7 specs, 38 of 38, 37.3 s); mr-mantle EventRegistrations (16 of 16, 29.3 s);
+  again after the fix commit MarketingEvents, SalesQuotes, PeopleLeave (9 of 9; the two new features 0.00 s each). Prettier (mr-moqui's
+  config) on the changed specs. Not run: test-apps, test-framework, acceptance.
+- For the lead:
+  - budget share: unchanged (one more `ec.l10n.format` per event in the new feature);
+  - merge hot spots: as the Built note's, plus the review commit in the same files (`data/BossZSalesDemoData.xml`,
+    `service/ironstone/marketing/DemoServices.xml`, `test/Marketing/MarketingEvents.spec.js`, `test/Sales/SalesQuotes.spec.js`);
+  - the user's calls: whether the demo should renew the webinar's call link on a reload; the Built note's (campaign and opportunity
+    dates) stands.
+
+### Follow-up 4 — A remote PASS checkout's visitor key for attribution
+
+The user's call of Nov 15 (§4, P20's review): a remote PASS frontend forwards the consented visitor key with the checkout, so an order
+placed through a remote frontend is attributed as a local one is (F386-F401, P20's Review note "the user's call 1"). The authority's
+checkout service stores only the key's digest with the order (the same digest P15 keeps on events, `digest("mkt-visitor:" + key)`), in
+the placement's own transaction before `place#Order`, and only where P15 would have recorded the key: the seller's MarketingPolicy
+`visitorKeys` Y or the customer allowing tracking with the seller, never for a customer who has withdrawn tracking; the raw key is never
+stored. PASS's checkout operation sends the frontend's first-party key (`^[A-Za-z0-9_-]{16,64}$`, else dropped) through the facade, whose
+schema gains the parameter (the byte-identical copies kept equal). `record#OrderAttribution` reads events by that digest beside the
+visit's keys, the recipient check still applying. Branch `mkt/fix4` in mr-mantle and mr-pass (mr-boss for the plan and the acceptance
+scenario).
+
+**Built Nov 15 (follow-up 4).** mr-mantle, mr-pass and mr-boss on branch `mkt/fix4` (hashes in the worker's reply), from master after
+P20's merge; mr-moqui unchanged, no Rust built. Built beside P21 (`mkt/p21`) and P22 (`mkt/p22`).
+- Checked first (the code over the plan): this section, P20's Review note "For the lead" (the user's call 1), §4's Nov 15 rows (the
+  visitor key as built in P15; the remote PASS frontend), P15's MarketingTracking.js (`recordEvent`'s digest, `trackingAllowed`,
+  `visitorKeyPattern`, the policy's `visitorKeys`), P20's MarketingAttribution.js (`identityEvents`, R2's `trackingWithdrawn` and
+  recipient check), Shop's ShopCheckout.js (submit, freeze, place) and PASS's Shop/ShopCheckout.js and TrackingLib.js (`mkt_vk`,
+  `heldKey`, `doNotTrack`). The code over the plan:
+  - "in the placement's own transaction before `place#Order`": the key arrives with `submitCheckout`, while a paid order is placed
+    later (the provider's return, the webhook, the reconciliation job), with no frontend request. Built in two places: the submit
+    computes the digest where allowed and the freeze step commits it on the order with the snapshot (before any provider call); the
+    placement step reads the consent and the policy again in its own transaction before `place#Order` and clears the digest when it
+    may no longer be kept (a customer who withdrew tracking since, a policy turned off);
+  - "stores only the key's digest with the order": `OrderHeader.marketingVisitorKeyHash` (an extend-entity in MarketingEntities.xml,
+    a follow-up 4 block at the end), the review's first suggestion; no new entity;
+  - "only where P15 would have recorded the key": `MarketingTracking.js visitorKeyAllowed(customer, seller)`: never for a customer who
+    has withdrawn tracking with the seller (`trackingWithdrawn`, moved here from MarketingAttribution.js, which now calls it), else the
+    seller's MarketingPolicy `visitorKeys` Y or the customer allowing tracking with the seller; `orderVisitorKeyHash(key, customer,
+    seller)` adds the key's form (`^[A-Za-z0-9_-]{16,64}$`, else dropped) and answers the digest; `visitorKeyHash(key)` is the one
+    digest (`digest("mkt-visitor:" + key)`, now used by `recordEvent` too), exported;
+  - "PASS's checkout operation sends the frontend's first-party key": PASS `Shop/ShopCheckout.js submit` sends the `mkt_vk` cookie
+    the browser holds (TrackingLib `heldKey`, of the key's form) unless it sends Do Not Track or Global Privacy Control, as
+    Marketing/Page.xml does for a landing page's visit; a local frontend sends it too (its order also has its local visit). The key is
+    not part of the submit's request identity (a retry with another cookie is the same submit) and never refuses it; a failure of the
+    consent read keeps nothing and is logged;
+  - the facade's schema: `submitCheckout` gains `visitorKey` in PASS `service/pass/Schema.js` and Mantle's `forum/ForumSchema.js`
+    (byte-identical), and in `Contracts.d.ts`; the route (`POST shop/checkout/submission`) and the three TOKEN_WRITES lists are
+    unchanged (submitCheckout is already a token write);
+  - `record#OrderAttribution` reads events by the stored digest (identity "visitorKey") beside the visit's keys; the withdrawn
+    customer's early return and R2's recipient check apply to it as to every path;
+  - not built: Register's ticket checkout (PASS Marketing `completeRegistration`) does not forward the key, as the section names Shop's
+    checkout only; a ticket order through a remote frontend is attributed by recipient only (a finding). The digest stays on the
+    order after the decision (the retry job and a later reader need nothing of it; retention does not clear it: a finding).
+- mr-mantle: `entity/MarketingEntities.xml` (the follow-up 4 block at the end), `service/mantle/marketing/MarketingTracking.js`
+  (`trackingWithdrawn`, `visitorKeyHash`, `visitorKeyAllowed`, `orderVisitorKeyHash` after `trackingAllowed`, exported),
+  `MarketingAttribution.js` (the header, `identityEvents`), `service/mantle/order/ShopCheckout.js` (the header, `visitorKeyHashOf`
+  before the steps, the freeze's write, `keptVisitorKey` in `placeStep`), `ShopCheckoutServices.xml` (submit#Checkout's description),
+  `service/mantle/forum/ForumSchema.js`.
+- mr-pass: `screen/Shop/ShopCheckout.js` (`visitorKeyInput`, the submit), `service/pass/Schema.js`, `service/pass/Contracts.d.ts`,
+  `plan/design-shop.md` (§13's checkout operations row).
+- mr-boss: `test/acceptance/Marketing/MarketingReportsScenario.spec.js` (the events carry the key's real digest; a new feature after
+  the reports: an order placed through a remote PASS, no local visit, keeps the digest Retail's policy allows and is attributed by
+  it; the reports' counts unchanged), `plan/design-marketing.md` (§11's as built), this note.
+- Tests: mr-mantle Attribution gains "follow-up 4: a checkout's visitor key is kept as its digest only where allowed, and the order
+  is attributed by it" (a consenting customer's key kept, a customer without consent and a guest not; malformed keys dropped; with
+  the seller's policy on a guest and a customer without consent kept, a withdrawn customer never; the digest the events' and never
+  the raw key; an order with no visit attributed by its stored digest, a withdrawn customer's and an unknown key's unattributed),
+  run against the unfixed attribution first and seen to fail; mr-pass ShopCheckout's remote-frontend feature sends a key under a
+  spec-local policy (removed after) and finds the digest on the order at the freeze and after the return's placement.
+  Run (release binary, `--nobuild`, this worktree's runtime): mr-mantle Attribution 4 of 4 (feature time 0.9 s; the new feature
+  0.14 s), ShopCheckout, Tracking, MarketingReports, Experiments, MarketingRetention 23 of 23 (9.1 s); mr-pass ShopCheckout 4 of 4
+  (0.6 s), Forum, MarketingTracking, ShopSubscriptions, MarketingPages 21 of 21 (2.0 s). No screen changed (no lint). Not run:
+  test-apps, the acceptance scenario (changed, not run).
+- Findings, numbered by the lead F402 to F403 in order:
+  - Register's ticket checkout does not forward the visitor key: a ticket order through a remote PASS is attributed by recipient
+    only (a follow-up like this one if wanted: `completeRegistration` and EventRegistrationPlaces' placement);
+  - the order keeps the digest after its decision and past the organization's statistics retention (the events it matches are
+    removed by retention unless an attribution names them); retention could clear it on orders older than the retention days.
+- For the lead:
+  - budget share: mr-mantle about +0.15 s (Attribution's new feature); mr-pass about +0.05 s (ShopCheckout's remote feature);
+    no client spec;
+  - merge hot spots: mr-mantle `entity/MarketingEntities.xml` (a block at the end, after P20's), `MarketingTracking.js` (after
+    `trackingAllowed`, the export list), `MarketingAttribution.js`, `ShopCheckout.js`, `ForumSchema.js`/PASS `Schema.js` (the
+    submitCheckout entry; P22's SMS schema entries may meet them); mr-boss `MarketingReportsScenario.spec.js`, `design-marketing.md`
+    §11, this file; mr-pass `Contracts.d.ts`, `design-shop.md`;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`; no mr-moqui worktree): in the attribution paragraph, replace "the
+    order's local visit and the visitor-key digests that visit's events carried, or its customer as a recipient who allows tracking
+    (PcpTracking)," with "the order's local visit and the visitor-key digests that visit's events carried, the visitor-key digest
+    its Shop checkout kept (`OrderHeader.marketingVisitorKeyHash`: a frontend's `submitCheckout` `visitorKey`, of the cookie's form
+    or dropped, kept only as its digest and only where an event would have kept the key, the seller's MarketingPolicy visitorKeys
+    or the customer allowing tracking, never for a customer who withdrew tracking, read again before place#Order; the raw key is
+    never stored), or its customer as a recipient who allows tracking (PcpTracking),";
+  - the user's calls: none.
+
+**Review Nov 15 (follow-up 4).** A fresh review of `mkt/fix4` (mr-mantle 60670635, mr-pass 436dea9, mr-boss 0060b0a5) against this
+section, P20's Review note "the user's call 1", §4's Nov 15 row, §2 and design-marketing §11.
+- Checked and sound:
+  - the raw key is never stored or logged: it reaches `submitCheckout` in the POST body (PASS's facade and Mantle's `Forum.js execute`
+    both admit only the schema's fields, and a refused field is named, not echoed), is no part of the submit's request hash (the
+    `request` object of `replayOf`; PostingOperation keeps the hash and the answer, never the input), and only its digest is passed to
+    the freeze step (`run#Step`'s input) and written on `OrderHeader.marketingVisitorKeyHash`; the two warnings log the checkout or
+    order id and the error's first line, never the key; PASS's Transport logs no input;
+  - kept only where consent or policy allows: `visitorKeyAllowed` refuses a withdrawn customer before the policy is read, then the
+    seller's active MarketingPolicy `visitorKeys` Y or the customer's PcpTracking with the seller; a read failure keeps nothing at
+    the submit and clears the digest at placement (fail closed); `keptVisitorKey` runs in `placeStep`'s transaction before
+    `place#Order`, after the ORDER_CHANGED check, and the freeze's write changes no `orderRevision` (bumped only explicitly), so the
+    placement's revision check is unaffected; every Shop placement (the return, the webhook, the job) goes through `placeStep`;
+  - request identity: the key is not in the request hash, never refuses the submit (a malformed key is dropped; a failure logged);
+    an "already" freeze (two tabs) keeps the first submit's digest; a REVIEW_REQUIRED freeze writes nothing;
+  - Do Not Track and GPC: PASS's `visitorKeyInput` sends `heldKey` (the cookie, of the key's form) only when `doNotTrack` (`sec-gpc`
+    or `dnt` = 1) is false, as Marketing/Page.xml does; the authority re-checks consent and policy whatever a frontend sends;
+  - the schema copies: PASS `service/pass/Schema.js` and Mantle `forum/ForumSchema.js` are byte-identical (`cmp`); `Contracts.d.ts`
+    gains the optional field; the route and the TOKEN_WRITES lists unchanged;
+  - attribution: the digest path runs after `identityEvents`' withdrawn early return and its events pass the same recipient filter
+    (an event of a recipient who no longer allows tracking is dropped), the window, the organization and the automated/kind
+    conditions are `eventsWhere`'s; `trackingWithdrawn` moved to MarketingTracking.js unchanged; `recordEvent` uses the one digest;
+  - the specs: Attribution's new feature tests the helper's allow/deny matrix, malformed keys and attribution by a stored digest
+    (withdrawn and unknown keys unattributed); PASS ShopCheckout's remote feature sends the key through the facade and finds the
+    digest at the freeze and after placement; the acceptance scenario's new feature reads soundly (not run).
+- Fixed:
+  - R1 (low, test gap): nothing tested the re-check before `place#Order`, that a retry with another key is the same submit, or that
+    a malformed key is never refused through the checkout. mr-mantle ShopCheckout gains "a checkout's visitor key: its digest kept
+    at the freeze, not the submit's identity, read again before the placement" (the seller's policy on at the submit, a retry with
+    another key `alreadyApplied` and the digest unchanged, the policy ended before the provider's return and the placed order's
+    digest cleared, a free item's submit with a malformed key completed with no digest); seen to fail with `keptVisitorKey`
+    removed.
+  - R2 (low, retention; the worker's second finding): the digest stayed on the order forever, past the statistics retention that
+    removes the events it would match, and after a customer's later withdrawal. `run#MarketingRetention` (MarketingReports.js) now
+    clears it on the organization's orders (OrderPart vendor) placed before its `statisticsRetentionDays`, each order on its own (a
+    failure named, the rest done); an organization without the setting keeps it as long as it keeps the events. MarketingRetention
+    covers it (A's 40-day-old order cleared, A's recent one and another seller's kept); seen to fail without the change.
+    design-marketing §11's retention sentence says so.
+- Findings, numbered by the lead F404 to F407 in order:
+  - Register's ticket checkout (PASS Marketing `completeRegistration`) does not forward the key (the worker's first finding): it
+    stands; not fixed now. The section names Shop's checkout only, a ticket order through a remote PASS is still attributed through
+    its customer as a consenting recipient, and the change crosses EventRegistrationPlaces' placement (P17's code), so it is a
+    follow-up like this one if the user wants ticket orders attributed by the key (the user's call);
+  - after placement a customer's withdrawal leaves the digest on the order until retention (or forever without
+    `statisticsRetentionDays`); attribution ignores it (its withdrawn early return), so it is never used, but it is kept; clearing
+    it on withdrawal would need a hook in the consent write (left as is, low);
+  - PASS's `visitorKeyInput` (Do Not Track / GPC, the cookie's form) is reviewed but not exercised by a spec (the remote feature
+    passes `visitorKey` to the facade directly; no spec drives the Shop submit transition with headers); TrackingLib's
+    `doNotTrack` and `heldKey` are covered by MarketingTracking (low);
+  - deployment order: both facades refuse an input field the schema does not list, so a PASS with this change against an authority
+    without it refuses every Shop submit that carries a key ("Unsupported field"); deploy the authority first (a note for release,
+    nothing to fix in one repository set).
+- Tests (release binary, `--nobuild`, this worktree's runtime): mr-mantle ShopCheckout 9 of 9 (the new feature 0.68 s; 5.2 s feature
+  time), MarketingRetention 1 of 1 (0.06 s), Attribution 4 of 4 (0.8 s), Tracking 4 of 4 (1.4 s), MarketingReports 7 of 7 (0.8 s);
+  mr-pass ShopCheckout 4 of 4 (0.6 s), Forum 13 of 13 (0.8 s), MarketingTracking 4 of 4 (0.9 s). Not run: test-apps, the acceptance
+  scenario. No screen changed (no lint).
+- For the lead:
+  - budget share: mr-mantle about +0.7 s more (ShopCheckout's new feature; the retention check adds nothing measurable), so about
+    +0.85 s with the worker's; mr-pass unchanged from the Built note;
+  - merge hot spots: add mr-mantle `MarketingReports.js runMarketingRetention` (the events' policy loop) and
+    `test/marketing/MarketingRetention.spec.js` (setup and checks), `test/order/ShopCheckout.spec.js` (a feature at the end);
+    mr-boss `design-marketing.md` §11's retention sentence;
+  - Attack-Surface: the Built note's replacement stands; add to the retention sentence (if it names the purged kinds) "and the
+    visitor-key digest of an organization's orders placed before its statistics retention";
+  - the user's calls: whether Register's ticket checkout should forward the key too (a follow-up).
+
+### Follow-up 5 — Register's ticket checkout forwards the visitor key
+
+The user's call of Nov 15 (§4, follow-up 4's review): Register's ticket checkout (`completeRegistration`, P17) forwards a remote PASS
+frontend's first-party visitor key as Shop's `submitCheckout` does since follow-up 4, so a ticket order placed through a remote frontend
+is attributed by its key. The same rules: the key's form checked or dropped, only its digest kept on `OrderHeader.marketingVisitorKeyHash`
+and only where `visitorKeyAllowed` holds, read again in the placement's transaction before `place#Order` (a paid ticket placed later
+by the provider's return, webhook or job), never part of the request's identity or a cause of refusal, the cookie sent by PASS only
+without Do Not Track or Global Privacy Control. Branch `mkt/fix5` in mr-mantle and mr-pass (mr-boss for the plan).
+
+**Built Nov 15 (follow-up 5).** mr-mantle, mr-pass and mr-boss on branch `mkt/fix5` (hashes in the worker's reply), from master after
+follow-up 4's merge; mr-moqui unchanged, no Rust built. Built beside P21's review and P22 (`mkt/p22`).
+- Checked first (the code over the plan): this section, follow-up 4's Built and Review notes and its code (MarketingTracking.js
+  `visitorKeyAllowed`, `orderVisitorKeyHash`, `visitorKeyHash`; ShopCheckout.js `visitorKeyHashOf`, the freeze's write,
+  `keptVisitorKey`; PASS TrackingLib `heldKey`, `doNotTrack` and Shop/ShopCheckout.js `visitorKeyInput`), P17's Built and Review
+  notes and code (MarketingPortal.js `completeRegistration` and `startRegistrationPayment`, EventRegistrationPlaces.js `complete`,
+  EventRegistrationPayments.js `orderOf`, `startPayment`, `refresh`, `place`, `seatReviewed`, `reconcile`), PASS Register.xml. The
+  code over the plan:
+  - "`completeRegistration` forwards the key": a ticket order does not exist at `completeRegistration` (a free reservation is
+    confirmed there with no order at all); the order is made by `startRegistrationPayment` (`orderOf` in `startPayment`'s step,
+    with its promised payment, before the provider is asked), the ticket checkout's counterpart of Shop's submit and freeze. Built
+    there: Register's Pay sends the key and the digest is committed on the order in that step, so nothing key-derived is kept on a
+    reservation that may never have an order, and a free registration keeps nothing (`completeRegistration` and its schema entry are
+    unchanged);
+  - the shared code moved where both checkouts call it: MarketingTracking.js `checkoutVisitorKeyHash(key, customer, seller, label)`
+    (`orderVisitorKeyHash` that never fails the caller: a failed read keeps nothing and is logged under the label, never the key;
+    was ShopCheckout's `visitorKeyHashOf` body) and `keepOrderVisitorKey(orderId)` (the re-check before `place#Order`: the first
+    part's customer and vendor through `visitorKeyAllowed`, cleared when no longer allowed or unreadable, fail closed; was
+    ShopCheckout's `keptVisitorKey` body); ShopCheckout.js calls them (behaviour unchanged); PASS TrackingLib.js `checkoutKeyInput
+    (request)` (the held `mkt_vk` cookie of the key's form as `{visitorKey}`, none under Do Not Track or GPC or without a request;
+    was ShopCheckout.js `visitorKeyInput`'s body), which Shop's submit and Register's pay transition both call;
+  - identity and refusal: the digest is computed before the start's transaction (customer the reservation's buyer, seller the
+    offer's organization); a repeat start that answers the existing attempt (`alreadyStarted`, or a start that raced it) returns
+    before the step and changes nothing; a start replacing a declined or cancelled payment writes that Pay's digest (or none), as a
+    Shop freeze does; a malformed key is dropped and the start goes on; staff's `start#RegistrationPayment` sends no key;
+  - the placement: `place` (the provider's return, the page, `reconcile`'s retries, `seatReviewed` through `refresh`) calls
+    `keepOrderVisitorKey` inside its placement step before `place#Order`, so every ticket placement re-reads consent and policy.
+- mr-mantle: `service/mantle/marketing/MarketingTracking.js` (the two helpers after `orderVisitorKeyHash`, exported),
+  `service/mantle/order/ShopCheckout.js` (`visitorKeyHashOf` and `keptVisitorKey` call them), `service/mantle/work/
+  EventRegistrationPayments.js` (the header, `startPayment`'s `visitorKey` and the order's write, `place`'s re-check),
+  `service/mantle/marketing/MarketingPortal.js` (`startRegistrationPayment` passes `visitorKey`), `MarketingPortalServices.xml`
+  (start#RegistrationPayment's description), `service/mantle/forum/ForumSchema.js` (`startRegistrationPayment` gains `visitorKey`).
+- mr-pass: `script/TrackingLib.js` (`checkoutKeyInput`), `screen/Shop/ShopCheckout.js` (`visitorKeyInput` calls it),
+  `screen/Marketing/Register.xml` (the pay transition sends it), `service/pass/Schema.js` (byte-identical with ForumSchema.js);
+  `Contracts.d.ts` names no Marketing registration operation (unchanged).
+- mr-boss: `plan/design-marketing.md` (§11's attribution identity, §13 Register's as built), this note.
+- Tests: mr-mantle EventRegistrations gains "a ticket payment's visitor key: its digest kept only where allowed, read again before
+  placement, attributed by it" (a buyer without consent under no policy: nothing kept; under a spec-local MarketingPolicy
+  `visitorKeys` Y, removed after: the events' digest kept and never the raw key, a repeat start with another key `alreadyStarted`
+  and the digest unchanged, the order placed at the return keeps it and is attributed by it (MobTrackingEvent, a remote click by
+  the key, no local visit); a malformed key dropped with the payment started; a buyer who withdrew tracking never kept; kept at the
+  start then the policy ended before the return: placed with no digest). Seen to fail with `place`'s re-check removed (the late
+  check), with the start not forwarding the key (the kept check), with the guard bypassed (the no-consent check), with
+  `trackingWithdrawn` removed from `visitorKeyAllowed` (the withdrawn check) and with the key's form unchecked (the malformed
+  check). mr-pass MarketingRegistration gains "follow-up 5: the payment start sends the held visitor key, never under Do Not Track
+  or GPC; the facade admits it" (`checkoutKeyInput` with the cookie, under `dnt`, under `sec-gpc`, a malformed cookie, another
+  cookie, no request; `startRegistrationPayment` with `visitorKey` through the facade answered, not "Unsupported"); seen to fail
+  with PASS's schema entry reverted. Run (release binary, `--nobuild`, this worktree's runtime): mr-mantle EventRegistrations 17 of
+  17 (5.7 s feature time; the new feature 1.0 s), ShopCheckout 9 of 9 (4.3 s), Attribution 4 of 4 (0.7 s), Tracking 4 of 4 (1.4 s),
+  MarketingRetention 1 of 1 (0.1 s); mr-pass MarketingRegistration 5 of 5 (0.3 s; the new feature 0.01 s), ShopCheckout 4 of 4
+  (0.5 s), MarketingTracking 4 of 4 (0.9 s), Forum 13 of 13 (0.7 s). Screen lint (Register.xml changed): no parse failure, Register
+  not flagged. Not run: test-apps, any acceptance test (none changed).
+- Findings, numbered by the lead F419 to F421 in order:
+  - the key is forwarded with `startRegistrationPayment`, not `completeRegistration` as the section names (the order is made at the
+    payment's start; above); the lead or the user may confirm;
+  - Register's pay transition is not driven by a spec with headers and a cookie (the helper it calls is: the PASS feature above), as
+    follow-up 4's review found for Shop's submit (low);
+  - deployment order, as for follow-up 4: a PASS with this change against an authority without it refuses every Register Pay that
+    carries a key ("Unsupported operation or input"); deploy the authority first.
+- For the lead:
+  - budget share: mr-mantle about +1.0 s (EventRegistrations' new feature); mr-pass about +0.01 s; no client spec;
+  - merge hot spots: mr-mantle `MarketingTracking.js` (after `orderVisitorKeyHash`, the export list), `ShopCheckout.js`
+    (`visitorKeyHashOf`, `keptVisitorKey`), `EventRegistrationPayments.js` (the header, `startPayment`, `place`),
+    `MarketingPortal.js` (`startRegistrationPayment`), `MarketingPortalServices.xml`, `ForumSchema.js`/PASS `Schema.js` (the
+    `startRegistrationPayment` entry; P22's SMS schema entries may meet them), `test/work/EventRegistrations.spec.js` (the setup's
+    offers, a feature at the end); mr-pass `script/TrackingLib.js` (the export list), `screen/Shop/ShopCheckout.js`,
+    `screen/Marketing/Register.xml`, `test/Marketing/MarketingRegistration.spec.js` (a feature at the end); mr-boss
+    `design-marketing.md` §11 and §13 Register, this file;
+  - Attack-Surface (mr-moqui `docs/security/Attack-Surface.md`; no mr-moqui worktree): in follow-up 4's replacement, "the visitor-key
+    digest its Shop checkout kept (`OrderHeader.marketingVisitorKeyHash`: a frontend's `submitCheckout` `visitorKey`," becomes "the
+    visitor-key digest its Shop checkout or ticket payment kept (`OrderHeader.marketingVisitorKeyHash`: a frontend's
+    `submitCheckout` or `startRegistrationPayment` `visitorKey`,";
+  - the user's calls: none (the first finding is the plan's wording against the code).
+
+**Review Nov 15 (follow-up 5).** A fresh review of `mkt/fix5` (mr-mantle a2171049, mr-pass 1821307, mr-boss ae884055) against this
+section, follow-up 4's Built and Review notes, §2 and design-marketing §11 and §13 Register.
+- Checked and sound:
+  - the start rather than `completeRegistration`: right. `completeRegistration` (EventRegistrationPlaces `complete`) makes no order
+    (a free reservation is confirmed there with none); the ticket order and its promised payment are made in `startPayment`'s step
+    (`orderOf`), the counterpart of Shop's freeze, and a paid ticket is placed only from that order. Forwarding at the start keeps
+    nothing key-derived on a reservation that never gets an order; the section's intent (a ticket order through a remote frontend
+    attributed by its key, the same rules) is met. Plan wording, not a user's call;
+  - every placement re-checks: the only `place#Order` of a ticket order is `place()`, reached from `refresh()` (the provider's
+    return and the page through `getRegistration`, `reconcile`'s due lookups), `reconcile`'s failed-placement retries, and
+    `seatReviewed` (its `refresh#RegistrationPayment` on commit); no webhook or other path places a ticket order (PaymentAttempts
+    dispatches none). `keepOrderVisitorKey` runs first in `place()`'s placement step, the same transaction as `place#Order`; seen to
+    fail the new feature's late check with it removed;
+  - identity and repeat: the digest is computed after the `alreadyStarted` early return and before the step; a start that raced
+    one answers `already` before the write; so a repeat never changes the digest (the spec's repeat with another key). A start
+    replacing a declined or cancelled payment writes that Pay's digest or none, as a Shop re-freeze does. The key is not in the
+    priceKey check or the attempt's snapshot, never refuses the start (a malformed key dropped, a read failure logged and nothing
+    kept);
+  - scope: customer the reservation's buyer and seller the offer's organization, the same parties `orderOf` writes as the order
+    part's customer and vendor, which `keepOrderVisitorKey` reads at placement, so the two checks agree; `startRegistrationPayment`
+    still reaches the reservation by its capability first (`reach`), the key adds no right;
+  - raw key never stored or logged: it reaches only `checkoutVisitorKeyHash` (its log line names the label "Registration <id>" and
+    the error's first line); only the digest enters the step and `OrderHeader`; PASS's Register transition passes it through
+    Registrations.js `call` and Portal `attempt`, neither of which logs input;
+  - staff: `startPaymentStaff` calls `startPayment(reservationId)` with no key; DNT/GPC: TrackingLib `checkoutKeyInput` returns
+    nothing under `dnt` or `sec-gpc` = 1, without a request, or for a cookie not of the key's form (the spec covers each); the cookie
+    is `Path=/` so Register's transition receives it;
+  - Shop unchanged in effect: `checkoutVisitorKeyHash` is the old `visitorKeyHashOf` body (the extra early null for a missing vendor
+    answers what `visitorKeyAllowed` did); `keepOrderVisitorKey` is the old `keptVisitorKey` body, with the first part's read moved
+    inside the try (a failed read now clears the digest, fail closed, where it failed the placement step before: safer, not a
+    behaviour a caller relied on); PASS `visitorKeyInput` is `checkoutKeyInput(ec.web?.request)`, the same logic. Shop's
+    follow-up 4 specs pass unchanged;
+  - ForumSchema.js and PASS Schema.js byte-identical (`cmp`); follow-up 4's retention clearing applies to ticket orders too (OrderPart
+    vendor).
+- Fixed: nothing.
+- Findings, numbered by the lead F422 to F423 in order:
+  - a staff `start#RegistrationPayment` replacing a buyer's declined remote payment writes no digest, so it clears one the buyer's
+    Pay kept (consistent with "a start replacing a payment writes that Pay's digest or none" and the privacy-conservative choice;
+    the ticket order is then attributed by recipient only; low, left as is);
+  - no spec drives a replacement start after a declined payment (digest rewritten) or Register's pay transition with headers and a
+    cookie (the worker's second finding; the helper is covered) (low).
+- Tests (release binary, `--nobuild`, this worktree's runtime): mr-mantle EventRegistrations 17 of 17 (5.7 s feature time),
+  ShopCheckout 9 of 9 (4.6 s), Attribution 4 of 4 (0.8 s), MarketingRetention 1 of 1; mr-pass MarketingRegistration 5 of 5,
+  ShopCheckout 4 of 4, MarketingTracking 4 of 4, Forum 13 of 13. EventRegistrations run again with `place()`'s
+  `keepOrderVisitorKey` removed: the new feature failed (restored). No screen changed by the review (no lint). Not run: test-apps,
+  any acceptance test.
+- For the lead:
+  - budget share: as the Built note (mr-mantle about +1.0 s, mr-pass about +0.01 s);
+  - merge hot spots: as the Built note;
+  - Attack-Surface: the Built note's replacement stands;
+  - the user's calls: none.
+
+### Follow-up 6 — The demo's campaign sends dated relative to the load
+
+The user's call of Nov 15 (§4, P21's review): the demo's campaign sends (Retail's December send, 2026-12-01, and the others with
+fixed dates) get dates relative to the load, as follow-up 2 and follow-up 3 did for prices and events, so the specs and the P21
+calendar walk's projected collection (30 days back, 180 ahead) hold them on any run day. Every regression and acceptance spec that
+reads those dates is updated. Branch `mkt/fix6` in mr-boss (mr-mantle if a Mantle spec reads the dates).
+
+**Built Nov 15 (follow-up 6).** mr-boss on branch `mkt/fix6` from master after P22's merge (mr-mantle unchanged).
+- Checked first (the code over the plan): every dated campaign send in the Marketing demo (BossZZMarketingDemoData.xml): one send has a
+  schedule, BOSS_MKT_SEND_DEC (approved, 2026-12-01 08:00 America/Chicago); the others are drafts with no schedule (PREVIEW, ABTEST),
+  the approved November one with none (NOV), the automation's step sends, and the survey invitation, sent and completed Nov 5 (its
+  FormInvitation's dates are past events, as the other history rows). The calendar's sources (MarketingCalendar.js: campaign windows,
+  scheduled sends, automation milestones from activatedDate and endedDate, publication dates, events): the automation milestone is its
+  activation, Nov 6, a past event; the events are follow-up 3's. What the specs and the P21 walk need besides the send is the running
+  campaign's window: the walk's month of the send day must show "Campaign: Spring garden launch" and the projected collection must list
+  the campaign, which a fixed window (Nov 1 to Jan 31) stops after March 2027. No rule ties a send's schedule to its campaign's window
+  and no entity ECA rule is on the campaign or send entities, so the loader writes through the entity services with rules on; the
+  approvals are of revision 1 and moving the dates through the entity service raises no revision. The code over the plan: the four
+  campaigns' windows move with the send (the section names the sends; the walk and the story need the windows, F382's seam closed).
+  No mr-mantle or mr-pass spec reads a BOSS demo campaign or send, so mr-mantle is unchanged.
+- Demo (mr-boss):
+  - BossZZMarketingDemoData.xml: the four campaigns' rows name no fromDate, thruDate or startDate and the December send's no
+    scheduledDate (follow-up 3's R2: a placeholder would change the stored row on a reload); the new
+    `ironstone.marketing.DemoServices.load#CampaignDatesDemo` (service/ironstone/marketing/DemoServices.xml), called at the end of the
+    P8 block after the sends, writes them in days from the load day: the spring garden launch from 14 days before to 77 after
+    (started 13 days before at 09:00), its launch evening 56 to 58 after, the holiday gift guide 16 to 46 after, Services' renewals 16
+    to 105 after, each 00:00 in the server's zone as load#QuoteDatesDemo; the December newsletter 16 days after at 08:00 wall-clock in
+    its schedule's zone (America/Chicago), as load#EventDatesDemo's R1 fix. A load on Nov 15, 2026 gives exactly the old dates; loading
+    again moves them. As the other loaders: anonymous-all, allow-remote false, a signed-in caller must be ADMIN, a missing row logged
+    and skipped. The webinar (70 or more days) now falls inside the spring campaign (77) on any load; the workshop (118) stays after it,
+    as before;
+  - the send keeps its name ("Garden newsletter, December") and its approval's reason ("For the first of December"): on a load other
+    than mid-November they read as story, not as the date (specs and the walk find the send by that name).
+- Specs (mr-boss):
+  - MarketingDelivery reads the send's schedule as loaded before moving it a week ahead: 08:00 in America/Chicago, 14.5 to 17 days
+    ahead (a broken loader leaves none and fails it);
+  - MarketingShell's calendar feature checks the running campaign's window as loaded: from 13.5 to 16 days back, to 75 to 78 days ahead;
+    its calendar reads were already around each record's own date;
+  - MarketingSpecLib's and the acceptance MarketingCalendarWalk's comments: the walk already read the send's and webinar's days from the
+    records (REST), so no expectation changed; with the window and the send relative its month view and the projected collection
+    (30 days back, 180 ahead) hold them on any day. Not run, as the brief says. No other spec or acceptance spec names these dates
+    (grep of mr-boss, mr-mantle and mr-pass for the literal dates, the send and the campaigns).
+- Tests run (release, `--nobuild`, this worktree's runtime): MarketingShell, MarketingDelivery (5 of 5; feature time unchanged, 0.60 s
+  and 0.43 s for the touched features); every Marketing and Insights regression spec of mr-boss on 4 workers (31 specs, 103 of 103,
+  37.4 s of feature time); the two again after Prettier (mr-moqui's config) on the changed specs. Not run: test-apps, test-framework,
+  acceptance.
+- Findings, numbered by the lead F436 to F438 in order:
+  - the code over the plan above: the campaigns' windows move with the send (the walk's month view and collection need the running
+    campaign's), and the only scheduled send is the December one;
+  - the December send's name and approval reason name December whatever the load (story seam, low);
+  - still fixed, no spec depends on them: the Sales opportunities' estimated close dates and Retail's holidays (follow-up 3's list less
+    the campaigns), and the past history rows (decisions, consents, imports, the survey's invitation).
+- For the lead:
+  - budget share: none measurable (two entity reads in two existing features; the loader runs once per load);
+  - merge hot spots: mr-boss `data/BossZZMarketingDemoData.xml` (P2 and P8 blocks), `service/ironstone/marketing/DemoServices.xml`,
+    `test/Marketing/MarketingShell.spec.js`, `test/Marketing/MarketingDelivery.spec.js`, `test/Marketing/MarketingSpecLib.js`,
+    `test/acceptance/client/Marketing/MarketingCalendarWalk.spec.js` (P23's review walks may touch the acceptance tree), this file;
+  - the user's call: none new (whether the opportunities' dates follow the load stands from follow-up 3).
+
+**Review Nov 15 (follow-up 6).** A fresh review of `mkt/fix6` (mr-boss 8cb653ae; mr-mantle unchanged) against the follow-up's text,
+§4 (the Nov 15 call) and follow-ups 2 and 3's loader pattern, R2 of follow-up 3 included.
+- Checked and sound:
+  - a reload: the four campaign rows and the December send name no fromDate, thruDate, startDate or scheduledDate, so storing them
+    again changes nothing the loader wrote (follow-up 3's R2), and the loader only updates rows by fixed ID (no create), so nothing is
+    duplicated; loading again moves the dates to the new load, as the other loaders. No entity ECA rule is on MarketingCampaign or
+    CampaignSend (none in mr-mantle's or mr-boss's eecas), so the moves raise no campaignRevision or sendRevision and the revision-1
+    approvals stand (checked: 1/1, CsApproved after each move); the readiness rule's "it needs its dates" is met before any approval
+    is asked;
+  - the arithmetic: a load on Nov 15, 2026 gives exactly the old dates (Nov 1 to Jan 31 started Nov 2 09:00; Jan 10 to 12; Dec 1 to
+    31; Dec 1 to Feb 28; Dec 1 08:00 CST);
+  - the 08:00 America/Chicago wall clock around DST, run through the loader under `ec.user.setEffectiveTime` in a throwaway spec
+    (not kept): loads at 2027-02-28 23:30Z (send Mar 16 08:00 CDT, 13:00Z), 2027-03-14 01:00Z, the day of the spring change in
+    Chicago's evening before it (Mar 29 08:00 CDT), 2027-10-20 00:10Z (Chicago's Oct 19: Nov 4 08:00 CDT) and 2026-11-15 12:00Z
+    (Dec 1 08:00 CST, 14:00Z). The load day is Chicago's, the days counted in UTC, the hour read back in the zone; the campaign
+    windows are 00:00 of the server's local day (05:00 or 06:00Z here), the same day as the send's on this machine;
+  - dependencies, by grep of mr-boss, mr-mantle, mr-pass and mr-marble (regression and acceptance, server and client) and mr-moqui's
+    own tests for the literal dates (2026-11-01, 2026-11-02, 2026-12-01, 2026-12-31, 2027-01-10, 2027-01-12, 2027-01-31,
+    2027-02-28), the campaign and send IDs, `runningCampaignId`, `scheduledSendId` and the campaign and send names: no spec reads the
+    old dates. The specs that touch the campaigns read names, status, scope or records they make; the ones a window matters to now hold
+    on any day where the fixed window failed after it: MarketingReports' CampaignPerformance ("the running demo campaign meets the last
+    30 days", the period filter on fromDate and thruDate) and the acceptance MarketingReportsScenario, MarketingShell's agenda and
+    calendar, Home's Scheduled sends (60 days) and Campaign windows sources, the acceptance MarketingCalendarWalk (reads the days from
+    the records). mr-mantle's MarketingCalendar and Upcoming specs use their own organizations;
+  - failure tolerance: as load#EventDatesDemo and load#QuoteDatesDemo: a missing row is logged and skipped; an update error fails the
+    service and rolls back its moves (one transaction; fixed IDs, rare), and the data loader logs the element and goes on. Not changed,
+    as follow-up 3's review left the quote loader;
+  - the new checks fail on a broken loader (no scheduledDate: loadedDays null; no window: the days far outside).
+- Fixed:
+  - R1 (low): MarketingDelivery's lower bound of 14.5 days left about an hour of margin under `--db snapshot`, which is keyed by the
+    server's local day while the send's load day is Chicago's: a UTC server's snapshot made at midnight and read at the end of that
+    day sees 14.54 days (15.54 with a spring DST change before the send). The bound is 14 (a broken loader still fails it).
+- Findings, numbered by the lead F439 to F441 in order:
+  - R1 above;
+  - the December send's name ("Garden newsletter, December") and its approval reason ("For the first of December"), and the Holiday
+    gift guide's window (16 to 46 days after the load), read as story on a load other than mid-November: low. Not changed: renaming
+    touches MarketingDelivery, MarketingShell's agenda, the acceptance MarketingCalendarWalk (name and palette search) and the
+    November sibling's name for symmetry, for little gain; for the lead or the user;
+  - a reload over a dev database where the December send was released or sent moves its schedule again (the row's reload already
+    resets its status to CsApproved): demo-only, as the other loaders.
+- Tests run (release, `--nobuild`, this worktree's runtime): mr-boss MarketingShell, MarketingDelivery, MarketingCampaigns,
+  MarketingReports, MarketingEvents, MarketingSends, MarketingAccess, MarketingLeads, MarketingPromotions, MarketingTracking,
+  MarketingContent, MarketingLists, MarketingSurveys on 4 workers (13 specs, 37 of 37, 52.4 s wall, 16.6 s of feature time); after the
+  fix MarketingDelivery and MarketingShell (5 of 5, 25.4 s). Prettier (mr-moqui's config) on the changed spec. Not run: test-apps,
+  test-framework, acceptance (MarketingCalendarWalk's change is a comment).
+- For the lead:
+  - budget share: unchanged;
+  - merge hot spots: as the Built note's, plus the review commit in `test/Marketing/MarketingDelivery.spec.js` and this file;
+  - the user's calls: whether the December send and the holiday guide get names that do not name a month (low); none other new.
+
+### Follow-up 7 — The final suites' failures
+
+The end-of-build `./moq test-apps --release --nobuild` (after P21 to P23 and follow-ups 4 to 6) failed on three mr-boss specs: Consent's
+registry feature, MarketingAccess's registries feature and the client MarketingSendWalk ("1 sent" not shown, the walk 16.22 s, over the
+15 s limit; mr-boss's client feature time 98.8 s of 90). A fix branch, `mkt/fix7` in mr-mantle and mr-boss (mr-pass unchanged).
+
+**Built Nov 15 (follow-up 7): Final suites fixes.**
+- Checked first (the code over the plan): each failure's root cause before any test change. Both server failures pass alone; the
+  suite's worker logs (`runtime/tmp/test-workers-81088`) show each ran after specs of other components in the same worker database,
+  so each is a spec's state met by a later spec, not a Marketing code change:
+  - MarketingAccess (worker 1, after mr-mantle's EventCheckIn): EventCheckIn (P18) makes a door-tablet group MKCI_DISPLAY with a
+    `CapabilityBundle` of appName Marketing and gives MKCI_DISPLAY and its check-in user's group MKCI_CHECKIN MARKETING_CHECKIN, and
+    its cleanup left them. MarketingAccess then found an extra Marketing bundle and two extra holders of MARKETING_CHECKIN. The seed
+    and §4 are right (nine role bundles, the launcher bundle and the door group's, MARKETING_CHECKIN the door group's alone), so the
+    leak was fixed, not the expectation; reproduced by running EventCheckIn before MarketingAccess in one run (fails before, passes
+    after);
+  - Consent (worker 3, after 112 specs that add contacts with consent data): the registry is a page of twenty, newest change first
+    (find#Consents, unchanged since M11). The demo's changes are 1 to 35 days old, and Bob Acme's last is 4 days old, so any twenty
+    newer contacts from earlier specs push a demo contact off the first page. The code is right; the feature's expectation held only on
+    a fresh database. It now renders the registry narrowed to the demo's News list, which all five demo contacts are on, and keeps
+    every check on that one render (status, rows, the chips of the other lists, the purposes, the toolbar);
+  - MarketingSendWalk: the final suite ran at 04:33 Chicago time. Retail's demo profile (P6) has quiet hours 21:00 to 07:00
+    America/Chicago, under which a delivery waits, untried (MessageSendingProfiles forDelivery, Mantle's SendingProfiles spec): the
+    Delivery box showed "1 handed off: 0 sent, 1 in flight" through all twenty reloads of the poll, which is what made the walk slow.
+    Not P22's ledger branch, P21's SendDetail or follow-up 6's dates: the walk held by day only since P9. Reproduced at 04:54 Chicago
+    time. The quiet hours are right, and the demo keeps them; the walk's server sets them aside.
+- Built:
+  - mr-mantle `test/work/EventCheckIn.spec.js`: cleanupSpec also deletes the spec's MARKETING_CHECKIN grants (groups MKCI_*) and its
+    door group's CapabilityBundle with any bundle permission and artifact rows;
+  - mr-boss `test/Comms/Consent.spec.js`: the registry feature renders `contactListId` BOSS_DEMO_LIST_NEWS;
+  - mr-boss `test/Marketing/MarketingClientFixtures.spec.js` (new, one feature): Retail's profile without quiet hours on the walk's
+    --serve server, added to `test/client/suite.js`'s server specs; the walk's header says why. It also runs in the server regression
+    suite, where it only clears the demo profile's quiet hours (no regression spec reads them; Mantle's SendingProfiles tests quiet
+    hours on its own profile);
+  - mr-boss `screen/Marketing/Sends/SendDetail.xml`: the Delivery box inside a section with the condition `delivery.released`. The
+    walk's failure screenshots showed "Released undefined by undefined to undefined recipients" on a send not yet released: a
+    `container-box` condition is not read by the framework (no condition in the XSD, none in ScreenQvt.js's containerBoxMacro), so the
+    box showed on every send. The walk's `waitForText(dispatcher, "Released")` now waits for the release itself.
+- Tests run (release, `--nobuild`, this worktree's runtime): EventCheckIn, MarketingAccess, Consent, MarketingClientFixtures,
+  MarketingSends and MarketingDelivery in one run (mr-mantle then mr-boss, so EventCheckIn before MarketingAccess and Consent): 46 of
+  46, 6.8 s of feature time; the client walk `./moq test-client mr-boss --serve --spec MarketingSendWalk` at 05:04 Chicago time, inside
+  the quiet hours: passed, 8.02 s (was 13.40 s failed in the suite, 13.81 s here before the fix), under the approved 9 s. Screen lint
+  clean (exit 0, the same advisory list). Not run: test-apps, test-framework, acceptance.
+- Findings, numbered by the lead F453 to F456 in order:
+  - a `container-box` `condition` attribute is ignored by the framework's renderers (qvt at least: containerBoxMacro), and mr-boss
+    uses it on about fifty boxes (Sales Settings, Shared MessageTemplateDetail and SendingProfiles, Marketing Home, CampaignDetail,
+    ExperimentDetail, Reports, RegistrationDetail, SalesOrderDetail and others): each shows its box when its condition is false,
+    often with empty or undefined values. Only SendDetail's Delivery box is fixed here. Either the framework honours the condition
+    (as it does on labels, dialogs and the other widgets) or screen lint flags it and the screens move to sections (medium; the user's
+    call, framework work);
+  - EventCheckIn left a Marketing bundle and MARKETING_CHECKIN grants behind for any later spec of its worker (fixed here, low);
+  - Consent's registry feature depended on a fresh database's first page (fixed here, low);
+  - the walk proved delivery by day only (the demo profile's quiet hours, fixed here for the walk). The acceptance
+    MarketingDispatchScenario sends through the same profile with run#Deliveries and is likely to wait the same way at night; not run
+    (the brief), not changed (low).
+- For the lead:
+  - budget share: mr-boss client about 5.4 s less than the final suite's run (MarketingSendWalk 8.0 s against 13.4 s), so mr-boss's
+    client feature time about 93 s of 90 before any other change: still over by about 3 s, which this follow-up cannot close without
+    cutting another app's walk; the new fixture feature adds about 0.01 s to the server and client runs;
+  - merge hot spots: mr-boss `screen/Marketing/Sends/SendDetail.xml` (the Delivery box), `test/client/suite.js`,
+    `test/Comms/Consent.spec.js`; mr-mantle `test/work/EventCheckIn.spec.js`; this file;
+  - the user's call: the container-box condition finding above, and the client budget (about 93 s measured against 90).
+
+**Review Nov 15 (follow-up 7).** A fresh review of `mkt/fix7` (mr-mantle 9b3fc7c0, mr-boss a41f36cb) against the follow-up's text, the
+failing run's log (`wave-logs/sm-final-apps.log`) and its worker logs (`runtime/tmp/test-workers-81088`), each root cause checked again.
+- Checked and sound:
+  - EventCheckIn's cleanup: it now deletes what reaches Admin's registries: the door group's CapabilityBundle (with any bundle
+    permission or artifact row; the spec makes none of those two, harmless) and every MARKETING_CHECKIN grant of an MKCI_ group (the
+    door group's and the check-in user's; `promoted`'s grants are removed by itself). Nothing seeded is touched: the conditions are the
+    spec's own group IDs (no seed group starts with MKCI; MARKETING_CHECKIN's seeded holders are BOSS_MARKETING_CHECKIN_DEVICE and
+    ADMIN). It does not remove everything the spec makes (its organizations, parties, users and their groups and memberships, its
+    artifact group, its events and registrations stay, as every spec-local row of the suite does); none of them is in a registry a later
+    spec counts;
+  - Consent: the cause is right (find#Consents is a page of twenty, newest change first; any twenty newer contacts push the demo's off).
+    The News list holds all five demo contacts, and the filtered render keeps the toolbar, purposes and states; the "ConsentFind
+    narrows" feature already proves each filter, the CSV and paging on their own;
+  - MarketingClientFixtures: the same pattern as the Accounting, Insights and Admin client fixtures (a regression spec, also on the
+    walk's --serve server); it changes only the test database's copy of BOSS_MKT_PROFILE_RETAIL, not the data file. By grep of every
+    component's test tree (regression, acceptance, client): no spec reads quietFrom or quietThru but this fixture and mr-mantle's
+    SendingProfiles, whose regression feature "the profile's quiet hours make a delivery wait, untried" uses its own profile (passed
+    here); the regression specs that use the Retail profile by name deliver nothing through it (run#Deliveries only in the acceptance
+    MarketingDispatchScenario and MarketingSmsScenario, which run on their own database without this fixture, as the Built note says);
+  - SendDetail: the Delivery box inside `section SendDelivery condition="delivery.released"`: for a released send the same box (the
+    section renders its widgets in qvt, qvt-static, html and tui alike; SendDetail has no .qvue or tui twin), for an unreleased one
+    nothing (`delivery` is `detail?.delivery || {}`, so the condition never throws; MarketingDispatch's get#Send gives `{released:
+    false}` before the release). The Pause and Cancel link already had its own condition;
+  - the framework claim: a `container-box` takes no condition. The XSD (`xml-screen-3.xsd`) gives it only id, type and initial; the
+    containerBoxMacro of ScreenQvt.js, ScreenQvtStatic.js and ScreenHtml.js and ScreenTui.js's "container-box" read no condition, and
+    TemplateSupport's `stmt` adds no generic one (the widgets that honour one test it in their own macro, as labels, links and dialogs
+    do; the Rust screen definition reads a condition on sections only). Screen lint does not flag it. Counted (multi-line tags
+    included): 58 boxes in mr-boss after this branch, and one in base tools (`System/Constitution/Edit.xml:150`, `ruleId`):
+    - Marketing (29): Home 119, 138, 167 (`!organizationRefused`); Settings/Adoption 58; Settings/Index 55, 89; Settings/CampaignDefaults
+      160, 171; Sends/ExperimentDetail 205 (`!experiment`), 213, 263, 288; Sends/Compose 159 (`!isSms`), 248; Sends/SendDetail 435
+      (`experiment.exists || experiment.canSetUp`); Sends/RecipientDetail 154; Surveys/SurveyDistribution 384 (`isLeadForm`);
+      Automations/AutomationDetail 459 (`can.canReadEnrollments`); Campaigns/CampaignDetail 568 (`capabilities.sendRead`), 600
+      (`automationRead`), 630, 710 (`promotionRead || …`); Events/RegistrationDetail 175, 181; Reports/DeliveryAnalysis 89, 118, 137;
+      Reports/AudienceGrowth 78, 98;
+    - Sales (19): template/SalesOrderDetail 283, 357, 683, 712, 769 (`salesOrder.showMoney`); template/SalesAgreementParts 29;
+      Settings/TypesAndReasons 58, 74; LeadSources 150, 223, 253; SalesDefaults 227; Readiness 76; ApprovalPolicies 144, 165; Stages
+      129, 193; Teams 128, 177;
+    - Shared (7): MessageTemplateDetail 133 (`template?.canEdit`), 181, 203; SendingProfiles 145, 180, 240 (`found.canCreate …`);
+      OrderChangeDetail 554;
+    - People (2): Reports 188; Settings/Preferences 127 (`employer.canChangeIntake`);
+    - Maintenance (1): Settings/Readiness 82.
+    The capability ones
+    (CampaignDetail's Sends, Automations and Promotions, AutomationDetail's Enrollments, SalesOrderDetail's money) leak no data, as
+    the screen actions load their lists only under the same capability, but show an empty box ("No sends yet.") to a role that may not
+    read them; the rest show empty or "undefined" boxes.
+- Fixed:
+  - R1 (medium; the follow-up's MarketingAccess fix was incomplete) `test/Marketing/MarketingAccess.spec.js`: the registries feature
+    counted every UserGroupPermission holder of MARKETING_APPROVE, MARKETING_DISPATCH, MARKETING_ALL_ORGANIZATIONS, MESSAGE_TEMPLATE_EDIT
+    and the rest, so any spec-local group of mr-mantle's Campaigns, Sends, Dispatch, MessageTemplates, SitePages, Experiments and the
+    others (MarketingSpecLib `user()` grants them and no cleanup removes them) failed it when it ran earlier in the same worker. The
+    failing worker 1 ran Campaigns before MarketingAccess too, so EventCheckIn's cleanup alone would not have made that run pass:
+    reproduced on this branch before the fix (EventCheckIn, Campaigns, MarketingAccess in one run: "MARKETING_ALL_ORGANIZATIONS's groups:
+    BOSS_MARKETING_ADMIN,MKC_FINANCEB", MARKETING_APPROVE's likewise). The holders are now those among the registered CapabilityBundle
+    groups of every app (as MaintenanceAccess reads its holders from the bundles), which still catches a seeded bundle granted a
+    Marketing permission it should not hold, and still catches EventCheckIn's leak through the bundle list; EventCheckIn's cleanup is kept;
+  - R2 (low) `test/Comms/Consent.spec.js`: the registry feature's "chips" were read anywhere in the page, and "Ziziwork News" and "Events
+    and workshops" are also the List filter's options, so they held with no row; nor was "one row per contact" checked. Now: the rows
+    are distinct, Alex's row's chips name both of its lists (the filtered and the other) and Casey's only the News list. The last
+    change is not checked here (it was not before; the Contact feature shows the history);
+  - R3 (low) `test/Marketing/MarketingSends.spec.js`: SendDetail's one render (the approved, unreleased November send) now checks
+    there is no Delivery box ("handed off:", "Released undefined"); it fails on master's SendDetail.xml (checked) and passes on the
+    branch. The walk's `waitForText("Released")` was the only check of the fix.
+- Findings, numbered by the lead F457 to F460 in order:
+  - the container-box `condition` finding (as the Built note's, now with the full list above; medium; the user's call, framework work);
+  - MarketingAccess's holders check was order-dependent on every Marketing spec's spec-local groups, not EventCheckIn's alone (R1,
+    medium, fixed here);
+  - Consent's registry chips were satisfied by the filter's options (R2, low, fixed here);
+  - SendDetail's Delivery fix had no server check (R3, low, fixed here).
+- Tests run (release, `--nobuild`, this worktree's runtime, from the main checkout): EventCheckIn, Campaigns, MarketingAccess, Consent,
+  MarketingClientFixtures, MarketingSends, MarketingDelivery before R1 in one run: 52 of 53, MarketingAccess's registries failing on
+  Campaigns' groups; MarketingSends on master's SendDetail.xml with R3: fails at the new check; after the fixes EventCheckIn, Campaigns,
+  Sends, Dispatch, SendingProfiles, MarketingAccess, Consent, MarketingClientFixtures, MarketingSends and MarketingDelivery in one run
+  (mr-mantle first): 70 of 70, feature time mr-mantle 10.3 s, mr-boss 5.2 s; the client walk `./moq test-client mr-boss --serve --spec
+  MarketingSendWalk` at 05:13 Chicago time, inside the demo's quiet hours: passed, 7.96 s. Screen lint clean (exit 0, the same
+  advisory list). Not run: test-apps, test-framework, acceptance.
+- For the lead:
+  - budget share: unchanged from the Built note (R1 to R3 add checks to existing renders and queries, no render or spec);
+  - merge hot spots: as the Built note's, plus `test/Marketing/MarketingAccess.spec.js` and `test/Marketing/MarketingSends.spec.js`;
+  - the user's calls: the container-box condition (honour it in the framework's four renderers, or lint it and move the 58 boxes to
+    sections), and the client budget (about 93 s of 90), as the Built note says.
 
 ## 4. Decisions
 
@@ -1467,6 +7715,45 @@ design-marketing.md or the owner's design.
 | Nov 13, 2026 | Sales' Accounts is mounted at `Marketing/Leads/Accounts` (P3) for the bulk action, beside Leads; design §2 gains the row | The user's call (Nov 13, as recommended). The plan's choice (F64): Sales' mount row admits Leads and LeadSources only, and impl-sales §4 (Nov 11) has Marketing mount Accounts; the design had no path for it |
 | Nov 13, 2026 | Marketing's BOSS setup and demo go in files of their own (`data/BossSetupMarketingData.xml`, `data/BossZZMarketingDemoData.xml`), as Sales' and Maintenance's do | The plan's choice (F69), so Marketing's track and Sales' do not meet in one file |
 | Nov 13, 2026 | §5 Q6 answered as recommended: P22 adds framework support in mr-moqui, a conf-level `sms-consent` provider a component such as Mantle registers, and a per-number day limit for promotional texts apart from `smsSystemMaxPerDay`; a campaign text is sent by the system, not as the releasing user | The user's call; F72, F74. P22 works in an mr-moqui worktree |
+| Nov 13, 2026 | `MARKETING_ALL_ORGANIZATIONS` is kept, granted to `ADMIN` and `BOSS_MARKETING_ADMIN` alone, as Sales', People's and Maintenance's all-organizations permissions | The user's call (P1) |
+| Nov 13, 2026 | `BOSS_MARKETING_ADMIN` keeps the grants P1 built: every Marketing view and edit, `MESSAGE_TEMPLATE_VIEW` and all-organizations; no approve, dispatch or Comms configuration, so approval and dispatch stay with their own groups | The user's call (P1), as Sales' administrator |
+| Nov 13, 2026 | Comms' explicit permissions are split by Marketing role: `MESSAGE_TEMPLATE_EDIT` to the Marketing content author group, `MESSAGE_SENDING_CONFIGURE` and `MESSAGE_SUPPRESSION_REVIEW` to `BOSS_MARKETING_ADMIN`; Comms' own groups gain them when Comms' settings area exists (§7). Granted in P6 with the screens that use them | The user's call (P1) |
+| Nov 14, 2026 | A merge of lists carries a member's grant on a same-purpose source list as an acceptance on the target, evidenced by the source list; a member withdrawn on any source is never carried (P4) | The user's call: design §4's independent target consent is read as a list of another purpose |
+| Nov 14, 2026 | `request#Subscriptions` refuses personal (non-directory) contacts, as the audience import does; built in P6 | The user's call (P4's review) |
+| Nov 14, 2026 | The 5,000-person cap stays for an interactive segment evaluation and audience preview; P8 evaluates a send's audience in pages, over the universe narrowed to the send's lists and segments, so a large list can be sent to | The user's call (P5's review) |
+| Nov 14, 2026 | Marketing's client budget estimate rises from about 8 s to about 9 s: its one golden-path walk (MarketingSendWalk: create, prepare, approve and release a send) runs about 8.2 s, up to 8.6 s | The user's call (P9's review) |
+| Nov 14, 2026 | A public form's answer to a question its rules hide is answered with a generic "leave unanswered the questions that do not apply" (naming none), so a visitor without JavaScript can fix it, rather than the neutral receipt that would drop the answer silently | The user's call (P12's review) |
+| Nov 14, 2026 | A landing page gets an optional Request review on PageDetail: a reviewer is notified and may approve; publishing directly with MARKETING_CONTENT_EDIT stays possible; blog posts are unchanged. Built in P15 | The user's call (P14's review) |
+| Nov 13, 2026 | The one-person-team flag also admits an author's own campaign approval, recorded as a self-approval, as built in P2: a campaign sends nothing itself, and each of its sends is approved on its own under the 500-recipient limit | The user's call (P2) |
+| Nov 13, 2026 | `MARKETING_OWNER_CHANGE` (the lifecycle participant `marketing.campaigns`) is granted to `BOSS_ADMIN_IDENTITY` and `BOSS_ADMIN_ADMIN`, as built in P2, as Sales' `SALES_OWNER_CHANGE`; no Marketing group holds it | The user's call (P2) |
+| Nov 14, 2026 | The consent mutators keep P3's rule, an owner contract of Comms and Commons: `subscribe#ContactListParty`, `store#PartyConsent` and the signed-in `unsubscribe#ContactListParty` change another party's consent only for the party's own user, a contact administrator or Marketing's consent editor of the list's or purpose's organization; the callers' specs pass unchanged | The user's call (P3). The services that decide who may by a link's token or code (the unsubscribe and preferences links, a checkout opt-in's confirmation) record through the internal `record#PartyConsent`, so a visitor signed in as someone else still unsubscribes (P3 review R1) |
+| Nov 14, 2026 | Suppressions block promotional mail only, except a hard bounce: a complaint, a staff block or repeated soft failures refuse a promotional delivery (the ledger's `transactional` N: a list's, campaign's or topic's) and never a transactional notice (an order confirmation, a password reset, a system notice); a hard bounce refuses every delivery to the address | The user's call (P3). Built in the P3 review (R2) in the ledger's attempt (`MessageSuppressions.js` `blocksEveryDelivery`); design-drawers-commons' Mailboxes row records it as the ledger's owner contract |
+| Nov 14, 2026 | An automation runs as a saved owner, the dispatcher who last activated or resumed it, signed in for each admission and step run and checked again (as run#EtlMapping signs in as a mapping's saved owner): its trigger, goal and condition segments may use the owner's Sales and purchase facts (P5's sources, under the owner's own Sales and Commerce access, read at run time), and classify#Recipients' "not available" is the owner's (P5 review); an owner who loses access (the permission, the organization, a disabled account) pauses the automation with a readiness reason rather than running wider or narrower; a new activation by another dispatcher makes that person the owner. This replaces P11's build as the system | The user's call (P11; built in its review, R1) |
+| Nov 14, 2026 | Choosing or changing a lead rule's Sales team needs `SALES_TEAM_MANAGE` in the organization (a sales manager); a Marketing content author without it saves a rule only with the organization's default team of Sales' SalesPolicy, or with no team (each lead then goes to the default team in effect at the handoff; refused when Sales has none); LeadRuleDetail shows the team read-only without it | The user's call (P13; built in its review, R1): design §2 LeadRules' "Sales routing grant" |
+| Nov 15, 2026 | The tracking visitor key stays as built in P15: a first-party key set only where the organization's MarketingPolicy `visitorKeys` is on (off by default) or for a consenting recipient's link, never for a browser sending Global Privacy Control or Do Not Track; no consent banner in PASS (a banner is later, §7) | The user's call (P15's review) |
+| Nov 15, 2026 | `/trk` and `/trk-o` (PASS's tracking servlets on every host) join the framework's reserved path names, so a public site's mount, page route or Smithy name cannot take them; built as a framework follow-up in mr-moqui | The user's call (P15's review), F-finding on the shadowing |
+| Nov 15, 2026 | A storeless ticket order (purpose `OrpEventRegistration`) skips only `check#OrderPreApprove`'s built-in new-customer and shipping-address warnings; every other warning (Sales' rules, credit, purchase), and the seller's approval setting, still stop its auto-approval | The user's call (P17's review); spec'd in EventRegistrations (a Sales order rule's warning keeps a ticket order placed, its place pending); design-sales §5 |
+| Nov 15, 2026 | The registration triggers ("registered for an event", "attended") of automations (P11) and lead rules (P13) are built in P18 with check-in | The user's call (P17's review); P18's phase text |
+| Nov 15, 2026 | The demo names Mantle's LOCAL tax gateway on ORG_ZIZI_CORP's accounting preference, which every Ziziwork organization without its own inherits, so their storeless orders (ticket orders among them) are taxed by X1 through it | The user's call (P17's review; built in BossZZMarketingDemoData.xml). The local gateway taxes only with a nexus and a rate and X1 only at an address: no Ziziwork organization but Sales (its own preference) has a nexus, so no total changes until one is given (the review's note) |
+| Nov 15, 2026 | Register takes a gateway whose hosted step is a posted form (Authorize.Net Accept Hosted) through a relay page, as Shop's PaymentRelay: a fresh token from the authority on each visit, posted to the provider; its return verified server-side; nothing confirms from the browser | The user's call (P17's review; built in it: `getRegistrationPaymentForm`, PASS `Marketing/RegistrationRelay`) |
+| Nov 15, 2026 | A ticket order's payment is captured when the order is approved: Marketing invoices it through Accounting's existing invoice-from-order path, which captures, as Shop's digital goods do. Built in follow-up 1 | The user's call (P17's review) |
+| Nov 15, 2026 | An offer's cancellation terms become a structured rule: a cancellation deadline (days before the start) and a refund percentage; online cancellation and refunds follow it; staff may override with a reason. Built in follow-up 1 | The user's call (P17's review) |
+| Nov 15, 2026 | An attendee's entry code is stable per registration revision, re-shown from a keyed derivation with no plaintext stored; it changes only on a correction or a staff reissue. Built in follow-up 1 | The user's call (P17's review) |
+| Nov 15, 2026 | The demo's Retail organization gets a Utah nexus and an address, so its ticket orders, and ZIZI_RETAIL's Shop orders, are taxed through the LOCAL gateway named on ORG_ZIZI_CORP; the specs whose totals change are updated. Built in follow-up 1 | The user's call (P17's review) |
+| Nov 15, 2026 | Mantle's classic flow specs (OrderToCashBasicFlow, ReturnToResponseBasicFlow, OrderBulk, PayTraceGateway) move to a Mantle-owned seller with no nexus and no inherited tax gateway rather than suspending the demo's Retail nexus, their expected figures kept; DemoTaxNexus.js removed. Built in follow-up 1's review for OrderBulk and PayTraceGateway (spec-local sellers); the OrderToCash chain's move is left (its size, in the review note) and suspends the nexus meanwhile | The user's call (follow-up 1's review) |
+| Nov 15, 2026 | A framework `hmac` host member replaces the nested digest of the entry code (EventRegistrationPlaces.js codeOf, one function); the lead builds it in mr-moqui after follow-up 1's review | The user's call (follow-up 1's review) |
+| Nov 15, 2026 | Mantle's OrderToCashBasicFlow and ReturnToResponseBasicFlow keep suspending Retail's Utah nexus during their run (test/order/DemoTaxNexus.js) rather than move the chain to a Mantle-owned seller | The user's call (follow-up 1's review) |
+| Nov 15, 2026 | Demo data dates that specs depend on are made relative to load time (or far future) and the specs read as of a fixed date, starting with BOSS_PRICE_SALES/BOSS_PRICE_NEXT; built in follow-up 2 with the framework hmac member | The user's call |
+| Nov 15, 2026 | The 2027 demo dates specs depend on become load-relative: the Marketing webinar and workshop (their events, offers' occurrences and the workshop's closing, together), the Sales demo quotes' validity, and PeopleLeave's request days; built in follow-up 3 | The user's call (Nov 15), after follow-up 2's F366 and F369 |
+| Nov 15, 2026 | A remote PASS frontend forwards the consented visitor key with the checkout, so an order placed through it is attributed like a local one; a follow-up the lead runs in mr-pass and mr-mantle after P20's review (what record#OrderAttribution needs: P20's Review note, For the lead) | The user's call (P20) |
+| Nov 15, 2026 | Assist gets an aggregate-only audience tool: counts per bucket and reason only (classify#Recipients' buckets), never names, addresses or party ids; Assistant only, not MCP; the reader's audience permission and organization scope. Built in P20's review (SegmentServices count#Audience, marketing_audience_counts) | The user's call (P20) |
+| Nov 15, 2026 | Customer360 and ContactDetail under Marketing open only a party Marketing has a record of in the user's organizations (a list member, subscription request, segment member, recipient, registrant or form submitter), since the contact's notes and files open on the same check; Sales and Commons still open any party they admit | The user's call (P19's review) |
+| Nov 15, 2026 | Register's ticket checkout forwards a remote PASS frontend's visitor key as Shop's checkout does (follow-up 4; as built with startRegistrationPayment, where the ticket order is made, not completeRegistration): the digest kept only where an event would keep the key, read again before place#Order; follow-up 5 | The user's call (follow-up 4's review) |
+| Nov 15, 2026 | The promotional SMS day limit stays one VoicePolicy value for every sending number (smsMaxPromotionalPerNumber); a per-number override, with a deployment-wide promotional cap beside it, is later (§7) | The user's call (P22's review) |
+| Nov 15, 2026 | PASS Email preferences may leave a text message topic but not join one; a join confirmed by the number itself ("Reply YES") needs an inbound keyword hook and is later (§7); joining is through an import or staff with evidence | The user's call (P22's review) |
+| Nov 15, 2026 | The demo's campaign sends get dates relative to the load, as follow-up 3 did for events, so the calendar walk's projected collection holds them on any run day; follow-up 6 | The user's call (P21's review) |
+| Nov 15, 2026 | A container-box's `condition` is honoured by the framework (the XSD and every renderer), so the 58 mr-boss boxes and the base tools' one that rely on it work as written; a framework follow-up (fix/boxcond) before the acceptance run (follow-up 7's review) | The user's call |
+| Nov 15, 2026 | mr-boss's client budget is raised to the measured time of the re-run after the final suites' fixes (about 93 s; MarketingSendWalk 8 s within the approved Marketing estimate) | The user's call |
 
 ## 5. Open questions
 
@@ -1575,17 +7862,393 @@ day, against the code and the other three plans; F64–F89 by the rest of P0 on 
 | F87 | P0 (Nov 13): nothing writes TrackingCodeVisit, TrackingCodeOrder, TrackingCodeOrderReturn or SalesOpportunityTracking in any component or crate; only their definitions exist (mr-mantle MarketingEntities.xml:354-418, SalesEntities.xml:188) | P15 and P20 as designed; Sales P5 writes SalesOpportunityTracking |
 | F88 | P0 (Nov 13): the demo: ORG_ZIZI_RETAIL owns POPC_DEFAULT (its store's tax gateway LOCAL, mr-mantle data/ZcaProductDemoData.xml:196) and the gateways TEST_APPROVE and BOSS_COM_HOSTED (mr-boss data/BossCommerceDemoData.xml:74-90), and the PASS site ZIZI_SHOP, made by Commerce's demo service, disabled until published, with Account, Billing, Support and Shop mounts (BossZCommerceDemoData.xml:15-19; service/ironstone/commerce/Demo.js:16); ORG_ZIZI_SERVICES owns BOSS_COM_DIGITAL and ZIZI_DIGITAL; no organization has a seller tax preference (impl-sales F62). A run captures mail with `mail_capture_sends=true` (docs/dev/JS-Testkit.md:341-346) | P1's users of ORG_ZIZI_RETAIL and ORG_ZIZI_SERVICES as written; P7 adds the Marketing mount to ZIZI_SHOP; P17 sets ORG_ZIZI_RETAIL's tax preference. P17 changed |
 | F89 | P0 (Nov 13): the earlier plans' §7 rows naming this plan: impl-sales §7 (P3, P5, P11, P13, P15, P17, P20, under the names §1 uses), impl-people §7 (P12, P21, CheckIn's route group), impl-maintenance §7 (none) | Consistent with §1, but for Accounts' mount (F64), which impl-sales F110 already names |
+| F90 | P1 (Built Nov 13): the ContactList filter, worded as the plan has it, would have hidden mailboxes and other organizations' lists from every BOSS read under an ordinary grant (Commons' contact record Consent tab, the list services, Comms' consent options): the mailbox exemption and the authorization-off reads keep Commons' and Comms' behavior as before P1; consent's organization scope is P3's | P1: as its Built note says |
+| F91 | P1 (Built Nov 13): `ForumMailboxReceipt` named ContactList without its owner or type, so any find of it under an app root's grant would have been refused once the list filter existed; aliases added | P1: as its Built note says |
+| F92 | P1 (Built Nov 13): the plan names no all-organizations permission for Marketing; `MARKETING_ALL_ORGANIZATIONS` is built for the administrator alone, as Sales', People's and Maintenance's are by the user's calls | P1: as its Built note says |
+| F93 | P1 (Built Nov 13): design §1.1 gives the administrator "MARKETING_CONFIGURE plus explicit view/edit grants": built as every view and edit of the table, `MESSAGE_TEMPLATE_VIEW` and the all-organizations permission, no approval, dispatch or Comms configuration (Sales' choice; Maintenance's administrator got every app permission by the user's call) | P1: as its Built note says |
+| F94 | P1 (Built Nov 13): `MESSAGE_TEMPLATE_EDIT`, `MESSAGE_SENDING_CONFIGURE` and `MESSAGE_SUPPRESSION_REVIEW` are held by `ADMIN` alone: design §1.1 gives them to "designated template editors" and as explicit grants with no group named, which P6 needs (a Comms or Admin group, or a Marketing one) | P1: as its Built note says |
+| F95 | P1 (Built Nov 13): the list services' new rule is the organization alone, with no Marketing permission (any employee of a list's organization reaches it through ContactListServices as before; Marketing's own list services and the list policy are P3's), and a call with no user is unchanged | P1: as its Built note says |
+| F96 | P1 (Built Nov 13): the Settings area's deny is met after the screen's own capability check in a render (always-actions run first), as Sales' and Maintenance's settings are; the spec takes either refusal | P1: as its Built note says |
+| F97 | P1 (Built Nov 13): the readiness check of unowned records is instance-wide (they are no organization's), under a provider scoped by organization, so Admin's Health shows it once per organization asked | P1: as its Built note says |
+| F98 | P1 (Built Nov 13): `test/acceptance/AppStructure`'s placeholder count was stale before this phase (at least 16 with 9 left), now none | P1: as its Built note says |
+| F99 | P1 (Review Nov 13): `apply#Adoption`'s check-then-write race and optional revision (R1, R2) | P1: as its Review note says |
+| F100 | P1 (Review Nov 13): Comms' `get#ConsentOptions` gated on the contact admin (R3) | P1: as its Review note says |
+| F101 | P1 (Review Nov 13): `create#ContactList` lets a contact administrator create a non-mailbox list with no owner, which is then unowned (awaiting adoption, reached only by contact administrators): kept, as the plan gives the contact administrator every list | P1: as its Review note says |
+| F102 | P1 (Review Nov 13): the readiness check and the Adoption preview are instance-wide (unowned records are no organization's): a configurer of one organization sees every unowned record's name; today only `BOSS_MARKETING_ADMIN` (every organization) holds the permission | P1: as its Review note says |
+| F103 | P2 (Built Nov 13): the one-person-team flag admits an author's own campaign approval too (recorded as a self-approval): the user's call names a send under 500; a campaign sends nothing itself and each of its sends is approved on its own. Needs the user's confirmation | P2: as its Built note says |
+| F104 | P2 (Built Nov 13): an approved campaign returns to Planned on a material change through a new flow transition; a material change of a campaign in progress is refused rather than re-approved (the design names no in-progress re-approval) | P2: as its Built note says |
+| F105 | P2 (Built Nov 13): completion refuses with the pending work's counts; the design's confirmed stop-then-complete command is not built (nothing to stop before sends, P9) | P2: as its Built note says |
+| F106 | P2 (Built Nov 13): a cost's source must be in the campaign's currency (CURRENCY_MISMATCH): the design's rate and date evidence for a conversion is not built | P2: as its Built note says |
+| F107 | P2 (Built Nov 13): a campaign links lists, segments, store promotions and form publications; an event (P16) and a page (P14) are KIND_UNAVAILABLE until their phases keep an organization (a Commons event's owner may be a person; a site page has none) | P2: as its Built note says |
+| F108 | P2 (Built Nov 13): `MARKETING_OWNER_CHANGE` is a new permission on Sales' pattern (SALES_OWNER_CHANGE, the user's call for Sales), held by Admin's identity operator and administrator, seeded in MarketingSeedData | P2: as its Built note says |
+| F109 | P2 (Built Nov 13): the Approvals area gives the approver group an ALWAYS (Sales' areas do the same), so the transitions under it skip artifact checks below; the decision services check `MARKETING_APPROVE` and the organization themselves | P2: as its Built note says |
+| F110 | P2 (Built Nov 13): CampaignDetail is one screen of boxes, not tabs (Sales' OpportunityDetail pattern); the later phases' tabs become boxes or the screen moves to tabs when they land | P2: as its Built note says |
+| F111 | P2 (Built Nov 13): Home's period and mine or team filters wait for more sources than P2's two counts | P2: as its Built note says |
+| F112 | P2 (Built Nov 13): `skill/people-policy-question.md` is left out of the skill index (its description is 201 characters, over 160), found running `--skills`; not P2's | P2: as its Built note says |
+| F113 | P2 (Review Nov 13): the reviser as an author (R1), Accounting's own scope for cost lines (R2), the locked allocation (R3), the uniform link refusal (R4), duplicate's link check (R5) | P2: as its Review note says |
+| F114 | P2 (Review Nov 13): a refused campaign may be asked again at the same revision with no change, so another approver can be sought; Purchasing's rule is the same; kept | P2: as its Review note says |
+| F115 | P2 (Review Nov 13): `store#MarketingPolicy`'s stale check is not locked: two first policies stored at once could both start (low; configurers are few) | P2: as its Review note says |
+| F116 | P2 (Review Nov 13): `create#CampaignAsset` takes `userId` and `contentDate` from its parameters (the auto-parameters), as Sales' `create#OpportunityContent`: an editor could name another uploader; left for a shared fix of the content hosts | P2: as its Review note says |
+| F117 | P2 (Review Nov 13): Attention's approvals list shows an approver the requests they authored too, which they may not decide | P2: as its Review note says |
+| F118 | P3 (Built Nov 14): the consent mutators (`subscribe#ContactListParty`, `store#PartyConsent`, the signed-in `unsubscribe#ContactListParty`) admitted any signed-in user for any party that was not someone's personal contact; now the party's own user, a contact administrator or Marketing's consent editor of the organization; every caller found passes (Comms as a contact administrator, Shop and the account hub for the party's own user, the token pages with no user) | P3: as its Built note says |
+| F119 | P3 (Built Nov 14): Marketing reads lists and members through its own finds rather than extending `find#ContactLists`/`find#ContactListParties` (the code over the plan above) | P3: as its Built note says |
+| F120 | P3 (Built Nov 14): a request whose evidence predates the party's latest withdrawal is refused WITHDRAWN, and a staff acceptance of a purpose the person withdrew (for every organization or the list's) is refused CONSENT_WITHDRAWN while a pending request with newer evidence is filed (the person's own confirmation, P7, renews it): the plan's "never clears a withdrawal" made precise | P3: as its Built note says |
+| F121 | P3 (Built Nov 14): with organizations asked, `find#Consents` merges the scoped rows of all of them into one state per purpose; a contact administrator's registry (no organization) shows the global states only, so an organization's scoped grant shows only under Marketing's mount | P3: as its Built note says |
+| F122 | P3 (Built Nov 14): suppressions apply to every delivery of the ledger, transactional notices too, for their organization or every one; a delivery's organization is its store's until P9 gives a campaign delivery its own | P3: as its Built note says |
+| F123 | P3 (Built Nov 14): the bulk action's capability shows from `ec.user.hasPermission('MARKETING_AUDIENCE_EDIT')` in Sales' screens (no Marketing context there); Mantle checks it, the list's organization and each record under the caller's Sales read | P3: as its Built note says |
+| F124 | P3 (Built Nov 14): Comms' Consent screens answer a Marketing consent editor under Comms' own root too (the rule is by permission, not by mount) | P3: as its Built note says |
+| F125 | P3 (Built Nov 14): the Leads area mounts Sales' Leads in P3 (the plan places Marketing's Leads in P13), as Accounts needed an area | P3: as its Built note says |
+| F126 | P3 (Built Nov 14): the design's ConsentDetail and Lists/ListDetail paths are Consent/Contact and Audiences/ListDetail (the code over the plan above) | P3: as its Built note says |
+| F127 | P3 (Review Nov 14): the token and code paths' consent writes go through the internal `record#PartyConsent` (R1) | P3: as its Review note says |
+| F128 | P3 (Review Nov 14): suppressions by kind of delivery (R2) and the editor's undated blocks (R3); the lead contacts' visibility (R4); the delivery's own organization (R5, which touches Sales P10's SalesQuoteIssues.js: two queue parameters) | P3: as its Review note says |
+| F129 | P3 (Review Nov 14): a Sales record of one organization may be filed to a list of another when the caller holds both (Sales there, Marketing here); nothing requires the lead's or account's organization to be the list's; left as built (the caller sees both) | P3: as its Review note says |
+| F130 | P3 (Review Nov 14): Comms' Consent/Contact for a Marketing consent editor of several organizations shows the global purpose states only (the scoped state is asked for one organization); history and lists are theirs; a display gap, no disclosure | P3: as its Review note says |
+| F131 | P3 (Review Nov 14): a contact with only a scoped consent appears in a contact administrator's registry with no purpose state (its scoped rows hidden) | P3: as its Review note says |
+| F132 | P4 (Built Nov 14): the merge is of lists only; party-merge guards (F82) stay P19's, and P4 needed nothing of them | P4: as its Built note says |
+| F133 | P4 (Built Nov 14): the import matches by the list channel's address alone and never uses a personal contact, the importer's own included (P3's request#Subscriptions admits the caller's own personal contact); a row matching only someone's personal contact makes a new directory contact with the same address | P4: as its Built note says |
+| F134 | P4 (Built Nov 14): the import calls neither `preview#Contacts` nor `import#Contacts` (name matching; contact books), using their parser and `match#Contact`/`import#ContactRow` (the code over the plan above) | P4: as its Built note says |
+| F135 | P4 (Built Nov 14): a row's request is filed in the row's transaction through `file#SubscriptionRequest` rather than through request#Subscriptions' per-item new transaction (the code over the plan above); the exactly-once rule is the locked item | P4: as its Built note says |
+| F136 | P4 (Built Nov 14): a merge carries an acceptance only for a source of the target's purpose with a list grant (a legacy member with no evidence and a member of another purpose are filed pending), and only for a consent editor; a member withdrawn from any source is not carried even when accepted on another (the withdrawal wins over the preview's other sources) | P4: as its Built note says |
+| F137 | P4 (Built Nov 14): error rows are downloadable only while the staged file is kept (30 days); the demo import has no staged file and offers none | P4: as its Built note says |
+| F138 | P4 (Built Nov 14): the membership export's view permission (who reads others' export records) is MARKETING_AUDIENCE_EXPORT; Marketing has no screen of export records, so they are read in Admin's Exports by its own permissions | P4: as its Built note says |
+| F139 | P4 (Built Nov 14): `./moq run lint --screens --release --nobuild` passed `--nobuild` to moqui and rebuilt the shared release binary (from master's sources; 3 m 43 s) before failing; lint was then run with the binary directly. The brief's lint command should be `target/release/moqui lint --screens` with the runtime | P4: as its Built note says |
+| F140 | P4 (Review Nov 14): Built finding 5, the user's call: a merge carries an acceptance as a grant of the target list when a same-purpose source list has a grant. Design §4 says target-list consent is required independently and evidence of another topic is not a grant, and design §4 (Segments: "a subscription topic represented by a non-MAILBOX ContactList") calls a list a topic, so a literal reading files every carried member pending; the build's reading (topic as purpose) keeps a consolidation of like lists usable. Left as built, the evidence text naming the source list | P4: as its Review note says |
+| F141 | P4 (Review Nov 14): request#Subscriptions (P3) admits the caller's own personal contact onto an organization's list, which the import refuses for the reason above; aligning P3 (refuse personal contacts there too) is suggested | P4: as its Review note says |
+| F142 | P4 (Review Nov 14): an import stuck in Applying past its expiry has its file purged and its remaining rows stay not applied, shown so, with no retry; import the file again | P4: as its Review note says |
+| F143 | P4 (Review Nov 14): `get#AudienceImport` names a matched party to an importer by the file's address (a directory lookup by address), as P3's request screens name parties; noted, not changed | P4: as its Review note says |
+| F144 | P5 (Built Nov 14): a rule segment is evaluated over its organization's audience, bounded at 5,000 (the code over the plan above) | P5: as its Built note says |
+| F145 | P5 (Built Nov 14): SegmentList shows no match count or freshness: an evaluation is the caller's own, under their sources | P5: as its Built note says |
+| F146 | P5 (Built Nov 14): the purchases source reads with `COMMERCE_ORDER_VIEW`, the orders the organization sold, totals in its base currency only; registration waits for P16 and tracking events for P15 | P5: as its Built note says |
+| F147 | P5 (Built Nov 14): a withdrawal or unsubscription of anyone at an address blocks every person at it (DESTINATION_WITHDRAWN): the design's "duplicates with conflicting consent require review" built as a block; the duplicate kept is the lowest party id | P5: as its Built note says |
+| F148 | P5 (Built Nov 14): an accepted member is eligible on a granted consent of the topic list or of the purpose (the organization's, else the global one); a legacy member with neither needs evidence; the address's solicitation flag N blocks as a withdrawal | P5: as its Built note says |
+| F149 | P5 (Built Nov 14): Sales' sources evaluate per caller (a representative's own leads, a manager's whole pipeline), so one segment answers differently for two readers; an account counts when the organization owns it or it is shared | P5: as its Built note says |
+| F150 | P5 (Built Nov 14): an "excludes" condition on a multi-valued field matches a known empty set (empty is known, not missing) | P5: as its Built note says |
+| F151 | P5 (Built Nov 14): MarketSegmentParty's dates are fields, not a key, and the native rule rows are not dated (the filter is): their history is the audit log's | P5: as its Built note says |
+| F152 | P5 (Built Nov 14): AudiencePreview's route grant for authors and dispatchers is an ALWAYS on Audiences.xml that is not inherited, a pattern new to the apps' area denies | P5: as its Built note says |
+| F153 | P5 (Review Nov 14): the universe is the organization's whole audience (every Marketing list's members and its own contacts), so an organization with more than 5,000 people on its lists can evaluate no rule segment and preview no segment, and a preview of a list over 5,000 is refused: refused, never truncated (R1), but P8's sends to a large list need a paged or streamed evaluation or a universe narrowed to the preview's lists first | P5: as its Review note says |
+| F154 | P5 (Review Nov 14): purchases are store orders only (R2): a Sales order with no store is no purchase fact, a won Sales opportunity being the Sales source's | P5: as its Review note says |
+| F155 | P5 (Review Nov 14): a withdrawal blocks an address for the matched people only: someone outside the selection who withdrew at the same address does not block it (a suppression does, address-wide) | P5: as its Review note says |
+| F156 | P5 (Review Nov 14): resultDigest and previewKey stay unkeyed hashes (over ids now); a keyed digest needs a server-keyed hash the script host lacks | P5: as its Review note says |
+| F157 | P5 (Review Nov 14): `classify#Recipients` puts another user's personal contact in "not available" by the calling user, so a P8 or P11 caller running as a job user (no user) sees every personal contact as not available; P8 and P11 should call it as the user who prepares | P5: as its Review note says |
+| F158 | P5 (Review Nov 14): SegmentDetail describes a stored Sales condition (its lead sources or campaigns in words) to an editor without Sales, marked unreadable; a definition, not Sales data | P5: as its Review note says |
+| F159 | P5 (Review Nov 14): "has an open lead is false" matches a person whose leads the caller cannot see: it reads as "none you can see" and discloses nothing | P5: as its Review note says |
+| F160 | P6 (Built Nov 14): F17 is five per-call values, not two (`fromAddress`, `fromName`, `emailServerId` beside `subject` and `bounceAddress`), and the call's subject is never expanded (the code over the plan above) | P6: as its Built note says |
+| F161 | P6 (Built Nov 14): the stored message keeps the call's relay, sender and subject but not its bounce address: a send again of the stored message (the mail queue's retry) would use the template's; the ledger owns its messages' retries (OWNER_RETRIES), so none is resent that way | P6: as its Built note says |
+| F162 | P6 (Built Nov 14): the bounce intake's recovery is its poll job's registration (RecoveryDescriptor has no EmailMessage kind); a report recorded unknown or unreadable is not read again; its EmailMessage stays in the bounce account | P6: as its Built note says |
+| F163 | P6 (Built Nov 14): sender domain verification is a warning, not a block: Admin has no domain verification (design-admin MailDomains is later), so "verified" is a domain this server signs or a relay that passed Admin's test; an untested relay is a warning too | P6: as its Built note says |
+| F164 | P6 (Built Nov 14): a hard bounce suppresses the address for every organization, a complaint for the delivery's organization only (the delivery's own, else its store's); repeated soft bounces suppress nothing yet (MsrSoftFailures has no rule) | P6: as its Built note says |
+| F165 | P6 (Built Nov 14): the email ECA's condition (multipart/report or a `bounces+` address) and the edge ECA are not exercised through the SMTP listener in the regression suite: the specs call process#DeliveryReport on a stored report, and the edge path through the EmailMessage ECA | P6: as its Built note says |
+| F166 | P6 (Built Nov 14): the poll reads the bounce accounts of the profiles' bounce domains; a bounce account that also receives other mail has each message read once (an ordinary message recorded unreadable) | P6: as its Built note says |
+| F167 | P6 (Built Nov 14): MessageTemplateDetail's variables are a text area (name \| label \| fallback \| required) and TextBlocks are not offered; Use (a draft send) waits for P8 | P6: as its Built note says |
+| F168 | P6 (Built Nov 14): Sales' quote templates still expand a `${subject}` body parameter in the EmailTemplate's subject (SalesQuoteIssues.js); they could pass `subject` per call now; not changed here (Sales' file) | P6: as its Built note says |
+| F169 | P6 (Review Nov 14): the VERP key is a random value stored on the delivery, not a keyed hash (the script host has no HMAC); deliveries queued before this review get a key at their next attempt | P6: as its Review note says |
+| F170 | P6 (Review Nov 14): an ARF is bound to its delivery by the key alone; a recipient (or anyone who saw the message) holding the key or the Message-ID can suppress only that recipient's address, which is the recipient's own choice anyway | P6: as its Review note says |
+| F171 | P6 (Review Nov 14): a DSN whose Final-Recipient is a forwarding target (not the delivery's address, no Original-Recipient) is ignored: such a hard bounce suppresses nothing (lettre sends no ORCPT) | P6: as its Review note says |
+| F172 | P6 (Review Nov 14): a profile's purpose (promotional or transactional) is not checked against the delivery's: a promotional delivery may name a transactional-only profile; P8 should choose by purpose or queue#Delivery refuse it | P6: as its Review note says |
+| F173 | P6 (Review Nov 14): the template body check is a pattern list, not a sanitizer: it refuses what it names (scripts, frames, forms, handlers, script links) and leaves styles and remote images; mail clients clean the rest, and BOSS shows the preview through cleanHtml | P6: as its Review note says |
+| F174 | P6 (Review Nov 14): the worker's findings stand (five per-call values; the stored message keeps no bounce address; recovery by the poll job; sender domain a warning; no SMTP-listener path in the regression suite) | P6: as its Review note says |
+| F175 | P7 (Built Nov 14): the operations are camelCase and the request is an anonymous write named in the transport (the code over the plan above) | P7: as its Built note says |
+| F176 | P7 (Built Nov 14): a confirmation link per verification attempt (SubscriptionRequestToken), any of a request's links confirming it for seven days | P7: as its Built note says |
+| F177 | P7 (Built Nov 14): a public offer with no site is offered nowhere (P3's offers and demo), not refused | P7: as its Built note says |
+| F178 | P7 (Built Nov 14): the verification goes from a ready profile of the organization, a transactional one first, else any ready one (Retail's demo profile is promotional; F172), and waits out the profile's quiet hours like any delivery; with no ready profile or no published confirmation template the request is kept and nothing is sent (readiness says which) | P7: as its Built note says |
+| F179 | P7 (Built Nov 14): the visitor's display name is never put in the message; the matched party is the first directory party with the address, so a request may put a pending membership on a customer's or staff member's party, which only that address can confirm | P7: as its Built note says |
+| F180 | P7 (Built Nov 14): a list confirmation renews the list's grant and passes a withdrawn purpose (F120) but does not undo a global marketing email withdrawal (PcpMarketingEmail with no organization); whether that blocks the list's sends is P9's dispatch check | P7: as its Built note says |
+| F181 | P7 (Built Nov 14): the limits' client key is the framework's requester key: server-side callers with no request (a spec, a job) share one bucket | P7: as its Built note says |
+| F182 | P7 (Built Nov 14): a marketing mount with no list offered makes the site not ready (every check must be ready), so mounting Marketing before publishing a list holds the site's readiness | P7: as its Built note says |
+| F183 | P7 (Built Nov 14): on the preferences page a topic turned on by a list link is sent for confirmation (the legacy page's resubscribe of a list the party is on stays as built); "No more email from" the organization is scoped to it, the legacy "No marketing email at all" global | P7: as its Built note says |
+| F184 | P7 (Built Nov 14): the checkout's news grant now records a request and a list grant with source PcsCheckout (was PcsForm through `set#ContactListPartySubscription`); a news choice the audience refuses (a personal contact, no address) is the outcome failed, logged | P7: as its Built note says |
+| F185 | P7 (Built Nov 14): the Forum spec's schema identity check failed on master (the DG6 and Sales P13 blocks in different orders); fixed by copying Mantle's ForumSchema.js to mr-pass Schema.js | P7: as its Built note says |
+| F186 | P7 (Review Nov 14): a residual timing difference: a new address makes a person, a contact mech and its party link (a few writes) and a known one does not; bounded by the address limit (5 an hour), not equalized | P7: as its Review note says |
+| F187 | P7 (Review Nov 14): two concurrent posts with one request key can both pass the repeat check (two groups, two messages within the mail limit) | P7: as its Review note says |
+| F188 | P7 (Review Nov 14): a checkout news choice confirmed by the receipt's link records a new accepted request and leaves the placement's checkout request SrsPending (the spec expects both); deciding the pending row would be cleaner | P7: as its Review note says |
+| F189 | P7 (Review Nov 14): the Built note's others stand as written: a link per attempt, a site-less offer offered nowhere, the matched party the first directory party with the address, a list confirmation not undoing a global marketing withdrawal (P9's dispatch check), a marketing mount with no offered list holding the site's readiness | P7: as its Review note says |
+| F190 | P8 (Built Nov 14): the ledger's own-message extension was built by Sales P10 and P6 before P8 (the code over the plan above); P8 adds the test source and the profile check | P8: as its Built note says |
+| F191 | P8 (Built Nov 14): the paged evaluation counts the topic's members only: a person a list or segment finds who is not on the topic is not read, so a prepared send's buckets differ from a preview's in "not subscribed"; and a withdrawal at a shared address by such a person (a purpose withdrawn, a solicitation refused) does not block the address for a member, as F155 has it for anyone outside the selection; the resultDigest then differs from the preview's and a prepare given it is refused (PREVIEW_STALE) | P8: as its Built note says |
+| F192 | P8 (Built Nov 14): a send's variables are the recipient's first name, last name and name only; a template variable beyond them takes its fallback | P8: as its Built note says |
+| F193 | P8 (Built Nov 14): a publicly retrievable inline file is not offered (no public store for a staff file); files are attachments, and the test message does not yet carry them (the ledger takes attachments; P9's message builds them for the recipients) | P8: as its Built note says |
+| F194 | P8 (Built Nov 14): a send's reply-to is kept and shown but the ledger sends the profile's reply-to (P9's message to apply it) | P8: as its Built note says |
+| F195 | P8 (Built Nov 14): a test message carries the draft as it is now with synthetic values, from the send's profile, at most 20 a day a send; its recipient party is the tester's (the ledger is keyed by party), its address the allowlist's | P8: as its Built note says |
+| F196 | P8 (Built Nov 14): a re-preparation marks the earlier recipients replaced and keeps them (no hand-off exists before P9); a large list's repeated preparations keep each set | P8: as its Built note says |
+| F197 | P8 (Built Nov 14): the policy's audience limit is checked at preparation (AUDIENCE_LIMIT) as well as P9's release | P8: as its Built note says |
+| F198 | P8 (Built Nov 14): CampaignDefaults' preview box read `preview.effectiveText` with no preview, an error in every mode (P2's); now `preview?.` | P8: as its Built note says |
+| F199 | P8 (Built Nov 14): a link to `//Marketing/...` renders disabled in a spec rendered from the app's root file (SendDetail's AudiencePreview link, MessageTemplates' Use), as Practices-App-Dev says, so the specs check the link's text and not that it is enabled | P8: as its Built note says |
+| F200 | P8 (Review Nov 14): a campaign file attached to a send stays the campaign's: its editor can remove or replace it after the send's approval; P9 should attach copies made at preparation, or refuse a release whose attachment changed | P8: as its Review note says |
+| F201 | P8 (Review Nov 14): R1's sharers are not restricted to the organization's audience: a segment's match outside it (the preview's universe) blocks an address the preview would not, the stricter way; an SMS topic (P22) matches a sharer by the same contact mech only | P8: as its Review note says |
+| F202 | P8 (Review Nov 14): a prepared send's buckets still differ from a preview's in "not subscribed" (non-members at other addresses are not read) | P8: as its Review note says |
+| F203 | P8 (Review Nov 14): the test daily limit is counted without a lock (concurrent tests can pass 20 by a few); a test does not run the PRIVATE_LINK check (a template's link reaches only the test list), which preparation does | P8: as its Review note says |
+| F204 | P8 (Review Nov 14): preparation creates each CampaignRecipient by its own call: a large list's preparation is slow (P9's load test) | P8: as its Review note says |
+| F205 | P8 (Review Nov 14): the Built note's findings stand as written (variables, attachments only, reply-to, a re-preparation keeping replaced rows, the audience limit at preparation) | P8: as its Review note says |
+| F206 | P9 (Built Nov 14): the ledger's natural key holds the execution key in the eventKey (`CampaignSend:<send>:<key>`), so a send's deliveries are counted by a prefix of it (the code over the plan above) | P9: as its Built note says |
+| F207 | P9 (Built Nov 14): MESSAGE_DELIVERY_REVIEW's every-organization reach is a system administrator's only now (receipts, resolution, the mail queue's reconciliation): an owner contract change of Comms, needed to grant it to the dispatcher | P9: as its Built note says |
+| F208 | P9 (Built Nov 14): the releaser may be neither an author nor the approver (but under the flag): the plan names the author only | P9: as its Built note says |
+| F209 | P9 (Built Nov 14): the dispatch's recheck reads the recipient's own membership, consent, suppression, solicitation and address and the frequency cap, not a withdrawal by another person at the same address (P5's DESTINATION_WITHDRAWN, settled at preparation); the ledger rechecks the recipient's consent and the suppressions at each attempt | P9: as its Built note says |
+| F210 | P9 (Built Nov 14): a cancelled or paused send's deliveries already with the ledger (queued or retrying) still go out, as design §5 says; the UI states their count; the build suppresses one whose recipient left the topic or whose address changed | P9: as its Built note says |
+| F211 | P9 (Built Nov 14): a send with an uncertain delivery stays Sending until it is reconciled; the frequency cap counts the organization's campaign-send deliveries only (P11's automation steps are not yet a source) | P9: as its Built note says |
+| F212 | P9 (Built Nov 14): a profile with no site gives the /u/ link from the root of the release's request; a send released with no web request (none in P9) would get a relative link | P9: as its Built note says |
+| F213 | P9 (Built Nov 14): throughput: 20 pages of 100 a send a run, a run every two minutes by default, the profile's throttle applied by the ledger | P9: as its Built note says |
+| F214 | P9 (Built Nov 14): ContactListCommStatus is stored CeReady at the hand-off and given its Message-ID by the next sweep (the ledger does not call back) | P9: as its Built note says |
+| F215 | P9 (Built Nov 14): the golden walk opens the New send dialog by the Use link's address with the campaign chosen (the template list's Use is an icon button the walk did not match by its text), to stay under 15 s a spec | P9: as its Built note says |
+| F216 | P9 (Built Nov 14): MarketingApprovals looked up its decisions by target id alone, which a send of another spec run before it can share | P9: as its Built note says |
+| F217 | P9 (Review Nov 14): the approver kept from releasing (beyond the plan's "the author"): kept, as design §5's separation; the user's confirmation | P9: as its Review note says |
+| F218 | P9 (Review Nov 14): R1's recheck reads everyone at the address now, the stricter way (F201): a topic-only send's preparation reads no sharer and its dispatch does; the ledger's build (each attempt, a retry) does not recheck another person's withdrawal, only the recipient's own consent and every suppression | P9: as its Review note says |
+| F219 | P9 (Review Nov 14): R2's refusal (NOT_READY, no address for the link) is reachable only by a release with no web request; a deployment with several sites should give its sending profiles a site with Account or their relays a web base URL, else the links carry the conf webapp's host | P9: as its Review note says |
+| F220 | P9 (Review Nov 14): the walk's median 8.2 s is about 0.2 s over the estimate (up to 0.6 s in a slow run): the user's call, or the estimate raised | P9: as its Review note says |
+| F221 | P9 (Review Nov 14): the New send dialog's profile default is a small UX change to Marketing's own screen, made for the walk | P9: as its Review note says |
+| F222 | P9 (Review Nov 14): `resumeSend` takes no stamp and does not recheck the audience limit (each claim rechecks the campaign and the profile); `resolveDelivery`'s `checkReach` is never passed (not a parameter); CampaignDelivery shows the Address filter to a masked reader, which ignores it | P9: as its Review note says |
+| F223 | P9 (Review Nov 14): the Built note's findings stand as written (the event key prefix, the reviewer's reach, the in-flight deliveries of a stopped send, an uncertain delivery keeping the send Sending, throughput, the list rows' Message-IDs by the sweep, MarketingApprovals' kind), but its "a send released with no web request would get a relative link" (R2: worse, another site's page; fixed) | P9: as its Review note says |
+| F224 | P10 (Built Nov 14): the flows' new states, Sample sent and Held for the winner (the code over the plan above) | P10: as its Built note says |
+| F225 | P10 (Built Nov 14): the winner's release evaluates the send's audience again as the releasing dispatcher: a person only the preparer could see (a personal contact, F157) is left out, the stricter way, and the release costs a preparation's evaluation; an archived list or segment is still read there, so an archive never holds a winner back | P10: as its Built note says |
+| F226 | P10 (Built Nov 14): a variant changes parts of the send's content; a part cannot be made empty in a variant (empty is the send's); sender variants are not built | P10: as its Built note says |
+| F227 | P10 (Built Nov 14): clicks and conversions are not available before P15 and P20: every experiment's decision reads undecided until then; a person chooses | P10: as its Built note says |
+| F228 | P10 (Built Nov 14): choosing the winner is a dispatcher's (no separation from the authors at the choice; it holds at the release); the observation runs from the later of the release and the schedule | P10: as its Built note says |
+| F229 | P10 (Built Nov 14): the audience limit and the one-person team's count read the whole prepared audience (samples and remainder) at both releases | P10: as its Built note says |
+| F230 | P10 (Built Nov 14): the send's CommunicationEvent carries the send's own subject (variant A's unless A was changed); variant B's recipients' list rows name it too | P10: as its Built note says |
+| F231 | P10 (Built Nov 14): duplicate#Send does not copy an experiment | P10: as its Built note says |
+| F232 | P10 (Built Nov 14): ExperimentDetail's release preview runs P9's page check over up to 2,000 held recipients on each render for a dispatcher who may release (none otherwise) | P10: as its Built note says |
+| F233 | P10 (Built Nov 14): the demo gains a draft subject test (the plan listed no demo for P10) | P10: as its Built note says |
+| F234 | P10 (Review Nov 14): the winner's release names the winner read (WINNER_CHANGED; R1); a paused experiment's resume counts the whole audience (R2) | P10: as its Review note says |
+| F235 | P10 (Review Nov 14): any change of an experiment's setup ends the send's approval, the measure and the observation period too (R4; the Built note had them as the reading's) | P10: as its Review note says |
+| F236 | P10 (Review Nov 14): no attention row for a send in Sample sent waiting for a winner (troubledSends lists it only with a failed or uncertain delivery) | P10: as its Review note says |
+| F237 | P10 (Review Nov 14): release#ExperimentWinner's `operationKey` names nothing (the experiment is the identity), as release#Send's stamp | P10: as its Review note says |
+| F238 | P11 (Built Nov 14): the owner identity is the system within the approved definition (above): a personal contact of any user is never enrolled, and a segment reading Sales or purchases is refused for a trigger, goal or condition; an automation needing Sales facts waits for a design of an automation owner who signs in for its runs (as run#EtlMapping's saved owner) | P11: as its Built note says |
+| F239 | P11 (Built Nov 14): editing an active automation returns it to draft; its enrollments admitted earlier continue on the steps in effect at their admission (approved at the earlier revision) once the new revision is approved and activated, as design §6 says; store#Steps copies every send step's template content again, so a re-stored set takes the templates' current content | P11: as its Built note says |
+| F240 | P11 (Built Nov 14): a send step's checks skip a channel withdrawal (the topic's purpose, the address's solicitation, no evidence) and stop the enrollment on a topic withdrawal, an unsubscription or a suppression (design §6's two sentences read together); the dispatch's frequency cap leaves out a step send's own earlier deliveries (a re-entered person's earlier delivery of the same step) | P11: as its Built note says |
+| F241 | P11 (Built Nov 14): the cart trigger's sends go to the automation's topic (a Marketing list) and need its marketing consent beside the store's cart reminders; a shopper who turned on cart reminders only is not reached by an automation sender, where built-in recovery reaches them | P11: as its Built note says |
+| F242 | P11 (Built Nov 14): the confirmed subscription trigger counts a staff acceptance with evidence as a confirmation (an accepted SubscriptionRequest), and reads only those decided after the first activation; the segment trigger's first scan is a baseline (no one already matched is enrolled); the segment universe's 5,000 cap leaves a scan with an admissionNote | P11: as its Built note says |
+| F243 | P11 (Built Nov 14): the automations and enrollments are read by an audience reader too (EnrollmentDetail's D and U), not by a reader or analyst (design §2 listed Automations as the app's) | P11: as its Built note says |
+| F244 | P11 (Built Nov 14): a delivery already with the ledger when an enrollment stops still goes out unless its build finds the recipient off the topic or the address changed (P9's build; F218's sharers are not rechecked there) | P11: as its Built note says |
+| F245 | P11 (Built Nov 14): no Home card, attention source or Today row for automations yet (stalled enrollments are Insights' alert, P20) | P11: as its Built note says |
+| F246 | P11 (Built Nov 14): the demo's stopped enrollment is a staff stop (Olive's unsubscription in November falls after her wait would have ended) | P11: as its Built note says |
+| F247 | P11 (Built Nov 14): CartRecovery's spec gains one feature (the plan names it); its earlier features are unchanged | P11: as its Built note says |
+| F248 | P11 (Review Nov 14): the owner (R1): an automation runs as the dispatcher who last activated it, rechecked at each run, pausing when they lose access; activation by a dispatcher who cannot read its segments is refused; staff enrollment admits as the owner (enroll#Party signs the owner in and back within the caller's request, as SitePages' preview does); the Simulation evaluates as its caller (a caller without Sales gets SOURCE_UNAVAILABLE for a Sales segment) | P11: as its Review note says |
+| F249 | P11 (Review Nov 14): the owner's scope is MarketingAccess.scope(), which narrows to the user's organization filter when one is set: an owner whose filter leaves the automation's organization out pauses it (not exercised) | P11: as its Review note says |
+| F250 | P11 (Review Nov 14): "never two active for the same automation and person" is a check under the lock of the person's existing enrollments, not a constraint: two events of one person admitted at once (enroll#Party beside the job) could make two | P11: as its Review note says |
+| F251 | P11 (Review Nov 14): the cart trigger's send step does not check the cart again: a shopper who checked out after the visit was filed still gets the step's mail unless a goal segment ends it (built-in recovery's build checks the cart) | P11: as its Review note says |
+| F252 | P11 (Review Nov 14): the subscription trigger's cursor reads acceptances decided at or after it: one committed late with an earlier decidedDate is missed; acceptances while an edited automation was back in draft are admitted at its re-activation (the cursor is kept) | P11: as its Review note says |
+| F253 | P11 (Review Nov 14): the worker's findings stand otherwise (the store#Steps copy of current template content, the cart trigger's topic consent, audience readers reading automations, a delivery already with the ledger when an enrollment stops, no Home card) | P11: as its Review note says |
+| F254 | P12 (Built Nov 14): the operations are camelCase; the survey purpose is the framework's DbfpSurvey; FormPurpose gains fieldAudienceEnumId (the code over the plan above) | P12: as its Built note says |
+| F255 | P12 (Built Nov 14): an invitation is an ordinary send of the publication's campaign (its promotional eligibility is the send's preparation and dispatch), its FormInvitation made at the build and its link per attempt; a publication needs a campaign and a site before an invitation send | P12: as its Built note says |
+| F256 | P12 (Built Nov 14): a published option's new score is a new option of the same value from now, so a response reads the score of its date; scores are whole numbers 0–1000 on a single choice only (design §10's declared aggregation limits for negative or multi-select scores are not built) | P12: as its Built note says |
+| F257 | P12 (Built Nov 14): an anonymous publication cannot limit people (each new request key is a submission; FprOnce limits an invitation or an account); two concurrent anonymous posts with one request key: the second fails on the unique key (Unavailable), not the first answer | P12: as its Built note says |
+| F258 | P12 (Built Nov 14): the page answers an unknown field or an oversized value with the neutral receipt and a hidden field's answer with what to fix | P12: as its Built note says |
+| F259 | P12 (Built Nov 14): the shared response screens' publication branch is an owner contract change of Customer Service's screens (its specs unchanged) | P12: as its Built note says |
+| F260 | P12 (Built Nov 14): the respondent of a response is named for an audience reader only; a report reader sees "A respondent" | P12: as its Built note says |
+| F261 | P12 (Built Nov 14): the form-submission trigger files only a submission with a known party (an invitation's recipient or a signed-in account); it is not spec'd (it needs an activated automation and its owner) | P12: as its Built note says |
+| F262 | P12 (Built Nov 14): the demo's ZIZI_SHOP is a Commerce demo site left unpublished, so the demo publications' site check reads Missing until it is published (as P7's offer) | P12: as its Built note says |
+| F263 | P12 (Built Nov 14): in one run of the mr-boss group CustomerServiceAccess (17.7 s) and PeopleAccessLater (21.6 s) passed the 15-second bound on a loaded machine (other workers running); neither is changed by this phase beyond the shared screens; to check on master | P12: as its Built note says |
+| F264 | P12 (Review Nov 14): accept#Submission is `authenticate="anonymous-all"` and trusts the invitationId and partyId its caller verified; `allow-remote="false"` keeps it off REST, and the Marketing page calls the JavaScript directly, as CaseFeedback's anonymous internal services are built | P12: as its Review note says |
+| F265 | P12 (Review Nov 14): a published option's new score ends it and starts an option of the same value at the next sequence number, so the rescored option moves to the end of the question's options (a relabel stays in place) | P12: as its Review note says |
+| F266 | P12 (Review Nov 14): the invitation link is made, and the FormInvitation marked sent with its attempt counted, before the build's later checks and the attempt itself, so a delivery suppressed after it (no unsubscribe address) or failed still reads as sent (Responses' "Delivered") | P12: as its Review note says |
+| F267 | P12 (Review Nov 14): the option score parser applies to every purpose's builder: a non-Marketing option line ending "\| <number>" now stores a score (unused there) instead of keeping it in its label | P12: as its Review note says |
+| F268 | P12 (Review Nov 14): the worker's findings stand (the operations camelCase, the purposes, the invitation as an ordinary send, scores 0–1000 on single choices, an anonymous publication taking each new key, the respondent named for audience readers, the trigger not spec'd, the demo site unpublished); its concurrent anonymous one is R1 | P12: as its Review note says |
+| F269 | P13 (Built Nov 14): the publication's default source and team queue are its lead rule, one current rule per lead form, and a lead form opens only with one (the code over the plan above); a changed rule is a new rule from now, so an answer is captured by the rule in effect when it was submitted and older answers are never captured again | P13: as its Built note says |
+| F270 | P13 (Built Nov 14): no "Sales routing grant": a content author routes a lead form to any current sales team of the organization with any source offered to it (the user's call, below) | P13: as its Built note says |
+| F271 | P13 (Built Nov 14): a lead form's handoff carries no tracking code or UTM pair (SubmitForm has none until P15), so the UTM map never decides a form lead's source yet; find#TrackingLinks is a minimal read here, for Sales' choices, that P15 extends | P13: as its Built note says |
+| F272 | P13 (Built Nov 14): `verified` is true only when an invitation's or the signed-in account's address equals the email answered; an anonymous lead form's inquiry is always unverified, so Sales' purge blanks it if it never qualifies | P13: as its Built note says |
+| F273 | P13 (Built Nov 14): an email answer that is not an address is left out of the inquiry (the lead is made without it) and noted on the capture | P13: as its Built note says |
+| F274 | P13 (Built Nov 14): Sales' owner contract tightened: create#/update#Opportunity refuse another organization's campaign (a legacy campaign of no organization passes; store#LeadIntake's system path still checks existence only), take a tracking code of the deal's campaign, and keep it (a code is added, never removed) | P13: as its Built note says |
+| F275 | P13 (Built Nov 14): a failed capture is retried by the job for 30 days from its capture (a wait doubling to a day), then only by an author's Try again; the registered recovery re-runs the job, which takes only what is due | P13: as its Built note says |
+| F276 | P13 (Built Nov 14): the capture after commit and the job's collection may meet on one answer: one fails on the unique key and is logged, no second capture is made | P13: as its Built note says |
+| F277 | P13 (Built Nov 14): Marketing's Leads area called Sales' context without `force-new`: for a user who reads no Sales the refusal marked the request's transaction for rollback, so any transition under Leads failed ("Transaction marked for rollback"); latent since P3 (its transitions were Sales readers'), fixed here in Leads.xml and the new Settings call | P13: as its Built note says |
+| F278 | P13 (Built Nov 14): a capture names its Sales lead only to a caller who can open it in Sales, and Marketing mounts no OpportunityDetail, so the lead shows as an id; the preview's sample for a reader without MARKETING_AUDIENCE_VIEW is made of the questions, and the duplicate outcome is Sales' policy in words, never looked up (no Sales record disclosed) | P13: as its Built note says |
+| F279 | P13 (Built Nov 14): Marketing's Settings is the Marketing administrator's and LeadSources needs SALES_CONFIGURE, so only a user holding both sees it there (the demo marketing.admin does not) | P13: as its Built note says |
+| F280 | P13 (Review Nov 14): the handoff's request digest includes values that can change between attempts (the localized "Inquiry" in the lead's name, the publication's title, an account's address, and with R1 Sales' default team): only if Sales committed an intake and the capture's own update was then lost would a retry answer OPERATION_KEY_CONFLICT and stay failed (the lead exists, by the source identity); rare, left as built | P13: as its Review note says |
+| F281 | P13 (Review Nov 14): the after-commit capture and the job colliding log an error for the loser (harmless, nothing kept); counted once as failed in that run's totals | P13: as its Review note says |
+| F282 | P13 (Review Nov 14): the Built note's findings stand as written, except the "Sales routing grant" one, now R1 | P13: as its Review note says |
+| F283 | P14 (Built Nov 14): the code over the plan above: the camelCase operation, store#BlogPost, BlogPostView, the sibling paths, Content for every reader, the page registry, the embed syntax and the form card, the newsletter category on the send, CakPage unavailable, the demo loader | P14: as its Built note says |
+| F284 | P14 (Built Nov 14): a landing page is published by its author (MARKETING_CONTENT_EDIT edits and publishes), with no review or approval step | P14: as its Built note says |
+| F285 | P14 (Built Nov 14): a send's posts are appended to its prepared body only: the draft preview and test message show the author's own text, and an experiment's variants (P10) do not get them | P14: as its Built note says |
+| F286 | P14 (Built Nov 14): the PASS landing page is no-store (its subscribe box carries the session token), so a shared cache never keeps it; there is no sitemap or robots for the marketing mount | P14: as its Built note says |
+| F287 | P14 (Built Nov 14): a Shop menu may link a landing page (an SdtPage destination of any enabled mount of the site), as built | P14: as its Built note says |
+| F288 | P14 (Built Nov 14): a blog post's public link assumes the space's `publicBlogUrl` takes the post's id; the blog itself is PASS Publishing's, later | P14: as its Built note says |
+| F289 | P14 (Built Nov 14): P15's hook: the landing page's campaign is its CampaignContent (CckSitePage), and Page.xml names where P15 records a tracking code's visit; nothing tracking is built here | P14: as its Built note says |
+| F290 | P14 (Review Nov 14): publication without approval (design §8): the design does not require a review or approval before a landing page or a blog post is public. LandingPages' crosscut row gives "create, edit, preview, request review, publish with the content grant", and ContentDetail says "Request review uses the existing wiki review flow; only the owner-approved version may be publicly bound". As built, MARKETING_CONTENT_EDIT publishes a landing page's chosen version (the owner's binding, dated and audited, with an operation key), which meets "owner-approved" read as the owner's publication; but the Request review action of the crosscut row is not built for landing pages (the shared PageContent tab offers none, and the page space's restrictUpdate keeps the wiki review flow's reviewer from the page). A blog post's public version is the page's published version, which any writer of the page sets in Knowledge, with or without a review. The user's call: leave publication as the content grant's act (and drop "request review" from the crosscut row), add an optional Request review to PageDetail, or require an approved review before publish#SitePage binds a landing page's version | P14: as its Review note says |
+| F291 | P14 (Review Nov 14): blog categories are global (WikiPageCategory), so one organization's newsletter takes another organization's public posts in a category of the same name, and create#ContentSend takes any category id; as the framework's model is, with no organization on a wiki space | P14: as its Review note says |
+| F292 | P14 (Review Nov 14): BlogPost's small image (design §8 NewBlogPost and BlogPost: image upload with thumbnail) is not built | P14: as its Review note says |
+| F293 | P14 (Review Nov 14): the Built note's others stand as written (the preview and test message without the posts, experiments' variants without them, no sitemap or robots for the marketing mount, a Shop menu linking a landing page, the blog link from `publicBlogUrl`, P15's hook) | P14: as its Review note says |
+| F294 | P15 (Built Nov 15): the code over the plan above: the site id in the link's path, tokens per attempt in the build rather than at preparation and only for the organization's tracking links, the automated kinds, the organization's visitor-key policy and the browser's signals as the site's tracking choices, the allowlist on MarketingPolicy, LinkObservations inside get#TrackingLink, MARKETING_CAMPAIGN_EDIT writing links, the review as Marketing's approvals' page kind | P15: as its Built note says |
+| F295 | P15 (Built Nov 15): store#MarketingPolicy dropped Campaign defaults' test addresses since P8 (the parameter was declared on store#CampaignBudget); fixed here: a policy saved before this phase from Campaign defaults has no test list until it is saved again | P15: as its Built note says |
+| F296 | P15 (Built Nov 15): `/trk` and `/trk-o` are servlet patterns on every host of a deployment, so they shadow a Smithy group or a root-mounted Shop page route of those names; now reserved: the framework adds each declared servlet's first segment to `ec.web.reservedPaths` (mr-moqui fix/trkpaths), so a Smithy group, handle, site page, redirect or mount cannot take them | P15: as its Built note says |
+| F297 | P15 (Built Nov 15): the visitor key is a first-party cookie set by the redirect: with the policy on, a browser without Global Privacy Control or Do Not Track gets it with no consent banner (PASS has none); a jurisdiction needing prior consent for analytics cookies should leave the policy off, which still counts visits and clicks without unique visitors (the user's call below) | P15: as its Built note says |
+| F298 | P15 (Built Nov 15): opens: a pixel fetch by a mail provider's image proxy is counted as an open (a known scanner's is set apart); opens are not shown in LinkObservations (a link's) and wait for P20's send reports | P15: as its Built note says |
+| F299 | P15 (Built Nov 15): Online sales' visits are not built (Home's are); with conversion they wait for P20's `Marketing.Visits` and attribution | P15: as its Built note says |
+| F300 | P15 (Built Nov 15): CampaignDetail's Tracking links box and RecipientDetail's clicks are not rendered by a regression spec (CampaignDetail's one render is MarketingCampaigns', which does not look for the box); a send's unique clicks are shown per recipient and per experiment variant, not yet on SendDetail | P15: as its Built note says |
+| F301 | P15 (Built Nov 15): a send's tracked links are those whose public address the author pasted; a plain link in the body is never counted, by design (no destination a link of the organization does not register) | P15: as its Built note says |
+| F302 | P15 (Review Nov 15): the Built note's findings stand as written; the user's calls of Nov 15 are in §4 (the visitor key as built, no banner, a banner in §7; `/trk` and `/trk-o` reserved in the framework as a follow-up). Done: `ec.web.reservedPaths` now derives the reserved segments from every declared servlet pattern, `/search` and `/dashboard` included (mr-moqui fix/trkpaths) | P15: as its Review note says |
+| F303 | P15 (Review Nov 15): a token is scoped to its recipient, send and organization, not to the links of its message: a holder may append it to another tracking link of the same organization and have that click attributed to the recipient (while they allow tracking). Nothing else follows from it | P15: as its Review note says |
+| F304 | P15 (Review Nov 15): a link's destination and safe destination are checked when saved: a host later removed from the allowlist, or a site whose mount no longer serves the organization, still receives the link's visitors until the link is saved or disabled | P15: as its Review note says |
+| F305 | P15 (Review Nov 15): an allowlist entry admits its subdomains (`partner.example` admits `shop.partner.example`), so an entry for a shared hosting domain would admit every tenant under it; MARKETING_CONFIGURE only | P15: as its Review note says |
+| F306 | P15 (Review Nov 15): a pixel's limit is per client across all pixels (30 in ten minutes): a mail provider's image proxy fetching for many recipients from one address has most opens dropped (opens are not yet reported, P20) | P15: as its Review note says |
+| F307 | P15 (Review Nov 15): a link's end date cannot be cleared from the form (an empty Timestamp is no parameter, so the old one is kept); disabling is the way back | P15: as its Review note says |
+| F308 | P16 (Built Nov 15): the code over the plan above: RegistrationEvent keeping the organization and the campaign link made by E, one offer row per occurrence changed in place with its revisions, EventRegistration defined now with its seat states only, no amount on a ticket type, the gateway rule, the question publication written by E, `close#Registration`, the camelCase operation and `?offer=`, the EventDetail hook, Add video call on RegistrationSetup | P16: as its Built note says |
+| F309 | P16 (Built Nov 15): an event that does not repeat has its offer matched to its dates now, so moving the event in the calendar moves the offer; a series' occurrence is matched by the start its rule gives it, within 31 days of a changed instance's own start (a changed instance moved further no longer matches, and the offer's readiness says "no longer an occurrence"); changed dates' notices are P17's job | P16: as its Built note says |
+| F310 | P16 (Built Nov 15): EventDetail's tabs (Overview, Attendees, Reminders, Files, Chatter) link Commons' own route, as under People's mount, so a click there leaves Marketing's menu | P16: as its Built note says |
+| F311 | P16 (Built Nov 15): the demo's ZIZI_SHOP is unpublished (as P7's, P12's and P14's demos), so the two demo offers' pages are Not Found until it is published; the webinar's call link lasts 90 days (the framework's most), shorter than a later event would need | P16: as its Built note says |
+| F312 | P16 (Built Nov 15): the occurrence choice of a series lists the next 24 occurrences in 400 days; a later one cannot be offered yet | P16: as its Built note says |
+| F313 | P16 (Built Nov 15): a time zone is typed (validated against the server's zones), not chosen from a list | P16: as its Built note says |
+| F314 | P16 (Review Nov 15): the Built note's findings stand but the first: the campaign link is the campaign's change (R1), not E's | P16: as its Review note says |
+| F315 | P16 (Review Nov 15): an offer changed in place keeps only a counter of its terms (termsRevision); the accepted words survive only in the policy row and the audit log. P17 should keep on each registration the termsRevision it accepted and the accepted text (or a snapshot row per terms revision written when it rises), not rely on EntityAuditLog as evidence | P16: as its Review note says |
+| F316 | P16 (Review Nov 15): the capacity checks lock the offer's row (forUpdate); P17's reservation must take the same lock (offer, then ticket type) so a capacity change and a reservation serialize | P16: as its Review note says |
+| F317 | P16 (Review Nov 15): after publication store#RegistrationPolicy accepts a closing date past the occurrence's end, and store#TicketType a ticket capacity above the offer's seats (its description says "within the offer's seats"); the readiness checks the window at publish only | P16: as its Review note says |
+| F318 | P16 (Review Nov 15): the public availability says "Full: join the waitlist" when the waitlist is on even when its limit is reached | P16: as its Review note says |
+| F319 | P16 (Review Nov 15): a ticket type with places taken may be ended (its places stay counted in the offer); P17 decides what its holders see | P16: as its Review note says |
+| F320 | P16 (Review Nov 15): find#Events and get#EventSetup give a registration event's name, dates and place to every Marketing reader of the organization, whatever the calendar's visibility (its notes now follow it, R4) | P16: as its Review note says |
+| F321 | P16 (Review Nov 15): an author may still publish registration questions alone through Commons (P12's registration purpose); only an offer's own publication is kept off SubmitForm | P16: as its Review note says |
+| F322 | P17 (Built Nov 15): the code over the plan above: the reservation and terms records, the order placed after the verified payment, the order-status SECA, EvrReview, refunds through the payment services, the code never stored and shown anew, the camelCase POST operations, the EventRegistration kind naming a reservation | P17: as its Built note says |
+| F323 | P17 (Built Nov 15): `check#OrderPreApprove` skips the new-customer and shipping-address warnings for a storeless ticket order; without it no first-time buyer's ticket order would ever auto-approve with the approval setting off (the user's call) | P17: as its Built note says |
+| F324 | P17 (Built Nov 15): the registration and lead-rule triggers of P11 and P13 are not built: they need a field naming the offer on MarketingAutomation and MarketingLeadRule, their screens' choices and a source cursor over confirmed registrations; attendance's trigger waits for P18 | P17: as its Built note says |
+| F325 | P17 (Built Nov 15): the demo's Retail has no accounting preference of its own, so no tax gateway was named for it (the plan's demo row) and the workshop's ticket orders are untaxed in the demo; the acceptance scenario uses its own organizations | P17: as its Built note says |
+| F326 | P17 (Built Nov 15): Register follows a provider page by address only; a gateway whose hosted step is a posted form (Authorize.Net Accept Hosted, Shop's PaymentRelay) is not offered on Register yet | P17: as its Built note says |
+| F327 | P17 (Built Nov 15): a partial cancellation of a payment only authorized waits for the capture to refund; the order's line is not cancelled, so the order's total stays as paid; a hold that ends while the payer is at the provider leaves the unplaced order open (a late success is review, refunded or seated by staff, never automatically) | P17: as its Built note says |
+| F328 | P17 (Built Nov 15): a price changed between the reservation and the payment's start is charged at the new price without a review step (Shop's checkout reviews it) | P17: as its Built note says |
+| F329 | P17 (Built Nov 15): each ticket notice attempt and each Show my entry code revokes the earlier code, so an earlier email's code stops working | P17: as its Built note says |
+| F330 | P17 (Built Nov 15): the public cancellation is allowed until the occurrence starts whatever the cancellation terms say (they are words, not a rule) | P17: as its Built note says |
+| F331 | P17 (Built Nov 15): Register posts an attendee's questions only for a publication open with the offer; a registration's answers open in Surveys' ResponseDetail, whose own access decides who reads them | P17: as its Built note says |
+| F332 | P17 (Review Nov 15): nothing captures a ticket order's authorized payment: a storeless ticket order is never invoiced or shipped, and capture happens in apply#OrderPaymentsToInvoice (or Shop's digital fulfilment), so the organization's money stays an authorization that lapses at the gateway, and a partial cancellation's refund (ErfRequested, waiting for a capture) waits forever. Design §15 says Marketing adds no invoice or capture processor, so this is Accounting's or Sales' to settle (invoice and capture on approval, as Shop's digital lines do); the user's call | P17: as its Review note says |
+| F333 | P17 (Review Nov 15): the cancellation terms are words only (design §9 RegistrationPolicy, §13 CancelRegistration): a buyer may cancel until the occurrence starts and every paid cancellation hands a full refund over, whatever the terms say. Enforcing them needs a structured rule on the offer (cancel until an offset before the start, refundable or not, a fee); the design defines none, so it is kept and put to the user (the worker's finding stands) | P17: as its Review note says |
+| F334 | P17 (Review Nov 15): the entry code rotates at every issue (each ticket delivery attempt, Send again, Show my entry code, a substitution): kept, since the plan asks for the digest and revision only and no keyed derivation exists for a stable code; a stable code per revision needs the code kept encrypted or a server-keyed HMAC (framework). Note that the buyer's Show my entry code revokes the code mailed to that attendee | P17: as its Review note says |
+| F335 | P17 (Review Nov 15): a placement that fails five times leaves its places pending (holding their seats) with the payment authorized, seen only as the reservation's failureMessage and the log; no staff list or alert names it | P17: as its Review note says |
+| F336 | P17 (Review Nov 15): the ExternalAccess kind lets an events manager issue a reservation capability through the generic issue service (its permission list), though its comment says only the registration services issue it | P17: as its Review note says |
+| F337 | P17 (Review Nov 15): a closed offer's waiting places are never ended (the job ends a published offer's at the start only) | P17: as its Review note says |
+| F338 | P18 (Built Nov 15): the code over the plan above: EventAttendance as its own record with its method; the check-in window; the override limited to held and pending places; the tablet's first name and initial; staff-only lookup; the device bound by the route group's fixed `registrationPolicyId`; the rate limit by attempt buckets; Attendance as the history with a fact; the offer triggers' cursors and the lead rules' event source and its Sales source kinds | P18: as its Built note says |
+| F339 | P18 (Built Nov 15): an override of a held free place leaves the place held: its hold may still expire after the check-in (the attendance stays); a cancellation after a check-in leaves the attendance of a cancelled place. Neither changes the other, by design of "never invents" | P18: as its Built note says |
+| F340 | P18 (Built Nov 15): P12's form-submission trigger (AtrFormSubmitted) has no choice in NewAutomation or AutomationDetail (P12 built the rule, not the screen); not added here | P18: as its Built note says |
+| F341 | P18 (Built Nov 15): an event's lead rule hands Sales no registration answers (the questions), only the attendee's name and address and the event in the notes; mapping the questions is later. Event captures come from the capture job alone (every five minutes), not after the commit | P18: as its Built note says |
+| F342 | P18 (Built Nov 15): the triggers name one offer (one occurrence): a series wants one automation or rule per occurrence | P18: as its Built note says |
+| F343 | P18 (Built Nov 15): the demo has no occurrence under way and no door tablet (Admin registers one), so the demo webinar's door says it is not open; the acceptance walk makes its own offer | P18: as its Built note says |
+| F344 | P18 (Built Nov 15): the spec and the acceptance fixture make codes with EventRegistrationPlaces.js `issueCode` (follow-up 1 changes how codes are made: see the hot spots) | P18: as its Built note says |
+| F345 | P18 (Review Nov 15): R1 above | P18: as its Review note says |
+| F346 | P18 (Review Nov 15): the worker's list stands (EventAttendance its own record, the window, overrides for held and pending only, first name and initial, staff-only search, the device by the fixed parameter, attempt buckets, the offer triggers and Sales source kinds; an overridden held place may still expire and free its seat while the attendee is in, so a sold-out door can admit one more than its seats; P12's form trigger has no screen choice; no answers to Sales; one occurrence per trigger; no demo door) | P18: as its Review note says |
+| F347 | P18 (Review Nov 15): the offer triggers' cursor, as P12's, stalls if more than 200 places share one `confirmedDate` (or attendances one `checkInDate`) to the millisecond: each run re-reads the same 200, all filed. Unreachable today (a reservation has ten places at most, confirmations and check-ins are one at a time); a tie-break on the registration id would close it for both triggers | P18: as its Review note says |
+| F348 | P18 (Review Nov 15): no spec runs two check-ins of one place concurrently; the row lock and EventAttendance's key make it safe by construction | P18: as its Review note says |
+| F349 | Follow-up 1 (Built Nov 15): the code over the plan above: the keyed derivation over digestText with an encrypted per-offer secret (no host member), the rule in hours, lateCancelAllowed as the offer's choice, the rule binding confirmed places only, the authorize-only test gateway | Follow-up 1: as its Built note says |
+| F350 | Follow-up 1 (Built Nov 15): P17's code: the last place of an approved, paid ticket order was refunded nothing (cancel#Order zeroed its lines); fixed here by not cancelling an invoiced order and by counting a zeroed line's billed quantity; such an order now stays approved with its invoice and refund payments, and Accounting settles the invoice (a credit memo), which nothing does automatically | Follow-up 1: as its Built note says |
+| F351 | Follow-up 1 (Built Nov 15): P17's code: a corrected or substituted attendee's ticket reused the first ticket's ledger key, so the new code was never mailed; fixed (its own key) | Follow-up 1: as its Built note says |
+| F352 | Follow-up 1 (Built Nov 15): a capture that fails at the approval (a declined capture, an invoice Accounting refuses) is logged and leaves the order approved, uninvoiced and the payment authorized; nothing retries it (the job does not look for approved, unbilled ticket orders), and a partial cancellation's refund then waits | Follow-up 1: as its Built note says |
+| F353 | Follow-up 1 (Built Nov 15): apply#OrderPaymentsToInvoice captures the whole payment, so a place cancelled before the approval is captured and refunded rather than released; and a later cancellation's refund is a refund payment beside a paid invoice, never a credit memo | Follow-up 1: as its Built note says |
+| F354 | Follow-up 1 (Built Nov 15): an offer published before follow-up 1 gets its secret at its first code, which changes the offer's row and so its revision: a staff member saving the offer form opened before then is refused as stale once | Follow-up 1: as its Built note says |
+| F355 | Follow-up 1 (Built Nov 15): the online refund percentage applies to a confirmed place's whole share, its tax included; a fee kept by the organizer is not shown as a fee line anywhere (the refund is smaller) | Follow-up 1: as its Built note says |
+| F356 | Follow-up 1 (Built Nov 15): PayTraceGateway was failing on master since P17's review (its storeless Retail order retaxed by the inherited Corp gateway); now insulated in the spec | Follow-up 1: as its Built note says |
+| F357 | Follow-up 1 (Review Nov 15): the capture is made inside the invoice's transaction under the part's lock (the provider is asked while the part is locked; Shop captures apart first); a slow provider holds that order part only | Follow-up 1: as its Review note says |
+| F358 | Follow-up 1 (Review Nov 15): a ticket invoice is finalized at the approval: its InvoiceFinalized SECAs post it and may send the invoice email where the organization has one, beside the registration's own receipt | Follow-up 1: as its Review note says |
+| F359 | Follow-up 1 (Review Nov 15): the finalize-and-apply path's success is not covered by a regression spec (the spec's organizations have no posting); a demo organization's ticket order (Retail's workshop) exercises it | Follow-up 1: as its Review note says |
+| F360 | Follow-up 1 (Review Nov 15): the whole authorization captured and a place cancelled before the approval refunded from it (above) | Follow-up 1: as its Review note says |
+| F361 | Follow-up 1 (Review Nov 15): OrderToCashBasicFlow and ReturnToResponseBasicFlow still suspend Retail's nexus (R4) | Follow-up 1: as its Review note says |
+| F362 | Follow-up 1 (Review Nov 15): ProductsPriceLists and ProductsPricing (mr-boss) fail on master too (the main checkout, release): BossProductsDemoData's BOSS_PRICE_SALES (15.00) ends and BOSS_PRICE_NEXT (16.00, "Scheduled next price") starts 2026-11-15 00:00, today, so the price list's explanation reads 14.40 (16.00 less 10 %) for the expected 13.50 and the REST read lists BOSS_PRICE_NEXT, not BOSS_PRICE_SALES: a date in the demo data, not tax and not this follow-up | Follow-up 1: as its Review note says |
+| F363 | Follow-up 2 (Built Nov 15): the code over the plan above (hex by default with an optional base64url, an empty key refused; no version marker for codes) | Follow-up 2: as its Built note says |
+| F364 | Follow-up 2 (Built Nov 15): existing entry codes of follow-up 1's construction rotate at their registration's next showing (the demo data stores none) | Follow-up 2: as its Built note says |
+| F365 | Follow-up 2 (Built Nov 15): SalesQuotes ("No tax: the seller has no tax gateway" not shown for Wingtip's quote) and SalesQuoteSend (propose#Quote refused, ADDRESS_REQUIRED: the customer has no address to tax the quote at) fail on master too: Retail now has a Utah nexus and inherits Corp's LOCAL gateway (follow-up 1's demo change), so Retail's quotes are taxed and need an address; a follow-up for Sales' specs or demo (Wingtip given an address, or the specs' expectations), not done here | Follow-up 2: as its Built note says |
+| F366 | Follow-up 2 (Built Nov 15): dates beyond December that specs depend on, next to turn: Marketing's webinar (2027-01-28) and workshop (2027-03-13, closing 03-12) offers that MarketingAccess and the Marketing specs register for; Wingtip's quote valid to 2027-01-31; PeopleLeave's requests of 2027-04-06/07. Not changed (outside the call's Nov–Dec window) | Follow-up 2: as its Built note says |
+| F367 | Follow-up 2 (Review Nov 15): existing entry codes of follow-up 1's construction rotate at their registration's next showing (as the Built note says) | Follow-up 2: as its Review note says |
+| F368 | Follow-up 2 (Review Nov 15): the demo quote BOSS_SAL_QTE_WINGTIP is untaxed as loaded (no tax line until a rep chooses the address or proposes it), since Retail's gateway and nexus load after the Sales demo; giving it tax at load would mean taxing it after BossZZMarketingDemoData or moving Retail's nexus into the Sales demo | Follow-up 2: as its Review note says |
+| F369 | Follow-up 2 (Review Nov 15): dates beyond December that specs depend on, next to turn (the worker's list, not changed): Marketing's webinar offer (2027-01-28) and workshop (2027-03-13, closing 03-12), which MarketingAccess and the Marketing specs register for; Wingtip's quote valid to 2027-01-31; PeopleLeave's requests of 2027-04-06/07 | Follow-up 2: as its Review note says |
+| F370 | P19 (Built Nov 15): the code over the plan above: the promotion registration (PromotionApps.js) and no `appRoot` parameter on the four screens; the promotion link's Commerce guard in Mantle and find#CampaignAssociations; P2's `promotionName` label; Customer360 on one page (F91); the Customers and Contacts paths and the contact record kind; the eight engagement sources and their permissions; the merge module, its four refusals (RECIPIENT_PENDING beyond the plan's text), the restrictive membership rule, the consent withdrawal by address and PcsMerge; MessageSuppression needs no move | P19: as its Built note says |
+| F371 | P19 (Built Nov 15): a merged party's withdrawal at an address the kept party does not have stays on the moved rows only; nothing reaches that address through the kept party, and if the address is later added to the kept party under a new contact mechanism its withdrawal does not follow (a consent keyed by contact mechanism, not by address) | P19: as its Built note says |
+| F372 | P19 (Built Nov 15): a Sales reader without MARKETING_AUDIENCE_VIEW who opens Sales' Accounts under Marketing's Leads now follows an account to Marketing's Customer360, which refuses them (PERMISSION_DENIED); before, the account showed unlinked. The account link could stay unlinked for them (Accounts.xml reads `sharedLinks` only), Sales' owner file | P19: as its Built note says |
+| F373 | P19 (Built Nov 15): the Customer360 tab bar (F91) stays the owner's or the framework's fix; Marketing's branch avoids it by having no tabs | P19: as its Built note says |
+| F374 | P19 (Built Nov 15): the contact record's notes and files are open under the Marketing root to an audience reader for any directory party of their organizations or shared, as Sales opens them for its accounts' contacts | P19: as its Built note says |
+| F375 | P19 (Built Nov 15): the promotion screens' product choices under Marketing are Mantle's product rule (owner organization or shared), not Products' catalog search (Products' context admits no Marketing root) | P19: as its Built note says |
+| F376 | P19 (Review Nov 15): R1–R5 above | P19: as its Review note says |
+| F377 | P19 (Review Nov 15): Marketing's Promotions list and PromoCodes list show every promotion of Commerce's store scope (find#Promotions takes one store or all), not only the stores of the user's Marketing organizations that its choices offer; the two scopes coincide for a member of their organizations and differ only for a COMMERCE_ALL_ORGANIZATIONS or MARKETING_ALL_ORGANIZATIONS holder, and Mantle still decides every read, so it adds no right; a store filter in Mantle's find is Commerce's owner change | P19: as its Review note says |
+| F378 | P19 (Review Nov 15): with R4, an account under Leads with no Marketing record (no list, send, registration or form) opens a "not available" Customer360 for an audience reader; adding it to a list goes through Accounts' bulk Add to list (P3), not ContactDetail | P19: as its Review note says |
+| F379 | P19 (Review Nov 15): the worker's withdrawal-by-address finding stands (a merged party's withdrawal at an address the kept party lacks stays on the moved rows only, keyed by contact mechanism; a suppression by address is the durable stop) | P19: as its Review note says |
+| F380 | P19 (Review Nov 15): the worker's other findings (the registration, the Customer360 tab bar, the product choices) are as described; the notes and files finding is R4, the Sales-reader link finding R5 | P19: as its Review note says |
+| F381 | Follow-up 3 (Built Nov 15): the code over the plan above: no Mantle or PASS spec depended on the BOSS events, and moving a quote's validity through the entity service raises its revision, so the loader runs without entity ECA rules; Fabrikam's quote is moved too | Follow-up 3: as its Built note says |
+| F382 | Follow-up 3 (Built Nov 15): the dates left fixed (the campaigns', the opportunities', Retail's holidays): no spec depends on them; the spring campaign ends Jan 31, 2027 whatever the load, so a later load shows its events after it | Follow-up 3: as its Built note says |
+| F383 | Follow-up 3 (Review Nov 15): R1 and R2 above | Follow-up 3: as its Review note says |
+| F384 | Follow-up 3 (Review Nov 15): the webinar's call link is made once (P16's webinarCall skips an event with an infoUrl), so a reload more than about two weeks after the first load moves the webinar past the link's 90 days; a fresh load is always inside. Not fixed: telling an expired link needs the CallLink row behind the path (its token is hashed); for the lead whether the demo loader should renew it | Follow-up 3: as its Review note says |
+| F385 | Follow-up 3 (Review Nov 15): a quote loader failure: the two moves share the service's transaction, so a failing update rolls back both (fixed IDs, rare); noted, not changed | Follow-up 3: as its Review note says |
+| F386 | P20 (Built Nov 15): the code over the plan above: the order's identity is its local visit, the key that visit carried and the customer as a consenting recipient; an unattributed decision recorded; amounts read from the attributed orders' own rows; the aggregation a whole recompute; the datasets' documents in mr-boss; counts, not rates, in the alert templates; one attention count service; Reports before Settings | P20: as its Built note says |
+| F387 | P20 (Built Nov 15): a remote PASS frontend's checkout carries no visitor key to the order (and its session no visit on the authority), so an order through a remote frontend is attributed only through its customer as a consenting recipient, not "through its visitor key" as scenario 18 asks; PASS's checkout operation would need to pass the key's digest for the order (mr-pass and the facade's schema; not in this phase's repositories) | P20: as its Built note says |
+| F388 | P20 (Built Nov 15): attribution through the visit needs the landing page (with the link's code) and the checkout in one session on the authority's host: the redirect itself declines its session, so a click followed by a Shop page without the code links nothing | P20: as its Built note says |
+| F389 | P20 (Built Nov 15): `preview#Audience` is not exposed to Assist: it answers names and whole addresses to an audience reader; an aggregate-only operation (bucket counts) would be the tool | P20: as its Built note says |
+| F390 | P20 (Built Nov 15): invoiced revenue is the attributed orders' OrderItemBilling (amount × quantity), returns their completed ReturnItems; design §11's invoice-line allocation of split lines and credits beyond returns are not built | P20: as its Built note says |
+| F391 | P20 (Built Nov 15): Audience growth counts the evidenced consent records of each list: a legacy member with no consent record is in "members now" and in no opening or closing count | P20: as its Built note says |
+| F392 | P20 (Built Nov 15): the delivery dataset has no campaign or send dimension (a delivery names its send only in its event key): campaign results by campaign are the reports' | P20: as its Built note says |
+| F393 | P20 (Built Nov 15): Commerce's Home keeps P15's Visits card with no conversion figure; Online sales shows visits and campaign orders | P20: as its Built note says |
+| F394 | P20 (Built Nov 15): the report readers see campaign totals (orders and their value by currency) without a Sales or Commerce read; an order's own row needs one (design §2: R for the reports, source rights for drill-down) | P20: as its Built note says |
+| F395 | P20 (Built Nov 15): the demo has no campaign deliveries, events or attributed orders, so the reports read nearly empty on the demo; the acceptance scenario makes its own | P20: as its Built note says |
+| F396 | P20 (Built Nov 15): `get#TrackingLinkResults` is built and on no screen (TrackingLinkDetail keeps get#TrackingLink's observations) | P20: as its Built note says |
+| F397 | P20 (Built Nov 15): a pending request with an expiry that an import row names cannot be removed (its foreign key) and is named each night; imports file requests without an expiry, so none is expected | P20: as its Built note says |
+| F398 | P20 (Review Nov 15): R1 to R6 above | P20: as its Review note says |
+| F399 | P20 (Review Nov 15): the worker's list stands (the order's identity by its local visit, its key and the consenting customer; the unattributed decision; amounts from the attributed orders' own rows; the aggregation a whole recompute; the datasets' documents in mr-boss; counts, not rates, in the alerts; one attention service; Reports before Settings; split-line allocation and credits beyond returns not built; the legacy member outside Audience growth's opening and closing; no campaign dimension in the delivery dataset; Commerce Home without a conversion figure; the demo's empty reports; `get#TrackingLinkResults` on no screen; the import-row request named each night) | P20: as its Review note says |
+| F400 | P20 (Review Nov 15): amounts in the reports are summed as JavaScript numbers and rounded only for display (decimals per JS-Globals would be exact); invoiced counts OrderItemBilling whatever its invoice's status (a cancelled invoice's billing still counts); neither fixed here | P20: as its Review note says |
+| F401 | P20 (Review Nov 15): the remote PASS checkout's visitor key (the user's call of Nov 15) is the lead's follow-up: see "For the lead" | P20: as its Review note says |
+| F402 | Follow-up 4 (Built Nov 15): Register's ticket checkout does not forward the visitor key: a ticket order through a remote PASS is attributed by recipient only (a follow-up like this one if wanted: `completeRegistration` and EventRegistrationPlaces' placement) | Follow-up 4: as its Built note says |
+| F403 | Follow-up 4 (Built Nov 15): the order keeps the digest after its decision and past the organization's statistics retention (the events it matches are removed by retention unless an attribution names them); retention could clear it on orders older than the retention days | Follow-up 4: as its Built note says |
+| F404 | Follow-up 4 (Review Nov 15): Register's ticket checkout (PASS Marketing `completeRegistration`) does not forward the key (the worker's first finding): it stands; not fixed now. The section names Shop's checkout only, a ticket order through a remote PASS is still attributed through its customer as a consenting recipient, and the change crosses EventRegistrationPlaces' placement (P17's code), so it is a follow-up like this one if the user wants ticket orders attributed by the key (the user's call) | Follow-up 4: as its Review note says |
+| F405 | Follow-up 4 (Review Nov 15): after placement a customer's withdrawal leaves the digest on the order until retention (or forever without `statisticsRetentionDays`); attribution ignores it (its withdrawn early return), so it is never used, but it is kept; clearing it on withdrawal would need a hook in the consent write (left as is, low) | Follow-up 4: as its Review note says |
+| F406 | Follow-up 4 (Review Nov 15): PASS's `visitorKeyInput` (Do Not Track / GPC, the cookie's form) is reviewed but not exercised by a spec (the remote feature passes `visitorKey` to the facade directly; no spec drives the Shop submit transition with headers); TrackingLib's `doNotTrack` and `heldKey` are covered by MarketingTracking (low) | Follow-up 4: as its Review note says |
+| F407 | Follow-up 4 (Review Nov 15): deployment order: both facades refuse an input field the schema does not list, so a PASS with this change against an authority without it refuses every Shop submit that carries a key ("Unsupported field"); deploy the authority first (a note for release, nothing to fix in one repository set) | Follow-up 4: as its Review note says |
+| F408 | P21 (Built Nov 15): the code over the plan above: one W service for the calendar's items and events (get#EventInstances, not get#FullCalendarData); `check#CalendarEvent` before a drag; the resource mode with four new kinds in Commons' Calendar.qvue; Calendar hidden from the menu (Home's shortcut and g k); the collection with events and publication dates; no test/work/CalendarDav (the new MarketingCalendar); three more ContextServices (§2's list of four is stale); a failing Today source of Mantle's as a named item | P21: as its Built note says |
+| F409 | P21 (Built Nov 15): Home's Upcoming still answers its events and publication-date sources "Not available" (since P1; MarketingAccess reads that text): get#CalendarItems' sources could now answer them; left as they are (P23, or a follow-up, changes the spec with them) | P21: as its Built note says |
+| F410 | P21 (Built Nov 15): a third copy of the phone matching (`partiesOfNumber`: SalesComms.js, Maintenance's Stack.js, now Marketing.js): a Mantle helper would serve all three | P21: as its Built note says |
+| F411 | P21 (Built Nov 15): design §14.3 names EventRegistration a record-panel host, but the root admits only the campaign, the send and the contact (P17 did not add it), so "Log as note" files on a campaign or a send, and a registration's page offers no note | P21: as its Built note says |
+| F412 | P21 (Built Nov 15): a moved event's notification links Commons' EventDetail (as Projects' calendar does), not Marketing's mount | P21: as its Built note says |
+| F413 | P21 (Built Nov 15): the demo's December send keeps a fixed date (2026-12-01, not load-relative): MarketingShell reads its range from the row, so it passes on any day; the walk's collection holds it only while it is within 180 days of the run | P21: as its Built note says |
+| F414 | P21 (Review Nov 15): the demo's December send keeps a fixed 2026-12-01 date (the worker's finding, confirmed): MarketingShell reads its range from the row and passes on any day, but the acceptance MarketingCalendarWalk's CalDAV feature finds the send only while it is within the projection's default window (30 days back, 180 ahead), so from 2026-12-31 on its listing and object checks fail (the campaign's window from about 2027-01-30), while its month views and drags, which read the row's date, keep working; the answer is the demo's send dates relative to the load, as follow-up 3 made the events', which touches every spec that reads the December send (MarketingSends, MarketingApprovals and others): not this phase's, left | P21: as its Review note says |
+| F415 | P21 (Review Nov 15): EventRegistration is not a notes-and-files record (design §14.3 names it a record-panel host; P17 did not add it), so "Log as note" serves a campaign or a send: confirmed; the record host is P17's owner-contract work, not P21's, left for a follow-up | P21: as its Review note says |
+| F416 | P21 (Review Nov 15): a third copy of the phone matching (`partiesOfNumber`, as SalesComms.js and Maintenance's Stack.js): confirmed, a Mantle helper for the three belongs to a cross-app follow-up, not this phase | P21: as its Review note says |
+| F417 | P21 (Review Nov 15): a moved event's notification links Commons' EventDetail, as Projects' calendar does (the worker's): acceptable, the event is the calendar's | P21: as its Review note says |
+| F418 | P21 (Review Nov 15): Today's Marketing feature in MarketingShell checks the group is present but not that the dispatcher gets an item (the demo has no send due today); Mantle's MarketingCalendar covers the sends-due source | P21: as its Review note says |
+| F419 | Follow-up 5 (Built Nov 15): the key is forwarded with `startRegistrationPayment`, not `completeRegistration` as the section names (the order is made at the payment's start; above); the lead or the user may confirm | Follow-up 5: as its Built note says |
+| F420 | Follow-up 5 (Built Nov 15): Register's pay transition is not driven by a spec with headers and a cookie (the helper it calls is: the PASS feature above), as follow-up 4's review found for Shop's submit (low) | Follow-up 5: as its Built note says |
+| F421 | Follow-up 5 (Built Nov 15): deployment order, as for follow-up 4: a PASS with this change against an authority without it refuses every Register Pay that carries a key ("Unsupported operation or input"); deploy the authority first | Follow-up 5: as its Built note says |
+| F422 | Follow-up 5 (Review Nov 15): a staff `start#RegistrationPayment` replacing a buyer's declined remote payment writes no digest, so it clears one the buyer's Pay kept (consistent with "a start replacing a payment writes that Pay's digest or none" and the privacy-conservative choice; the ticket order is then attributed by recipient only; low, left as is) | Follow-up 5: as its Review note says |
+| F423 | Follow-up 5 (Review Nov 15): no spec drives a replacement start after a declined payment (digest rewritten) or Register's pay transition with headers and a cookie (the worker's second finding; the helper is covered) (low) | Follow-up 5: as its Review note says |
+| F424 | P22 (Built Nov 15): the code over the plan above: the conf-level provider's form and authorization; the per-number limit as one policy value, a campaign's texts apart from the system's budget; send#SmsMessage's deliveryOutcome; an organization's number as its telecom number that is one of ours with a bridge; normalization from the number's own country code else the deployment's; topic grants counted by the sms-consent answer; the STOP's EECA; a send's and an automation's channel from the topic; the cost a segment on the profile; the day's limit waiting untried; Email preferences never turning a text topic on | P22: as its Built note says |
+| F425 | P22 (Built Nov 15): Mantle had no relation between an organization and one of our numbers (moqui.call.PhoneNumber): an organization's messaging numbers are its own telecom numbers that are ours; a number two organizations list belongs to both (the sms-consent answer asks every owner) | P22: as its Built note says |
+| F426 | P22 (Built Nov 15): a receipt for a campaign's text is still dropped (F73): the framework keeps no row of a direct text, so DeliveryAnalysis shows hand-off outcomes for SMS (§7) | P22: as its Built note says |
+| F427 | P22 (Built Nov 15): no per-number override of the promotional day limit (one VoicePolicy value for every number), though 10DLC campaigns differ per number | P22: as its Built note says |
+| F428 | P22 (Built Nov 15): the estimate is of the text with its variables unfilled (a long first name may add a segment); the cost is the profile's configured price, not the provider's | P22: as its Built note says |
+| F429 | P22 (Built Nov 15): a person joins a text message topic only through an import or staff with evidence: PASS Marketing's public subscription (P7) offers email topics, and Email preferences never turns a text topic on | P22: as its Built note says |
+| F430 | P22 (Built Nov 15): a provider service written as an inline script finds its `toNumber` parameter shadowed by the scripts' global `toNumber` helper (it must read `ec.context.toNumber`; Mantle's reads the parameter map) | P22: as its Built note says |
+| F431 | P22 (Built Nov 15): the uncertain SMS hand-off is set by hand in the Mantle spec (the framework's lost answer is moqui-channels' test; an app spec has no provider that drops a connection: the adapter's HTTP client is moqui-lib's, outside the HTTP fixtures) | P22: as its Built note says |
+| F432 | P22 (Review Nov 15): a text topic whose list policy names another purpose (storeSubscriptionPolicy accepts any PartyConsentPurpose; purposeOf takes the policy's first) is checked at the ledger against that purpose, not PcpSms; the framework hook still needs PcpSms with the organization, so nothing goes without PcpSms, but the topic's own PcpSms is then not what is checked. Refusing a non-PcpSms purpose for a list of phone numbers would close it | P22: as its Review note says |
+| F433 | P22 (Review Nov 15): an SMS send's test goes to an allowlisted number as a promotional text, so the hook refuses it (suppressed) unless the tester's number holds PcpSms with the organization; no spec covers the SMS test | P22: as its Review note says |
+| F434 | P22 (Review Nov 15): there is no deployment-wide cap on promotional texts with no user: each of our numbers has its own `smsMaxPromotionalPerNumber` (1000), so the day's total grows with the numbers that have a bridge and a ready profile | P22: as its Review note says |
+| F435 | P22 (Review Nov 15): the Built note's other findings stand (the organization's number as its telecom number, the receipt dropped F73, the estimate with variables unfilled, the inline script's `toNumber` shadowing) | P22: as its Review note says |
+| F436 | Follow-up 6 (Built Nov 15): the code over the plan above: the campaigns' windows move with the send (the walk's month view and collection need the running campaign's), and the only scheduled send is the December one | Follow-up 6: as its Built note says |
+| F437 | Follow-up 6 (Built Nov 15): the December send's name and approval reason name December whatever the load (story seam, low) | Follow-up 6: as its Built note says |
+| F438 | Follow-up 6 (Built Nov 15): still fixed, no spec depends on them: the Sales opportunities' estimated close dates and Retail's holidays (follow-up 3's list less the campaigns), and the past history rows (decisions, consents, imports, the survey's invitation) | Follow-up 6: as its Built note says |
+| F439 | Follow-up 6 (Review Nov 15): R1 above | Follow-up 6: as its Review note says |
+| F440 | Follow-up 6 (Review Nov 15): the December send's name ("Garden newsletter, December") and its approval reason ("For the first of December"), and the Holiday gift guide's window (16 to 46 days after the load), read as story on a load other than mid-November: low. Not changed: renaming touches MarketingDelivery, MarketingShell's agenda, the acceptance MarketingCalendarWalk (name and palette search) and the November sibling's name for symmetry, for little gain; for the lead or the user | Follow-up 6: as its Review note says |
+| F441 | Follow-up 6 (Review Nov 15): a reload over a dev database where the December send was released or sent moves its schedule again (the row's reload already resets its status to CsApproved): demo-only, as the other loaders | Follow-up 6: as its Review note says |
+| F442 | P23 (Built Nov 15): the phase text's "eleven operations" is sixteen (above); §4's follow-up 5 row names completeRegistration where the code uses startRegistrationPayment | P23: as its Built note says |
+| F443 | P23 (Built Nov 15): Marketing has no section in mr-mantle `docs/Upgrading.md` (Sales and Maintenance have one): a database made before Marketing loads its seed, setup and report datasets as any new component's, but nothing says so | P23: as its Built note says |
+| F444 | P23 (Built Nov 15): the ticket has no PDF or print of its own (§18 names html-print/PDF): the PASS page is printable from the browser | P23: as its Built note says |
+| F445 | P23 (Built Nov 15): Attack-Surface's lines the read found exact but loose, left as they are: "at most ten topics" answers NotFound past ten; "an answer over 64 KB" is 65,536 characters of the values' JSON; resolveTrackingLink carries site, code and token | P23: as its Built note says |
+| F446 | P23 (Built Nov 15): mr-mantle `service/mantle/party/MessageServices.xml` names the report ECA's file as `MantleConsent.emecas.xml`; it is `MessageReports.emecas.xml` (a comment) | P23: as its Built note says |
+| F447 | P23 (Built Nov 15): the access walk's Services side has no event or registration of its own (Retail's registration is checked against Services' users only); the private (non-directory) contact of scenario 1 is MarketingImportWalk's (the import cannot match it), not repeated here | P23: as its Built note says |
+| F448 | P23 (Review Nov 15): the phase text says eleven PASS operations; there are sixteen (the Built note is right); §4's follow-up 5 row names completeRegistration where the code forwards the visitor key in startRegistrationPayment (a note here, §4 not edited) | P23: as its Review note says |
+| F449 | P23 (Review Nov 15): the plan's and the walk's "shown to the audience manager" for a send's recipients: Marketing's audience managers are refused Sends entirely, so only the administrator (or a user in both an audience group and a sends group) reads a recipient's address; by design as built, but no demo user but the administrator shows it | P23: as its Review note says |
+| F450 | P23 (Review Nov 15): a list member with no preferred address exports an empty Address (the export reads only `preferredContactMechId`); the intake paths set one, but a member loaded or adopted without it is blank in the export with nothing saying why | P23: as its Review note says |
+| F451 | P23 (Review Nov 15): Marketing has no section in mr-mantle `docs/Upgrading.md` (the worker's finding; not written here: it needs the list of Marketing's seed, setup and report files) | P23: as its Review note says |
+| F452 | P23 (Review Nov 15): the ticket has no PDF of its own (design §18 html-print/PDF), the worker's finding; the PASS page prints from the browser | P23: as its Review note says |
+| F453 | Follow-up 7 (Built Nov 15): a `container-box` `condition` attribute is ignored by the framework's renderers (qvt at least: containerBoxMacro), and mr-boss uses it on about fifty boxes (Sales Settings, Shared MessageTemplateDetail and SendingProfiles, Marketing Home, CampaignDetail, ExperimentDetail, Reports, RegistrationDetail, SalesOrderDetail and others): each shows its box when its condition is false, often with empty or undefined values. Only SendDetail's Delivery box is fixed here. Either the framework honours the condition (as it does on labels, dialogs and the other widgets) or screen lint flags it and the screens move to sections (medium; the user's call, framework work) | Follow-up 7: as its Built note says |
+| F454 | Follow-up 7 (Built Nov 15): EventCheckIn left a Marketing bundle and MARKETING_CHECKIN grants behind for any later spec of its worker (fixed here, low) | Follow-up 7: as its Built note says |
+| F455 | Follow-up 7 (Built Nov 15): Consent's registry feature depended on a fresh database's first page (fixed here, low) | Follow-up 7: as its Built note says |
+| F456 | Follow-up 7 (Built Nov 15): the walk proved delivery by day only (the demo profile's quiet hours, fixed here for the walk). The acceptance MarketingDispatchScenario sends through the same profile with run#Deliveries and is likely to wait the same way at night; not run (the brief), not changed (low) | Follow-up 7: as its Built note says |
+| F457 | Follow-up 7 (Review Nov 15): the container-box `condition` finding (as the Built note's, now with the full list above; medium; the user's call, framework work) | Follow-up 7: as its Review note says |
+| F458 | Follow-up 7 (Review Nov 15): MarketingAccess's holders check was order-dependent on every Marketing spec's spec-local groups, not EventCheckIn's alone (R1, medium, fixed here) | Follow-up 7: as its Review note says |
+| F459 | Follow-up 7 (Review Nov 15): Consent's registry chips were satisfied by the filter's options (R2, low, fixed here) | Follow-up 7: as its Review note says |
+| F460 | Follow-up 7 (Review Nov 15): SendDetail's Delivery fix had no server check (R3, low, fixed here) | Follow-up 7: as its Review note says |
 
 ## 7. Later
 
 Designed, not in this build:
 
+- **SMS after the first release** (P22's review, the user's call of Nov 15): a per-number promotional day limit on
+  moqui.call.PhoneNumber falling back to the policy value, with a deployment-wide promotional cap; a text topic joined from PASS
+  and confirmed by a reply from the number ("Reply YES"), on an inbound keyword hook the framework would give Mantle.
 - **The design's later capabilities** (§17, §21): cross-store promotion programs, loyalty and referrals; the
   Publishing app's editorial workflow, taxonomy and public blog rendering; social and channel campaign sync; a
   branching journey canvas; multi-touch attribution; conference tracks and booths; attendance from call legs; camera
   and offline check-in; certification, timed exams and live quizzes; a block email builder (§21.3); campaign stages
   and tags on a generic record tag (§21.7); tickets in a Shop cart (§21.4; later by the user's call, §4); more than
   two experiment variants; WhatsApp and the other C4 channels.
+- **A site's tracking consent banner** (§4 Nov 15): a visitor's prior consent for PASS's first-party visitor key, where a
+  jurisdiction needs one; until then the organization's policy (off by default) and the browser's GPC and Do Not Track decide.
 - **The privacy provider** (§4): Marketing's find, export and anonymize of consent and membership history,
   suppressions, recipients, tracking events, submissions and registrations, when Admin's PrivacyServices and the
   PASS Account privacy page are built.

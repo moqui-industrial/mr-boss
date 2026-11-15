@@ -48,6 +48,30 @@ walk `test/client/People/PeopleHireWalk`; its scenario walks, the screen sweeps 
 review walks PeopleReviewWalk and PeopleNavigationWalk are in `test/acceptance/People/`, the phone walk PeoplePhoneWalk in
 `test/acceptance/client/People/`.
 
+Sales (`screen/Sales/`) is built: leads and opportunities in pipelines with stages, teams and lead sources, lead intake
+from mail and Comms, accounts and contacts with merge, quotes with pricing, storeless tax, approvals, issue and send,
+requests for quote and quote templates, orders with approval and the storeless confirmation, commercial changes and the
+fulfillment and billing handoffs, customer agreements and prices, recurring orders and subscriptions, forecasts and
+targets, reports with Insights' datasets and alert templates, and Home, the palette, Assist and the import; the customer's
+side is PASS Sales in mr-pass ([design](plan/design-sales.md), [impl-sales](plan/impl-sales.md)). Its rules are tested in
+mr-mantle's `test/sales/` and `test/order/` and here in `test/Sales/` with the golden-path walk
+`test/client/Sales/SalesPipelineWalk`; its scenario walks, the screen sweeps SalesTui and SalesServerStatic and the review
+walks SalesLeadToInvoiceWalk and SalesAccessWalk are in `test/acceptance/Sales/`, the board walk in
+`test/acceptance/client/Sales/`. A database made before Sales' datasets loads them as
+[Upgrading](../mr-mantle/docs/Upgrading.md#sales-report-datasets-sales-p20-november-2026) says.
+
+Marketing (`screen/Marketing/`) is built: campaigns with budgets, costs and approvals, lists with evidenced consent,
+suppressions, the audience import and list merge, segments and the audience preview, message templates and sending
+profiles with bounce intake, sends with the composer, separate approval and dispatch through Comms' delivery ledger, A/B
+experiments, drip automations, surveys and form publication, leads handed to Sales, content, blog posts and storeless
+landing pages, tracking links and visits, events with registration, tickets, payment and check-in, promotions,
+Customer360 and engagement, attribution and reports with Insights' datasets and alert templates, the campaign calendar, the
+shell providers and Assist, and SMS; the public side is PASS Marketing in mr-pass ([design](plan/design-marketing.md),
+[impl-marketing](plan/impl-marketing.md)). Its rules are tested in mr-mantle's `test/marketing/`, `test/party/` and
+`test/work/` and here in `test/Marketing/` with the golden-path walk `test/client/Marketing/MarketingSendWalk`; its scenario
+walks, the screen sweeps MarketingTui and MarketingServerStatic and the access walk MarketingAccessWalk are in
+`test/acceptance/Marketing/`, the calendar and door check-in walks in `test/acceptance/client/Marketing/`.
+
 UI review and refinement plans use `plan/ui-review-*.md`, starting with
 [drawers, Commons and Comms](plan/ui-review-drawers-commons.md): screen coverage, complete user processes,
 refinement criteria, findings and verification. The [document guide](plan/design-doc-guide.md#ui-review-and-refinement-phase)

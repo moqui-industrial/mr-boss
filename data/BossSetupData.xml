@@ -459,34 +459,34 @@ along with this software (see the LICENSE.md file). If not, see
             in Admin P1 and the two rows they took past 255 split, impl-admin F14: twelve rows; people in People P1, impl-people
             F26: the longest 244; maintenance in Maintenance P1, impl-maintenance F50: the add and record rows split, fifteen rows
             here and Admin P6's transfer row below, the longest 238, so sales and marketing fit every row; sales in Sales P1,
-            impl-sales F55: the longest 244) -->
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(add|apply|approve|archive|attach|book)#.*"
+            impl-sales F55: the longest 244; marketing in Marketing P1, impl-marketing F58, F69: the longest 254, none split) -->
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(add|apply|approve|archive|attach|book)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(bulk|cancel|change|claim|clockIn|clockOut)#.*"
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(bulk|cancel|change|claim|clockIn|clockOut)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(clone|close|comment|complete|compare)#.*"
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(clone|close|comment|complete|compare)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(confirm|convert|copy|create|decide|delete|discard|drop)#.*"
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(confirm|convert|copy|create|decide|delete|discard|drop)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(duplicate|edit|end|expire|export|fail|fetch|file|finish)#.*"
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(duplicate|edit|end|expire|export|fail|fetch|file|finish)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(follow|generate|import|invoice|join|link|load|log)#.*"
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(follow|generate|import|invoice|join|link|load|log)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(make|map|mark|merge|migrate|move|notify|open|place)#.*"
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(make|map|mark|merge|migrate|move|notify|open|place)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(post|prepare|preview|publish|quickAdd|raise|rank|reassign)#.*"
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(post|prepare|preview|publish|quickAdd|raise|rank|reassign)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(record|reevaluate|refresh|refuse|release)#.*"
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(record|reevaluate|refresh|refuse|release)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(remove|rename|reopen|replace|reply)#.*"
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(remove|rename|reopen|replace|reply)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(request|reschedule|resolve|respond|restore|retire|return|run)#.*"
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(request|reschedule|resolve|respond|restore|retire|return|run)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(save|schedule|select|send|set|setup|share|staff|start)#.*"
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(save|schedule|select|send|set|setup|share|staff|start)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(stop|store|submit|sync|test|toggle|transition|trash|triage)#.*"
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(stop|store|submit|sync|test|toggle|transition|trash|triage)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(turnOn|unfollow|unlink|unsubscribe|update|upload|use|validate)#.*"
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(turnOn|unfollow|unlink|unsubscribe|update|upload|use|validate)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
         <!-- and the searches of the edit forms (people, records, work items and plan items to pick), which list beyond the client's part -->
         <artifacts artifactName="ironstone\.(comms\.InboxServices\.search#LinkRecords|shared\.ChatterServices\.search#Users|commons\.TaskServices\.search#Assignees)"
@@ -1909,10 +1909,13 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.UserGroupPermission userGroupId="BOSS_CUSTOMER_SERVICE_ORDER_DESK" userPermissionId="PRICE_VIEW" fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_CUSTOMER_SERVICE_ADMIN" userPermissionId="PRICE_VIEW" fromDate="0"/>
     <!-- Customer Service P10: an order change to decide (Mantle's OrderChangeApproval, sent to ORDER_CHANGE_APPROVE holders of
-        the order's organization) opens OrderChangeDetail; the decision is mantle.order.OrderChangeServices.decide#OrderChange
-        at the message's revision, from Notifications or the detail -->
+        the order's organization, and SALES_APPROVE holders for a commercial kind) opens where Commons' record-link resolver sends
+        each recipient (impl-sales P9, F58: one link for every recipient, resolved per user through PaletteServices.get#RecordLink's
+        order-change branch: Sales' OrderChangeDetail for a Sales approver, change operator or reader of a commercial kind's order,
+        impl-sales P14, else Customer Service's OrderChangeDetail for one who works orders there); the decision is
+        mantle.order.OrderChangeServices.decide#OrderChange at the message's revision, from Notifications or the detail -->
     <moqui.security.user.NotificationTopic topic="OrderChangeApproval"
-            linkTemplate="/qapps/CustomerService/Orders/OrderChangeDetail?requestId=${requestId}"/>
+            linkTemplate="/apps/Commons/openRecord?recordEntityName=mantle.request.Request&amp;id=${requestId}"/>
     <!-- Customer Service P9 (impl-customer-service P9, F44): a customer return's exception waiting for a manager
         (ReturnExceptionApproval, decided in Approvals or on ReturnDetail) and a decision on a return its assignee is told of
         (ReturnDecision) open the return under Customer Service -->
@@ -1921,6 +1924,10 @@ along with this software (see the LICENSE.md file). If not, see
     <!-- Customer Service P11 (F67): a warranty claim's repair finished (Mantle's WarrantyRepairFinished, to the claim's agent) opens
         the claim's assessment under Customer Service -->
     <moqui.security.user.NotificationTopic topic="WarrantyRepairFinished"
+            linkTemplate="/qapps/CustomerService/Returns/WarrantyAssessment?requestId=${requestId}"/>
+    <!-- Sales P8 review (the chargeable repair's handoff; the user's call of Nov 13, 2026): Sales made a claim's repair estimate
+        (Mantle's SalesRepairQuoted, to the claim's assignee or queue) opens the claim's assessment, whose Sales quotes box shows it -->
+    <moqui.security.user.NotificationTopic topic="SalesRepairQuoted"
             linkTemplate="/qapps/CustomerService/Returns/WarrantyAssessment?requestId=${requestId}"/>
     <!-- Customer Service P13: a low feedback score's follow-up (Mantle's CaseFeedbackFollowUp, mantle.request.CaseFeedbackServices)
         opens the answer's ResponseDetail; SatisfactionResults, ResponseDetail and the feedback forms are checked in their
@@ -2670,8 +2677,8 @@ along with this software (see the LICENSE.md file). If not, see
         Warehouse, Manufacturing, Accounting, Projects, Insights and Admin), each with the permissions it carries (its
         UserGroupPermission rows above and in BossAccountingSetupData; kind view, edit, export or sensitive: costs, supplier prices,
         pay and credit) and, for an app's root user group, its launcher as an artifact binding with the root's filter sets. Left out:
-        the groups of the apps not built (Marketing; People's, Maintenance's and Sales' are with their groups, People P1,
-        Maintenance P1 and Sales P1, data/BossSetupSalesData.xml), the Projects
+        the groups of the apps not built (none now: People's, Maintenance's, Sales' and Marketing's are with their groups, People
+        P1, Maintenance P1, Sales P1 and Marketing P1, data/BossSetupSalesData.xml and BossSetupMarketingData.xml), the Projects
         client contacts' BOSS_PROJECT_CLIENT
         (external users, given in Projects) and the service teams. The privileged groups are registered: the privileged-group EECA
         and AccessServices still refuse a non-member. A later phase or app adds its own rows; the registry describes and never
@@ -3601,14 +3608,26 @@ along with this software (see the LICENSE.md file). If not, see
             description="Stock value beside the inventory accounts, by product; values need financial read." purpose="Inventory"
             basis="As of a day" routePath="Accounting/Inventory/InventoryValuation" parameterContract="organizationPartyId"
             sourceReference="mantle.product.InventoryReportServices.run#InventoryValuation" sequenceNum="240"/>
-    <!-- Sales (owner contract, impl-insights §4, F18): SalesAnalysis is one entry, Sales', opening Accounting's built report until Sales is built and Accounting mounts Sales' report; Accounting's catalogue decides who reads it, as its route's -->
+    <!-- Sales (owner contract, impl-insights §4, F18; impl-sales P19, F59): SalesAnalysis is Sales' report at Sales' route, read through
+        Sales' catalogue (get#SalesReports, the app root Sales); Accounting's catalogue refuses any root but Accounting, so Accounting's
+        mount of the same report has an entry of its own under it (the cost and margin for a reader of product costs) -->
     <ironstone.insights.ReportCatalogEntry entryId="Sales.SalesAnalysis" version="1" ownerApp="Sales" title="Sales analysis"
-            description="Ordered, shipped, invoiced and returned, by product, customer or class." purpose="Sales"
-            basis="Placed, shipped and invoiced dates" routePath="Accounting/Reports/SalesAnalysis"
+            description="Ordered, shipped, invoiced and returned, by product, customer or class; margin for a price and cost reader."
+            purpose="Sales" basis="Placed, shipped and invoiced dates" routePath="Sales/Reports/SalesAnalysis"
             parameterContract="organizationPartyId,timePeriodId"
             sourceReference="mantle.sales.SalesReportServices.run#SalesAnalysis"
             metricIds="Sales.Orders,Sales.OrderValue,Accounting.InvoicedRevenue"
-            catalogueService="ironstone.accounting.ReportServices.get#Catalog" catalogueKey="SalesAnalysis" sequenceNum="250"/>
+            catalogueService="mantle.sales.SalesWorkspaceServices.get#SalesReports" catalogueKey="Sales.SalesAnalysis"
+            exportFormats="CSV,XLSX" sequenceNum="250"/>
+    <ironstone.insights.ReportCatalogEntry entryId="Accounting.SalesAnalysis" version="1" ownerApp="Accounting"
+            title="Sales analysis (finance)"
+            description="Sales' analysis in Accounting: ordered, shipped, invoiced and returned, the cost of what shipped and its margin for a cost reader."
+            purpose="Finance" basis="Placed, shipped and invoiced dates" routePath="Accounting/Reports/SalesAnalysis"
+            parameterContract="organizationPartyId,timePeriodId"
+            sourceReference="mantle.sales.SalesReportServices.run#SalesAnalysis"
+            metricIds="Sales.Orders,Sales.OrderValue,Accounting.InvoicedRevenue"
+            catalogueService="ironstone.accounting.ReportServices.get#Catalog" catalogueKey="SalesAnalysis"
+            exportFormats="CSV,XLSX" sequenceNum="251"/>
     <!-- Warehouse (owner contract, design-warehouse §14): stock at date, operations history and count variance, by their routes -->
     <ironstone.insights.ReportCatalogEntry entryId="Warehouse.StockAtDate" version="1" ownerApp="Warehouse"
             title="Stock at date"
@@ -4092,7 +4111,7 @@ along with this software (see the LICENSE.md file). If not, see
     <!-- the client deny pattern (BOSS_PROJECTS_INTERNAL, impl-admin F14): P6's new write verb, transfer
         (ironstone.admin.LifecycleServices transfer#OwnedResource, transfer#Assignments) -->
     <artifactGroups artifactGroupId="BOSS_PROJECTS_INTERNAL">
-        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|shared)(\.[A-Za-z]+)+\.(pause|reconcile|retry|transfer)#.*"
+        <artifacts artifactName="ironstone\.(commons|comms|projects|products|accounting|warehouse|manufacturing|purchasing|customerservice|commerce|admin|insights|people|maintenance|sales|marketing|shared)(\.[A-Za-z]+)+\.(pause|reconcile|retry|transfer)#.*"
                 artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
     </artifactGroups>
 

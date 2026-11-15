@@ -12,9 +12,26 @@ You should have received a copy of the CC0 Public Domain Dedication
 along with this software (see the LICENSE.md file). If not, see
 <http://creativecommons.org/publicdomain/zero/1.0/>.
 -->
-<!-- IronStone Marketing: root of the app for marketing staff (initial-design.md app table); its sections follow
-    design-marketing.md when that file is written. Not yet implemented: its BOSS_MARKETING grant in data/BossSetupData.xml
-    is commented out, so no one may open it and it is in no menu. -->
+<!-- IronStone Marketing (design-marketing §1): the root of the app for authors, audience managers, approvers, dispatchers, events
+    managers, analysts, readers and administrators. The root user group BOSS_MARKETING and the administrator group
+    BOSS_MARKETING_ADMIN open it (data/BossSetupMarketingData.xml, data/BossSetupData.xml), as ADMIN does (impl-marketing F1: the
+    grant was live for ADMIN and BOSS_MARKETING_ADMIN before P1, whatever this comment said). The root grant opens navigation only:
+    ironstone.marketing.ContextServices.get#SharedContext checks the user and resolves their capabilities, organizations and links
+    for every subscreen, and each Mantle marketing service checks the permissions and the organization again
+    (mantle/marketing/MarketingAccess.js). The menu of design §1.2 grows by phase and shows built areas only: P1 builds Home (every
+    Marketing user's), P2 Campaigns (with Approvals, the approvers'), P3 Audiences (the audience managers') and Leads (Sales' Leads and
+    Accounts with the bulk action, a Sales reader's) and Settings (the administrator's, MARKETING_CONFIGURE, BOSS_MKT_SETTINGS); Segments and Newsletters stay as
+    redirects of their old links (F2), to Audiences and Sends (P5, P8); Sends gains the sends, SendDetail and Compose (P8); P11 builds
+    Automations (the drip sequences, AutomationDetail and EnrollmentDetail; BOSS_MKT_AUTOMATIONS); P12 Surveys (the shared survey builder
+    and responses with Marketing's registration, and SurveyDistribution; BOSS_MKT_SURVEYS); P13 LeadRules under Leads (the lead forms'
+    routing to Sales and their handoffs, the authors'; BOSS_MKT_LEAD_RULES) and Sales' LeadSources in Settings; P14 Content (campaign
+    content, blog posts, the shared landing pages with Marketing's registration and Commons Knowledge; every Marketing reader's); P16
+    Events (the registration events, Commons' EventDetail mounted and RegistrationSetup; every Marketing reader's, set up by the events
+    managers); P18 its CheckIn, an events manager's under their own sign-in or an event's shared door tablet's (below); P19 Promotions
+    (Commerce's shared promotion screens, for a user with Commerce's promotion read when a store is configured) and, hidden from the
+    menu, Customers (the shared Customer360 with Marketing's engagement) and Contacts (the Commons contact record), the audience
+    readers'; P20 Reports (the report readers'; BOSS_MKT_REPORTS); P21 the campaign calendar (every Marketing reader's, hidden from the
+    menu: Home's Calendar and the key g k), quick create's send, Today, the Comms hooks and Assist's answer actions. -->
 <screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
         default-menu-title="Marketing" menu-image="sym_o_campaign" menu-image-type="icon">
 
@@ -22,6 +39,42 @@ along with this software (see the LICENSE.md file). If not, see
         <set field="appRoot" value="Marketing"/>
 
         <service-call name="mantle.party.PartyServices.setup#UserOrganizationInfo" out-map="context"/>
+        <!-- P18: a shared device's request (an event's door tablet; its route group MARKETING_CHECKIN admits Events/CheckIn and its
+            transitions alone) runs as a display account, which is no Marketing user and holds no root grant: it gets no context,
+            capability or link and is served no record panel (People's and Maintenance's roots); CheckIn's services check the device
+            themselves (Mantle's EventCheckIn.js) -->
+        <if condition="UserSecurityChecks.currentDevice()"><then>
+            <set field="marketing" from="{device: true, capabilities: {}, organizationPartyIds: [], sharedLinks: {}, webBase: '/qapps/Marketing'}"/>
+        </then><else>
+            <service-call name="ironstone.marketing.ContextServices.get#SharedContext" in-map="{appRoot:appRoot}" out-map="marketing"/>
+        </else></if>
+        <!-- the record panels serve Marketing's own record hosts only (the People P2, Insights P12, Maintenance P1 and Sales P1 mount
+            lesson): this root's inheritable grant would otherwise open the notes and files of any record get#RecordLinkInfo admits to
+            a user given Marketing without Commons. P2: the campaign, checked by check#Record (a Marketing reader of its
+            organization); P8: the send, by check#Record the same way; the event registration (P17) joins with its check (design §14.3). Any other record is
+            refused; a panel request with no record (a person search, an avatar) names none. -->
+        <script><![CDATA[
+            const pathNames = Array.from(sri.getScreenUrlInfo().fullPathNameList || []).map(String)
+            const panelName = pathNames[pathNames.indexOf('Marketing') + 1]
+            panelRecordType = null
+            if ((panelName === 'Chatter' || panelName === 'RecordFiles') && marketing.device)
+                throw new Error('RECORD_PANEL_UNAVAILABLE: Notes and files are not available on a shared device')
+            if ((panelName === 'Chatter' || panelName === 'RecordFiles') && ec.context.recordEntity) {
+                const panelHosts = {'mantle.marketing.campaign.MarketingCampaign': 'campaign', 'mantle.marketing.campaign.CampaignSend': 'send'}
+                // P19: ContactDetail's contact record, a party of the scope's audiences (check#Record contact, an audience reader's)
+                panelHosts['mantle.party.Party'] = 'contact'
+                const entityName = String(ec.context.recordEntity)
+                if (!Object.hasOwn(panelHosts, entityName))
+                    throw new Error('RECORD_PANEL_UNAVAILABLE: Notes and files of this record are kept in the app that owns it')
+                panelRecordType = panelHosts[entityName]
+            }
+        ]]></script>
+        <if condition="panelRecordType">
+            <service-call name="ironstone.marketing.ContextServices.check#Record" out-map="panelRecord" ignore-error="true"
+                    in-map="{appRoot:'Marketing', recordType:panelRecordType, recordId:ec.context.recordId || ''}"/>
+            <script>ec.message.clearErrors(); if (!panelRecord?.recordId) throw new Error('RECORD_PANEL_UNAVAILABLE: This record is not available')</script>
+        </if>
+        <set field="sharedLinks" from="marketing.sharedLinks"/>
     </always-actions>
 
     <subscreens default-item="Home" always-use-full-path="true">
@@ -29,7 +82,150 @@ along with this software (see the LICENSE.md file). If not, see
             (the theme values STRT_CHATTER_SCREEN and STRT_RECORD_FILES_SCREEN; impl-drawers-commons.md R5) -->
         <subscreens-item name="Chatter" location="component://mr-boss/screen/Shared/Chatter.xml" menu-include="false"/>
         <subscreens-item name="RecordFiles" location="component://mr-boss/screen/Shared/RecordFiles.xml" menu-include="false"/>
+        <!-- P2: Campaigns (design §3): the campaigns list and board, CampaignDetail, its plan print and Approvals (the approvers',
+            BOSS_MKT_APPROVALS), for a user who reads Marketing; Mantle's campaign services scope every read to the organizations -->
+        <subscreens-item name="Campaigns" location="component://mr-boss/screen/Marketing/Campaigns.xml" menu-index="2"
+                menu-include="ec.user.hasPermission('MARKETING_VIEW') || ec.user.hasPermission('MARKETING_AUDIENCE_VIEW') || ec.user.hasPermission('MARKETING_REPORT_VIEW')"/>
+        <!-- P3: Audiences (design §4): lists, members, Comms' Consent and the shared Suppressions, for the audience managers and the
+            administrator (BOSS_MKT_AUDIENCES denies the root user group); Mantle's audience, consent and suppression services check the
+            permissions and the organization again -->
+        <subscreens-item name="Audiences" location="component://mr-boss/screen/Marketing/Audiences.xml" menu-index="3"
+                menu-include="ec.user.hasPermission('MARKETING_AUDIENCE_VIEW')"/>
+        <!-- P6, P8: Sends (design §5): the sends, SendDetail and Compose, Comms' shared MessageTemplates and MessageTemplateDetail, for
+            the authors, approvers, dispatchers and the administrator (BOSS_MKT_SENDS denies the root user group); Mantle's send and
+            template services check the permissions and the organization again -->
+        <subscreens-item name="Sends" location="component://mr-boss/screen/Marketing/Sends.xml" menu-index="4"
+                menu-include="ec.user.hasPermission('MESSAGE_TEMPLATE_VIEW') || ec.user.hasPermission('MESSAGE_TEMPLATE_EDIT') || ec.user.hasPermission('MARKETING_SEND_EDIT') || ec.user.hasPermission('MARKETING_APPROVE') || ec.user.hasPermission('MARKETING_DISPATCH')"/>
+        <!-- P11: Automations (design §6): the drip sequences, AutomationDetail and EnrollmentDetail, for the authors, approvers,
+            dispatchers, audience managers and the administrator (BOSS_MKT_AUTOMATIONS denies the root user group); Mantle's
+            AutomationServices check the permissions and the organization again -->
+        <subscreens-item name="Automations" location="component://mr-boss/screen/Marketing/Automations.xml" menu-index="5"
+                menu-include="ec.user.hasPermission('MARKETING_SEND_EDIT') || ec.user.hasPermission('MARKETING_APPROVE') || ec.user.hasPermission('MARKETING_DISPATCH') || ec.user.hasPermission('MARKETING_AUDIENCE_VIEW')"/>
+        <!-- P19: Promotions (design §7): Commerce's shared promotion screens in Marketing's registration (PromotionApps.js), the stores of
+            the user's Marketing organizations within Commerce's store scope, shown only when such a store is configured (the promotions
+            capability); Commerce's promotion permissions decide every read and write in Mantle's StorePromotionServices -->
+        <subscreens-item name="Promotions" location="component://mr-boss/screen/Marketing/Promotions.xml" menu-index="6"
+                menu-include="ec.resource.script('component://mr-boss/service/ironstone/marketing/Marketing.js').promotionsShown()"/>
+        <!-- P14: Content (design §8): the campaigns' content, blog posts, landing pages (Shared/Pages and PageDetail in Marketing's registration)
+            and Commons Knowledge, for every Marketing reader (the app's, design §2; no area deny); Mantle's content and site page services
+            check the content grant, the organization and the wiki's rule again -->
+        <subscreens-item name="Content" location="component://mr-boss/screen/Marketing/Content.xml" menu-index="7"
+                menu-include="ec.user.hasPermission('MARKETING_VIEW') || ec.user.hasPermission('MARKETING_AUDIENCE_VIEW') || ec.user.hasPermission('MARKETING_REPORT_VIEW')"/>
+        <!-- P16: Events (design §9): the registration events of the user's organizations, Commons' EventDetail (the calendar's own rules)
+            and RegistrationSetup (the events managers', MARKETING_EVENT_MANAGE), for every Marketing reader (design §2: the app's; no area
+            deny); Mantle's EventRegistrationServices check the permission and the organization again -->
+        <subscreens-item name="Events" location="component://mr-boss/screen/Marketing/Events.xml" menu-index="8"
+                menu-include="ec.user.hasPermission('MARKETING_VIEW') || ec.user.hasPermission('MARKETING_AUDIENCE_VIEW') || ec.user.hasPermission('MARKETING_REPORT_VIEW')"/>
+        <!-- P12: Surveys (design §10): the survey builder's shared screens with Marketing's registration (SurveyApps.js), SurveyDistribution
+            and the responses, for the authors, audience managers, analysts and the administrator (BOSS_MKT_SURVEYS denies the root user
+            group); the builder's and Marketing's form services check the purposes' permissions and the organization again -->
+        <subscreens-item name="Surveys" location="component://mr-boss/screen/Marketing/Surveys.xml" menu-index="9"
+                menu-include="ec.user.hasPermission('MARKETING_CONTENT_EDIT') || ec.user.hasPermission('MARKETING_AUDIENCE_VIEW') || ec.user.hasPermission('MARKETING_REPORT_VIEW')"/>
+        <!-- P3: Leads (design §10, F64): Sales' Leads and Accounts in Sales' context for this root, with the bulk "Add to list
+            (evidenced)", for a user who reads Sales; Sales' own services decide what they read. P13: and LeadRules, the lead forms'
+            routing to Sales, for a content author or the administrator -->
+        <subscreens-item name="Leads" location="component://mr-boss/screen/Marketing/Leads.xml" menu-index="10"
+                menu-include="ec.user.hasPermission('SALES_VIEW') || ec.user.hasPermission('SALES_TEAM_VIEW') || ec.user.hasPermission('SALES_REPORT_VIEW') || ec.user.hasPermission('MARKETING_CONTENT_EDIT') || ec.user.hasPermission('MARKETING_CONFIGURE')"/>
+        <!-- P19: a contact's Customer360 with Marketing's engagement and its contact record (design §10), the audience readers', hidden
+            from the menu: reached from a lead's account, an engagement row or the palette -->
+        <subscreens-item name="Customers" location="component://mr-boss/screen/Marketing/Customers.xml" menu-include="false"/>
+        <subscreens-item name="Contacts" location="component://mr-boss/screen/Marketing/Contacts.xml" menu-include="false"/>
+        <!-- P20: Reports (design §11): the catalog, CampaignPerformance, DeliveryAnalysis, AudienceGrowth and Attribution, for the report
+            readers (BOSS_MKT_REPORTS denies the root user group and opens it to the analysts and readers); Mantle's report services check
+            MARKETING_REPORT_VIEW and the organization again -->
+        <subscreens-item name="Reports" location="component://mr-boss/screen/Marketing/Reports.xml" menu-index="11"
+                menu-include="ec.user.hasPermission('MARKETING_REPORT_VIEW')"/>
+        <!-- P2: quick create's campaign form (QuickCampaign), hidden from the menu -->
+        <subscreens-item name="QuickCreate" location="component://mr-boss/screen/Marketing/QuickCreate.xml" menu-include="false"/>
+        <!-- P1: Settings (design §12), the administrator's (MARKETING_CONFIGURE); BOSS_MKT_SETTINGS denies the root user group, and
+            Mantle's settings and adoption services check the permission again -->
+        <subscreens-item name="Settings" location="component://mr-boss/screen/Marketing/Settings.xml" menu-index="12"
+                menu-include="ec.user.hasPermission('MARKETING_CONFIGURE')"/>
+        <!-- the old placeholders' links (F2, design §1.2), hidden from the menu: Segments to Audiences › Segments (P5), Newsletters to
+            Sends (P8) -->
+        <subscreens-item name="Segments" location="component://mr-boss/screen/Marketing/Segments.xml" menu-include="false"/>
+        <subscreens-item name="Newsletters" location="component://mr-boss/screen/Marketing/Newsletters.xml" menu-include="false"/>
+        <!-- P21: the campaign calendar (design §3 Calendar; every Marketing reader's, the calendar shortcut of design §1.2: Home's Calendar
+            and the key g k, hidden from the menu) with its terminal agenda, and Assist's answer actions (LogNote, SendMessage) -->
+        <subscreens-item name="Calendar" location="component://mr-boss/screen/Marketing/Calendar.xml" menu-include="false"/>
+        <subscreens-item name="CalendarTui" location="component://mr-boss/screen/Marketing/CalendarTui.xml" menu-include="false"/>
+        <subscreens-item name="LogNote" location="component://mr-boss/screen/Marketing/LogNote.xml" menu-include="false"/>
+        <subscreens-item name="SendMessage" location="component://mr-boss/screen/Marketing/SendMessage.xml" menu-include="false"/>
     </subscreens>
+
+    <!-- P1: the marketing keymap (design §1.2). P2: the palette's campaigns, QuickCampaign, the approval topics and CampaignDetail's
+        Assist chip. Quick create's list and event (P3, P16); P21 quick create's send, Today, the Comms providers (record-lookup and
+        call-context) and Assist's answer actions. -->
+    <shell-providers>
+        <!-- P2: the palette's Marketing records, the campaigns of the user's organizations (ironstone.marketing.ContextServices.search#Records) -->
+        <palette-source group="Marketing" label="Marketing records" icon="sym_o_campaign"
+                service="ironstone.marketing.ContextServices.search#Records" sequence="52"/>
+        <!-- P2 (design §14.3 QuickCreate): QuickCampaign, the Campaigns list's NewCampaign; a user without campaign edit is told so -->
+        <quick-create kind="marketingCampaign" label="Campaign" icon="sym_o_campaign" screen="Marketing/QuickCreate/NewCampaign"
+                sequence="92"/>
+        <!-- P3 (design §14.3 QuickList): the Lists screen's NewList; a user without audience edit is told so -->
+        <quick-create kind="marketingList" label="Distribution list" icon="sym_o_contact_mail" screen="Marketing/QuickCreate/NewList"
+                sequence="93"/>
+        <!-- P16 (design §14.3 QuickEvent): the Events screen's NewEvent; a user without the events permission is told so -->
+        <quick-create kind="marketingEvent" label="Marketing event" icon="sym_o_event" screen="Marketing/QuickCreate/NewEvent"
+                sequence="94"/>
+        <!-- P2: the approval topics (Mantle's MarketingSeedData; their links BossSetupMarketingData); sends' and automations' are sent
+            from P8 and P11 -->
+        <notification-topic topic="MarketingCampaignApproval"/>
+        <notification-topic topic="MarketingSendApproval"/>
+        <notification-topic topic="MarketingAutomationApproval"/>
+        <!-- P5 (design §1.3 CX-ASSIST): SegmentDetail's chip, skill/marketing-audience-check.md -->
+        <assist-prompt label="Explain this segment" text="Explain this segment: who it finds and by which rule, who it leaves out and why, and what a send to it would still need"
+                screen="Marketing/Audiences/SegmentDetail" entity="mantle.marketing.segment.MarketSegment" sequence="65"/>
+        <!-- P8 (design §1.3 CX-ASSIST): SendDetail's chip, skill/marketing-prepare-send.md -->
+        <assist-prompt label="Why were recipients excluded?" text="Why were recipients of this send excluded? Explain its audience's buckets and what the send still needs before approval"
+                screen="Marketing/Sends/SendDetail" entity="mantle.marketing.campaign.CampaignSend" sequence="66"/>
+        <!-- P2 (design §1.3 CX-ASSIST): CampaignDetail's chip; its results arrive with the reports (P20) -->
+        <assist-prompt label="Summarize this campaign's results" text="Summarize this campaign's results: its plan, budget and actual cost, approvals and what is next"
+                screen="Marketing/Campaigns/CampaignDetail" entity="mantle.marketing.campaign.MarketingCampaign" sequence="64"/>
+        <!-- P21 (design §14.3 QuickSend): the Sends list's NewSend, the campaign fixed when opened from one; a user without send edit
+            is told so -->
+        <quick-create kind="marketingSend" label="Marketing send" icon="sym_o_forward_to_inbox" screen="Marketing/QuickCreate/NewSend"
+                sequence="95"/>
+        <!-- P21 (design §14.3 Today): the sends due, the approvals awaiting the approver, the sends with failed or uncertain deliveries
+            and the registrations to review, each opening its screen; a source that could not be read says so by name -->
+        <today-source service="ironstone.marketing.ContextServices.get#TodayItems" label="Marketing"/>
+        <!-- P21 (design §1.3 Comms hooks): a campaign's, a send's or a registration's card, search and links in Comms, and the caller's
+            upcoming registrations in the ring bar and the call (an events manager's); never an address, a token or an attendee's name -->
+        <record-lookup name="marketing.records" service="ironstone.marketing.ContextServices.lookup#Records" sequence="-4"/>
+        <call-context name="marketing.registrations" service="ironstone.marketing.ContextServices.get#CallContext"/>
+        <!-- P21 (design §1.3 CX-ASSIST): Assist's answer actions, filed through Marketing's own record check: Log as note on the page's
+            campaign or send, Send as message (Comms' internal message, filed on the page's record when Marketing admits the user) -->
+        <response-action label="Log as note" icon="sym_o_sticky_note_2" screen="Marketing/LogNote" text-parameter="noteText"
+                requires-record="true" sequence="72"/>
+        <response-action label="Send as message" icon="sym_o_send" screen="Marketing/SendMessage" text-parameter="messageText"
+                sequence="73"/>
+        <keymap scope="marketing">
+            <key keys="g m" label="Marketing home" screen="Marketing/Home"/>
+            <!-- P2 -->
+            <key keys="g c" label="Campaigns" screen="Marketing/Campaigns/Campaigns"/>
+            <!-- P3 -->
+            <key keys="g l" label="Lists" screen="Marketing/Audiences/Lists"/>
+            <!-- P5 -->
+            <key keys="g s" label="Segments" screen="Marketing/Audiences/Segments"/>
+            <!-- P6 -->
+            <key keys="g t" label="Message templates" screen="Marketing/Sends/MessageTemplates"/>
+            <!-- P8 -->
+            <key keys="g n" label="Sends" screen="Marketing/Sends/Sends"/>
+            <!-- P11 -->
+            <key keys="g a" label="Automations" screen="Marketing/Automations/Automations"/>
+            <!-- P12 -->
+            <key keys="g v" label="Surveys" screen="Marketing/Surveys/Surveys"/>
+            <!-- P14 -->
+            <key keys="g o" label="Content" screen="Marketing/Content/Content"/>
+            <!-- P16 -->
+            <key keys="g e" label="Events" screen="Marketing/Events/Events"/>
+            <!-- P20 -->
+            <key keys="g r" label="Reports" screen="Marketing/Reports/Catalog"/>
+            <!-- P21: the campaign calendar -->
+            <key keys="g k" label="Campaign calendar" screen="Marketing/Calendar"/>
+        </keymap>
+    </shell-providers>
 
     <widgets><subscreens-panel id="marketing-panel" type="popup"/></widgets>
 </screen>

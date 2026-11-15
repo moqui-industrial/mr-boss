@@ -45,7 +45,9 @@
         "laneId": "customer",
         "title": "Finds us",
         "sequenceNum": 1,
-        "description": "Campaigns, the website and referrals bring a customer in. Marketing's campaigns and visits are not part of this installation yet, so this step is information only.",
+        "description": "Campaigns, the website and referrals bring a customer in. Marketing's campaigns, their visits and the orders attributed to them.",
+        "targetRegistrationId": "Marketing.Campaigns",
+        "catalogEntryId": "Marketing.CampaignPerformance",
         "next": [
           "quote",
           "shop"
@@ -56,7 +58,9 @@
         "laneId": "selling",
         "title": "Quote and negotiate",
         "sequenceNum": 1,
-        "description": "A salesperson qualifies the opportunity and sends a quote. The Sales app is not part of this installation yet, so this step is information only.",
+        "description": "A salesperson qualifies the opportunity and sends a quote; the customer accepts it and it becomes a sales order. Quotes waiting to be sent or expiring are in Sales.",
+        "targetRegistrationId": "Sales.Quotes",
+        "catalogEntryId": "Sales.PipelineAnalysis",
         "next": [
           "order"
         ]

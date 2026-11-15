@@ -29,7 +29,24 @@ const organizationOptionLimit = 100
 // (SALES_CONTEXT); a mount adds no right: the user's own Sales grant and scope decide.
 const mountRoots = {
     Sales: {linkBase: "//Sales", paths: null},
-    Marketing: {linkBase: "//Marketing", paths: {"Pipeline/Leads": "Leads", "Settings/LeadSources": "Settings/LeadSources"}}
+    // impl-marketing P3 (F64): Accounts at Marketing/Leads/Accounts, for Marketing's bulk "Add to list (evidenced)"; P19: an account opens
+    // Marketing's Customer360 (its engagement, in Marketing's context) and a contact Marketing's ContactDetail
+    Marketing: {
+        linkBase: "//Marketing",
+        paths: {
+            "Pipeline/Leads": "Leads",
+            "Accounts/Accounts": "Leads/Accounts",
+            "Settings/LeadSources": "Settings/LeadSources",
+            "Accounts/Customer360": "Customers/Customer360",
+            "Accounts/ContactDetail": "Contacts/ContactDetail"
+        },
+        // P19 review: Marketing's Customers and Contacts are its audience readers' (design-marketing §2: U); for anyone else an account
+        // and a contact show unlinked, as before P19, rather than opening a refused page
+        pathPermissions: {
+            "Accounts/Customer360": "MARKETING_AUDIENCE_VIEW",
+            "Accounts/ContactDetail": "MARKETING_AUDIENCE_VIEW"
+        }
+    }
 }
 // The menu areas whose authorization is a capability (data/BossSetupSalesData.xml BOSS_SAL_<Area>): Reports the report readers'
 // (P1). Home is every Sales user's; later phases add theirs (Settings P2, Approvals P9, Changes P14, Agreements P15).
@@ -173,7 +190,29 @@ const linkPaths = [
     "Pipeline/Opportunities",
     "Pipeline/Leads",
     "Pipeline/OpportunityDetail",
-    "Pipeline/WorkItemDetail"
+    "Pipeline/WorkItemDetail",
+    // P6: Home's counters' lists above, the import wizard's mount, and the shell's quick create and Assist answer actions
+    "Pipeline/OpportunityImport",
+    "QuickCreate",
+    "LogNote",
+    "SendMessage",
+    // P7: quotes (design §5), the one OrderDetail route, and Products' screens in Sales' context (F67)
+    "Quotes",
+    "Quotes/Quotes",
+    "Orders/OrderDetail",
+    "Products/Product360",
+    "Products/InventoryAvailability",
+    "Products/PriceExplain",
+    // P8: requests for quote (design §5 QuoteRequests, QuoteRequestDetail)
+    "Quotes/QuoteRequests",
+    "Quotes/QuoteRequestDetail",
+    // P9: the approvals list and the defaults and approval rules
+    "Quotes/Approvals",
+    "Settings/SalesDefaults",
+    "Settings/ApprovalPolicies",
+    // P11: the order list (design §6 Orders)
+    "Orders",
+    "Orders/Orders"
 ]
 function sharedContext(p) {
     const appRoot = p.appRoot || "Sales"
@@ -184,7 +223,11 @@ function sharedContext(p) {
     const mount = mountRoots[appRoot]
     const linkBase = mount.linkBase
     const sharedLinks = mount.paths
-        ? Object.fromEntries(Object.entries(mount.paths).map(([path, own]) => [path, linkBase + "/" + own]))
+        ? Object.fromEntries(
+              Object.entries(mount.paths)
+                  .filter(([path]) => !mount.pathPermissions?.[path] || access.has(mount.pathPermissions[path]))
+                  .map(([path, own]) => [path, linkBase + "/" + own])
+          )
         : Object.fromEntries(linkPaths.map(path => [path, linkBase + "/" + path]))
     return {
         capabilities: userScope.capabilities,
@@ -206,7 +249,7 @@ function sharedContext(p) {
 // ===== record kinds =====
 // Each kind a Sales screen or mount may be given: its name, icon, screen (once built) and its check, which refuses a record that
 // does not exist and one outside the scope alike (RECORD_UNAVAILABLE). P1: an organization; later phases add theirs (an account
-// P3, an opportunity P4, a quote P7, an order P11, an agreement P15, a forecast P18).
+// P3, an opportunity P4, a quote P7, an order P11, an agreement P15; a forecast has no record panel, P18).
 const recordKinds = {
     organization: {
         name: "Organization",
@@ -248,6 +291,40 @@ const recordKinds = {
             }
         }
     },
+    // P7: a quote the user sees (SalesAccess.js quoteOf: of a seller of the scope, assigned to them or a team of theirs, or the
+    // organization's every quote for SALES_TEAM_VIEW), the one OrderDetail route
+    quote: {
+        name: "Quote",
+        icon: "sym_o_request_quote",
+        destination: "Orders/OrderDetail",
+        parameter: "orderId",
+        read: (userScope, orderId) => {
+            const found = salesAccess.quoteOf(userScope.mantle, orderId)
+            if (!found) return null
+            return {
+                organizationPartyId: found.organizationPartyId,
+                label: found.order.orderName || "Quote " + orderId,
+                detail: "Quote"
+            }
+        }
+    },
+    // P8: a request for quote the user sees (SalesAccess.js quoteRequestOf: of an organization of the scope, assigned to them or a
+    // team of theirs, or the organization's every one for SALES_TEAM_VIEW), QuoteRequestDetail
+    quoteRequest: {
+        name: "Request for quote",
+        icon: "sym_o_contract_edit",
+        destination: "Quotes/QuoteRequestDetail",
+        parameter: "requestId",
+        read: (userScope, requestId) => {
+            const found = salesAccess.quoteRequestOf(userScope.mantle, requestId)
+            if (!found) return null
+            return {
+                organizationPartyId: found.organizationPartyId,
+                label: found.request.requestName || "Request for quote " + requestId,
+                detail: "Request for quote"
+            }
+        }
+    },
     contact: {
         name: "Contact",
         icon: "sym_o_contact_page",
@@ -267,6 +344,37 @@ const recordKinds = {
         }
     }
 }
+// ===== P9: a commercial order change (impl-sales P9, F58) =====
+// P9 opened a commercial-kind change from Approvals for its approver; P14's recordKinds.orderChange (below) replaced it with
+// OrderChangeDetail under Sales (the one definition since P20's review).
+// ===== end of P9 =====
+// ===== P11: a sales order (impl-sales P11; design §6) =====
+// A sales order the user sees (SalesAccess.js orderOf: a direct order, an accepted quote or another sales order of a seller of the scope,
+// assigned to them or a team of theirs, the organization's for SALES_TEAM_VIEW, or awaiting approval or held for an order approver),
+// the one OrderDetail route; and the order document of the root's record panels, a quote the user sees or such an order.
+recordKinds.order = {
+    name: "Order",
+    icon: "sym_o_receipt_long",
+    destination: "Orders/OrderDetail",
+    parameter: "orderId",
+    read: (userScope, orderId) => {
+        const found = salesAccess.orderOf(userScope.mantle, orderId)
+        if (!found) return null
+        return {
+            organizationPartyId: found.organizationPartyId,
+            label: found.order.orderName || "Order " + orderId,
+            detail: "Order"
+        }
+    }
+}
+recordKinds.orderDocument = {
+    name: "Order",
+    icon: "sym_o_receipt_long",
+    destination: "Orders/OrderDetail",
+    parameter: "orderId",
+    read: (userScope, orderId) => recordKinds.quote.read(userScope, orderId) || recordKinds.order.read(userScope, orderId)
+}
+// ===== end of P11 =====
 // A party's name for a label: the organization's name or the person's.
 function partyLabel(party) {
     if (!party) return ""
@@ -574,6 +682,463 @@ Object.assign(choiceSources, {
             partyId => partyLabel(one("mantle.party.Party", {partyId}))
         )
 })
+// P6: a deal to put an activity on (QuickCreate's Activity): the open leads and opportunities the user sees, by name or id, in
+// Mantle's scoped find (add#OpportunityActivity checks the deal and the edit permission again)
+choiceSources.deals = (userScope, term, selected) =>
+    withSelected(
+        Array.from(
+            lib.probe("mantle.sales.OpportunityServices.find#Opportunities", {
+                text: term || null,
+                statusId: "SalesOppOpen",
+                pageSize: choiceLimit
+            }).opportunityList || []
+        ).map(row => ({value: row.salesOpportunityId, label: row.opportunityName + " · " + row.typeText})),
+        selected,
+        salesOpportunityId => !!salesAccess.opportunityOf(userScope.mantle, salesOpportunityId),
+        salesOpportunityId => {
+            const row = one("mantle.sales.opportunity.SalesOpportunity", {salesOpportunityId})
+            return row?.opportunityName || salesOpportunityId
+        }
+    )
+// ===== P7: a quote's choices (impl-sales P7) =====
+Object.assign(choiceSources, {
+    // a quote line's product: the catalogue products of the seller (its own, of an organization of the scope when none is named, and
+    // the shared catalogue's), not virtual and not barred from sale, by name or id (store#QuoteLine checks the product again)
+    products: (userScope, term, selected, p) => {
+        const organizationPartyId = choiceOrganization(userScope, p)
+        const owners = (organizationPartyId ? [organizationPartyId] : organizationIds(userScope)).concat(["_NA_"])
+        const readable = productId => {
+            const product = productId ? one("mantle.product.Product", {productId}) : null
+            return !!product && owners.includes(product.ownerPartyId || "_NA_") && product.productTypeEnumId !== "PtVirtual"
+        }
+        const factory = ec.entity.conditionFactory
+        let query = find("mantle.product.Product")
+            .condition("ownerPartyId", "in", owners)
+            .condition("productTypeEnumId", "not-equals", "PtVirtual")
+            .condition(
+                factory.makeCondition(
+                    [
+                        factory.makeCondition("salesAllowed", "is-null", null),
+                        factory.makeCondition("salesAllowed", "not-equals", "N")
+                    ],
+                    "or"
+                )
+            )
+            .orderBy("^productName")
+            .limit(choiceLimit)
+        if (term)
+            query = query.condition(
+                factory.makeCondition(
+                    ["productId", "productName"].map(field => factory.makeCondition(field, "like", likeText(term)).ignoreCase()),
+                    "or"
+                )
+            )
+        const label = row => (row.productName ? row.productName + " · " + row.productId : row.productId)
+        return withSelected(
+            Array.from(query.list()).map(row => ({value: row.productId, label: label(row)})),
+            selected,
+            readable,
+            productId => label(one("mantle.product.Product", {productId}))
+        )
+    },
+    // a quote's currency: the currencies
+    currencies: (userScope, term) =>
+        byTerm(
+            Array.from(find("moqui.basic.Uom").condition("uomTypeEnumId", "UT_CURRENCY_MEASURE").orderBy("uomId").list()).map(
+                row => ({
+                    value: row.uomId,
+                    label: row.uomId + (row.description ? " · " + row.description : "")
+                })
+            ),
+            term
+        ),
+    // a quote's store: the stores of the selling organization (none: a storeless quote)
+    stores: (userScope, term, selected, p) => {
+        const organizationPartyId = choiceOrganization(userScope, p)
+        if (!organizationPartyId) return []
+        return byTerm(
+            Array.from(
+                find("mantle.product.store.ProductStore").condition("organizationPartyId", organizationPartyId).list()
+            ).map(row => ({
+                value: row.productStoreId,
+                label: row.storeName || row.productStoreId
+            })),
+            term
+        )
+    }
+})
+// ===== P9: the approvers' groups (impl-sales P9) =====
+// an approval rule's approver role: the user groups that hold SALES_APPROVE now (store#SalesApprovalPolicy checks the group again)
+choiceSources.approverGroups = (userScope, term) => {
+    const groupIds = Array.from(
+        new Set(
+            Array.from(find("moqui.security.UserGroupPermission").condition("userPermissionId", "SALES_APPROVE").list())
+                .filter(row => lib.active(row))
+                .map(row => row.userGroupId)
+        )
+    )
+    if (!groupIds.length || !userScope.capabilities.configure) return []
+    return byTerm(
+        Array.from(find("moqui.security.UserGroup").condition("userGroupId", "in", groupIds).orderBy("description").list()).map(
+            row => ({value: row.userGroupId, label: row.description || row.userGroupId})
+        ),
+        term
+    )
+}
+// ===== end of P9 =====
+// ===== P12: quote templates (impl-sales P12; design-sales §5 QuoteTemplates, QuoteTemplateDetail) =====
+linkPaths.push("Quotes/QuoteTemplates", "Quotes/QuoteTemplateDetail")
+// NewQuote's template: the current templates of the selling organization (Mantle's find#QuoteTemplates, scoped and searched there)
+choiceSources.quoteTemplates = (userScope, term, selected, p) => {
+    const organizationPartyId = choiceOrganization(userScope, p)
+    if (!organizationPartyId) return []
+    const found =
+        ec.service
+            .sync()
+            .name("mantle.order.SalesQuoteServices.find#QuoteTemplates")
+            .parameters({organizationPartyId, state: "current", text: term || null, pageSize: choiceLimit})
+            .call() || {}
+    const options = Array.from(found.templateList || []).map(row => ({
+        value: row.orderId,
+        label: row.orderName + " · " + row.currencyUomId
+    }))
+    return withSelected(
+        options,
+        selected,
+        orderId => salesAccess.templateOf(userScope.mantle, orderId)?.state === "current",
+        orderId => one("mantle.order.OrderHeader", {orderId})?.orderName || orderId
+    )
+}
+// ===== end of P12 =====
+// ===== P14: commercial changes and the fulfillment and billing handoffs (impl-sales P14; design-sales §6) =====
+linkPaths.push("Orders/OrderChanges", "Orders/OrderChangeDetail", "Orders/ShipmentDetail", "Orders/InvoiceDetail")
+const orderChanges = () => ec.resource.script("component://mr-mantle/service/mantle/order/SalesOrderChanges.js")
+// Changes (Sales/Orders/OrderChanges, BOSS_SAL_CHANGES): the change operator's, the approver's and the manager's (design §2 C, A, M),
+// each holding a permission find#OrderChanges reads by (SALES_ORDER_CHANGE, SALES_APPROVE, SALES_TEAM_VIEW)
+areas.changes = "Orders/OrderChanges"
+areaReads.changes = caps => !!(caps.orderChange || caps.approve || caps.teamView)
+// A commercial order change now opens its OrderChangeDetail under Sales (F58: OrderChangeApproval's one link, resolved per recipient
+// by Commons' get#RecordLink): a commercial-kind change of a sales order of the scope, for its approver (SALES_APPROVE), its change
+// operator (SALES_ORDER_CHANGE) or a Sales reader who sees the order (its owner, its team, the organization's manager); Mantle's
+// OrderChangeServices checks the permission of each verb and the organization again.
+recordKinds.orderChange = {
+    name: "Order change",
+    icon: "sym_o_edit_note",
+    destination: "Orders/OrderChangeDetail",
+    parameter: "requestId",
+    read: (userScope, requestId) => {
+        const request = one("mantle.request.Request", {requestId})
+        if (!request || request.requestTypeEnumId !== "RqtOrderChange" || !request.orderId) return null
+        if (["OckCancel", "OckSubstitute"].includes(request.orderChangeKindEnumId)) return null
+        const part = Array.from(
+            find("mantle.order.OrderPart").condition("orderId", request.orderId).orderBy("orderPartSeqId").list()
+        )[0]
+        if (!part || !covers(userScope, part.vendorPartyId)) return null
+        const caps = userScope.capabilities
+        if (!caps.approve && !caps.orderChange && !salesAccess.orderOf(userScope.mantle, request.orderId)) return null
+        return {
+            organizationPartyId: part.vendorPartyId,
+            label: request.requestName || "Order change " + requestId,
+            detail: "Order change"
+        }
+    }
+}
+// A shipment of a sales order the user sees (ShipmentDetail's Sales row; Mantle's get#SalesShipment answers the rest).
+recordKinds.shipment = {
+    name: "Shipment",
+    icon: "sym_o_local_shipping",
+    destination: "Orders/ShipmentDetail",
+    parameter: "shipmentId",
+    read: (userScope, shipmentId) => {
+        const found = orderChanges().getShipment({shipmentId})
+        if (!found.shipmentFound) return null
+        const part = Array.from(
+            find("mantle.order.OrderPart").condition("orderId", found.orderIds[0]).orderBy("orderPartSeqId").list()
+        )[0]
+        return {
+            organizationPartyId: part?.vendorPartyId || null,
+            label: "Shipment " + shipmentId,
+            detail: found.shipment.statusText
+        }
+    }
+}
+// An invoice of a sales order the user sees, for a receivable reader (InvoiceDetail's Sales row; Mantle's check#SalesInvoice).
+recordKinds.invoice = {
+    name: "Invoice",
+    icon: "sym_o_receipt",
+    destination: "Orders/InvoiceDetail",
+    parameter: "invoiceId",
+    read: (userScope, invoiceId) => {
+        const found = orderChanges().checkInvoice({invoiceId})
+        return {organizationPartyId: found.organizationPartyId, label: "Invoice " + invoiceId, detail: "Invoice"}
+    }
+}
+// NewChange's order: the scope's placed, approved and held orders (Mantle's find#SalesOrders, the change operator's reach included)
+choiceSources.changeOrders = (userScope, term, selected) => {
+    const found =
+        ec.service
+            .sync()
+            .name("mantle.sales.SalesWorkspaceServices.find#SalesOrders")
+            .parameters({list: "recent", text: term || null, pageSize: choiceLimit})
+            .call() || {}
+    const changeable = salesAccess.changeStatuses
+    const options = Array.from(found.orderList || [])
+        .filter(row => changeable.includes(row.statusId))
+        .map(row => ({value: row.orderId, label: [row.orderId, row.customerName, row.statusText].filter(Boolean).join(" · ")}))
+    return withSelected(
+        options,
+        selected,
+        orderId => !!salesAccess.orderOf(userScope.mantle, orderId),
+        orderId => one("mantle.order.OrderHeader", {orderId})?.orderName || orderId
+    )
+}
+// A change's order line: the product lines of an order the user sees
+choiceSources.orderLines = (userScope, term, selected, p) => {
+    const so = p.orderId ? salesAccess.orderOf(userScope.mantle, p.orderId) : null
+    if (!so) return []
+    const lower = String(term || "").toLowerCase()
+    return Array.from(find("mantle.order.OrderItem").condition("orderId", p.orderId).orderBy("orderItemSeqId").list())
+        .filter(row => row.productId && row.itemTypeEnumId !== "ItemSalesTax")
+        .map(row => ({
+            value: row.orderItemSeqId,
+            label:
+                row.orderItemSeqId +
+                " · " +
+                (row.itemDescription || row.productId) +
+                " · " +
+                ec.l10n.format(row.quantity ?? 0, "#,##0.###")
+        }))
+        .filter(option => !lower || option.label.toLowerCase().includes(lower))
+}
+// An address change's address: the postal addresses of the order's customer
+choiceSources.customerAddresses = (userScope, term, selected, p) => {
+    const so = p.orderId ? salesAccess.orderOf(userScope.mantle, p.orderId) : null
+    if (!so) return []
+    const ids = Array.from(
+        find("mantle.party.contact.PartyContactMech")
+            .condition("partyId", so.customerPartyId)
+            .conditionDate("fromDate", "thruDate", ec.user.nowTimestamp)
+            .list()
+    ).map(row => row.contactMechId)
+    if (!ids.length) return []
+    const lower = String(term || "").toLowerCase()
+    return Array.from(find("mantle.party.contact.PostalAddress").condition("contactMechId", "in", ids).list())
+        .map(row => ({
+            value: row.contactMechId,
+            label: [row.toName, row.address1, row.city, row.postalCode].filter(Boolean).join(", ")
+        }))
+        .filter(option => !lower || option.label.toLowerCase().includes(lower))
+}
+// A carrier change's carrier: the parties with the Carrier role
+choiceSources.carriers = (userScope, term) => {
+    const ids = Array.from(find("mantle.party.PartyRole").condition("roleTypeId", "Carrier").selectField("partyId").list()).map(
+        row => row.partyId
+    )
+    const lower = String(term || "").toLowerCase()
+    return ids
+        .map(partyId => ({value: partyId, label: partyLabel(one("mantle.party.Party", {partyId}))}))
+        .filter(option => !lower || option.label.toLowerCase().includes(lower))
+        .slice(0, choiceLimit)
+}
+// ===== end of P14 =====
+// ===== P15: customer agreements and prices (impl-sales P15; design-sales §7 Agreements, AgreementDetail, CustomerPrices, PriceLists) =====
+linkPaths.push(
+    "Agreements",
+    "Agreements/Agreements",
+    "Agreements/AgreementDetail",
+    "Agreements/CustomerPrices",
+    "Agreements/PriceLists",
+    "Agreements/PriceLists/PriceListDetail"
+)
+// An agreement the user sees (SalesAccess.js agreementOf: of an organization of the scope, for a Sales reader), the shared
+// AgreementDetail under Agreements; a record panel host of the root
+recordKinds.agreement = {
+    name: "Agreement",
+    icon: "sym_o_contract",
+    destination: "Agreements/AgreementDetail",
+    parameter: "agreementId",
+    read: (userScope, agreementId) => {
+        const found = salesAccess.agreementOf(userScope.mantle, agreementId)
+        if (!found) return null
+        return {
+            organizationPartyId: found.organizationPartyId,
+            label: found.agreement.description || "Agreement " + agreementId,
+            detail: found.agreement.isTemplate === "Y" ? "Agreement template" : "Agreement",
+            accountPartyId: found.agreement.otherPartyId || null
+        }
+    }
+}
+// NewAgreement's template: the agreement templates of the selling organization (Mantle's scoped find#SalesAgreements)
+choiceSources.agreementTemplates = (userScope, term, selected, p) => {
+    const organizationPartyId = choiceOrganization(userScope, p)
+    if (!organizationPartyId) return []
+    const found = lib.probe("mantle.party.SalesAgreementServices.find#SalesAgreements", {
+        organizationPartyId,
+        state: "templates",
+        text: term || null,
+        pageSize: choiceLimit
+    })
+    return Array.from(found.agreementList || [])
+        .filter(row => row.statusId !== "AgmStCancelled")
+        .map(row => ({value: row.agreementId, label: row.description + " · " + row.currencyUomId}))
+}
+// AgreementParties' party: the customer (accountPartyId) and its current contacts, and the people working for the organization
+// (store#AgreementParty checks the party again)
+choiceSources.agreementParties = (userScope, term, selected, p) => {
+    const organizationPartyId = choiceOrganization(userScope, p)
+    const account = p.accountPartyId ? salesAccess.accountOf(userScope.mantle, p.accountPartyId) : null
+    const ids = (account ? [p.accountPartyId].concat(accountContactIds(p.accountPartyId) || []) : []).concat(
+        organizationPartyId ? memberIds([organizationPartyId]) : []
+    )
+    const options = peopleOptions(ids, term, userScope)
+    if (account && (!term || partyLabel(account.party).toLowerCase().includes(term.toLowerCase())))
+        options.unshift({value: p.accountPartyId, label: partyLabel(account.party)})
+    return options
+}
+// ===== end of P15 =====
+// ===== P16: recurring orders and subscriptions (impl-sales P16; design-sales §7 RecurringOrders, Subscriptions) =====
+linkPaths.push("Agreements/RecurringOrders", "Agreements/Subscriptions")
+const recurrence = () => ec.resource.script("component://mr-mantle/service/mantle/order/SalesRecurrence.js")
+// RecurrenceSettings' order: the approved sales orders a keeper of recurrence may repeat (SalesRecurrence.js, Mantle's check)
+choiceSources.recurrenceSources = (userScope, term, selected) => recurrence().recurrenceSourceOptions(term, selected)
+// A base's agreement and Subscriptions' agreement filter: the active customer agreements of the scope (Mantle's find#SalesAgreements),
+// of the organization and the customer when given
+choiceSources.agreements = (userScope, term, selected, p) => {
+    const found = lib.probe("mantle.party.SalesAgreementServices.find#SalesAgreements", {
+        organizationPartyId: p.organizationPartyId && covers(userScope, p.organizationPartyId) ? p.organizationPartyId : null,
+        customerPartyId: p.accountPartyId || null,
+        state: "active",
+        text: term || null,
+        pageSize: choiceLimit
+    })
+    return withSelected(
+        Array.from(found.agreementList || []).map(row => ({
+            value: row.agreementId,
+            label: [row.description, row.customerName].filter(Boolean).join(" · ")
+        })),
+        selected,
+        agreementId => !!salesAccess.agreementOf(userScope.mantle, agreementId),
+        agreementId => one("mantle.party.agreement.Agreement", {agreementId})?.description || agreementId
+    )
+}
+// RecurrenceSettings' zone: the known time zones, searched by name
+choiceSources.timeZones = (userScope, term, selected) => {
+    const lower = String(term || "").toLowerCase()
+    const zones = Array.from(ec.l10n.getAvailableTimeZones() || []).map(String)
+    const options = zones
+        .filter(zone => !lower || zone.toLowerCase().includes(lower))
+        .slice(0, choiceLimit)
+        .map(zone => ({value: zone, label: zone}))
+    return withSelected(
+        options,
+        selected,
+        zone => zones.includes(zone),
+        zone => zone
+    )
+}
+// ===== end of P16 =====
+
+// ===== P18: forecasts and targets (impl-sales P18; design-sales §8 Forecast, TargetAttainment, §9 Targets) =====
+linkPaths.push("Pipeline/Forecast", "Settings/Targets", "Reports/TargetAttainment")
+const forecasts = () => ec.resource.script("component://mr-mantle/service/mantle/sales/SalesForecasts.js")
+Object.assign(choiceSources, {
+    // a forecast's or target's period: the sales and fiscal periods of the organization, the latest first
+    salesPeriods: (userScope, term, selected, p) => {
+        const organizationPartyId = choiceOrganization(userScope, p)
+        return organizationPartyId ? forecasts().periodOptions(organizationPartyId, term, choiceLimit) : []
+    },
+    // whose forecast: the parties whose forecasts the user sees in the organization (SalesAccess.js forecastSees): the organization,
+    // its teams and their members for a reader of its whole pipeline, else the user and the teams they manage with their members
+    forecastSubjects: (userScope, term, selected, p) => {
+        const organizationPartyId = choiceOrganization(userScope, p)
+        return organizationPartyId ? forecasts().subjectOptions(userScope.mantle, organizationPartyId, term, choiceLimit) : []
+    },
+    // a target's parent: the forecasts of the organization and period the user sees (store#Target checks the parent again)
+    forecastParents: (userScope, term, selected, p) => {
+        const organizationPartyId = choiceOrganization(userScope, p)
+        return organizationPartyId
+            ? forecasts().parentOptions(userScope.mantle, organizationPartyId, p.timePeriodId || null, term, choiceLimit)
+            : []
+    },
+    // a forecast allocation's category: the product categories of the organization and the shared ones, by name or id
+    productCategories: (userScope, term, selected, p) => {
+        const organizationPartyId = choiceOrganization(userScope, p)
+        const owners = (organizationPartyId ? [organizationPartyId] : organizationIds(userScope)).concat(["_NA_"])
+        const factory = ec.entity.conditionFactory
+        let query = find("mantle.product.category.ProductCategory")
+            .condition(
+                factory.makeCondition(
+                    [factory.makeCondition("ownerPartyId", "in", owners), factory.makeCondition("ownerPartyId", "is-null", null)],
+                    "or"
+                )
+            )
+            .orderBy("^categoryName")
+            .limit(choiceLimit)
+        if (term)
+            query = query.condition(
+                factory.makeCondition(
+                    ["productCategoryId", "categoryName"].map(field =>
+                        factory.makeCondition(field, "like", likeText(term)).ignoreCase()
+                    ),
+                    "or"
+                )
+            )
+        return Array.from(query.list()).map(row => ({
+            value: row.productCategoryId,
+            label: row.categoryName || row.productCategoryId
+        }))
+    }
+})
+// ===== end of P18 =====
+// ===== P19: reports (impl-sales P19; design-sales §8 Reports, PipelineAnalysis, WinLoss) =====
+linkPaths.push("Reports/Catalogue", "Reports/PipelineAnalysis", "Reports/WinLoss")
+// ===== end of P19 =====
+// ===== impl-marketing P13: a lead's campaign and tracking code (owner contract; impl-sales §7) =====
+// Marketing's campaigns and their tracking codes as a lead's choices, from Mantle's CampaignServices.find#Campaigns and
+// TrackingServices.find#TrackingLinks under the user's own Marketing scope (open campaigns of the lead's organization): a user who reads
+// no Marketing gets none, and the lead form shows the stored value only. Nothing here grants a campaign: create#Opportunity and
+// update#Opportunity check it against the deal's organization.
+const marketingProbe = (service, parameters) => {
+    try {
+        return lib.probe(service, parameters)
+    } catch (error) {
+        return null
+    }
+}
+Object.assign(choiceSources, {
+    campaigns: (userScope, term, selected, p) => {
+        if (!ec.user.hasPermission("MARKETING_VIEW")) return []
+        const organizationPartyId = choiceOrganization(userScope, p)
+        if (!organizationPartyId) return []
+        const found = marketingProbe("mantle.marketing.CampaignServices.find#Campaigns", {
+            organizationPartyId,
+            text: term || null,
+            statusId: "open",
+            pageSize: choiceLimit
+        })
+        const options = Array.from(found?.campaignList || []).map(row => ({
+            value: row.marketingCampaignId,
+            label: row.campaignName || row.marketingCampaignId
+        }))
+        if (selected && !options.some(option => option.value === selected)) {
+            const campaign = one("mantle.marketing.campaign.MarketingCampaign", {marketingCampaignId: selected})
+            if (campaign && campaign.organizationPartyId === organizationPartyId)
+                options.push({value: selected, label: campaign.campaignName || selected})
+        }
+        return options
+    },
+    trackingCodes: (userScope, term, selected, p) => {
+        if (!ec.user.hasPermission("MARKETING_VIEW") || !p.marketingCampaignId) return []
+        const found = marketingProbe("mantle.marketing.TrackingServices.find#TrackingLinks", {
+            marketingCampaignId: p.marketingCampaignId
+        })
+        return byTerm(
+            Array.from(found?.trackingLinkList || []).map(row => ({value: row.trackingCodeId, label: row.label})),
+            term
+        )
+    }
+})
+// ===== end of impl-marketing P13 =====
 // The current contacts of an account (PrtContact to it); null (any person of the scope) when it has none.
 function accountContactIds(accountPartyId) {
     const ids = Array.from(
@@ -700,6 +1265,71 @@ searchFinds.push({
         }))
     }
 })
+// P7: quotes, through Mantle's scoped find (find#Quotes' text: name or id), open ones
+searchFinds.push({
+    kind: "quote",
+    rows: (userScope, text, limit) => {
+        if (!userScope.capabilities.anyRead) return []
+        const found = lib.probe("mantle.order.SalesQuoteServices.find#Quotes", {text, pageSize: limit})
+        return Array.from(found.quoteList || []).map(row => ({
+            title: row.orderName,
+            subtitle: ["Quote " + row.orderId, row.customerName, row.statusText, row.totalText].filter(Boolean).join(" · "),
+            icon: recordKinds.quote.icon,
+            recordEntity: "mantle.order.OrderHeader",
+            recordId: row.orderId,
+            url: recordUrl("quote", row.orderId)
+        }))
+    }
+})
+// P8: requests for quote, through Mantle's scoped find (find#QuoteRequests' text: name or id), open ones
+searchFinds.push({
+    kind: "quoteRequest",
+    rows: (userScope, text, limit) => {
+        if (!userScope.capabilities.anyRead) return []
+        const found = lib.probe("mantle.order.SalesQuoteServices.find#QuoteRequests", {text, pageSize: limit})
+        return Array.from(found.quoteRequestList || []).map(row => ({
+            title: row.requestName,
+            subtitle: ["RFQ " + row.requestId, row.customerName, row.statusText].filter(Boolean).join(" · "),
+            icon: recordKinds.quoteRequest.icon,
+            recordEntity: "mantle.request.Request",
+            recordId: row.requestId,
+            url: recordUrl("quoteRequest", row.requestId)
+        }))
+    }
+})
+// P11: sales orders, through Mantle's scoped find (find#SalesOrders' text: id, name or the customer's reference), recent ones
+searchFinds.push({
+    kind: "order",
+    rows: (userScope, text, limit) => {
+        if (!userScope.capabilities.anyRead) return []
+        const found = lib.probe("mantle.sales.SalesWorkspaceServices.find#SalesOrders", {text, pageSize: limit})
+        return Array.from(found.orderList || []).map(row => ({
+            title: row.orderName,
+            subtitle: ["Order " + row.orderId, row.customerName, row.statusText, row.totalText].filter(Boolean).join(" · "),
+            icon: recordKinds.order.icon,
+            recordEntity: "mantle.order.OrderHeader",
+            recordId: row.orderId,
+            url: recordUrl("order", row.orderId)
+        }))
+    }
+})
+// ===== P15: the palette's agreements, through Mantle's scoped find (find#SalesAgreements' text: name or id), open ones
+searchFinds.push({
+    kind: "agreement",
+    rows: (userScope, text, limit) => {
+        if (!userScope.capabilities.anyRead) return []
+        const found = lib.probe("mantle.party.SalesAgreementServices.find#SalesAgreements", {text, pageSize: limit})
+        return Array.from(found.agreementList || []).map(row => ({
+            title: row.description,
+            subtitle: ["Agreement " + row.agreementId, row.customerName, row.statusText].filter(Boolean).join(" · "),
+            icon: recordKinds.agreement.icon,
+            recordEntity: "mantle.party.agreement.Agreement",
+            recordId: row.agreementId,
+            url: recordUrl("agreement", row.agreementId)
+        }))
+    }
+})
+// ===== end of P15 =====
 function search(p) {
     const userScope = scope()
     if (!userScope.read || !String(p.text || "").trim()) return {rows: []}
@@ -757,7 +1387,55 @@ function workItemContext(p) {
     return {available: opportunityRows.length > 0, opportunityRows}
 }
 
-const operations = {sharedContext, checkRecord, choices, search, workItemContext}
+// ===== P6: Today =====
+// The Sales today-source (Commons' get#UserTodayItems calls it): the user's own open leads and opportunities whose expected close
+// falls by thruDate (Mantle's find#Opportunities, mine), each opening OpportunityDetail with the deal as the record and no Mark
+// done; the activities on deals are Commons' tasks and already in Today. Another user's Today, and a user who reads nothing of Sales,
+// get none.
+function today(p) {
+    const label = "Sales"
+    if (p.userId && p.userId !== ec.user.userId) return {items: [], label}
+    const userScope = scope()
+    if (!userScope.read || !userScope.capabilities.anyRead) return {items: [], label}
+    const thru = p.thruDate ? lib.ms(p.thruDate) : null
+    const found = lib.probe("mantle.sales.OpportunityServices.find#Opportunities", {
+        mine: "Y",
+        statusId: "SalesOppOpen",
+        closeThru: thru != null ? ec.l10n.format(new Date(thru), "yyyy-MM-dd") : null,
+        orderByField: "estimatedCloseDate",
+        pageSize: 50
+    })
+    const items = []
+    for (const row of Array.from(found.opportunityList || [])) {
+        const due = lib.ms(row.estimatedCloseDate)
+        if (due == null || (thru != null && due >= thru)) continue
+        items.push({
+            kind: "salesDeal",
+            workEffortId: null,
+            requestId: null,
+            title:
+                (row.typeText ? row.typeText + " " : "") + row.opportunityName + (row.accountName ? " · " + row.accountName : ""),
+            dueDate: new Date(due),
+            startDate: null,
+            endDate: null,
+            allDay: true,
+            priority: null,
+            statusId: row.statusId,
+            assignees: [],
+            canUpdate: false,
+            hasCallLink: false,
+            url: recordUrl("opportunity", row.salesOpportunityId),
+            record: {
+                recordEntityName: "mantle.sales.opportunity.SalesOpportunity",
+                recordId: row.salesOpportunityId,
+                recordName: row.opportunityName
+            }
+        })
+    }
+    return {items, label}
+}
+
+const operations = {sharedContext, checkRecord, choices, search, workItemContext, today}
 function run(op, p) {
     if (!Object.hasOwn(operations, op)) throw new Error("Unknown Sales operation " + op)
     return operations[op](p || {})

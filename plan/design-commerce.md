@@ -143,7 +143,10 @@ explicit reporting currency and Accounting's conversion policy. The summaries re
 store scope (Nov 5, impl-commerce F21). Visits exclude preview/test
 traffic; refunds are separate from gross sales; the cards say that aggregate visits are not
 people. When the site has no Marketing tracking, the visitor and conversion cards are hidden
-rather than shown as zero.
+rather than shown as zero. As built (impl-marketing P15): Home's Visits card reads Marketing's `mantle.marketing.TrackingServices.count#StoreVisits`
+(distinct visitor keys of the non-automated events of the sites whose Shop mount sells for the stores, plus each keyless event) for the
+period and the one before, shown when such a site exists; the `Marketing.Visits` metric registration, conversion and Online sales'
+visits wait for Marketing P20's attribution and reports.
 
 The shell receives store, site, record, selection and filter context. Register store/product/order
 palette providers, whose rows carry `recordEntity` and `recordId` (R-LV-W10), and scoped
@@ -318,6 +321,7 @@ Commerce filters them by store and adds nothing to their definition.
 | OnlineSales | list, read | Orders and net sales by store and period | store, period, orders, items, gross, discounts, net invoiced, average order, top products | graph view by period; currency per row | `mantle.sales.SalesReportServices.get#SalesOrderSummary`, `get#SalesInvoiceSummary` (`productStoreIds`), `get#SalesTopProduct` (gains a proposed `productStoreIds` filter) | Odoo Online Sales report; ridgecrest order reports |
 | CartRecovery | list, read | Recovery funnel | store, carts opened, abandoned, eligible, recovery sends, delivered, recovered orders, recovered value | graph view | proposed O.get#CartRecoverySummary | Odoo abandoned-cart report |
 | PromotionUse | list, read | Promotion and code performance | promotion, code, orders, discount total, net sales of those orders, use limits left | record links to PromotionDetail | proposed P.get#PromotionUseSummary over OrderPromoCode and promotion adjustments | Odoo loyalty reporting |
+| Traffic (impl-marketing P20) | list, read | Visits and campaign orders | period, visits of the stores' sites, orders, orders per visit, orders whose primary attribution is a campaign and their value by currency | — | `mantle.marketing.TrackingServices.count#StoreVisits`, `mantle.marketing.MarketingReportServices.count#StoreConversions` (each checks the store itself), the latest six periods, none without a Shop site | Marketing's attribution (X10) |
 | ChannelHealth | list, read | Integration and feed outcomes | remote, message type, received, processed, errors, retries, last success; feed, last complete build, skipped products | graph view; links to IntegrationDetail and FeedDetail | proposed I.get#ChannelHealth over SystemMessage and feed builds | tools SystemMessage screens |
 
 The CartRecovery, PromotionUse and ChannelHealth forms are new, and their fields above are the
@@ -594,7 +598,16 @@ operations (MKT-CONTENT, MKT-PUBLIC). Neither mount is authority to publish priv
 | App | Mount | Filters fixed | Action set | Emphasis |
 | --- | --- | --- | --- | --- |
 | Commerce | `Commerce/Website/Pages`, `Commerce/Website/PageDetail` (one route per screen, Nov 6) | permitted sites with a Shop mount; store pages and policy roles | new, edit, preview, publish, schedule, withdraw, assign template | policy versions accepted at checkout; menu references |
-| Marketing | `Marketing/Content/LandingPages[/PageDetail]` | permitted sites; campaign landing pages (no policy roles) | new, edit, preview, publish, schedule, withdraw; campaign link | campaign association and tracking links |
+| Marketing | `Marketing/Content/LandingPages`, `Marketing/Content/PageDetail` (built in impl-marketing P14) | sites whose Marketing mount serves the user's organizations; storeless landing pages (no policy role, no template) | new, edit, publish, schedule, withdraw with MARKETING_CONTENT_EDIT; campaign link through Marketing's content (CampaignContent) | the campaign's content and, later, its tracking links |
+
+As built (owner contract, impl-marketing P14, F22, F23): the two screens read the mounting app's registration in mr-boss
+`service/ironstone/shared/PageApps.js` (its context and choices services, the site page app it works, the capabilities that show
+edit and publish, its PageDetail route, whether its pages take a policy role and a template, its words), never a branch on one
+app. The site page services take a page's app from its mount: a Shop mount's page through its store and `COMMERCE_*`, a Marketing
+mount's through the mount's organization (Marketing's scope), `MARKETING_CONTENT_EDIT` to edit and publish, its text in the
+organization's page space (`MarketingPageSpace`, restrictUpdate), so a Commerce designer cannot edit a landing page nor a Marketing
+author a store's page; `find#SitePages` and a new page's `store#SitePage` take `app` (shop by default, so Commerce is unchanged).
+Themes, policy roles, menus and redirects stay Commerce's.
 
 ### Themes
 
@@ -861,6 +874,14 @@ sender for the store's carts, built-in recovery or a named Marketing automation,
 does not send. The Comms delivery ledger deduplicates by cart and recipient as a second guard, so
 a cart never gets two recovery mails.
 
+As built (impl-marketing P11, owner contract): the sender is `builtin` or `automation`, the latter offered (RecoveryPolicy's
+`view.senderOptions`, `store#CartRecoveryPolicy` refusing it otherwise: AUTOMATION_UNAVAILABLE) while an active Marketing automation of
+the store's organization has the store's cart-abandoned trigger. With it, built-in recovery sends nothing for the store (OTHER_SENDER);
+the automation's admission reads the same carts (`CartRecovery.js` `automationCarts`: idle past the delay within the window, a signed-in
+verified shopper holding the store's cart reminders, under the most sends), files one event per cart and visit, marks the visit
+handled, and never admits a visit built-in recovery already sent for; its send goes to the automation's topic, a Marketing list, under
+the shopper's marketing consent as every automation send does.
+
 ### Returns
 
 | Form | Kind | Purpose | Highlighted fields | Widgets of note | Services | Derived from |
@@ -955,6 +976,15 @@ resumes the same occurrence through Shop's coordinator, and is refused while a p
 (PAYMENT_UNRESOLVED) or with no recorded consent (CONSENT_REQUIRED). A refund of an automatic contract's
 latest term ends its renewal (design-shop §10.2 as built). Customer360 lists the customer's subscriptions.
 Storeless native Subscription rows for Sales' mount are not listed yet (impl-commerce F145).
+
+**As built (Nov 14, impl-sales P16; owner contract, F23).** The list is `Shared/Subscriptions`, mounted by Commerce at
+`Commerce/Customers/Subscriptions` (its route and its own rendering, filters and links unchanged) and by Sales at
+`Sales/Agreements/Subscriptions`. Sales' context does not call `R.find#StoreSubscriptions` (it needs Commerce's
+permissions): Mantle's `mantle.order.SalesRecurrenceServices.find#SalesSubscriptions`, a Sales reader's, lists the store
+contracts of the stores of the user's sales organizations read only (no method, consent or renewal attempts) beside the
+storeless Subscription rows of native orders of those organizations, each with its source order, recurring base and
+agreement and "No billing link" when its order line was not billed. Sales offers only Follow up (a task on the customer);
+cancel and retry stay SubscriptionDetail's under Commerce's grants, which Sales does not mount.
 
 ### Requests
 
@@ -1054,6 +1084,19 @@ codes. A customer restriction cannot be bypassed through guest checkout. **Needs
 Marketing selects permitted stores and emphasizes the campaign links defined in its §7; Sales only
 reads eligible codes and applies them on the existing shared order form. No mount grants extra
 promotion or pricing authority.
+
+As built (impl-marketing P19, owner contract): the four screens read the mounting app's registration
+(mr-boss `service/ironstone/shared/PromotionApps.js`, as the page screens read `PageApps.js`): its
+context and choices services, the choice names of its drop-downs (stores, customers, campaigns), the
+capabilities that show the edits and the order links, where a promotion's products are chosen, how a
+code's customer is checked, and whether it links campaigns. The app root is the mounting root's,
+never a request parameter (the screens no longer declare `appRoot`). Commerce's registration keeps its
+context, choices, catalog choices and customer check as built; Marketing's offers the stores of the
+user's Marketing organizations within Commerce's store scope, no order link, its own product and
+customer choices, and PromotionDetail's Campaigns box. Mantle's `StorePromotionServices` decide every
+read and write with `COMMERCE_VIEW`, `COMMERCE_PROMOTION_EDIT` and the store's scope, under either app;
+a campaign link (`CampaignServices.store#CampaignAssociation`) asks the campaign's edit and Commerce's
+promotion permission and store scope. Commerce's promotion specs pass unchanged.
 
 ## 8. Checkout settings
 

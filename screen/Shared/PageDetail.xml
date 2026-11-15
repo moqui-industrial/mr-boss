@@ -16,27 +16,74 @@ along with this software (see the LICENSE.md file). If not, see
     a site page's record header (its route as a key chip, its title, site, locale and policy role, and its publication state
     as a chip, with the live page's address) and the tabs, each with the page as its context: Content (1: the Commons
     Knowledge editor on the bound page alone, F53, its terminal twin PageText), Route and SEO (2: PageRoute), Publication
-    (3: PagePublication, publish a version from a date, withdraw, cancel what waits) and History (4: PageHistory). Commerce's
-    context only (ironstone.commerce.ContextServices.get#SharedContext); the page is read and saved through
-    mantle.public.ThemeServices and published through mantle.public.SiteServices.publish#SitePage, which check the
-    permission and the site's store again. A page of a site outside the user's stores is not available. -->
+    (3: PagePublication, publish a version from a date, withdraw, cancel what waits) and History (4: PageHistory). The context is
+    the mounting app's registration (service/ironstone/shared/PageApps.js; impl-marketing P14, F22): Commerce's store pages or
+    Marketing's storeless landing pages (no policy role or template; its content grant edits and publishes). The page is read and
+    saved through mantle.public.ThemeServices and published through mantle.public.SiteServices.publish#SitePage, which check the
+    permission and the site's store or organization again (a page's app is its mount's). A page outside the user's scope is not
+    available. impl-marketing P15: a registration with a review (Marketing's) shows its state at the text version, Request review for an
+    author and Review (approve or refuse) for an approver, through the services the registration names; publishing does not wait for
+    it. -->
 <screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
         default-menu-title="Page" default-menu-include="false">
     <parameter name="sitePageId" required="true"/>
     <!-- the page for the tabs, which the client loads on their own (their actions run without this screen's) -->
     <always-actions>
-        <service-call name="ironstone.commerce.ContextServices.get#SharedContext" in-map="{appRoot:appRoot}" out-map="pagesContext"/>
-        <set field="pagesCan" from="pagesContext.capabilities"/>
+        <set field="pagesContext" from="ec.resource.script('component://mr-boss/service/ironstone/shared/PageApps.js').context(appRoot)"/>
+        <set field="pagesCan" from="pagesContext.can"/>
         <set field="sharedLinks" from="pagesContext.sharedLinks"/>
+        <set field="storePages" from="pagesContext.storePages"/>
+        <set field="pagesWords" from="pagesContext.words"/>
         <service-call name="mantle.public.ThemeServices.find#SitePages" out-map="pageFound" transaction="force-new" ignore-error="true"
                 in-map="{sitePageId:(sitePageId || '')}"/>
         <script>ec.message.clearErrors()</script>
-        <set field="sitePage" from="pageFound?.pages?.[0] || null"/>
+        <!-- a page of the registration's app only (Commerce's pages under Commerce, the landing pages under Marketing) -->
+        <set field="sitePage" from="pageFound?.pages?.[0]?.app == pagesContext.pageApp ? pageFound.pages[0] : null"/>
         <set field="recordFound" from="!!sitePage"/>
     </always-actions>
     <subscreens default-item="PageContent" always-use-full-path="true"/>
     <transition name="pages"><default-response url="../Pages"/></transition>
+    <!-- impl-marketing P15 (its §4 Nov 14): a registration's optional review (Marketing's landing pages): asked at the text version read,
+        decided by an approver; the registration names the services, which check the permission, the organization and the version -->
+    <transition name="requestPageReview">
+        <actions>
+            <if condition="pagesContext.review">
+                <script>ec.service.sync().name(pagesContext.review.requestService).parameters({targetKind:pagesContext.review.targetKind,
+                    targetId:sitePageId, targetRevision:(targetRevision || null), reason:(reason || null)}).call()</script>
+                <if condition="!ec.message.hasError()"><message type="success">Review asked; the approvers are notified. Publishing does not wait for it.</message></if>
+                <else><message type="danger">This page has no review here</message></else>
+            </if>
+        </actions>
+        <default-response url="."/>
+        <error-response url="."/>
+    </transition>
+    <transition name="decidePageReview">
+        <actions>
+            <if condition="pagesContext.review">
+                <script>ec.service.sync().name(pagesContext.review.decideService).parameters({targetKind:pagesContext.review.targetKind,
+                    targetId:sitePageId, targetRevision:(targetRevision || null), decision:decision, reason:(reason || null)}).call()</script>
+                <if condition="!ec.message.hasError()"><message type="success">${decision == 'approve' ? 'Approved at this version' : 'Refused'}</message></if>
+                <else><message type="danger">This page has no review here</message></else>
+            </if>
+        </actions>
+        <default-response url="."/>
+        <error-response url="."/>
+    </transition>
     <actions>
+        <!-- P15: the registration's review, when it has one (Marketing's landing pages) -->
+        <if condition="recordFound &amp;&amp; pagesContext.review">
+            <script><![CDATA[
+                ec.message.pushErrors()
+                try {
+                    reviewFound = ec.service.sync().name(pagesContext.review.readService).parameters({sitePageId}).requireNewTransaction(true).call()
+                } finally {
+                    ec.message.clearErrors()
+                    ec.message.popErrors()
+                }
+            ]]></script>
+        </if>
+        <set field="pageReview" from="reviewFound?.review || null"/>
+        <set field="reviewCan" from="reviewFound?.capabilities || {}"/>
         <if condition="recordFound">
             <set field="captionText" from="[sitePage.siteName, sitePage.locale, sitePage.roleText ? sitePage.roleText + ' policy' : null,
                     sitePage.templateKey ? 'template ' + sitePage.templateKey : null].filter((part) =&gt; part).join(' · ')"/>
@@ -47,7 +94,7 @@ along with this software (see the LICENSE.md file). If not, see
     <widgets>
         <section name="PageNotFound" condition="!recordFound"><widgets>
             <container-box type="warning"><box-header title="Not available"/><box-body>
-                <label type="p" text="Page ${sitePageId} is not available: it does not exist, or it is not on a site of one of your stores."/>
+                <label type="p" text="Page ${sitePageId} is not available: ${pagesWords.unavailable}"/>
                 <link url="pages" text="Back to Pages" link-type="anchor"/>
             </box-body></container-box>
         </widgets></section>
@@ -80,10 +127,31 @@ along with this software (see the LICENSE.md file). If not, see
                         <label text="Waiting to publish: ${sitePage.scheduledText}" type="span" style="text-caption q-ml-sm" condition="sitePage.scheduledText"/>
                         <label text="Not published at its date: ${sitePage.failureText}" type="span" style="text-caption text-negative q-ml-sm"
                                 condition="sitePage.failureText"/>
+                        <label text="Review: ${pageReview.stateText}" type="span" style="text-caption q-ml-sm" condition="pageReview"/>
                     </container>
                     <container style="col-12 col-md-auto row items-center q-gutter-y-xs m-record-actions">
                         <link url="${sitePage.publicUrl}" url-type="plain" text="View the live page" icon="sym_o_open_in_new" link-type="anchor"
                                 target-window="_blank" condition="sitePage.state == 'published' &amp;&amp; sitePage.publicUrl"/>
+                        <container-dialog id="RequestReviewDialog" button-text="Request review" icon="sym_o_rate_review" width="520"
+                                title="Request a review of ${sitePage.title}" condition="pageReview &amp;&amp; reviewCan.canRequest">
+                            <label type="p" style="text-caption m-muted" text="An approver of the organization is notified and may approve version ${pageReview.versionShort}. Publishing stays yours: it does not wait for the review."/>
+                            <form-single name="RequestReview" transition="requestPageReview">
+                                <field name="targetRevision" from="pageReview.revision"><default-field><hidden/></default-field></field>
+                                <field name="reason"><default-field title="Note for the reviewer"><text-area rows="2" cols="50"/></default-field></field>
+                                <field name="submitButton"><default-field title="Request review"><submit/></default-field></field>
+                            </form-single>
+                        </container-dialog>
+                        <container-dialog id="DecideReviewDialog" button-text="Review" icon="sym_o_approval" width="520"
+                                title="Review ${sitePage.title}, version ${pageReview.versionShort}" condition="pageReview &amp;&amp; reviewCan.canDecide">
+                            <form-single name="DecideReview" transition="decidePageReview">
+                                <field name="targetRevision" from="pageReview.revision"><default-field><hidden/></default-field></field>
+                                <field name="decision">
+                                    <default-field title="Decision"><radio no-current-selected-key="approve"><option key="approve" text="Approve"/><option key="refuse" text="Refuse"/></radio></default-field>
+                                </field>
+                                <field name="reason"><default-field title="Reason" tooltip="Needed to refuse"><text-area rows="2" cols="50"/></default-field></field>
+                                <field name="submitButton"><default-field title="Record the review"><submit/></default-field></field>
+                            </form-single>
+                        </container-dialog>
                     </container>
                 </container>
             </container>

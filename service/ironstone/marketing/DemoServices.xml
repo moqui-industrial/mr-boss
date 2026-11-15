@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a
+Grant of Patent License.
+
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<!-- IronStone Marketing's demo loader (impl-marketing P14; MarketingDemo.js), called from data/BossZZMarketingDemoData.xml: what demo
+    data cannot write as rows, the wiki pages of the content demo, through the wiki services, (P16) the webinar's call link, and
+    (follow-up 3) the events' dates and (follow-up 6) the campaigns' and the December send's dates relative to the load. Data, not a
+    business service: only data loading or a system administrator runs it. -->
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
+    <service verb="load" noun="ContentDemo" transaction="ignore" authenticate="anonymous-all" allow-remote="false">
+        <description>Idempotent Marketing content demo for ORG_ZIZI_RETAIL, by fixed ID: the garden blog space (Marketing Author writes
+            it) with three posts in the garden news category, two with a published page version and one a draft, the first linked to
+            the spring campaign; and the spring garden landing page on ZIZI_SHOP's Marketing mount, its text in Retail's page space with
+            an embedded subscribe box for the garden newsletter, published and linked to the campaign. In the data file's transaction
+            (its rows are referenced); a part that fails is named in errors and the other is made. Only data loading or a system administrator may run it.</description>
+        <out-parameters>
+            <parameter name="complete" type="Boolean"/>
+            <parameter name="errors" type="List"/>
+        </out-parameters>
+        <actions>
+            <set field="demoResult" from="ec.resource.script('component://mr-boss/service/ironstone/marketing/MarketingDemo.js').execute('load', context)"/>
+            <set field="complete" from="demoResult.complete"/>
+            <set field="errors" from="demoResult.errors"/>
+        </actions>
+    </service>
+    <service verb="load" noun="CampaignDatesDemo" authenticate="anonymous-all" allow-remote="false">
+        <description>Dates the campaign demo from the load (Marketing follow-up 6), in days from the load day: the spring garden launch
+            from 14 days before to 77 days after (started 13 days before at 09:00), its launch evening 56 to 58 days after, the holiday
+            gift guide 16 to 46 days after and Services' renewals 16 to 105 days after, each at 00:00 in the server's zone as the demo's
+            fixed dates are read; and the approved December newsletter's schedule 16 days after at 08:00 wall-clock in its schedule's
+            time zone (America/Chicago), whatever the server's zone. A load on Nov 15, 2026 gives the old dates (Nov 1 to Jan 31, Jan 10
+            to 12, Dec 1 to 31, Dec 1 to Feb 28, and Dec 1 at 08:00). Loading again moves them; a missing row is logged and skipped. Only
+            data loading or a system administrator may run it.</description>
+        <out-parameters><parameter name="scheduledDate" type="Timestamp"/></out-parameters>
+        <actions><script><![CDATA[
+            if (ec.user.userId && !ec.user.isInGroup('ADMIN')) throw new Error('Demo loading requires system administration')
+            const nowMillis = ec.user.timestampMillis(ec.user.nowTimestamp)
+            // the server's local day, as the demo data's fixed dates are read
+            const now = new Date(nowMillis)
+            const after = (days, hour = 0) => String(new Date(now.getFullYear(), now.getMonth(), now.getDate() + days, hour).getTime())
+            // a wall-clock time in a zone: the load day there, a calendar day counted in UTC (no DST in the count), the hour read back in
+            // the zone (DST kept), as load#EventDatesDemo
+            const pad = (n) => String(n).padStart(2, '0')
+            const afterIn = (zone, days, hour) => {
+                const [year, month, date] = String(ec.l10n.format(String(nowMillis), 'yyyy-MM-dd', null, zone)).split('-').map(Number)
+                const d = new Date(Date.UTC(year, month - 1, date + days))
+                const text = d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + ' ' + pad(hour) + ':00:00'
+                return String(ec.user.timestampMillis(ec.l10n.parseTimestamp(text, 'yyyy-MM-dd HH:mm:ss', null, zone)))
+            }
+            const move = (entityName, keys, fields) => {
+                if (ec.entity.find(entityName).condition(keys).disableAuthz().one() == null) {
+                    ec.logger.warn('The campaign dates demo found no ' + entityName + ' ' + JSON.stringify(keys) + '; not moved')
+                    return
+                }
+                ec.service.sync().name('update#' + entityName).parameters(Object.assign({}, keys, fields)).disableAuthz().call()
+            }
+            const CAMPAIGN = 'mantle.marketing.campaign.MarketingCampaign'
+            move(CAMPAIGN, {marketingCampaignId: 'BOSS_MKT_CMP_SPRING'}, {fromDate: after(-14), thruDate: after(77), startDate: after(-13, 9)})
+            move(CAMPAIGN, {marketingCampaignId: 'BOSS_MKT_CMP_SPRING_EVENT'}, {fromDate: after(56), thruDate: after(58)})
+            move(CAMPAIGN, {marketingCampaignId: 'BOSS_MKT_CMP_HOLIDAY'}, {fromDate: after(16), thruDate: after(46)})
+            move(CAMPAIGN, {marketingCampaignId: 'BOSS_MKT_CMP_SERVICES'}, {fromDate: after(16), thruDate: after(105)})
+            const SEND = 'mantle.marketing.campaign.CampaignSend'
+            const send = ec.entity.find(SEND).condition({campaignSendId: 'BOSS_MKT_SEND_DEC'}).disableAuthz().one()
+            if (send == null) {
+                ec.logger.warn('The campaign dates demo found no send BOSS_MKT_SEND_DEC; not moved')
+            } else {
+                scheduledDate = afterIn(send.scheduleTimeZone || 'America/Chicago', 16, 8)
+                move(SEND, {campaignSendId: 'BOSS_MKT_SEND_DEC'}, {scheduledDate})
+            }
+        ]]></script></actions>
+    </service>
+    <service verb="load" noun="EventDatesDemo" authenticate="anonymous-all" allow-remote="false">
+        <description>Moves the event demo's dates to the load (Marketing follow-up 3): the spring planting webinar to 18:00–19:00 on
+            the first Thursday ten weeks or more after the load day, and the rose pruning workshop to 09:00–12:00 on the first Saturday
+            118 days or more after it, its registration closing the day before at 17:00; each event's start and end and its offer's
+            occurrence move together (a load on Nov 15, 2026 gives Jan 28 and Mar 13, 2027). The day and the hours are wall-clock in
+            each offer's time zone (America/Denver), whatever the server's zone. The webinar stays inside its call link's
+            90 days. Loading again moves them; a missing row is logged and skipped. Only data loading or a system administrator may
+            run it.</description>
+        <out-parameters>
+            <parameter name="webinarStart" type="Timestamp"/>
+            <parameter name="workshopStart" type="Timestamp"/>
+        </out-parameters>
+        <actions><script><![CDATA[
+            if (ec.user.userId && !ec.user.isInGroup('ADMIN')) throw new Error('Demo loading requires system administration')
+            // wall-clock times in each offer's time zone (America/Denver, as PASS shows them), whatever the server's zone: the load day
+            // there, a calendar day counted in UTC (no DST in the count), the hour read back in the zone (DST kept)
+            const nowText = String(ec.user.timestampMillis(ec.user.nowTimestamp))
+            const zoneOf = (registrationPolicyId) => {
+                const offer = ec.entity.find('mantle.work.registration.EventRegistrationPolicy').condition({registrationPolicyId}).disableAuthz().one()
+                return (offer && offer.timeZone) || 'America/Denver'
+            }
+            const dayOn = (zone, afterDays, weekDay) => {
+                const [year, month, date] = String(ec.l10n.format(nowText, 'yyyy-MM-dd', null, zone)).split('-').map(Number)
+                const day = new Date(Date.UTC(year, month - 1, date + afterDays))
+                return new Date(Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate() + ((weekDay - day.getUTCDay() + 7) % 7)))
+            }
+            const pad = (n) => String(n).padStart(2, '0')
+            const at = (zone, day, hour, plusDays = 0) => {
+                const d = new Date(Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate() + plusDays))
+                const text = d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + ' ' + pad(hour) + ':00:00'
+                return String(ec.user.timestampMillis(ec.l10n.parseTimestamp(text, 'yyyy-MM-dd HH:mm:ss', null, zone)))
+            }
+            const move = (entityName, keys, fields) => {
+                const found = ec.entity.find(entityName).condition(keys).disableAuthz().one()
+                if (found == null) {
+                    ec.logger.warn('The event dates demo found no ' + entityName + ' ' + JSON.stringify(keys) + '; not moved')
+                    return
+                }
+                ec.service.sync().name('update#' + entityName).parameters(Object.assign({}, keys, fields)).disableAuthz().call()
+            }
+            const webinarZone = zoneOf('BOSS_MKT_OFFER_WEBINAR')
+            const workshopZone = zoneOf('BOSS_MKT_OFFER_WORKSHOP')
+            const webinar = dayOn(webinarZone, 70, 4)
+            const workshop = dayOn(workshopZone, 118, 6)
+            webinarStart = at(webinarZone, webinar, 18)
+            workshopStart = at(workshopZone, workshop, 9)
+            move('mantle.work.effort.WorkEffort', {workEffortId: 'BOSS_MKT_EV_WEBINAR'},
+                {estimatedStartDate: webinarStart, estimatedCompletionDate: at(webinarZone, webinar, 19)})
+            move('mantle.work.registration.EventRegistrationPolicy', {registrationPolicyId: 'BOSS_MKT_OFFER_WEBINAR'},
+                {occurrenceStart: webinarStart, occurrenceEnd: at(webinarZone, webinar, 19)})
+            move('mantle.work.effort.WorkEffort', {workEffortId: 'BOSS_MKT_EV_WORKSHOP'},
+                {estimatedStartDate: workshopStart, estimatedCompletionDate: at(workshopZone, workshop, 12)})
+            move('mantle.work.registration.EventRegistrationPolicy', {registrationPolicyId: 'BOSS_MKT_OFFER_WORKSHOP'},
+                {occurrenceStart: workshopStart, occurrenceEnd: at(workshopZone, workshop, 12), closesDate: at(workshopZone, workshop, 17, -1)})
+        ]]></script></actions>
+    </service>
+    <service verb="load" noun="EventDemo" transaction="ignore" authenticate="anonymous-all" allow-remote="false">
+        <description>Idempotent Marketing event demo (impl-marketing P16): the spring planting webinar's video call, a call link of the
+            framework (lobby, video) made through org.moqui.call.CallServices.create#CallLink as the webinar's join address, when it has
+            none. Only data loading or a system administrator may run it.</description>
+        <out-parameters>
+            <parameter name="complete" type="Boolean"/>
+            <parameter name="errors" type="List"/>
+        </out-parameters>
+        <actions>
+            <set field="demoResult" from="ec.resource.script('component://mr-boss/service/ironstone/marketing/MarketingDemo.js').execute('loadEvents', context)"/>
+            <set field="complete" from="demoResult.complete"/>
+            <set field="errors" from="demoResult.errors"/>
+        </actions>
+    </service>
+</services>

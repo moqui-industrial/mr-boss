@@ -12,7 +12,7 @@
 // its panels and Marketing's mount.
 // Run: ./moq test mr-boss --spec SalesAccess
 const lib = ec.resource.script("component://mr-boss/test/Sales/SalesSpecLib.js")
-const {ids, users, asUser, system, refusal, invoke, page, screenRefusal, shell} = lib
+const {ids, users, asUser, system, refusal, invoke, page, screenRefusal, shell, recurringBase} = lib
 const contextServices = "ironstone.sales.ContextServices."
 const context = contextServices + "get#SharedContext"
 const checkRecord = contextServices + "check#Record"
@@ -191,7 +191,8 @@ const capabilityNames = [
 const edits = ["opportunityEdit", "accountEdit", "quoteEdit", "quoteSend", "orderEdit"]
 // design §1.1's table as P1 grants it (F43: approve and orderChange come with P9 and P14); every user in BOSS_SALES holds view
 const capabilityUsers = [
-    {user: users.rep, granted: ["view", ...edits, "anyRead"]},
+    // P18: the representative enters their own forecast (SALES_FORECAST_EDIT)
+    {user: users.rep, granted: ["view", ...edits, "forecastEdit", "anyRead"]},
     {
         user: users.manager,
         granted: ["view", "teamView", "teamManage", ...edits, "forecastEdit", "reportView", "customerInvite", "import"].concat([
@@ -203,8 +204,10 @@ const capabilityUsers = [
             "settings"
         ])
     },
-    {user: users.approver, granted: ["view", "orderApprove", "anyRead"]},
-    {user: users.change, granted: ["view", "anyRead"]},
+    // P9: the approver holds SALES_APPROVE (F43)
+    {user: users.approver, granted: ["view", "orderApprove", "approve", "anyRead"]},
+    // P14: the change operator holds SALES_ORDER_CHANGE (F43)
+    {user: users.change, granted: ["view", "orderChange", "anyRead"]},
     {user: users.agreement, granted: ["view", "agreementEdit", "recurrenceManage", "anyRead"]},
     {user: users.reader, granted: ["view", "teamView", "reportView", "anyRead", "teamRead", "reportRead", "reports"]},
     {
@@ -365,7 +368,7 @@ feature(
             repHome.errors.length == 0
             repHome.output.includes("Sales work")
             repHome.output.includes("RFQs awaiting response")
-            repHome.output.includes("Not configured")
+            repHome.output.includes("Orders blocked")
             repHome.output.includes("Ziziwork Retail")
             !repHome.output.includes("Nothing of it is open to you.")
             // the representative has no Reports shortcut
@@ -429,7 +432,7 @@ feature(
 )
 
 // P4 (design §1.1, §3): a deal is its owner's and its team's, the organization's for a manager, never another organization's; its
-// notes and files under Sales follow it; Marketing's root mounts Leads and LeadSources alone
+// notes and files under Sales follow it; Marketing's root mounts Leads, Accounts (impl-marketing P3) and LeadSources alone
 feature(
     "a deal is the rep's and their team's, the organization's for a manager, refused another's; Marketing's root mounts Leads",
     {
@@ -464,10 +467,21 @@ feature(
             // a second root's context: Marketing's links are the Sales screens it mounts, under its own root
             const marketing = asUser(users.rep, () => invoke(context, {appRoot: "Marketing"}))
             if (
-                JSON.stringify(Object.keys(marketing.sharedLinks || {}).sort()) !== '["Pipeline/Leads","Settings/LeadSources"]' ||
-                marketing.sharedLinks["Pipeline/Leads"] !== "//Marketing/Leads"
+                JSON.stringify(Object.keys(marketing.sharedLinks || {}).sort()) !==
+                    '["Accounts/Accounts","Pipeline/Leads","Settings/LeadSources"]' ||
+                marketing.sharedLinks["Pipeline/Leads"] !== "//Marketing/Leads" ||
+                // impl-marketing P3: Accounts at Marketing/Leads/Accounts, for its bulk action
+                marketing.sharedLinks["Accounts/Accounts"] !== "//Marketing/Leads/Accounts"
             )
                 problems.push(`Marketing's links: ${JSON.stringify(marketing.sharedLinks)}`)
+            // impl-marketing P19 (review): an account opens Marketing's Customer360 and a contact its ContactDetail for a Marketing
+            // audience reader only (the administrator here); the rep above, who holds no audience read, sees them unlinked
+            const audienceLinks = asUser("john.doe", () => invoke(context, {appRoot: "Marketing"})).sharedLinks || {}
+            if (
+                audienceLinks["Accounts/Customer360"] !== "//Marketing/Customers/Customer360" ||
+                audienceLinks["Accounts/ContactDetail"] !== "//Marketing/Contacts/ContactDetail"
+            )
+                problems.push(`Marketing's links for an audience reader: ${JSON.stringify(audienceLinks)}`)
             const pipelineMenu = shell(users.rep, true, "Pipeline/Opportunities", "Pipeline").names
             if (JSON.stringify(pipelineMenu) !== JSON.stringify(ids.pipelineMenu))
                 problems.push(`the Pipeline menu: ${pipelineMenu}`)
@@ -480,7 +494,7 @@ feature(
 )
 
 feature(
-    "Admin's registry holds each Sales bundle with exactly its group's grants; SALES_OWNER_CHANGE is the identity operator's alone",
+    "Admin's registry holds each Sales bundle with exactly its group's grants; SALES_OWNER_CHANGE is the identity operator's and Admin's administrator's",
     {
         when() {
             const problems = []
@@ -523,7 +537,8 @@ feature(
                     problems.push(`SALES_IMPORT's bundles: ${importers}`)
                 for (const entity of ["moqui.security.UserGroupPermission", "moqui.security.CapabilityBundlePermission"]) {
                     const owners = holders(entity, "SALES_OWNER_CHANGE")
-                    if (JSON.stringify(owners) !== '["BOSS_ADMIN_IDENTITY"]')
+                    // P6 (the user's call of Nov 13, F80): Admin's administrator holds it too, as every other owner change
+                    if (JSON.stringify(owners) !== '["BOSS_ADMIN_ADMIN","BOSS_ADMIN_IDENTITY"]')
                         problems.push(`SALES_OWNER_CHANGE's ${entity}: ${owners}`)
                 }
             })
@@ -542,3 +557,231 @@ feature(
         }
     }
 )
+
+// P9 (impl-sales P9, F43): Approvals is the sales approver's, and deciding a quote needs SALES_APPROVE and a quote of the approver's
+// organization; the approver's own decision of a quote is SalesApprovals'
+feature("Approvals and a quote's decision are a sales approver's, of their organization", {
+    when() {
+        const problems = []
+        const tabs = user => shell(user, true, "Quotes/Quotes", "Quotes").names
+        if (JSON.stringify(tabs(users.approver)) !== JSON.stringify(ids.approverQuotesMenu))
+            problems.push(`the approver's Quotes tabs: ${tabs(users.approver)}`)
+        if (JSON.stringify(tabs(users.rep)) !== JSON.stringify(ids.quotesMenu))
+            problems.push(`the rep's Quotes tabs: ${tabs(users.rep)}`)
+        const approverList = screenRefusal(users.approver, "Quotes/Approvals")
+        if (approverList) problems.push(`the approver's Approvals: ${approverList}`)
+        const repList = screenRefusal(users.rep, "Quotes/Approvals")
+        if (!/^40[13] |is not authorized|PERMISSION_DENIED/.test(repList))
+            problems.push(`the rep opens Approvals: ${repList || "opened"}`)
+        // the same parameters: a stale revision, so neither call could write; the rep is refused for the permission first. The
+        // service as the user through no screen, authorization off as the root's grant lets its screens call it
+        const decide = (user, orderId) =>
+            asUser(user, () =>
+                system(() =>
+                    refusal("mantle.order.SalesApprovalServices.decide#Quote", {orderId, orderRevision: "0", reason: "Spec"})
+                )
+            )
+        const repDecide = decide(users.rep, ids.quotes.wingtip)
+        if (!repDecide.includes("PERMISSION_DENIED")) problems.push(`the rep decides: ${repDecide || "decided"}`)
+        const approverDecide = decide(users.approver, ids.quotes.wingtip)
+        if (!/REVISION_CHANGED|RECORD_UNAVAILABLE/.test(approverDecide))
+            problems.push(`the approver's stale decision: ${approverDecide || "decided"}`)
+        const otherDecide = decide(users.approver, ids.quotes.fabrikam)
+        if (!otherDecide.includes("RECORD_UNAVAILABLE"))
+            problems.push(`the approver decides Ziziwork Sales' quote: ${otherDecide || "decided"}`)
+        return {problems}
+    },
+    then({problems}) {
+        problems.join("\n") == ""
+    }
+})
+
+// P10 (impl-sales P10): sending a quote is its rep's, of their organization: with the same parameters (a preview, so nothing is
+// written), the rep reaches the quote's own state check and Ziziwork Sales' rep is refused it as missing; a holder of
+// SALES_QUOTE_EDIT without SALES_QUOTE_SEND is refused in Mantle's SalesQuoteIssue (no demo group holds one without the other)
+feature("a quote's send is its rep's, of their organization", {
+    when() {
+        const send = user =>
+            asUser(user, () =>
+                system(() =>
+                    refusal("mantle.order.SalesQuoteIssueServices.send#Quote", {
+                        orderId: ids.quotes.wingtip,
+                        orderRevision: "1",
+                        previewOnly: "Y"
+                    })
+                )
+            )
+        return {rep: send(users.rep), other: send(users.otherRep)}
+    },
+    then({rep, other}) {
+        rep.includes("QUOTE_NOT_PROPOSED")
+        other.includes("RECORD_UNAVAILABLE")
+    }
+})
+
+// P11 (impl-sales P11): approving a sales order is an order approver's, of their organization: with the same parameters (a stale
+// revision, so nothing is written) the rep who placed it is refused for the permission, the approver reaches the revision check, and
+// Ziziwork Sales' rep is refused it as missing
+feature("approving a sales order is an order approver's, of their organization", {
+    when() {
+        const O = "mantle.order.SalesOrderServices."
+        const revisionOf = id =>
+            Number(ec.entity.find("mantle.order.OrderHeader").condition("orderId", id).disableAuthz().one().orderRevision)
+        const orderId = asUser(users.rep, () =>
+            system(() => {
+                const id = invoke(O + "create#SalesOrder", {
+                    organizationPartyId: ids.organizationId,
+                    customerPartyId: ids.accounts.wingtip
+                }).orderId
+                invoke(O + "store#SalesOrderLine", {
+                    orderId: id,
+                    orderRevision: revisionOf(id),
+                    productId: "DEMO_1_1",
+                    quantity: 1
+                })
+                invoke(O + "place#SalesOrder", {orderId: id, orderRevision: revisionOf(id)})
+                return id
+            })
+        )
+        const approve = user => asUser(user, () => system(() => refusal(O + "approve#SalesOrder", {orderId, orderRevision: "0"})))
+        return {rep: approve(users.rep), approver: approve(users.approver), other: approve(users.otherRep)}
+    },
+    then({rep, approver, other}) {
+        rep.includes("PERMISSION_DENIED")
+        approver.includes("REVISION_CHANGED")
+        other.includes("RECORD_UNAVAILABLE")
+    }
+})
+
+// P12 (impl-sales P12): a quote template is maintained by a Sales manager or administrator and read, once published, by the
+// organization's Sales users: with the same parameters (a stale revision, so nothing is written) the rep is refused the draft's change
+// for the permission and the manager reaches the revision check; the rep sees Retail's published template and Ziziwork Sales' rep does
+// not (another organization's answers as missing)
+feature("a quote template is a manager's to keep and its organization's to read", {
+    when() {
+        const Q = "mantle.order.SalesQuoteServices."
+        const store = user =>
+            asUser(user, () =>
+                system(() =>
+                    refusal(Q + "store#QuoteTemplate", {
+                        orderId: ids.templates.service,
+                        orderRevision: "0",
+                        orderName: "Yearly service visit"
+                    })
+                )
+            )
+        const seen = user =>
+            asUser(user, () => system(() => !!invoke(Q + "get#QuoteTemplate", {orderId: ids.templates.refit}).templateFound))
+        return {rep: store(users.rep), manager: store(users.manager), repSees: seen(users.rep), otherSees: seen(users.otherRep)}
+    },
+    then({rep, manager, repSees, otherSees}) {
+        rep.includes("PERMISSION_DENIED")
+        manager.includes("REVISION_CHANGED")
+        repSees == true
+        otherSees == false
+    }
+})
+
+// P15 (impl-sales P15): a customer agreement is the agreement keeper's to change and its organization's to read: with the same
+// parameters (a stale revision, so nothing is written) the rep is refused the change for the permission and the keeper reaches the
+// revision check; the rep reads Retail's agreement and Ziziwork Sales' rep does not (another organization's answers as missing)
+feature("a customer agreement is the keeper's to change and its organization's to read", {
+    when() {
+        const G = "mantle.party.SalesAgreementServices."
+        const store = user =>
+            asUser(user, () =>
+                system(() =>
+                    refusal(G + "store#SalesAgreement", {
+                        agreementId: ids.agreements.contoso,
+                        agreementRevision: "0",
+                        description: "Contoso supply terms"
+                    })
+                )
+            )
+        const seen = user =>
+            asUser(user, () =>
+                system(() => !!invoke(G + "get#SalesAgreement", {agreementId: ids.agreements.contoso}).agreementFound)
+            )
+        return {rep: store(users.rep), keeper: store(users.agreement), repSees: seen(users.rep), otherSees: seen(users.otherRep)}
+    },
+    then({rep, keeper, repSees, otherSees}) {
+        rep.includes("PERMISSION_DENIED")
+        keeper.includes("REVISION_CHANGED")
+        repSees == true
+        otherSees == false
+    }
+})
+
+// P13 (impl-sales P13): inviting a customer's contact to PASS Sales is a holder of SALES_CUSTOMER_INVITE's, for an account of their
+// organization: with the same parameters (an address that is not the contact's, so nothing is written), the manager reaches the
+// address check, the rep is refused for the permission, and the manager is refused Ziziwork Sales' account as missing
+feature("inviting a customer's contact to PASS Sales is an inviter's, for an account of their organization", {
+    when() {
+        const invite = (user, accountPartyId, contactPartyId) =>
+            asUser(user, () =>
+                system(() =>
+                    refusal("mantle.sales.AccountServices.invite#SalesContact", {
+                        accountPartyId,
+                        contactPartyId,
+                        emailAddress: "nobody@invite.example.test"
+                    })
+                )
+            )
+        return {
+            manager: invite(users.manager, ids.accounts.wingtip, ids.contacts.dana),
+            rep: invite(users.rep, ids.accounts.wingtip, ids.contacts.dana),
+            other: invite(users.manager, ids.accounts.fabrikam, ids.contacts.lee)
+        }
+    },
+    then({manager, rep, other}) {
+        manager.includes("EMAIL_INVALID")
+        rep.includes("PERMISSION_DENIED")
+        other.includes("RECORD_UNAVAILABLE")
+    }
+})
+// P16: keeping a recurring base is SALES_RECURRENCE_MANAGE's in its organization (a manager reads it; Ziziwork Sales' rep does not see it)
+feature("a recurring base is its keeper's to change, in its organization", {
+    when() {
+        const base = recurringBase().baseOrderId
+        const pause = user =>
+            asUser(user, () =>
+                system(() =>
+                    refusal("mantle.order.SalesRecurrenceServices.change#SalesRecurrence", {
+                        baseOrderId: base,
+                        recurRevision: "99",
+                        operation: "pause",
+                        reason: "Spec"
+                    })
+                )
+            )
+        return {keeper: pause(users.agreement), manager: pause(users.manager), other: pause(users.otherRep)}
+    },
+    then({keeper, manager, other}) {
+        keeper.includes("REVISION_CHANGED")
+        manager.includes("PERMISSION_DENIED")
+        other.includes("RECORD_UNAVAILABLE")
+    }
+})
+
+// P18 (impl-sales P18): a target is a sales manager's to set and a forecast its key's readers' to read: with the same parameters (a
+// stale revision, so nothing is written) the rep is refused the target for the permission and the manager reaches the revision check;
+// the rep reads their own forecast and Ziziwork Sales' rep does not (another organization's answers as missing)
+feature("a target is a sales manager's to set; a forecast is read by its key's readers, not another organization's", {
+    when() {
+        const F = "mantle.sales.ForecastServices."
+        const store = user =>
+            asUser(user, () =>
+                system(() =>
+                    refusal(F + "store#Target", {salesForecastId: ids.forecasts.rep, quotaAmount: "30000", expectedRevision: "0"})
+                )
+            )
+        const seen = user => asUser(user, () => system(() => refusal(F + "get#Forecast", {salesForecastId: ids.forecasts.rep})))
+        return {rep: store(users.rep), manager: store(users.manager), repSees: seen(users.rep), otherSees: seen(users.otherRep)}
+    },
+    then({rep, manager, repSees, otherSees}) {
+        rep.includes("PERMISSION_DENIED")
+        manager.includes("REVISION_CHANGED")
+        repSees == ""
+        otherSees.includes("RECORD_UNAVAILABLE")
+    }
+})

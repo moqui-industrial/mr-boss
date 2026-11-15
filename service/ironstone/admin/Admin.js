@@ -403,6 +403,21 @@ const settingsRoutes = {
     salesStages: {url: "/qapps/Sales/Settings/Stages", idParameter: "salesPipelineId", plain: true},
     salesTeams: {url: "/qapps/Sales/Settings/Teams", plain: true},
     salesLeadSources: {url: "/qapps/Sales/Settings/LeadSources", plain: true},
+    // Sales P9: its defaults (the readiness's sales.defaults and sales.commercialRevision) and approval rules
+    salesDefaults: {url: "/qapps/Sales/Settings/SalesDefaults", plain: true},
+    salesApprovalPolicies: {url: "/qapps/Sales/Settings/ApprovalPolicies", plain: true},
+    // Marketing P1: its settings landing (marketing.settings) and its setup readiness's places (marketing.setup)
+    marketingSettings: {url: "/qapps/Marketing/Settings", plain: true},
+    marketingAdoption: {url: "/qapps/Marketing/Settings/Adoption", plain: true},
+    // Marketing P2: the campaign defaults and vocabularies (the readiness's "no policy" place)
+    marketingCampaignDefaults: {url: "/qapps/Marketing/Settings/CampaignDefaults", plain: true},
+    marketingVocabularies: {url: "/qapps/Marketing/Settings/Vocabularies", plain: true},
+    // Marketing P6: Comms' sending profiles and templates under Marketing's mount (the readiness's marketing.sending place) and the
+    // settings index's links to Consent and Suppressions
+    marketingSendingProfiles: {url: "/qapps/Marketing/Settings/SendingProfiles", plain: true},
+    marketingTemplates: {url: "/qapps/Marketing/Sends/MessageTemplates", plain: true},
+    marketingConsent: {url: "/qapps/Marketing/Audiences/Consent", plain: true},
+    marketingSuppressions: {url: "/qapps/Marketing/Audiences/Suppressions", plain: true},
     voice: {url: "/qapps/system/Voice", plain: true},
     toolsStatusFlows: {url: "/qapps/tools/StatusFlows", plain: true}
 }
@@ -427,6 +442,13 @@ const mountRoutes = {
     // People's payroll exchange: its history and results imports and its pay inputs export (impl-people P28)
     peoplePayrollExchange: {url: "/qapps/People/Payroll/PayrollExchange", plain: true},
     maintenanceEquipmentImport: {url: "/qapps/Maintenance/Equipment/EquipmentImport", plain: true},
+    // Sales' opportunity import and its list exports (impl-sales P6)
+    salesOpportunityImport: {url: "/qapps/Sales/Pipeline/OpportunityImport", plain: true},
+    salesOpportunities: {url: "/qapps/Sales/Pipeline/Opportunities", plain: true},
+    salesLeads: {url: "/qapps/Sales/Pipeline/Leads", plain: true},
+    // Marketing's audience import and its list members' export (impl-marketing P4)
+    marketingAudienceImport: {url: "/qapps/Marketing/Audiences/AudienceImport", plain: true},
+    marketingLists: {url: "/qapps/Marketing/Audiences/Lists", plain: true},
     // Maintenance's due list: the preventive generation job's and its recovery's owner place (impl-maintenance P14, F117)
     maintenanceDue: {url: "/qapps/Maintenance/Preventive/DueMaintenance", plain: true},
     // Maintenance's Reports: its reports' exports (impl-maintenance P17, F72)

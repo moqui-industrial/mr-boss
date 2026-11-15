@@ -1,0 +1,850 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a
+Grant of Patent License.
+
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<!-- Marketing › Campaigns › CampaignDetail (design-marketing §3 CampaignDetail: CampaignHeader, CampaignParties, Budget, CostEntries,
+    RelatedWork, Decisions; §14.3 Chatter and RecordFiles; style-guide §3.3 Detail; impl-marketing P2): one campaign of the user's
+    organizations (check#Record campaign; else "Not available", linking back). The record header: its id and name, organization,
+    parent, dates, revision and budget, the status chip; one primary action by status (Request approval for a planned campaign
+    ready for it, Approve for an approver while it awaits a decision, Start for an approved one, Complete in progress) and the
+    others in More (Duplicate, Cancel, the plan print). The boxes: Summary (the plan, Edit), People (the organization, managers and
+    contributors, dated: Add, End, Change organization), Budget and costs (Edit budget, Record a cost, Reverse), Links (the lists and
+    segments it plans with), Decisions (requests and decisions, a self-approval marked, those ended by a later change) and Activity
+    (the native notes, read only, the conversation and the files: the campaign is a Chatter and files host). Every change is Mantle's
+    guarded service at the revision read; a material change (organization, parent, dates, budget, managers) returns an approved plan
+    to review. Sends lists its sends with QuickSend (P8), Automations its automations (P11), Results the lead forms' handoffs to Sales
+    (P13, any Marketing reader), Content its planned content with Link content (P14: blog posts, landing pages and files; linking
+    publishes nothing), Tracking links its links with New link (P15), Events its events with New event (P16: an events manager who also edits
+    campaigns) and Link an event (the campaign's editor); Promotions its store promotions with Link a promotion (P19: the campaign's editor
+    who also holds Commerce's promotion permission). -->
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
+        default-menu-title="Campaign" default-menu-include="false">
+    <parameter name="marketingCampaignId" required="true"/>
+    <transition-include name="choices" location="component://mr-boss/template/MarketingParts.xml"/>
+    <transition-include name="storeCampaign" location="component://mr-boss/template/MarketingCampaigns.xml"/>
+    <transition-include name="storeBudget" location="component://mr-boss/template/MarketingCampaigns.xml"/>
+    <transition-include name="storeParty" location="component://mr-boss/template/MarketingCampaigns.xml"/>
+    <transition-include name="storeAssociation" location="component://mr-boss/template/MarketingCampaigns.xml"/>
+    <transition-include name="storeCost" location="component://mr-boss/template/MarketingCampaigns.xml"/>
+    <transition-include name="requestApproval" location="component://mr-boss/template/MarketingCampaigns.xml"/>
+    <transition-include name="decideApproval" location="component://mr-boss/template/MarketingCampaigns.xml"/>
+    <transition-include name="changeStatus" location="component://mr-boss/template/MarketingCampaigns.xml"/>
+    <transition-include name="duplicateCampaign" location="component://mr-boss/template/MarketingCampaigns.xml"/>
+    <transition-include name="createSend" location="component://mr-boss/template/MarketingSends.xml"/>
+    <transition-include name="createAutomation" location="component://mr-boss/template/MarketingAutomations.xml"/>
+    <transition-include name="storeContent" location="component://mr-boss/template/MarketingContent.xml"/>
+    <transition-include name="storeTrackingLink" location="component://mr-boss/template/MarketingTracking.xml"/>
+    <transition-include name="createEvent" location="component://mr-boss/template/MarketingEvents.xml"/>
+    <actions>
+        <service-call name="ironstone.marketing.ContextServices.check#Record" out-map="campaignCheck" transaction="force-new" ignore-error="true"
+                in-map="{appRoot:appRoot, recordType:'campaign', recordId:marketingCampaignId}"/>
+        <script>ec.message.clearErrors()</script>
+        <if condition="campaignCheck?.recordId">
+            <service-call name="mantle.marketing.CampaignServices.get#Campaign" out-map="detail" transaction="force-new" ignore-error="true"
+                    in-map="{marketingCampaignId:marketingCampaignId}"/>
+            <script>ec.message.clearErrors()</script>
+        </if>
+        <set field="recordFound" from="!!detail?.campaign"/>
+        <set field="campaign" from="detail?.campaign || {}"/>
+        <set field="can" from="detail?.capabilities || {}"/>
+        <set field="partyList" from="detail?.parties || []"/>
+        <set field="currentParties" from="partyList.filter(party =&gt; party.current)"/>
+        <set field="associationList" from="(detail?.associations || []).filter(link =&gt; link.current)"/>
+        <set field="childList" from="detail?.children || []"/>
+        <set field="noteList" from="detail?.notes || []"/>
+        <set field="costList" from="detail?.costs || []"/>
+        <set field="costSummary" from="detail?.costSummary || {}"/>
+        <set field="decisionList" from="detail?.decisions || []"/>
+        <set field="problemsText" from="(detail?.approvalProblems || []).join(', ')"/>
+        <set field="listPath" from="sharedLinks['Campaigns/Campaigns']"/>
+        <set field="detailPath" from="sharedLinks['Campaigns/CampaignDetail']"/>
+        <set field="planPath" from="sharedLinks['Campaigns/CampaignPlan']"/>
+        <set field="captionText" from="[campaign.organizationName, campaign.parentName ? 'part of ' + campaign.parentName : null,
+                campaign.datesText || 'no dates yet', 'revision ' + campaign.campaignRevision].filter(Boolean).join(' · ')"/>
+        <set field="factsText" from="[campaign.budgetText ? 'budget ' + campaign.budgetText : 'no budget', costSummary.actualText ? 'actual ' + costSummary.actualText : null,
+                campaign.managerName ? 'managed by ' + campaign.managerName : 'no manager'].filter(Boolean).join(' · ')"/>
+        <set field="campaignRef" from="{marketingCampaignId:marketingCampaignId, expectedRevision:campaign.revision}"/>
+        <set field="decisionRef" from="{marketingCampaignId:marketingCampaignId, targetRevision:campaign.campaignRevision}"/>
+        <set field="editValues" from="Object.assign({}, campaign, {expectedRevision: campaign.revision,
+                fromDate: campaign.fromDate ? ec.l10n.format(campaign.fromDate, 'yyyy-MM-dd') : null,
+                thruDate: campaign.thruDate ? ec.l10n.format(campaign.thruDate, 'yyyy-MM-dd') : null})"/>
+        <set field="budgetValues" from="{marketingCampaignId:marketingCampaignId, expectedRevision:campaign.revision, budgetedCost:campaign.budgetedCost,
+                estimatedCost:campaign.estimatedCost, costUomId:campaign.costUomId}"/>
+        <set field="partyValues" from="{marketingCampaignId:marketingCampaignId, expectedRevision:campaign.revision, organizationPartyId:campaign.organizationPartyId}"/>
+        <set field="costValues" from="{marketingCampaignId:marketingCampaignId, operationKey:ec.l10n.format(ec.user.nowTimestamp, 'yyyyMMddHHmmssSSS') + '-' + marketingCampaignId}"/>
+        <set field="printParameters" from="{marketingCampaignId:marketingCampaignId, renderMode:'html-print', lastStandalone:'true'}"/>
+        <!-- P8: the campaign's sends (design §3 CampaignDetail's Sends), with QuickSend (design §14.3: the campaign fixed) -->
+        <if condition="recordFound &amp;&amp; marketing.capabilities.sendRead">
+            <service-call name="mantle.marketing.CampaignSendServices.find#Sends" out-map="sendsFound" transaction="force-new" ignore-error="true"
+                    in-map="{marketingCampaignId:marketingCampaignId, statusId:'all', pageSize:20}"/>
+            <script>ec.message.clearErrors()</script>
+        </if>
+        <set field="campaignSendList" from="sendsFound?.sendList || []"/>
+        <set field="sendDetailPath" from="sharedLinks['Sends/SendDetail'] || null"/>
+        <set field="sendsPath" from="sharedLinks['Sends/Sends'] || null"/>
+        <set field="newSendValues" from="{marketingCampaignId:marketingCampaignId, organizationPartyId:campaign.organizationPartyId, campaignFixed:true}"/>
+        <!-- P11: the campaign's automations (design §3 CampaignDetail's Automation), with New automation (the campaign fixed) -->
+        <if condition="recordFound &amp;&amp; marketing.capabilities.automationRead">
+            <service-call name="mantle.marketing.AutomationServices.find#Automations" out-map="automationsFound" transaction="force-new" ignore-error="true"
+                    in-map="{marketingCampaignId:marketingCampaignId, statusId:'all', pageSize:20}"/>
+            <script>ec.message.clearErrors()</script>
+        </if>
+        <set field="campaignAutomationList" from="automationsFound?.automationList || []"/>
+        <set field="automationDetailPath" from="sharedLinks['Automations/AutomationDetail'] || null"/>
+        <set field="newAutomationValues" from="{marketingCampaignId:marketingCampaignId, organizationPartyId:campaign.organizationPartyId, campaignFixed:true}"/>
+        <!-- P13: the campaign's lead handoffs (design §3 CampaignDetail's Results, §10 Leads): Marketing's own capture counts, for any
+            Marketing reader (F66: no Sales read needed, and no pipeline shown) -->
+        <if condition="recordFound">
+            <service-call name="mantle.marketing.MarketingFormServices.get#LeadHandoffs" out-map="handoffsFound" transaction="force-new" ignore-error="true"
+                    in-map="{marketingCampaignId:marketingCampaignId}"/>
+            <script>ec.message.clearErrors()</script>
+        </if>
+        <set field="leadHandoffs" from="handoffsFound?.handoffs || null"/>
+        <set field="leadRulesPath" from="marketing.capabilities.leadRules ? (sharedLinks['Leads/LeadRules'] || null) : null"/>
+        <!-- P14: the campaign's content (design §3 CampaignDetail's Content, §8), with Link content (the campaign fixed) -->
+        <if condition="recordFound">
+            <service-call name="mantle.marketing.MarketingContentServices.find#CampaignContent" out-map="contentFound" transaction="force-new"
+                    ignore-error="true" in-map="{marketingCampaignId:marketingCampaignId, pageSize:20}"/>
+            <script>ec.message.clearErrors()</script>
+        </if>
+        <set field="campaignContentList" from="contentFound?.contents || []"/>
+        <set field="contentDetailPath" from="sharedLinks['Content/ContentDetail'] || null"/>
+        <set field="linkContentValues" from="{marketingCampaignId:marketingCampaignId, contentKindEnumId:'CckBlogPost', campaignFixed:true}"/>
+        <!-- P15: the campaign's tracking links (design §3 CampaignDetail's Tracking links: the TrackingLinks list fixed to the campaign,
+            with New link) -->
+        <if condition="recordFound">
+            <service-call name="mantle.marketing.TrackingServices.find#TrackingLinks" out-map="linksFound" transaction="force-new"
+                    ignore-error="true" in-map="{marketingCampaignId:marketingCampaignId, pageSize:20}"/>
+            <script>ec.message.clearErrors()</script>
+        </if>
+        <set field="campaignLinkList" from="linksFound?.trackingLinkList || []"/>
+        <set field="linkDetailPath" from="sharedLinks['Content/TrackingLinkDetail'] || null"/>
+        <set field="linkValues" from="{marketingCampaignId:marketingCampaignId, destinationKindEnumId:'TdkSitePage', campaignFixed:true}"/>
+        <!-- P16: the campaign's events (design §3 CampaignDetail's Events: the Events list fixed to the campaign, with New event) -->
+        <if condition="recordFound">
+            <service-call name="mantle.work.EventRegistrationServices.find#Events" out-map="eventsFound" transaction="force-new"
+                    ignore-error="true" in-map="{marketingCampaignId:marketingCampaignId, pageSize:20}"/>
+            <script>ec.message.clearErrors()</script>
+        </if>
+        <set field="campaignEventList" from="eventsFound?.eventList || []"/>
+        <set field="eventPath" from="marketing.capabilities.eventSetupRead ? sharedLinks['Events/RegistrationSetup'] : sharedLinks['Events/EventDetail']"/>
+        <set field="newEventValues" from="{organizationPartyId:campaign.organizationPartyId, marketingCampaignId:marketingCampaignId, campaignFixed:true}"/>
+        <!-- P20: the campaign's results (design §3 CampaignDetail's Results, §11 CampaignPerformance) from its start (else the last 30
+            days) to now, with its children counted once, for a report reader; none before it starts -->
+        <if condition="recordFound &amp;&amp; marketing.capabilities.reportRead">
+            <service-call name="mantle.marketing.MarketingReportServices.get#CampaignPerformance" out-map="resultsFound" transaction="force-new"
+                    ignore-error="true" in-map="{marketingCampaignId:marketingCampaignId, includeChildren:'true', fromDate:(campaign.fromDate || null)}"/>
+            <script>ec.message.clearErrors()</script>
+        </if>
+        <set field="campaignResults" from="(resultsFound?.campaignRows || [])[0] || null"/>
+        <set field="performancePath" from="marketing.capabilities.reports ? (sharedLinks['Reports/CampaignPerformance'] || null) : null"/>
+        <!-- P19: the campaign's store promotions (design §3 CampaignDetail's Promotions, §7): its current CakPromotion links -->
+        <set field="campaignPromotionList" from="associationList.filter(link =&gt; link.associationKindEnumId == 'CakPromotion')"/>
+        <set field="promotionPath" from="marketing.capabilities.promotionRead ? (sharedLinks['Promotions/PromotionDetail'] || null) : null"/>
+    </actions>
+    <widgets>
+        <section name="CampaignNotFound" condition="!recordFound">
+            <widgets>
+                <container-box type="warning">
+                    <box-header title="Not available"/>
+                    <box-body>
+                        <label text="Campaign ${marketingCampaignId} is not available: it does not exist, or it is not one of your organizations'."
+                                type="p"/>
+                        <link url="${listPath}" text="Back to campaigns" link-type="anchor"/>
+                    </box-body>
+                </container-box>
+            </widgets>
+        </section>
+        <section name="CampaignFound" condition="recordFound">
+            <widgets>
+                <context record-entity="mantle.marketing.campaign.MarketingCampaign" record-id="${marketingCampaignId}" title="${campaign.campaignName}"/>
+                <container style="m-record-header">
+                    <container style="row items-start q-col-gutter-x-md q-col-gutter-y-sm">
+                        <container style="col-12 col-md m-record-title">
+                            <container style="row items-center q-gutter-x-sm">
+                                <label text="${marketingCampaignId}" type="span" style="m-key-chip text-mono"/>
+                                <label text="${campaign.campaignName}" type="h5" style="q-my-none"/>
+                            </container>
+                            <label text="${captionText}" type="div" style="text-caption m-muted"/>
+                            <label text="${factsText}" type="div" style="text-caption m-muted"/>
+                            <label text="Awaiting approval" type="div" style="text-caption text-warning" condition="detail.awaitingApproval"/>
+                            <label text="Before approval: ${problemsText}" type="div" style="text-caption m-muted"
+                                    condition="problemsText &amp;&amp; campaign.statusId == 'MKTG_CAMP_PLANNED'"/>
+                        </container>
+                        <container style="col-12 col-md-auto m-record-status">
+                            <render-mode>
+                                <text type="qvt"><![CDATA[<q-chip square class="q-ma-none m-tonal text-${campaign.statusColor}">${WebUtilities.encodeHtml(campaign.statusText)}</q-chip>]]></text>
+                                <text type="tui"><![CDATA[${JSON.stringify({t: "text", style: "strong", text: String(campaign.statusText ?? "")})}]]></text>
+                                <text type="html">${campaign.statusText}</text>
+                            </render-mode>
+                        </container>
+                    </container>
+                    <container style="row items-center q-col-gutter-x-md q-col-gutter-y-sm m-record-foot">
+                        <container style="col-12 row items-center q-gutter-x-xs q-gutter-y-xs m-record-actions">
+                            <!-- the primary action by status: Request approval, Approve, Start, Complete -->
+                            <container-dialog id="RequestApprovalDialog" button-text="Request approval" icon="sym_o_approval" type="primary"
+                                    title="Request approval of ${campaign.campaignName}" width="520" condition="can.canRequestApproval">
+                                <form-single name="RequestApproval" transition="requestApproval" map="decisionRef">
+                                    <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                    <field name="targetRevision"><default-field><hidden/></default-field></field>
+                                    <field name="reason"><default-field title="Note for the approver"><text-area rows="2" cols="50"/></default-field></field>
+                                    <field name="submitButton"><default-field title=""><submit text="Request approval"/></default-field></field>
+                                </form-single>
+                            </container-dialog>
+                            <container-dialog id="DecideDialog" button-text="Approve" icon="sym_o_check_circle" type="primary"
+                                    title="Decide on ${campaign.campaignName}, revision ${campaign.campaignRevision}" width="560" condition="can.canDecide">
+                                <form-single name="DecideApproval" transition="decideApproval" map="decisionRef">
+                                    <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                    <field name="targetRevision"><default-field><hidden/></default-field></field>
+                                    <field name="decision">
+                                        <default-field title="Decision">
+                                            <radio><option key="approve" text="Approve"/><option key="refuse" text="Refuse"/></radio>
+                                        </default-field>
+                                    </field>
+                                    <field name="reason"><default-field title="Reason" tooltip="A refusal needs its reason"><text-area rows="2" cols="50"/></default-field></field>
+                                    <field name="submitButton">
+                                        <default-field title=""><submit text="Decide" confirmation="Decide on ${campaign.campaignName} at revision ${campaign.campaignRevision}?"/></default-field>
+                                    </field>
+                                </form-single>
+                            </container-dialog>
+                            <container-dialog id="StartDialog" button-text="Start" icon="sym_o_play_arrow" type="primary"
+                                    title="Start ${campaign.campaignName}" width="480" condition="can.canStart">
+                                <form-single name="StartCampaign" transition="changeStatus" map="campaignRef">
+                                    <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                    <field name="expectedRevision"><default-field><hidden/></default-field></field>
+                                    <field name="action" from="'start'"><default-field><hidden/></default-field></field>
+                                    <field name="submitButton"><default-field title=""><submit text="Start" confirmation="Start ${campaign.campaignName}?"/></default-field></field>
+                                </form-single>
+                            </container-dialog>
+                            <container-dialog id="CompleteDialog" button-text="Complete" icon="sym_o_flag" type="primary"
+                                    title="Complete ${campaign.campaignName}" width="480" condition="can.canComplete">
+                                <form-single name="CompleteCampaign" transition="changeStatus" map="campaignRef">
+                                    <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                    <field name="expectedRevision"><default-field><hidden/></default-field></field>
+                                    <field name="action" from="'complete'"><default-field><hidden/></default-field></field>
+                                    <field name="submitButton">
+                                        <default-field title=""><submit text="Complete" confirmation="Complete ${campaign.campaignName}? It is refused while related work is open."/></default-field>
+                                    </field>
+                                </form-single>
+                            </container-dialog>
+                            <button-menu text="More" icon="more_horiz">
+                                <container-dialog id="DuplicateDialog" button-text="Duplicate" icon="sym_o_content_copy"
+                                        title="Duplicate ${campaign.campaignName}" width="560" condition="can.canDuplicate">
+                                    <form-single name="DuplicateCampaign" transition="duplicateCampaign" map="{marketingCampaignId:marketingCampaignId}">
+                                        <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                        <field name="campaignName"><default-field title="Name" tooltip="Copy of this one when empty"><text-line size="40"/></default-field></field>
+                                        <field name="fromDate"><default-field title="From"><date-time type="date"/></default-field></field>
+                                        <field name="thruDate"><default-field title="Through"><date-time type="date"/></default-field></field>
+                                        <field name="submitButton"><default-field title=""><submit text="Duplicate as a planned campaign"/></default-field></field>
+                                    </form-single>
+                                </container-dialog>
+                                <link url="${planPath}" text="Print the plan" link-type="anchor" icon="sym_o_print" target-window="_blank"
+                                        parameter-map="printParameters"/>
+                                <container-dialog id="CancelDialog" button-text="Cancel campaign" icon="sym_o_block"
+                                        title="Cancel ${campaign.campaignName}" width="520" condition="can.canCancel">
+                                    <form-single name="CancelCampaign" transition="changeStatus" map="campaignRef">
+                                        <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                        <field name="expectedRevision"><default-field><hidden/></default-field></field>
+                                        <field name="action" from="'cancel'"><default-field><hidden/></default-field></field>
+                                        <field name="reason"><default-field title="Why"><text-line size="40"/></default-field></field>
+                                        <field name="submitButton">
+                                            <default-field title=""><submit text="Cancel campaign" type="danger"
+                                                    confirmation="Cancel ${campaign.campaignName}? What was sent or registered stays."/></default-field>
+                                        </field>
+                                    </form-single>
+                                </container-dialog>
+                            </button-menu>
+                        </container>
+                    </container>
+                </container>
+
+                <container-box>
+                    <box-header title="Summary"/>
+                    <box-toolbar>
+                        <container-dialog id="EditCampaignDialog" button-text="Edit" icon="sym_o_edit" title="Edit ${campaign.campaignName}"
+                                width="760" condition="can.canEdit">
+                            <form-single name="EditCampaign" transition="storeCampaign" map="editValues">
+                                <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                <field name="expectedRevision"><default-field><hidden/></default-field></field>
+                                <field name="campaignName"><default-field title="Name"><text-line size="40" required="true"/></default-field></field>
+                                <field name="parentCampaignId">
+                                    <conditional-field title="Part of" condition="can.canEditMaterial">
+                                        <drop-down allow-empty="true">
+                                            <dynamic-options transition="choices" server-search="true" min-length="0"
+                                                    parameter-map="{choice:'campaigns', selected:campaign.parentCampaignId, organizationPartyId:campaign.organizationPartyId,
+                                                        excludeId:marketingCampaignId}"/>
+                                        </drop-down>
+                                    </conditional-field>
+                                    <default-field><hidden/></default-field>
+                                </field>
+                                <field name="fromDate">
+                                    <conditional-field title="From" condition="can.canEditMaterial"><date-time type="date"/></conditional-field>
+                                    <default-field><hidden/></default-field>
+                                </field>
+                                <field name="thruDate">
+                                    <conditional-field title="Through" condition="can.canEditMaterial"><date-time type="date"/></conditional-field>
+                                    <default-field><hidden/></default-field>
+                                </field>
+                                <field name="expectedResponsePercent"><default-field title="Expected response %"><text-line size="6"/></default-field></field>
+                                <field name="expectedRevenue"><default-field title="Expected revenue"><text-line size="12"/></default-field></field>
+                                <field name="campaignSummary"><default-field title="Summary"><text-area rows="4" cols="60"/></default-field></field>
+                                <field name="submitButton">
+                                    <default-field title=""><submit text="Save" confirmation="Save the plan? A change of its parent or dates returns an approved plan to review."/></default-field>
+                                </field>
+                            </form-single>
+                        </container-dialog>
+                    </box-toolbar>
+                    <box-body>
+                        <label text="${campaign.campaignSummary || 'No summary yet.'}" type="p"/>
+                        <label text="Expected response ${campaign.expectedResponsePercent}%" type="p" style="text-caption m-muted"
+                                condition="campaign.expectedResponsePercent != null"/>
+                        <label text="Expected revenue ${campaign.expectedRevenueText}" type="p" style="text-caption m-muted" condition="campaign.expectedRevenueText"/>
+                        <label text="Started ${campaign.startDateText}" type="p" style="text-caption m-muted" condition="campaign.startDateText"/>
+                        <section name="Children" condition="childList.length">
+                            <widgets>
+                                <label text="Related campaigns" type="h6"/>
+                                <form-list name="ChildCampaigns" list="childList" skip-form="true" paginate="false">
+                                    <field name="campaignName">
+                                        <default-field title="Campaign">
+                                            <link url="${detailPath}" text="${campaignName}" link-type="anchor" parameter-map="{marketingCampaignId:marketingCampaignId}"/>
+                                        </default-field>
+                                    </field>
+                                    <field name="statusText"><default-field title="Status"><display/></default-field></field>
+                                    <field name="datesText"><default-field title="Dates"><display/></default-field></field>
+                                    <columns type="mobile">
+                                        <column><field-ref name="campaignName"/></column>
+                                        <column><field-ref name="statusText"/></column>
+                                    </columns>
+                                </form-list>
+                            </widgets>
+                        </section>
+                    </box-body>
+                </container-box>
+
+                <container-box>
+                    <box-header title="People"/>
+                    <box-toolbar>
+                        <container-dialog id="AddPartyDialog" button-text="Add" icon="sym_o_person_add" title="Add to ${campaign.campaignName}"
+                                width="560" condition="can.canEdit">
+                            <form-single name="AddParty" transition="storeParty" map="partyValues">
+                                <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                <field name="expectedRevision"><default-field><hidden/></default-field></field>
+                                <field name="action" from="'add'"><default-field><hidden/></default-field></field>
+                                <field name="roleTypeId">
+                                    <default-field title="Role">
+                                        <drop-down allow-empty="false">
+                                            <option key="MarketingCampaignManager" text="Manager"/>
+                                            <option key="MarketingCampaignContributor" text="Contributor"/>
+                                        </drop-down>
+                                    </default-field>
+                                </field>
+                                <field name="partyId">
+                                    <default-field title="Person">
+                                        <drop-down allow-empty="false">
+                                            <dynamic-options transition="choices" server-search="true" min-length="0"
+                                                    parameter-map="{choice:'people', organizationPartyId:campaign.organizationPartyId}"/>
+                                        </drop-down>
+                                    </default-field>
+                                </field>
+                                <field name="submitButton"><default-field title=""><submit text="Add"/></default-field></field>
+                            </form-single>
+                        </container-dialog>
+                        <container-dialog id="ChangeOrganizationDialog" button-text="Change organization" icon="sym_o_corporate_fare"
+                                title="Move ${campaign.campaignName} to another organization" width="560" condition="can.canEditMaterial">
+                            <form-single name="ChangeOrganization" transition="storeParty" map="partyValues">
+                                <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                <field name="expectedRevision"><default-field><hidden/></default-field></field>
+                                <field name="roleTypeId" from="'MarketingOrganization'"><default-field><hidden/></default-field></field>
+                                <field name="partyId">
+                                    <default-field title="Organization">
+                                        <drop-down allow-empty="false">
+                                            <dynamic-options transition="choices" server-search="true" min-length="0"
+                                                    parameter-map="{choice:'organizations', selected:campaign.organizationPartyId}"/>
+                                        </drop-down>
+                                    </default-field>
+                                </field>
+                                <field name="submitButton">
+                                    <default-field title=""><submit text="Change organization"
+                                            confirmation="Move ${campaign.campaignName}? Its people of the old organization end, and an approved plan returns to review."/></default-field>
+                                </field>
+                            </form-single>
+                        </container-dialog>
+                    </box-toolbar>
+                    <box-body>
+                        <form-list name="CampaignParties" list="currentParties" skip-form="true" paginate="false">
+                            <field name="partyName"><default-field title="Who"><display/></default-field></field>
+                            <field name="roleText"><default-field title="Role"><display/></default-field></field>
+                            <field name="fromDateText"><default-field title="Since"><display/></default-field></field>
+                            <field name="rowActions" align="right">
+                                <default-field title="">
+                                    <container-dialog id="EndParty_${roleTypeId}_${partyId}" button-text="End" icon="sym_o_person_remove"
+                                            title="End ${partyName} as ${roleText}" width="440" condition="can.canEdit &amp;&amp; roleTypeId != 'MarketingOrganization'">
+                                        <form-single name="EndParty" transition="storeParty"
+                                                map="{marketingCampaignId:marketingCampaignId, expectedRevision:campaign.revision, roleTypeId:roleTypeId, partyId:partyId}">
+                                            <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                            <field name="expectedRevision"><default-field><hidden/></default-field></field>
+                                            <field name="roleTypeId"><default-field><hidden/></default-field></field>
+                                            <field name="partyId"><default-field><hidden/></default-field></field>
+                                            <field name="action" from="'end'"><default-field><hidden/></default-field></field>
+                                            <field name="submitButton">
+                                                <default-field title=""><submit text="End" type="danger" confirmation="End ${partyName} as ${roleText} on this campaign?"/></default-field>
+                                            </field>
+                                        </form-single>
+                                    </container-dialog>
+                                </default-field>
+                            </field>
+                            <columns type="mobile">
+                                <column><field-ref name="partyName"/><field-ref name="roleText"/></column>
+                                <column><field-ref name="fromDateText"/><field-ref name="rowActions"/></column>
+                            </columns>
+                        </form-list>
+                    </box-body>
+                </container-box>
+
+                <container-box>
+                    <box-header title="Budget and costs"/>
+                    <box-toolbar>
+                        <container-dialog id="EditBudgetDialog" button-text="Edit budget" icon="sym_o_account_balance_wallet"
+                                title="Budget of ${campaign.campaignName}" width="560" condition="can.canEditMaterial">
+                            <form-single name="EditBudget" transition="storeBudget" map="budgetValues">
+                                <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                <field name="expectedRevision"><default-field><hidden/></default-field></field>
+                                <field name="costUomId">
+                                    <default-field title="Currency">
+                                        <drop-down allow-empty="true">
+                                            <dynamic-options transition="choices" server-search="true" min-length="0"
+                                                    parameter-map="{choice:'currencies', selected:campaign.costUomId}"/>
+                                        </drop-down>
+                                    </default-field>
+                                </field>
+                                <field name="budgetedCost"><default-field title="Budget"><text-line size="12"/></default-field></field>
+                                <field name="estimatedCost"><default-field title="Expected spend"><text-line size="12"/></default-field></field>
+                                <field name="explanation"><default-field title="Why"><text-line size="40"/></default-field></field>
+                                <field name="submitButton">
+                                    <default-field title=""><submit text="Save budget" confirmation="Save the budget? A budget change returns an approved plan to review."/></default-field>
+                                </field>
+                            </form-single>
+                        </container-dialog>
+                        <container-dialog id="AddCostDialog" button-text="Record a cost" icon="sym_o_receipt_long"
+                                title="Record a cost of ${campaign.campaignName}" width="640" condition="can.canAddCost">
+                            <form-single name="AddCost" transition="storeCost" map="costValues">
+                                <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                <field name="operationKey"><default-field><hidden/></default-field></field>
+                                <field name="costSourceEnumId">
+                                    <default-field title="Source">
+                                        <radio>
+                                            <option key="CcsManual" text="Manual"/>
+                                            <option key="CcsInvoiceItem" text="Purchase invoice item"/>
+                                            <option key="CcsLedgerEntry" text="Ledger entry"/>
+                                        </radio>
+                                    </default-field>
+                                </field>
+                                <field name="amount"><default-field title="Amount (${campaign.costUomId || ''})"><text-line size="12" required="true"/></default-field></field>
+                                <field name="description"><default-field title="Description" tooltip="A manual cost needs one"><text-line size="40"/></default-field></field>
+                                <field name="invoiceId"><default-field title="Invoice"><text-line size="14"/></default-field></field>
+                                <field name="invoiceItemSeqId"><default-field title="Item"><text-line size="6"/></default-field></field>
+                                <field name="acctgTransId"><default-field title="Journal entry"><text-line size="14"/></default-field></field>
+                                <field name="acctgTransEntrySeqId"><default-field title="Line"><text-line size="6"/></default-field></field>
+                                <field name="submitButton"><default-field title=""><submit text="Record cost"/></default-field></field>
+                                <field-layout>
+                                    <field-ref name="costSourceEnumId"/>
+                                    <field-row><field-ref name="amount"/><field-ref name="description"/></field-row>
+                                    <field-row><field-ref name="invoiceId"/><field-ref name="invoiceItemSeqId"/></field-row>
+                                    <field-row><field-ref name="acctgTransId"/><field-ref name="acctgTransEntrySeqId"/></field-row>
+                                    <field-ref name="submitButton"/>
+                                </field-layout>
+                            </form-single>
+                        </container-dialog>
+                    </box-toolbar>
+                    <box-body>
+                        <label text="Budget ${costSummary.budgetText || 'not set'} · actual ${costSummary.actualText || '0'}${costSummary.remainingText ? ' · left ' + costSummary.remainingText : ''}"
+                                type="p"/>
+                        <label text="Over budget" type="p" style="text-negative" condition="costSummary.overBudget"/>
+                        <label text="Expected spend ${campaign.estimatedText}" type="p" style="text-caption m-muted" condition="campaign.estimatedText"/>
+                        <label text="No costs recorded yet." type="p" style="m-muted" condition="!costList.length"/>
+                        <form-list name="CostEntries" list="costList" skip-form="true" paginate="false" condition="costList.length">
+                            <field name="costDateText"><default-field title="Date"><display/></default-field></field>
+                            <field name="sourceText"><default-field title="Source"><display/></default-field></field>
+                            <field name="description"><default-field title="Description"><display/></default-field></field>
+                            <field name="amountText" align="right"><default-field title="Amount"><display/></default-field></field>
+                            <field name="stateText"><default-field title="State"><display/></default-field></field>
+                            <field name="rowActions" align="right">
+                                <default-field title="">
+                                    <container-dialog id="ReverseCost_${campaignCostId}" button-text="Reverse" icon="sym_o_undo"
+                                            title="Reverse cost ${campaignCostId}" width="440" condition="can.canAddCost &amp;&amp; !reversal &amp;&amp; !reversed">
+                                        <form-single name="ReverseCost" transition="storeCost" map="{marketingCampaignId:marketingCampaignId, reversalOfCostId:campaignCostId}">
+                                            <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                            <field name="reversalOfCostId"><default-field><hidden/></default-field></field>
+                                            <field name="description"><default-field title="Why"><text-line size="40"/></default-field></field>
+                                            <field name="submitButton">
+                                                <default-field title=""><submit text="Reverse" type="danger" confirmation="Reverse cost ${campaignCostId} (${amountText})?"/></default-field>
+                                            </field>
+                                        </form-single>
+                                    </container-dialog>
+                                </default-field>
+                            </field>
+                            <columns type="mobile">
+                                <column><field-ref name="description"/><field-ref name="sourceText"/></column>
+                                <column><field-ref name="amountText"/><field-ref name="rowActions"/></column>
+                            </columns>
+                        </form-list>
+                    </box-body>
+                </container-box>
+
+                <container-box>
+                    <box-header title="Links"/>
+                    <box-toolbar>
+                        <container-dialog id="AddLinkDialog" button-text="Link a list or segment" icon="sym_o_link"
+                                title="Link ${campaign.campaignName}" width="560" condition="can.canEdit">
+                            <form-single name="AddLink" transition="storeAssociation" map="{marketingCampaignId:marketingCampaignId}">
+                                <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                <field name="associationKindEnumId">
+                                    <default-field title="Kind">
+                                        <radio><option key="CakList" text="List"/><option key="CakSegment" text="Segment"/></radio>
+                                    </default-field>
+                                </field>
+                                <field name="listId">
+                                    <default-field title="List">
+                                        <drop-down allow-empty="true">
+                                            <dynamic-options transition="choices" server-search="true" min-length="0"
+                                                    parameter-map="{choice:'lists', organizationPartyId:campaign.organizationPartyId}"/>
+                                        </drop-down>
+                                    </default-field>
+                                </field>
+                                <field name="segmentId">
+                                    <default-field title="Segment">
+                                        <drop-down allow-empty="true">
+                                            <dynamic-options transition="choices" server-search="true" min-length="0"
+                                                    parameter-map="{choice:'segments', organizationPartyId:campaign.organizationPartyId}"/>
+                                        </drop-down>
+                                    </default-field>
+                                </field>
+                                <field name="purpose"><default-field title="Purpose"><text-line size="40"/></default-field></field>
+                                <field name="submitButton"><default-field title=""><submit text="Link"/></default-field></field>
+                            </form-single>
+                        </container-dialog>
+                    </box-toolbar>
+                    <box-body>
+                        <label text="No lists or segments linked yet." type="p" style="m-muted" condition="!associationList.length"/>
+                        <form-list name="RelatedWork" list="associationList" skip-form="true" paginate="false" condition="associationList.length">
+                            <field name="kindText"><default-field title="Kind"><display/></default-field></field>
+                            <field name="label"><default-field title="Name"><display/></default-field></field>
+                            <field name="purpose"><default-field title="Purpose"><display/></default-field></field>
+                            <field name="fromDateText"><default-field title="Since"><display/></default-field></field>
+                            <field name="rowActions" align="right">
+                                <default-field title="">
+                                    <container-dialog id="EndLink_${campaignAssociationId}" button-text="End" icon="sym_o_link_off"
+                                            title="End the link to ${label}" width="440" condition="can.canEdit">
+                                        <form-single name="EndLink" transition="storeAssociation"
+                                                map="{marketingCampaignId:marketingCampaignId, campaignAssociationId:campaignAssociationId}">
+                                            <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                            <field name="campaignAssociationId"><default-field><hidden/></default-field></field>
+                                            <field name="action" from="'end'"><default-field><hidden/></default-field></field>
+                                            <field name="submitButton">
+                                                <default-field title=""><submit text="End link" type="danger" confirmation="End the link to ${label}?"/></default-field>
+                                            </field>
+                                        </form-single>
+                                    </container-dialog>
+                                </default-field>
+                            </field>
+                            <columns type="mobile">
+                                <column><field-ref name="label"/><field-ref name="kindText"/></column>
+                                <column><field-ref name="fromDateText"/><field-ref name="rowActions"/></column>
+                            </columns>
+                        </form-list>
+                    </box-body>
+                </container-box>
+
+                <container-box condition="marketing.capabilities.sendRead">
+                    <box-header title="Sends"/>
+                    <box-toolbar>
+                        <container-dialog id="QuickSendDialog" button-text="New send" icon="sym_o_add" title="New send of ${campaign.campaignName}"
+                                width="640" condition="sendsFound?.canCreate &amp;&amp; ['MKTG_CAMP_PLANNED', 'MKTG_CAMP_APPROVED', 'MKTG_CAMP_INPROGRESS'].includes(campaign.statusId)">
+                            <section-include name="NewSendForm" location="component://mr-boss/template/MarketingSends.xml"/>
+                        </container-dialog>
+                        <link url="${sendsPath}" text="All its sends" link-type="anchor-button" icon="sym_o_list" condition="sendsPath &amp;&amp; campaignSendList.length"
+                                parameter-map="{marketingCampaignId:marketingCampaignId, statusId:'all'}"/>
+                    </box-toolbar>
+                    <box-body>
+                        <label text="No sends yet." type="p" style="m-muted" condition="!campaignSendList.length"/>
+                        <form-list name="CampaignSends" list="campaignSendList" skip-form="true" paginate="false" condition="campaignSendList.length">
+                            <field name="sendName">
+                                <conditional-field title="Send" condition="sendDetailPath">
+                                    <link url="${sendDetailPath}" text="${sendName}" link-type="anchor" parameter-map="{campaignSendId:campaignSendId}"/>
+                                </conditional-field>
+                                <default-field title="Send"><display/></default-field>
+                            </field>
+                            <field name="statusText"><default-field title="State"><display/></default-field></field>
+                            <field name="subject"><default-field title="Subject"><display/></default-field></field>
+                            <field name="scheduledText"><default-field title="Schedule"><display/></default-field></field>
+                            <field name="eligibleText" align="right"><default-field title="Eligible"><display/></default-field></field>
+                            <columns type="mobile">
+                                <column><field-ref name="sendName"/><field-ref name="subject"/></column>
+                                <column><field-ref name="statusText"/><field-ref name="eligibleText"/></column>
+                            </columns>
+                        </form-list>
+                    </box-body>
+                </container-box>
+
+                <!-- P11: the campaign's automations -->
+                <container-box condition="marketing.capabilities.automationRead">
+                    <box-header title="Automations"/>
+                    <box-toolbar>
+                        <container-dialog id="QuickAutomationDialog" button-text="New automation" icon="sym_o_add" title="New automation of ${campaign.campaignName}"
+                                width="640" condition="automationsFound?.canCreate &amp;&amp; ['MKTG_CAMP_PLANNED', 'MKTG_CAMP_APPROVED', 'MKTG_CAMP_INPROGRESS'].includes(campaign.statusId)">
+                            <section-include name="NewAutomationForm" location="component://mr-boss/template/MarketingAutomations.xml"/>
+                        </container-dialog>
+                    </box-toolbar>
+                    <box-body>
+                        <label text="No automations yet." type="p" style="m-muted" condition="!campaignAutomationList.length"/>
+                        <form-list name="CampaignAutomations" list="campaignAutomationList" skip-form="true" paginate="false" condition="campaignAutomationList.length">
+                            <field name="automationName">
+                                <conditional-field title="Automation" condition="automationDetailPath">
+                                    <link url="${automationDetailPath}" text="${automationName}" link-type="anchor" parameter-map="{marketingAutomationId:marketingAutomationId}"/>
+                                </conditional-field>
+                                <default-field title="Automation"><display/></default-field>
+                            </field>
+                            <field name="statusText"><default-field title="State"><display/></default-field></field>
+                            <field name="triggerText"><default-field title="Trigger"><display/></default-field></field>
+                            <field name="activeCount" align="right"><default-field title="Active"><display format="#,##0"/></default-field></field>
+                            <field name="completedCount" align="right"><default-field title="Completed"><display format="#,##0"/></default-field></field>
+                            <columns type="mobile">
+                                <column><field-ref name="automationName"/><field-ref name="triggerText"/></column>
+                                <column><field-ref name="statusText"/><field-ref name="activeCount"/></column>
+                            </columns>
+                        </form-list>
+                    </box-body>
+                </container-box>
+
+                <!-- P13: the campaign's results so far: its lead forms' handoffs to Sales. P20: its performance for a report reader -->
+                <container-box condition="leadHandoffs || campaignResults">
+                    <box-header title="Results"/>
+                    <box-body>
+                        <section name="CampaignPerformanceResults" condition="campaignResults">
+                            <widgets>
+                                <label text="Accepted sends ${campaignResults.acceptedCount} · Reach ${campaignResults.reachCount} · Visits ${campaignResults.visitCount} · Leads ${campaignResults.leadCount} (${campaignResults.qualifiedLeadCount} qualified) · Orders ${campaignResults.orderCount}"
+                                        type="p"/>
+                                <label text="Order value ${campaignResults.orderValueText} · Invoiced net ${campaignResults.netText} · ROI ${campaignResults.roiText}" type="p"/>
+                                <label text="From ${resultsFound.fromText} to ${resultsFound.thruText}, its child campaigns counted once; amounts by currency." type="p"
+                                        style="text-caption m-muted"/>
+                                <link url="${performancePath}" text="Campaign performance" link-type="anchor" condition="performancePath"
+                                        parameter-map="{marketingCampaignId:marketingCampaignId, includeChildren:'true'}"/>
+                            </widgets>
+                        </section>
+                        <label text="Leads from its forms: ${leadHandoffs?.summaryText}" type="p" condition="leadHandoffs"/>
+                        <label text="${leadHandoffs?.captured} answers captured · ${leadHandoffs?.handedOff} handed to Sales" type="p" style="text-caption m-muted"
+                                condition="leadHandoffs?.captured"/>
+                        <link url="${leadRulesPath}" text="Lead rules" link-type="anchor" condition="leadRulesPath"/>
+                    </box-body>
+                </container-box>
+
+                <!-- P14: the campaign's content -->
+                <container-box>
+                    <box-header title="Content"/>
+                    <box-toolbar>
+                        <container-dialog id="LinkContentDialog" button-text="Link content" icon="sym_o_add_link" title="Link content to ${campaign.campaignName}"
+                                width="640" condition="marketing.capabilities.contentEdit &amp;&amp; ['MKTG_CAMP_PLANNED', 'MKTG_CAMP_APPROVED', 'MKTG_CAMP_INPROGRESS'].includes(campaign.statusId)">
+                            <section-include name="LinkContentForm" location="component://mr-boss/template/MarketingContent.xml"/>
+                        </container-dialog>
+                    </box-toolbar>
+                    <box-body>
+                        <label text="No content planned yet." type="p" style="m-muted" condition="!campaignContentList.length"/>
+                        <form-list name="CampaignContentList" list="campaignContentList" skip-form="true" paginate="false" condition="campaignContentList.length">
+                            <field name="title">
+                                <default-field title="Content">
+                                    <link url="${contentDetailPath}" text="${title}" link-type="anchor" parameter-map="{campaignContentId:campaignContentId}"/>
+                                </default-field>
+                            </field>
+                            <field name="kindText"><default-field title="Kind"><display/></default-field></field>
+                            <field name="useText"><default-field title="Use"><display/></default-field></field>
+                            <field name="intendedDateText"><default-field title="Intended"><display/></default-field></field>
+                            <field name="stateText"><default-field title="Publication"><display/></default-field></field>
+                            <columns type="mobile">
+                                <column><field-ref name="title"/><field-ref name="kindText"/></column>
+                                <column><field-ref name="stateText"/><field-ref name="intendedDateText"/></column>
+                            </columns>
+                        </form-list>
+                    </box-body>
+                </container-box>
+
+                <!-- P15: the campaign's tracking links -->
+                <container-box>
+                    <box-header title="Tracking links"/>
+                    <box-toolbar>
+                        <container-dialog id="NewLinkDialog" button-text="New link" icon="sym_o_add_link" title="New tracking link for ${campaign.campaignName}"
+                                width="760" condition="marketing.capabilities.campaignEdit &amp;&amp; ['MKTG_CAMP_PLANNED', 'MKTG_CAMP_APPROVED', 'MKTG_CAMP_INPROGRESS'].includes(campaign.statusId)">
+                            <section-include name="TrackingLinkForm" location="component://mr-boss/template/MarketingTracking.xml"/>
+                        </container-dialog>
+                    </box-toolbar>
+                    <box-body>
+                        <label text="No tracking link yet." type="p" style="m-muted" condition="!campaignLinkList.length"/>
+                        <form-list name="CampaignLinkList" list="campaignLinkList" skip-form="true" paginate="false" condition="campaignLinkList.length">
+                            <field name="label">
+                                <default-field title="Link">
+                                    <link url="${linkDetailPath}" text="${label}" link-type="anchor" parameter-map="{trackingCodeId:trackingCodeId}"/>
+                                </default-field>
+                            </field>
+                            <field name="destinationText"><default-field title="Destination"><display/></default-field></field>
+                            <field name="utmText"><default-field title="Source / medium"><display/></default-field></field>
+                            <field name="clickCount" align="right"><default-field title="Clicks"><display format="#,##0"/></default-field></field>
+                            <field name="stateText"><default-field title="State"><display/></default-field></field>
+                            <columns type="mobile">
+                                <column><field-ref name="label"/><field-ref name="destinationText"/></column>
+                                <column><field-ref name="stateText"/><field-ref name="clickCount"/></column>
+                            </columns>
+                        </form-list>
+                    </box-body>
+                </container-box>
+                <!-- P19: the campaign's store promotions; linked by the campaign's editor who also holds Commerce's promotion permission
+                    (C.store#CampaignAssociation, CakPromotion, asks both again) -->
+                <container-box condition="marketing.capabilities.promotionRead || campaignPromotionList.length">
+                    <box-header title="Promotions"/>
+                    <box-toolbar>
+                        <container-dialog id="LinkPromotionDialog" button-text="Link a promotion" icon="sym_o_local_offer"
+                                title="Link a promotion to ${campaign.campaignName}" width="560"
+                                condition="can.canEdit &amp;&amp; marketing.capabilities.promotionEdit">
+                            <form-single name="LinkPromotion" transition="storeAssociation"
+                                    map="{marketingCampaignId:marketingCampaignId, associationKindEnumId:'CakPromotion'}">
+                                <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                <field name="associationKindEnumId"><default-field><hidden/></default-field></field>
+                                <field name="sourceId">
+                                    <default-field title="Promotion">
+                                        <drop-down allow-empty="false">
+                                            <dynamic-options transition="choices" server-search="true" min-length="0"
+                                                    parameter-map="{choice:'promotions', organizationPartyId:campaign.organizationPartyId}"/>
+                                        </drop-down>
+                                    </default-field>
+                                </field>
+                                <field name="purpose"><default-field title="Purpose"><text-line size="40"/></default-field></field>
+                                <field name="submitButton"><default-field title=""><submit text="Link"/></default-field></field>
+                            </form-single>
+                            <label type="p" style="text-caption m-muted"
+                                    text="A store promotion of the campaign's organization; its rule, limits and codes stay Commerce's."/>
+                        </container-dialog>
+                    </box-toolbar>
+                    <box-body>
+                        <label text="No promotion linked yet." type="p" style="m-muted" condition="!campaignPromotionList.length"/>
+                        <form-list name="CampaignPromotionList" list="campaignPromotionList" skip-form="true" paginate="false"
+                                condition="campaignPromotionList.length">
+                            <field name="label">
+                                <default-field title="Promotion">
+                                    <link url="${promotionPath}" text="${label}" link-type="anchor" parameter-map="{storePromotionId:sourceId}"
+                                            condition="promotionPath"/>
+                                    <label text="${label}" type="span" condition="!promotionPath"/>
+                                </default-field>
+                            </field>
+                            <field name="purpose"><default-field title="Purpose"><display/></default-field></field>
+                            <field name="fromDateText"><default-field title="Since"><display/></default-field></field>
+                            <columns type="mobile">
+                                <column><field-ref name="label"/><field-ref name="purpose"/></column>
+                                <column><field-ref name="fromDateText"/></column>
+                            </columns>
+                        </form-list>
+                    </box-body>
+                </container-box>
+                <!-- P16: the campaign's events -->
+                <container-box>
+                    <box-header title="Events"/>
+                    <box-toolbar>
+                        <container-dialog id="NewEventDialog" button-text="New event" icon="sym_o_event" title="New event for ${campaign.campaignName}"
+                                width="760" condition="marketing.capabilities.eventManage &amp;&amp; marketing.capabilities.campaignEdit &amp;&amp; ['MKTG_CAMP_PLANNED', 'MKTG_CAMP_APPROVED', 'MKTG_CAMP_INPROGRESS'].includes(campaign.statusId)">
+                            <section-include name="NewEventForm" location="component://mr-boss/template/MarketingEvents.xml"/>
+                        </container-dialog>
+                        <!-- P16 review: the link is a change of the campaign (C.store#CampaignAssociation, CakEvent): its editor links a
+                            registration event of the organization an events manager made -->
+                        <container-dialog id="LinkEventDialog" button-text="Link an event" icon="sym_o_link" title="Link an event to ${campaign.campaignName}"
+                                width="560" condition="can.canEdit">
+                            <form-single name="LinkEvent" transition="storeAssociation"
+                                    map="{marketingCampaignId:marketingCampaignId, associationKindEnumId:'CakEvent', purpose:'Event'}">
+                                <field name="marketingCampaignId"><default-field><hidden/></default-field></field>
+                                <field name="associationKindEnumId"><default-field><hidden/></default-field></field>
+                                <field name="purpose"><default-field><hidden/></default-field></field>
+                                <field name="sourceId">
+                                    <default-field title="Event">
+                                        <drop-down allow-empty="false">
+                                            <dynamic-options transition="choices" server-search="true" min-length="0"
+                                                    parameter-map="{choice:'registrationEvents', organizationPartyId:campaign.organizationPartyId}"/>
+                                        </drop-down>
+                                    </default-field>
+                                </field>
+                                <field name="submitButton"><default-field title=""><submit text="Link"/></default-field></field>
+                            </form-single>
+                        </container-dialog>
+                    </box-toolbar>
+                    <box-body>
+                        <label text="No event yet." type="p" style="m-muted" condition="!campaignEventList.length"/>
+                        <form-list name="CampaignEventList" list="campaignEventList" skip-form="true" paginate="false" condition="campaignEventList.length">
+                            <field name="eventName">
+                                <default-field title="Event">
+                                    <link url="${eventPath}" text="${eventName}" link-type="anchor" parameter-map="{workEffortId:workEffortId}"/>
+                                </default-field>
+                            </field>
+                            <field name="whenText"><default-field title="When"><display/></default-field></field>
+                            <field name="capacityText" align="right"><default-field title="Places"><display/></default-field></field>
+                            <field name="stateText"><default-field title="Registration"><display/></default-field></field>
+                            <columns type="mobile">
+                                <column><field-ref name="eventName"/><field-ref name="whenText"/></column>
+                                <column><field-ref name="stateText"/><field-ref name="capacityText"/></column>
+                            </columns>
+                        </form-list>
+                    </box-body>
+                </container-box>
+
+                <container-box>
+                    <box-header title="Decisions"/>
+                    <box-body>
+                        <label text="No approval asked yet." type="p" style="m-muted" condition="!decisionList.length"/>
+                        <form-list name="Decisions" list="decisionList" skip-form="true" paginate="false" condition="decisionList.length">
+                            <field name="decisionDateText"><default-field title="When"><display/></default-field></field>
+                            <field name="decisionText"><default-field title="Decision"><display/></default-field></field>
+                            <field name="targetRevision" align="right"><default-field title="Revision"><display/></default-field></field>
+                            <field name="decidedByName"><default-field title="By"><display/></default-field></field>
+                            <field name="reason"><default-field title="Reason"><display/></default-field></field>
+                            <field name="stateText"><default-field title="State"><display/></default-field></field>
+                            <columns type="mobile">
+                                <column><field-ref name="decisionText"/><field-ref name="decidedByName"/></column>
+                                <column><field-ref name="decisionDateText"/><field-ref name="stateText"/></column>
+                            </columns>
+                        </form-list>
+                    </box-body>
+                </container-box>
+
+                <container-box>
+                    <box-header title="Activity"/>
+                    <box-body>
+                        <section name="NativeNotes" condition="noteList.length">
+                            <widgets>
+                                <label text="Earlier notes" type="h6"/>
+                                <form-list name="CampaignNotes" list="noteList" skip-form="true" paginate="false">
+                                    <field name="noteDateText"><default-field title="When"><display/></default-field></field>
+                                    <field name="noteText"><default-field title="Note"><display/></default-field></field>
+                                    <columns type="mobile">
+                                        <column><field-ref name="noteText"/></column>
+                                        <column><field-ref name="noteDateText"/></column>
+                                    </columns>
+                                </form-list>
+                            </widgets>
+                        </section>
+                        <chatter id="CampaignChatter" record-entity="mantle.marketing.campaign.MarketingCampaign" record-id="${marketingCampaignId}"/>
+                    </box-body>
+                </container-box>
+                <container-box>
+                    <box-header title="Files"/>
+                    <box-body>
+                        <record-files id="CampaignFiles" record-entity="mantle.marketing.campaign.MarketingCampaign" record-id="${marketingCampaignId}"/>
+                    </box-body>
+                </container-box>
+            </widgets>
+        </section>
+    </widgets>
+</screen>

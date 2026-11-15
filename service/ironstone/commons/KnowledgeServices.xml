@@ -618,9 +618,15 @@ along with this software (see the LICENSE.md file). If not, see
         </out-parameters>
         <actions><script><![CDATA[
             const L = (text) => ec.l10n.localize(text)
-            const name = String(pageName || '').replace(/\s+/g, ' ').trim()
-            if (!name || !/^[\w.\-,':()!? ]+$/.test(name) || name === '.' || name === '..' || name.length > 100) {
+            // in NFC as the wiki saves it (update#WikiPage), so the path checked here is the one written
+            const name = String(pageName || '').normalize('NFC').replace(/\s+/g, ' ').trim()
+            if (!name || !StringUtilities.isAlphaNumeric(name, ".,'-_:()!? ", true) || name === '.' || name === '..') {
                 ec.message.addError(L("A page name has letters, digits, spaces and . , ' - _ : ( ) ! ? only"))
+                return
+            }
+            // at most 100 characters, and 240 bytes in UTF-8 as the framework's update#WikiPage takes (its URI encoding, each %XX one)
+            if (name.length > 100 || encodeURIComponent(name).replace(/%[0-9A-F]{2}/g, '_').length > 240) {
+                ec.message.addError(L('A page name is too long'))
                 return
             }
             let parent = String(parentPath || '').split('/').filter((part) => part).join('/')
@@ -685,9 +691,15 @@ along with this software (see the LICENSE.md file). If not, see
             if (!srcPath) { ec.message.addError(L('The home page of a space is copied with its space (Spaces, Clone)')); return }
             if (!src.exists) { ec.message.addError(L('This page has no text yet to copy')); return }
             const spaceId = toWikiSpaceId || src.wikiSpaceId
-            const name = String(toPageName || '').replace(/\s+/g, ' ').trim()
-            if (!name || !/^[\w.\-,':()!? ]+$/.test(name) || name === '.' || name === '..' || name.length > 100) {
+            // in NFC as the wiki saves it (update#WikiPage), so the path checked here is the one written
+            const name = String(toPageName || '').normalize('NFC').replace(/\s+/g, ' ').trim()
+            if (!name || !StringUtilities.isAlphaNumeric(name, ".,'-_:()!? ", true) || name === '.' || name === '..') {
                 ec.message.addError(L("A page name has letters, digits, spaces and . , ' - _ : ( ) ! ? only"))
+                return
+            }
+            // at most 100 characters, and 240 bytes in UTF-8 as the framework's update#WikiPage takes (its URI encoding, each %XX one)
+            if (name.length > 100 || encodeURIComponent(name).replace(/%[0-9A-F]{2}/g, '_').length > 240) {
+                ec.message.addError(L('A page name is too long'))
                 return
             }
             let parent = String(toParentPath || '').split('/').map((part) => part.trim()).filter((part) => part).join('/')
@@ -1498,7 +1510,12 @@ along with this software (see the LICENSE.md file). If not, see
             const space = ec.service.sync().name('org.moqui.resource.WikiServices.ensure#UserNotesSpace').call()
             if (ec.message.hasError() || !space?.wikiSpaceId) return
             wikiSpaceId = space.wikiSpaceId
-            const cleanTitle = String(title || '').replace(/[^\w.\-,':()!? ]+/g, ' ').replace(/\s+/g, ' ').trim().substring(0, 80)
+            // in NFC, letters, digits and combining marks (after a letter or digit) of any script and .,'-_:()!? only (create#Page's
+            // rule), at most 80 characters and 200 bytes in UTF-8 (by whole characters), room for " (n)" under create#Page's 240
+            const cleanChars = Array.from(String(title || '').normalize('NFC').replace(/[^\p{L}\p{M}\p{Nd}_.\-,':()!? ]+/gu, ' ')
+                .replace(/(^|[^\p{L}\p{M}\p{Nd}])\p{M}+/gu, '$1').replace(/\s+/g, ' ').trim()).slice(0, 80)
+            while (encodeURIComponent(cleanChars.join('')).replace(/%[0-9A-F]{2}/g, '_').length > 200) cleanChars.pop()
+            const cleanTitle = cleanChars.join('').trim()
             const base = cleanTitle || (L('Note') + ' ' + ec.l10n.format(ec.user.nowTimestamp, 'yyyy-MM-dd HH.mm'))
             const inUse = (name) => ec.entity.find('moqui.resource.wiki.WikiPage').condition('wikiSpaceId', wikiSpaceId).condition('pagePath', name).count() > 0
             let name = base

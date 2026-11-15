@@ -12,10 +12,36 @@ You should have received a copy of the CC0 Public Domain Dedication
 along with this software (see the LICENSE.md file). If not, see
 <http://creativecommons.org/publicdomain/zero/1.0/>.
 -->
-<!-- Placeholder for the IronStone Marketing settings (initial-design.md); design-marketing.md decides them. -->
+<!-- The Settings area of IronStone Marketing (design-marketing §12, §1.2; impl-marketing P1), linked from Admin's settings index
+    (marketing.settings): Index (the landing, SettingsIndex over Mantle's get#Settings, with the readiness of the provider
+    marketing.setup that Admin's Health shows too) and Adoption (design §15.4: the campaigns, lists and segments that belong to no
+    organization, assigned one by one). The Marketing administrator's (MARKETING_CONFIGURE). BOSS_MKT_SETTINGS denies the root user
+    group; the screens check the capability too, as the menu does, so a custom group given Marketing in Admin opens only what its
+    permissions give (impl-maintenance F346's lesson). Mantle's services check the permission and the organization again.
+    CampaignDefaults and Vocabularies (P2), Consent and Suppressions (P3), SendingProfiles and MessageTemplates (P6) and LeadSources
+    (P13) join with their phases. P13: Sales' LeadSources mounted (design §12 LeadSources; Sales.js admits this root), in Sales' context
+    for this root (`sales`: the user's own Sales grant and scope decide; SALES_CONFIGURE writes it), its UTM map offering Marketing's
+    vocabulary. -->
 <screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
-        default-menu-title="Settings" default-menu-index="9" menu-image="sym_o_settings" menu-image-type="icon">
+        default-menu-title="Settings" default-menu-index="10" menu-image="sym_o_settings" menu-image-type="icon"
+        default-menu-include="ec.user.hasPermission('MARKETING_CONFIGURE')">
+    <always-actions>
+        <script>if(!marketing.capabilities.settings)throw new Error('PERMISSION_DENIED: Marketing settings are the Marketing administrator\'s')</script>
+        <!-- P13: Sales' context for this root, for its LeadSources (none for a user without Sales) -->
+        <service-call name="ironstone.sales.ContextServices.get#SharedContext" in-map="{appRoot:'Marketing'}" out-map="salesFound"
+                transaction="force-new" ignore-error="true"/>
+        <script>ec.message.clearErrors()</script>
+        <set field="sales" from="salesFound?.sharedLinks ? salesFound : {capabilities: {}, sharedLinks: {}, organizationPartyIds: []}"/>
+    </always-actions>
+    <subscreens default-item="Index" always-use-full-path="true">
+        <!-- P6: Comms' shared sending profiles, Marketing's mount (F16); MESSAGE_SENDING_CONFIGURE writes them -->
+        <subscreens-item name="SendingProfiles" location="component://mr-boss/screen/Shared/SendingProfiles.xml" menu-index="5"/>
+        <!-- P13: Sales' lead sources and UTM map (design §12 LeadSources), a Sales administrator's (SALES_CONFIGURE) -->
+        <subscreens-item name="LeadSources" location="component://mr-boss/screen/Sales/Settings/LeadSources.xml" menu-index="6"
+                menu-include="ec.user.hasPermission('SALES_CONFIGURE')"/>
+    </subscreens>
     <widgets>
-        <label text="Placeholder: Marketing settings." type="p"/>
+        <subscreens-menu id="MarketingSettingsTabs" type="tab"/>
+        <subscreens-active/>
     </widgets>
 </screen>

@@ -39,6 +39,23 @@
         {"query": "what is left to do before I complete the repair order", "expect": ["maintenance-close-work-order"]},
         {"query": "summarize this equipment's history", "page": "/qapps/Maintenance/Equipment/EquipmentDetail", "expect": ["maintenance-equipment-history"]},
         {"query": "when was the compressor last serviced and how often does it break down", "expect": ["maintenance-equipment-history"]},
-        {"query": "show me the repair history of the forklift", "expect": ["maintenance-equipment-history"]}
+        {"query": "show me the repair history of the forklift", "expect": ["maintenance-equipment-history"]},
+        {"query": "qualify this lead", "page": "/qapps/Sales/Pipeline/OpportunityDetail", "expect": ["sales-qualify-lead"]},
+        {"query": "turn the Northwind enquiry into an opportunity", "expect": ["sales-qualify-lead"]},
+        {"query": "is this prospect ready to convert to a deal", "expect": ["sales-qualify-lead"]},
+        {"query": "draft a follow-up to the customer on this deal", "page": "/qapps/Sales/Pipeline/OpportunityDetail", "expect": ["sales-follow-up"]},
+        {"query": "summarize this campaign's results", "page": "/qapps/Marketing/Campaigns/CampaignDetail", "expect": ["marketing-campaign-summary"]},
+        {"query": "how is the spring campaign doing against its budget", "expect": ["marketing-campaign-summary"]},
+        {"query": "explain this segment", "page": "/qapps/Marketing/Audiences/SegmentDetail", "expect": ["marketing-audience-check"]},
+        {"query": "why are so many recipients excluded from the garden newsletter audience", "expect": ["marketing-audience-check"]},
+        {"query": "get this send ready for approval", "page": "/qapps/Marketing/Sends/SendDetail", "expect": ["marketing-prepare-send"]},
+        {"query": "send a test of this mailing to me first", "expect": ["marketing-prepare-send"]},
+        {"query": "how many people can we email from the garden subscriber list", "expect": ["marketing-audience-check"]},
+        {"query": "what is planned for the spring campaign over the next weeks", "page": "/qapps/Marketing/Calendar", "expect": ["marketing-campaign-summary"]},
+        {"query": "what changed on the Wingtip deal since the last activity", "expect": ["sales-follow-up"]},
+        {"query": "I just called Dana at Wingtip, log the call", "expect": ["sales-log-call"]},
+        {"query": "record my call notes on this opportunity", "page": "/qapps/Sales/Pipeline/OpportunityDetail", "expect": ["sales-log-call"]},
+        {"query": "send this quote to the customer", "page": "/qapps/Sales/Orders/OrderDetail", "expect": ["sales-issue-quote"]},
+        {"query": "the customer accepted the quote, record it", "expect": ["sales-issue-quote"]}
     ]
 }

@@ -114,8 +114,8 @@ along with this software (see the LICENSE.md file). If not, see
         MANTLE_ACTIVE_ORG is while none is active; no other group holds it. In its bundle alone. -->
     <moqui.security.UserGroupPermission userGroupId="BOSS_SALES_ADMIN" userPermissionId="SALES_ALL_ORGANIZATIONS" fromDate="0"/>
     <!-- SALES_OWNER_CHANGE (impl-sales F54, the user's call of Nov 13): the transfer of a departing user's opportunities, accounts
-        and open quotes by Sales' lifecycle participant (P6), held by Admin's identity group alone, as People's owner change is; no
-        Sales group holds it. In that group's bundle. -->
+        and open quotes by Sales' lifecycle participant (P6), held by Admin's identity group and (P6, the user's call of Nov 13) its
+        administrator, as People's owner change is; no Sales group holds it. In those groups' bundles. -->
     <moqui.security.UserGroupPermission userGroupId="BOSS_ADMIN_IDENTITY" userPermissionId="SALES_OWNER_CHANGE" fromDate="0"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_IDENTITY" userPermissionId="SALES_OWNER_CHANGE" capabilityKindEnumId="CpkEdit"/>
     <!-- Sales' capability bundles in Admin's registry (owner contract, impl-sales P1; design-crosscut §1.4's rows, which Admin P3 left
@@ -245,4 +245,391 @@ along with this software (see the LICENSE.md file). If not, see
             <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/></authz>
     </artifactGroups>
     <!-- ===== end of Sales P5 ===== -->
+
+    <!-- ===== Sales P6: Home, shell, Assist and the pipeline dataset (impl-sales P6, F54, F65, F66; design-sales §3, §1.4, §12.2) ===== -->
+    <!-- SALES_OWNER_CHANGE for Admin's administrator too, beside the identity operator (the user's call of Nov 13, F80), as every other
+        owner change is; in its bundle -->
+    <moqui.security.UserGroupPermission userGroupId="BOSS_ADMIN_ADMIN" userPermissionId="SALES_OWNER_CHANGE" fromDate="0"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_ADMIN" userPermissionId="SALES_OWNER_CHANGE" capabilityKindEnumId="CpkEdit"/>
+    <!-- Sales' lifecycle participant (owner contract, design-admin §14; F54): the open leads and opportunities a departing user owns and
+        the accounts they manage (quotes join in P7), through Mantle's own services on the owned-resource contract
+        (SalesWorkspaceServices find#OwnedSalesAssignments, transfer#SalesAssignment; every user may call them, mr-mantle
+        data/SalesWorkspaceData.xml), which check SALES_OWNER_CHANGE for another user's and that the new owner works for the record's
+        organization. Admin's disable or removal of the user lists and moves them; People's access-end request calls no participant. -->
+    <ironstone.admin.LifecycleParticipant participantKey="sales.assignments" version="1" ownerApp="Sales" title="Sales assignments"
+            description="The open leads and opportunities the user owns and the accounts they manage, handed to a new owner who works for the record's organization."
+            resourceKind="assignment" lookupService="mantle.sales.SalesWorkspaceServices.find#OwnedSalesAssignments"
+            transferService="mantle.sales.SalesWorkspaceServices.transfer#SalesAssignment" resourceParameter="salesResourceId"
+            requiredPermission="SALES_OWNER_CHANGE" sequenceNum="80"/>
+    <!-- The pipeline dataset (mr-mantle report/mantle-sales-pipeline.json and data/SalesPipelineReportData.xml, F66): read by every Sales
+        user, whose rows are their own sales scope (the ReportScopePolicy MantleSalesScope: the organization, then the assignment or
+        team), so Home's funnel shows each viewer their own pipeline; and by the Insights groups as the other business datasets are (the
+        steward updates and refreshes it). Admitted by setup as BOSS's own datasets are, operations data. -->
+    <artifactGroups artifactGroupId="BOSS_SAL_DATASETS" description="Sales: the pipeline dataset">
+        <artifacts artifactName="org.moqui.report.dataset.mantle-sales-pipeline" artifactTypeEnumId="AT_SERVICE"/>
+        <authz artifactAuthzId="BOSS_SAL_DATASETS_SALES" userGroupId="BOSS_SALES" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_VIEW"/>
+        <authz artifactAuthzId="BOSS_SAL_DATASETS_SALES_ADMIN" userGroupId="BOSS_SALES_ADMIN" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_VIEW"/>
+        <authz artifactAuthzId="BOSS_SAL_DATASETS_INSIGHTS_READ" userGroupId="BOSS_INSIGHTS_READ" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_VIEW"/>
+        <authz artifactAuthzId="BOSS_SAL_DATASETS_INSIGHTS_AUTHOR" userGroupId="BOSS_INSIGHTS_AUTHOR" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_VIEW"/>
+        <authz artifactAuthzId="BOSS_SAL_DATASETS_INSIGHTS_DISTRIBUTE" userGroupId="BOSS_INSIGHTS_DISTRIBUTE" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_VIEW"/>
+        <authz artifactAuthzId="BOSS_SAL_DATASETS_INSIGHTS_FLOW" userGroupId="BOSS_INSIGHTS_FLOW" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_VIEW"/>
+        <authz artifactAuthzId="BOSS_SAL_DATASETS_INSIGHTS_DATA" userGroupId="BOSS_INSIGHTS_DATA" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL"/>
+    </artifactGroups>
+    <moqui.entity.document.DataDocumentUserGroup dataDocumentId="MantleSalesOpportunity" userGroupId="BOSS_SALES"/>
+    <moqui.entity.document.DataDocumentUserGroup dataDocumentId="MantleSalesOpportunity" userGroupId="BOSS_SALES_ADMIN"/>
+    <moqui.entity.document.DataDocumentUserGroup dataDocumentId="MantleSalesOpportunity" userGroupId="BOSS_INSIGHTS_READ"/>
+    <moqui.entity.document.DataDocumentUserGroup dataDocumentId="MantleSalesOpportunity" userGroupId="BOSS_INSIGHTS_AUTHOR"/>
+    <moqui.entity.document.DataDocumentUserGroup dataDocumentId="MantleSalesOpportunity" userGroupId="BOSS_INSIGHTS_DISTRIBUTE"/>
+    <moqui.entity.document.DataDocumentUserGroup dataDocumentId="MantleSalesOpportunity" userGroupId="BOSS_INSIGHTS_FLOW"/>
+    <moqui.entity.document.DataDocumentUserGroup dataDocumentId="MantleSalesOpportunity" userGroupId="BOSS_INSIGHTS_DATA"/>
+    <moqui.report.BusinessDataset datasetId="mantle-sales-pipeline" admittedDate="2026-11-13 00:00:00" versionNumber="1"/>
+    <ironstone.insights.DatasetClass datasetId="mantle-sales-pipeline" version="1" domainOwner="Sales" classEnumId="InsDcOperations"/>
+    <moqui.server.ReadinessProvider providerKey="insights.dataset.mantle-sales-pipeline" version="1" ownerApp="Insights"
+            title="Sales pipeline index" description="The sales pipeline dataset's admission and its index's last build"
+            healthGroupEnumId="AdmHgObservability" scopeEnumId="AdmScInstance"
+            serviceName="ironstone.insights.DatasetServices.check#DatasetReadiness" requiredPermission="INSIGHTS_VIEW"
+            fixRoute="insightsDataset" fixId="mantle-sales-pipeline" expectedFrequencyMinutes="1440" sequenceNum="70"/>
+    <moqui.server.RefreshOperation refreshKey="insights.dataset.mantle-sales-pipeline.index" version="1" ownerApp="Insights"
+            title="Rebuild the sales pipeline index" serviceName="ironstone.insights.DatasetServices.refresh#DatasetIndex"
+            sourceKindEnumId="AdmRsIndex" sourceName="mantle-sales-pipeline" requiredPermission="INSIGHTS_DATASET_EDIT"
+            providerKey="insights.dataset.mantle-sales-pipeline"/>
+    <!-- The pipeline exports Sales makes in its own lists (CSV and XLSX of the filtered result, the columns shown, design §16), listed in
+        Admin's Exports as wizard export targets with their owner route (Admin.js mountRoutes salesOpportunities, salesLeads), nothing
+        dispatched, as Projects' work item list is; the import's owner route is salesOpportunityImport (mr-mantle
+        data/SalesWorkspaceData.xml's target `opportunities`). -->
+    <moqui.server.TransferTarget targetId="salesOpportunityList" direction="export" targetMode="wizard" title="Sales opportunities"
+            description="The opportunities of a list as CSV or XLSX, from Opportunities in Sales"
+            ownerApp="Sales" targetVersion="1" ownerRoute="salesOpportunities" sequenceNum="69"/>
+    <moqui.server.TransferTarget targetId="salesLeadList" direction="export" targetMode="wizard" title="Sales leads"
+            description="The leads of a list as CSV or XLSX, from Leads in Sales"
+            ownerApp="Sales" targetVersion="1" ownerRoute="salesLeads" sequenceNum="70"/>
+    <!-- Assist's tools (design §1.4 CX-ASSIST; Admin's rows, BossSetupData AgentToolExposure): find#Opportunities for the Assistant and
+        MCP (a read, the user's own sales scope), and create#, move# and close#Opportunity for the Assistant alone, each a write the
+        user approves before it runs (AgclWrite), none on MCP. A tool runs as the user outside Sales' screens, so the Sales groups are
+        granted these four services (each checks its permission, the organization and the assignment itself); Mantle's facts say which
+        organization is active, and each tool still takes and checks its organization (F65). -->
+    <artifactGroups artifactGroupId="BOSS_SAL_ASSIST_TOOLS" description="Sales: the opportunity services Assist's tools call">
+        <artifacts artifactName="mantle\.sales\.OpportunityServices\.(find|create|move|close)#Opportunit(y|ies)" artifactTypeEnumId="AT_SERVICE"
+                nameIsPattern="Y" inheritAuthz="Y"/>
+        <authz artifactAuthzId="BOSS_SAL_ASSIST_TOOLS_SALES" userGroupId="BOSS_SALES" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/></authz>
+        <authz artifactAuthzId="BOSS_SAL_ASSIST_TOOLS_ADMIN" userGroupId="BOSS_SALES_ADMIN" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/></authz>
+    </artifactGroups>
+    <moqui.agent.AgentToolExposure toolName="sales_find_opportunities" serviceName="mantle.sales.OpportunityServices.find#Opportunities"
+            title="Sales leads and opportunities"
+            description="find#Opportunities: the leads (typeEnumId SotLead) and opportunities (SotOpportunity) the user may see in Sales (their own and their teams', or their organizations' for a manager), narrowed by text, organizationPartyId, mine (Y), ownerPartyId, teamPartyId, salesPipelineId, opportunityStageId, statusId (SalesOppOpen, SalesOppWon, SalesOppLost or closed), closeFrom and closeThru (yyyy-MM-dd), accountPartyId and dataSourceId, paged; each with its account, stage, amount, probability, expected close, owner, team and next activity, and the totals by currency."
+            classificationEnumId="AgclRead" exposeAssistant="Y" exposeMcp="Y" previewMode="none" lockVersion="1"/>
+    <moqui.agent.AgentToolExposure toolName="sales_create_opportunity" serviceName="mantle.sales.OpportunityServices.create#Opportunity"
+            title="New lead or opportunity"
+            description="create#Opportunity: a lead (typeEnumId SotLead: no account or stage needed) or an opportunity (SotOpportunity, the default) of an organization of the user's sales scope (organizationPartyId; ask which when none is active), with its name, account, contact, pipeline and stage, owner or team, amount and currency and expected close. The user approves it first."
+            classificationEnumId="AgclWrite" exposeAssistant="Y" exposeMcp="N" previewMode="none" lockVersion="1"/>
+    <moqui.agent.AgentToolExposure toolName="sales_move_opportunity" serviceName="mantle.sales.OpportunityServices.move#Opportunity"
+            title="Move an opportunity to a stage"
+            description="move#Opportunity: an open deal to a current stage of its pipeline (opportunityStageId), at the revision read with find#Opportunities (expectedRevision); a stage move is not a closure. The user approves it first."
+            classificationEnumId="AgclWrite" exposeAssistant="Y" exposeMcp="N" previewMode="none" lockVersion="1"/>
+    <moqui.agent.AgentToolExposure toolName="sales_close_opportunity" serviceName="mantle.sales.OpportunityServices.close#Opportunity"
+            title="Close a lead or opportunity"
+            description="close#Opportunity: an open deal closed Won or Lost (Lost needs a current lost reason), at the revision read (expectedRevision); a lead closed Lost is disqualified. The user approves it first."
+            classificationEnumId="AgclWrite" exposeAssistant="Y" exposeMcp="N" previewMode="none" lockVersion="1"/>
+    <!-- ===== end of Sales P6 ===== -->
+
+    <!-- ===== Sales P7 (impl-sales P7, F67): quote drafts, pricing and Products' screens in Sales' context ===== -->
+    <!-- the catalogue read Products' shared Product360, InventoryAvailability and PriceExplain ask (CatalogServices.get#CatalogAccess),
+        for every Sales user and the administrator, as Customer Service's and Purchasing's users hold it: a read of the product master
+        only; prices beyond a quote line's own stay Products' PRICE_VIEW, cost and stock actions their owners' (impl-sales §2). The
+        quote services are Mantle's guarded ones, called by the root's screens (its inheritable grant), so no service row is added. -->
+    <moqui.security.UserGroupPermission userGroupId="BOSS_SALES" userPermissionId="PRODUCT_CATALOG_VIEW" fromDate="0"/>
+    <moqui.security.UserGroupPermission userGroupId="BOSS_SALES_ADMIN" userPermissionId="PRODUCT_CATALOG_VIEW" fromDate="0"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_SALES" userPermissionId="PRODUCT_CATALOG_VIEW" capabilityKindEnumId="CpkView"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_SALES_ADMIN" userPermissionId="PRODUCT_CATALOG_VIEW" capabilityKindEnumId="CpkView"/>
+    <!-- ===== end of Sales P7 ===== -->
+
+    <!-- ===== Sales P9 (impl-sales P9, F26, F43, F58): approvals, defaults and approval rules ===== -->
+    <!-- SALES_APPROVE for the approver (F43, §4: granted with its screens): it decides quote exceptions (decide#Quote) and, filed by
+        Customer Service, commercial order changes (OrderChangeServices decides them under SALES_APPROVE), from Approvals; in its
+        bundle. No other Sales group holds it, the administrator neither (§4 Nov 13). -->
+    <moqui.security.UserGroupPermission userGroupId="BOSS_SALES_APPROVE" userPermissionId="SALES_APPROVE" fromDate="0"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_SALES_APPROVE" userPermissionId="SALES_APPROVE" capabilityKindEnumId="CpkEdit"/>
+    <!-- Approvals (design §5; Sales/Quotes/Approvals.xml): denied to the root user group, ALWAYS for the approver with the root's filter
+        sets; the administrator and ADMIN open it through their ALWAYS on the root. The screen and its menu also ask SALES_APPROVE,
+        so a custom group given Sales in Admin, which this deny does not reach, is shown no list its services refuse
+        (impl-maintenance F346's lesson). SalesDefaults and ApprovalPolicies are Settings tabs, under BOSS_SAL_SETTINGS (P2). -->
+    <artifactGroups artifactGroupId="BOSS_SAL_APPROVALS" description="Sales approvals">
+        <artifacts artifactName="component://mr-boss/screen/Sales/Quotes/Approvals.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
+        <authz artifactAuthzId="BOSS_SAL_APPROVALS_DENY" userGroupId="BOSS_SALES" authzTypeEnumId="AUTHZT_DENY"
+                authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_SAL_APPROVALS_APPROVER" userGroupId="BOSS_SALES_APPROVE" authzTypeEnumId="AUTHZT_ALWAYS"
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/></authz>
+    </artifactGroups>
+    <!-- a quote's exception to decide (Mantle's SalesQuoteApproval, F26) opens the quote's OrderDetail under Sales, whose Approval box
+        decides it; the decision is decide#Quote at the message's revision, from Approvals, the Commons inbox or the detail -->
+    <moqui.security.user.NotificationTopic topic="SalesQuoteApproval" linkTemplate="/qapps/Sales/Orders/OrderDetail?orderId=${orderId}"/>
+    <!-- P8 review (the user's call of Nov 13, 2026): a warranty claim's chargeable repair (Mantle's SalesRepairToQuote, to the
+        organization's default team) opens it in Sales' RFQ context, answered by its customer and products alone -->
+    <moqui.security.user.NotificationTopic topic="SalesRepairToQuote" linkTemplate="/qapps/Sales/Quotes/QuoteRequestDetail?requestId=${requestId}"/>
+    <!-- ===== end of Sales P9 ===== -->
+
+    <!-- ===== Sales P10 (impl-sales P10; design-sales §1.4 CX-ASSIST, SAL-ASSIST): Assist's quote tools ===== -->
+    <!-- find#Quotes for the Assistant and MCP (a read, the user's own sales scope), preview#Quote for the Assistant (the rules a draft
+        meets, never a cost), and send#Quote for the Assistant alone, a write the user approves before it runs (AgclWrite), none on MCP.
+        A tool runs as the user outside Sales' screens, so the Sales groups are granted these three services (each checks its permission,
+        the organization and the assignment itself), as P6's opportunity tools. -->
+    <artifactGroups artifactGroupId="BOSS_SAL_QUOTE_TOOLS" description="Sales: the quote services Assist's tools call">
+        <artifacts artifactName="mantle\.order\.SalesQuoteServices\.find#Quotes" artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
+        <artifacts artifactName="mantle\.order\.SalesApprovalServices\.preview#Quote" artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
+        <artifacts artifactName="mantle\.order\.SalesQuoteIssueServices\.send#Quote" artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
+        <authz artifactAuthzId="BOSS_SAL_QUOTE_TOOLS_SALES" userGroupId="BOSS_SALES" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/></authz>
+        <authz artifactAuthzId="BOSS_SAL_QUOTE_TOOLS_ADMIN" userGroupId="BOSS_SALES_ADMIN" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/></authz>
+    </artifactGroups>
+    <moqui.agent.AgentToolExposure toolName="sales_find_quotes" serviceName="mantle.order.SalesQuoteServices.find#Quotes"
+            title="Sales quotes"
+            description="find#Quotes: the quotes the user may see in Sales (their own and their teams', or their organizations' for a manager), narrowed by text, organizationPartyId, customerPartyId, salesOpportunityId, mine (Y), state (open, draft, proposed, cancelled or all) and validity (expiring or expired), paged; each with its customer, total, validity, owner and revision (orderRevision, which send needs)."
+            classificationEnumId="AgclRead" exposeAssistant="Y" exposeMcp="Y" previewMode="none" lockVersion="1"/>
+    <moqui.agent.AgentToolExposure toolName="sales_preview_quote" serviceName="mantle.order.SalesApprovalServices.preview#Quote"
+            title="Approvals a quote needs"
+            description="preview#Quote: the approval rules a quote (orderId) meets at its revision, each with what meets it, the approver it needs and its state (needs approval, waiting, approved, refused). It shows no cost."
+            classificationEnumId="AgclRead" exposeAssistant="Y" exposeMcp="N" previewMode="none" lockVersion="1"/>
+    <moqui.agent.AgentToolExposure toolName="sales_send_quote" serviceName="mantle.order.SalesQuoteIssueServices.send#Quote"
+            title="Send a quote"
+            description="send#Quote: a proposed quote (orderId) issued and sent at the revision read with find#Quotes (orderRevision) to recipientPartyIds (the customer or its contacts; empty for the quote's contact), from the user's own mail (sendMode own, the quote's owner) or the organization's (organization); previewOnly Y first says who gets it and the PDF's name. Needs an operationKey. The user approves it first."
+            classificationEnumId="AgclWrite" exposeAssistant="Y" exposeMcp="N" previewMode="none" lockVersion="1"/>
+    <!-- ===== end of Sales P10 ===== -->
+    <!-- ===== Sales P11 (impl-sales P11, F43; design-sales §1.1, §6): orders, approval and the attention counts ===== -->
+    <!-- ORDER_APPROVE for the approver (F43, §4: granted with its screens), beside its SALES_ORDER_APPROVE (P1): it approves a sales order
+        of a seller whose approval setting is off (approve#Order as built) and releases a Manual hold; SALES_ORDER_APPROVE approves one
+        of a seller whose setting is on. In its bundle. No other Sales group holds it, the administrator neither (§4 Nov 13). -->
+    <moqui.security.UserGroupPermission userGroupId="BOSS_SALES_APPROVE" userPermissionId="ORDER_APPROVE" fromDate="0"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_SALES_APPROVE" userPermissionId="ORDER_APPROVE" capabilityKindEnumId="CpkEdit"/>
+    <!-- Insights' attention providers (owner contract with Insights, design-insights §3, on Commerce's rows in BossSetupData): Sales'
+        counts, each the count of the scoped list it opens (mantle.order.SalesOrderServices.get#SalesWorkSummary), shown to a viewer
+        whose route opens; Insights calls the count as the viewer outside Sales' screens, so the Sales groups are granted it (it checks
+        a Sales read and the scope itself) -->
+    <artifactGroups artifactGroupId="BOSS_SAL_WORK_SUMMARY" description="Sales: the work counts Insights' attention reads">
+        <artifacts artifactName="mantle\.order\.SalesOrderServices\.get#SalesWorkSummary" artifactTypeEnumId="AT_SERVICE" nameIsPattern="Y" inheritAuthz="Y"/>
+        <authz artifactAuthzId="BOSS_SAL_WORK_SUMMARY_SALES" userGroupId="BOSS_SALES" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/></authz>
+        <authz artifactAuthzId="BOSS_SAL_WORK_SUMMARY_ADMIN" userGroupId="BOSS_SALES_ADMIN" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/></authz>
+    </artifactGroups>
+    <ironstone.insights.AttentionProvider providerKey="Sales.QuotesToSend" version="1" ownerApp="Sales" title="Quotes to send"
+            description="Proposed quotes with no issue standing."
+            countService="mantle.order.SalesOrderServices.get#SalesWorkSummary" countField="counts.quotesToSend"
+            organizationParameter="organizationPartyId"
+            routePath="Sales/Quotes/Quotes" routeParameters="state=proposed&amp;issue=unsent"
+            organizationScope="Your quotes and your teams', or your organization's" sequenceNum="10"/>
+    <ironstone.insights.AttentionProvider providerKey="Sales.QuotesExpiring" version="1" ownerApp="Sales" title="Quotes expiring"
+            description="Open quotes whose validity ends within a week."
+            countService="mantle.order.SalesOrderServices.get#SalesWorkSummary" countField="counts.quotesExpiring"
+            organizationParameter="organizationPartyId"
+            routePath="Sales/Quotes/Quotes" routeParameters="state=open&amp;validity=expiring"
+            organizationScope="Your quotes and your teams', or your organization's" sequenceNum="20"/>
+    <ironstone.insights.AttentionProvider providerKey="Sales.OrdersAwaitingApproval" version="1" ownerApp="Sales" title="Orders awaiting approval"
+            description="Placed sales orders waiting for a person's approval."
+            countService="mantle.order.SalesOrderServices.get#SalesWorkSummary" countField="counts.ordersAwaitingApproval"
+            organizationParameter="organizationPartyId"
+            routePath="Sales/Orders/Orders" routeParameters="list=awaiting"
+            organizationScope="Your orders and your teams', the organization's for an approver" sequenceNum="30"/>
+    <!-- ===== end of Sales P11 ===== -->
+    <!-- ===== Sales P14 (impl-sales P14, F43, F58; design-sales §1.1, §6): commercial changes and the fulfillment and billing handoffs ===== -->
+    <!-- SALES_ORDER_CHANGE and ORDER_CHANGE_HOLD_RELEASE for the change operator (F43, §4: granted with its screens): it files and
+        applies a commercial order change the sales approver decided (mantle.order.OrderChangeServices, SalesOrderChanges.js), placing
+        the Change hold its apply uses and releasing that hold; in its bundle. No other Sales group holds them, the administrator
+        neither (§4 Nov 13). -->
+    <moqui.security.UserGroupPermission userGroupId="BOSS_SALES_CHANGE" userPermissionId="SALES_ORDER_CHANGE" fromDate="0"/>
+    <moqui.security.UserGroupPermission userGroupId="BOSS_SALES_CHANGE" userPermissionId="ORDER_CHANGE_HOLD_RELEASE" fromDate="0"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_SALES_CHANGE" userPermissionId="SALES_ORDER_CHANGE" capabilityKindEnumId="CpkEdit"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_SALES_CHANGE" userPermissionId="ORDER_CHANGE_HOLD_RELEASE" capabilityKindEnumId="CpkEdit"/>
+    <!-- Changes (design §6 OrderChanges, Sales/Orders/OrderChanges.xml): denied to the root user group, ALWAYS for the change operator,
+        the approver and the manager (design §2 C, A, M) with the root's filter sets; the administrator and ADMIN open it through their
+        ALWAYS on the root. The screen and its tab also ask SALES_ORDER_CHANGE, SALES_APPROVE or SALES_TEAM_VIEW (Sales.js areaReads),
+        so a custom group given Sales in Admin is shown no list find#OrderChanges refuses. OrderChangeDetail, ShipmentDetail and
+        InvoiceDetail stay under the Orders area's grant: each checks its record (Sales.js recordKinds) and Mantle checks it again. -->
+    <artifactGroups artifactGroupId="BOSS_SAL_CHANGES" description="Sales order changes">
+        <artifacts artifactName="component://mr-boss/screen/Sales/Orders/OrderChanges.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
+        <authz artifactAuthzId="BOSS_SAL_CHANGES_DENY" userGroupId="BOSS_SALES" authzTypeEnumId="AUTHZT_DENY"
+                authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_SAL_CHANGES_OPERATOR" userGroupId="BOSS_SALES_CHANGE" authzTypeEnumId="AUTHZT_ALWAYS"
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/></authz>
+        <authz artifactAuthzId="BOSS_SAL_CHANGES_APPROVER" userGroupId="BOSS_SALES_APPROVE" authzTypeEnumId="AUTHZT_ALWAYS"
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/></authz>
+        <authz artifactAuthzId="BOSS_SAL_CHANGES_MANAGER" userGroupId="BOSS_SALES_MANAGER" authzTypeEnumId="AUTHZT_ALWAYS"
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/></authz>
+    </artifactGroups>
+    <!-- ===== end of Sales P14 ===== -->
+    <!-- ===== Sales P18 (impl-sales P18; design-sales §8 Forecast, §1.1): forecasts and targets ===== -->
+    <!-- SALES_FORECAST_EDIT for the representative too (design §8 SubmitForecast, "a rep's judgement"; the user's call, impl-sales P18):
+        a representative enters the forecast of their own key only, a team's manager their team's, a holder of SALES_TEAM_VIEW a team's
+        or the organization's (mantle/sales/SalesAccess.js forecastSubmits); never another person's. In its bundle. Targets stay
+        SALES_TEAM_MANAGE's (the manager's and the administrator's). Forecast, Targets and Target attainment need no area group of their
+        own: Forecast is every Sales reader's under Pipeline, Targets is under Settings (BOSS_SAL_SETTINGS) and its tab and screen ask
+        SALES_TEAM_MANAGE, Target attainment is under Reports (BOSS_SAL_REPORTS). -->
+    <moqui.security.UserGroupPermission userGroupId="BOSS_SALES_REP" userPermissionId="SALES_FORECAST_EDIT" fromDate="0"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_SALES_REP" userPermissionId="SALES_FORECAST_EDIT" capabilityKindEnumId="CpkEdit"/>
+    <!-- ===== end of Sales P18 ===== -->
+    <!-- ===== Sales P19 (impl-sales P19; design-sales §8 Reports, §1.4 CX-OPS-REPORTS, §13.2): reports and Insights registrations ===== -->
+    <!-- The stage-age dataset (mr-mantle report/mantle-sales-pipeline-stage-age.json): the pipeline dataset's document and row filter
+        (Sales' scope), timed by when each deal entered its stage, read by the stalled-deal alert template (report/boss-sales-stalled-deals.json);
+        granted, admitted and classed as the pipeline dataset is (its index is the same document's). -->
+    <artifactGroups artifactGroupId="BOSS_SAL_DATASETS" description="Sales: the pipeline datasets">
+        <artifacts artifactName="org.moqui.report.dataset.mantle-sales-pipeline-stage-age" artifactTypeEnumId="AT_SERVICE"/>
+    </artifactGroups>
+    <moqui.report.BusinessDataset datasetId="mantle-sales-pipeline-stage-age" admittedDate="2026-11-14 00:00:00" versionNumber="1"/>
+    <ironstone.insights.DatasetClass datasetId="mantle-sales-pipeline-stage-age" version="1" domainOwner="Sales" classEnumId="InsDcOperations"/>
+    <!-- Sales' reports in Insights' catalog (owner contract, impl-insights §7; design-insights §6.1; F3, F24, F59), read through Sales'
+        catalogue, mantle.sales.SalesWorkspaceServices.get#SalesReports (answering the app root Sales only); Sales.SalesAnalysis, moved
+        to Sales' route, is in BossSetupData beside Accounting's own entry for its mount -->
+    <ironstone.insights.ReportCatalogEntry entryId="Sales.SalesSummary" version="1" ownerApp="Sales" title="Sales summary"
+            description="Orders placed and invoices issued by period in one currency, with top products and customer classes."
+            purpose="Sales" basis="Placed date (orders), invoice date (invoices), one currency" routePath="Sales/Reports/SalesSummary"
+            parameterContract="organizationPartyId,interval,currencyUomId"
+            sourceReference="mantle.sales.SalesReportServices.get#SalesOrderSummary"
+            metricIds="Sales.Orders,Sales.OrderValue,Accounting.InvoicedRevenue"
+            catalogueService="mantle.sales.SalesWorkspaceServices.get#SalesReports" catalogueKey="Sales.SalesSummary"
+            exportFormats="CSV" sequenceNum="245"/>
+    <ironstone.insights.ReportCatalogEntry entryId="Sales.PipelineAnalysis" version="1" ownerApp="Sales" title="Pipeline analysis"
+            description="Open pipeline by stage, source, owner or age as of a time; stage durations, lead conversion and the funnel."
+            purpose="Sales" basis="Deals as of a time, from their audit log; leads by created date" routePath="Sales/Reports/PipelineAnalysis"
+            parameterContract="organizationPartyId,asOfDate,groupBy"
+            sourceReference="mantle.sales.ForecastServices.get#PipelineAnalysis"
+            metricIds="Sales.OpenPipeline,Sales.WeightedPipeline"
+            catalogueService="mantle.sales.SalesWorkspaceServices.get#SalesReports" catalogueKey="Sales.PipelineAnalysis"
+            exportFormats="CSV,XLSX" sequenceNum="252"/>
+    <ironstone.insights.ReportCatalogEntry entryId="Sales.WinLoss" version="1" ownerApp="Sales" title="Win/loss"
+            description="Won and lost deals of a close cohort, win rate, loss reasons, cycle time and reopenings; disqualified leads apart."
+            purpose="Sales" basis="Close date in the period; final outcome as of the report time, or each close event"
+            routePath="Sales/Reports/WinLoss" parameterContract="organizationPartyId,fromDate,thruDate,mode"
+            sourceReference="mantle.sales.ForecastServices.get#WinLoss" metricIds="Sales.WonValue,Sales.WinRate"
+            catalogueService="mantle.sales.SalesWorkspaceServices.get#SalesReports" catalogueKey="Sales.WinLoss"
+            exportFormats="CSV,XLSX" sequenceNum="254"/>
+    <ironstone.insights.ReportCatalogEntry entryId="Sales.TargetAttainment" version="1" ownerApp="Sales" title="Target attainment"
+            description="Each target's quota against the one basis it is measured on, with variance; unassigned amounts apart."
+            purpose="Sales" basis="The target's basis: won deals, placed orders or finalized invoices, in the period"
+            routePath="Sales/Reports/TargetAttainment" parameterContract="organizationPartyId,timePeriodId,currencyUomId"
+            sourceReference="mantle.sales.ForecastServices.get#TargetAttainment"
+            catalogueService="mantle.sales.SalesWorkspaceServices.get#SalesReports" catalogueKey="Sales.TargetAttainment"
+            exportFormats="CSV" sequenceNum="256"/>
+    <ironstone.insights.ReportCatalogEntry entryId="Sales.Forecast" version="1" ownerApp="Sales" title="Forecast"
+            description="A forecast's quota, pipeline, weighted and won amounts and submitted judgement, with the deals behind them."
+            purpose="Sales" basis="Deals expected to close in the period, as of a time" routePath="Sales/Pipeline/Forecast"
+            parameterContract="organizationPartyId,timePeriodId,currencyUomId"
+            sourceReference="mantle.sales.ForecastServices.get#Forecast" metricIds="Sales.WeightedPipeline"
+            catalogueService="mantle.sales.SalesWorkspaceServices.get#SalesReports" catalogueKey="Sales.Forecast"
+            exportFormats="CSV" sequenceNum="258"/>
+    <!-- Sales' measures (owner contract, design-insights §6.2; design-sales §8 metric owners), beside Sales.Orders and Sales.OrderValue -->
+    <ironstone.insights.MetricRegistration metricId="Sales.OpenPipeline" version="1" ownerApp="Sales" title="Open pipeline"
+            description="The estimated amount of open qualified opportunities, in each deal's own currency, as of a time."
+            serviceName="mantle.sales.ForecastServices.get#PipelineAnalysis" datasetIds="mantle-sales-pipeline"
+            catalogEntryId="Sales.PipelineAnalysis" grain="Opportunity" recordKey="salesOpportunityId"
+            dateBasis="As of a time, from the deal's audit log" statusBasis="Open (not Won or Lost) opportunities; leads apart"
+            aggregation="snapshot" numerator="The sum of the deals' estimated amounts" unitPolicy="currency"
+            additiveDimensions="stage, source, owner, team, age (within one currency)" nonAdditiveDimensions="currency, date"
+            allowedDimensions="stage, source, owner, team, age, currency"
+            supportedFilters="organizationPartyId, teamPartyId, ownerPartyId, salesPipelineId, opportunityStageId, dataSourceId, currencyUomId, asOfDate"
+            exclusions="Leads, won and lost deals; a deal with no estimate is counted apart, never as zero"
+            drillContract="The open deals of the selected bucket" scopePolicy="The viewer's sales scope (MantleSalesScope)"
+            freshness="Live; the dataset by the MantleSalesPipeline feed" sequenceNum="30"/>
+    <ironstone.insights.MetricRegistration metricId="Sales.WeightedPipeline" version="1" ownerApp="Sales" title="Weighted pipeline"
+            description="Open qualified opportunities' estimated amounts times their probability, in each deal's own currency, as of a time."
+            serviceName="mantle.sales.ForecastServices.get#PipelineAnalysis" datasetIds="mantle-sales-pipeline"
+            catalogEntryId="Sales.PipelineAnalysis" grain="Opportunity" recordKey="salesOpportunityId"
+            dateBasis="As of a time, from the deal's audit log" statusBasis="Open (not Won or Lost) opportunities; leads apart"
+            aggregation="snapshot" numerator="The sum of each deal's estimated amount times its probability (stage or manual)"
+            unitPolicy="currency" additiveDimensions="stage, source, owner, team, age (within one currency)"
+            nonAdditiveDimensions="currency, date" allowedDimensions="stage, source, owner, team, age, currency"
+            supportedFilters="organizationPartyId, teamPartyId, ownerPartyId, salesPipelineId, opportunityStageId, dataSourceId, currencyUomId, asOfDate"
+            exclusions="Leads, won and lost deals; a deal with no estimate or no probability adds nothing and is named"
+            drillContract="The open deals of the selected bucket" scopePolicy="The viewer's sales scope (MantleSalesScope)"
+            freshness="Live" sequenceNum="32"/>
+    <ironstone.insights.MetricRegistration metricId="Sales.WonValue" version="1" ownerApp="Sales" title="Won value"
+            description="The estimated amount of opportunities closed won in a period, in each deal's own currency; not invoiced revenue."
+            serviceName="mantle.sales.ForecastServices.get#WinLoss" datasetIds="mantle-sales-pipeline" catalogEntryId="Sales.WinLoss"
+            grain="Opportunity" recordKey="salesOpportunityId" dateBasis="Close date"
+            statusBasis="Won, each deal once by its final outcome as of the report time" aggregation="sum"
+            numerator="The sum of the won deals' estimated amounts at their close" unitPolicy="currency"
+            additiveDimensions="owner, team, account, source, period (within one currency)" nonAdditiveDimensions="currency"
+            allowedDimensions="owner, team, account, source, currency, period"
+            supportedFilters="organizationPartyId, teamPartyId, ownerPartyId, accountPartyId, dataSourceId, currencyUomId, fromDate, thruDate"
+            exclusions="Leads; a deal reopened after the report time counts by its outcome then"
+            drillContract="The won deals of the period" scopePolicy="The viewer's sales scope (MantleSalesScope)" freshness="Live"
+            sequenceNum="34"/>
+    <ironstone.insights.MetricRegistration metricId="Sales.WinRate" version="1" ownerApp="Sales" title="Win rate"
+            description="Won opportunities over won and lost opportunities closed in a period."
+            serviceName="mantle.sales.ForecastServices.get#WinLoss" datasetIds="mantle-sales-pipeline" catalogEntryId="Sales.WinLoss"
+            grain="Opportunity" recordKey="salesOpportunityId" dateBasis="Close date"
+            statusBasis="Won and lost opportunities, each deal once by its final outcome as of the report time" aggregation="ratio"
+            numerator="Won opportunities" denominator="Won and lost opportunities" unitPolicy="percent"
+            additiveDimensions="none (recompute from the parts)" nonAdditiveDimensions="every dimension"
+            allowedDimensions="owner, team, account, source, period"
+            supportedFilters="organizationPartyId, teamPartyId, ownerPartyId, accountPartyId, dataSourceId, fromDate, thruDate"
+            exclusions="Leads disqualified before qualification are counted apart, never in the denominator"
+            drillContract="The won and lost deals of the period" scopePolicy="The viewer's sales scope (MantleSalesScope)"
+            freshness="Live" sequenceNum="36"/>
+    <!-- Sales' work lists for the flow maps (owner contract, design-insights §9; BossSetupData's flow targets): the suite's customer
+        flow's quote step opens Quotes -->
+    <ironstone.insights.FlowTarget targetId="Sales.Leads" version="1" ownerApp="Sales" title="Leads"
+            description="Leads to work: yours and your teams' queues, or the organization's."
+            routePath="Sales/Pipeline/Leads" parameterContract='{"organizationPartyId":{"type":"organization"},"statusId":{"type":"choice","values":["SalesOppOpen","SalesOppLost","all"]}}'
+            sequenceNum="5"/>
+    <ironstone.insights.FlowTarget targetId="Sales.Opportunities" version="1" ownerApp="Sales" title="Opportunities"
+            description="Opportunities you see, by stage, owner or expected close."
+            routePath="Sales/Pipeline/Opportunities" parameterContract='{"organizationPartyId":{"type":"organization"}}'
+            sequenceNum="6"/>
+    <ironstone.insights.FlowTarget targetId="Sales.Quotes" version="1" ownerApp="Sales" title="Quotes"
+            description="Quotes, by state: drafts, sent, expiring and expired."
+            routePath="Sales/Quotes/Quotes" parameterContract='{"organizationPartyId":{"type":"organization"},"state":{"type":"choice","values":["draft","proposed","open","expiring","expired","cancelled","all"]}}'
+            sequenceNum="7"/>
+    <ironstone.insights.FlowTarget targetId="Sales.Orders" version="1" ownerApp="Sales" title="Sales orders"
+            description="Sales orders, by what needs doing: awaiting approval, held, to fulfil, to invoice."
+            routePath="Sales/Orders/Orders" parameterContract='{"organizationPartyId":{"type":"organization"},"list":{"type":"choice","values":["recent","draft","awaiting","held","blocked","toFulfill","partFulfilled","toInvoice","cancelled"]}}'
+            sequenceNum="8"/>
+    <ironstone.insights.FlowTarget targetId="Sales.OrderChanges" version="1" ownerApp="Sales" title="Order changes"
+            description="Commercial changes to sales orders, waiting for a decision or applied."
+            routePath="Sales/Orders/OrderChanges" parameterContract='{"organizationPartyId":{"type":"organization"}}'
+            sequenceNum="9"/>
+    <!-- ===== end of Sales P19 ===== -->
+    <!-- ===== Sales P20 (impl-sales P20; §4 Nov 14, the user's call): the quote dataset and the quote-expiring alert ===== -->
+    <!-- The quote dataset (mr-mantle report/mantle-sales-quotes.json, document MantleSalesQuote in data/SalesPipelineReportData.xml):
+        Sales quotes not placed, timed by their valid-through date, whose rows are each viewer's own sales quote scope (the
+        ReportScopePolicy MantleSalesQuoteScope: the organization, then the assignment or team; templates and placed quotes out); read
+        by the quote-expiring alert template (report/boss-sales-quotes-expiring.json). Granted, admitted and classed as the pipeline
+        dataset is (BOSS_SAL_DATASETS' grants: every Sales user and the Insights groups), with its own readiness and index refresh. -->
+    <artifactGroups artifactGroupId="BOSS_SAL_DATASETS" description="Sales: the pipeline and quote datasets">
+        <artifacts artifactName="org.moqui.report.dataset.mantle-sales-quotes" artifactTypeEnumId="AT_SERVICE"/>
+    </artifactGroups>
+    <moqui.entity.document.DataDocumentUserGroup dataDocumentId="MantleSalesQuote" userGroupId="BOSS_SALES"/>
+    <moqui.entity.document.DataDocumentUserGroup dataDocumentId="MantleSalesQuote" userGroupId="BOSS_SALES_ADMIN"/>
+    <moqui.entity.document.DataDocumentUserGroup dataDocumentId="MantleSalesQuote" userGroupId="BOSS_INSIGHTS_READ"/>
+    <moqui.entity.document.DataDocumentUserGroup dataDocumentId="MantleSalesQuote" userGroupId="BOSS_INSIGHTS_AUTHOR"/>
+    <moqui.entity.document.DataDocumentUserGroup dataDocumentId="MantleSalesQuote" userGroupId="BOSS_INSIGHTS_DISTRIBUTE"/>
+    <moqui.entity.document.DataDocumentUserGroup dataDocumentId="MantleSalesQuote" userGroupId="BOSS_INSIGHTS_FLOW"/>
+    <moqui.entity.document.DataDocumentUserGroup dataDocumentId="MantleSalesQuote" userGroupId="BOSS_INSIGHTS_DATA"/>
+    <moqui.report.BusinessDataset datasetId="mantle-sales-quotes" admittedDate="2026-11-14 00:00:00" versionNumber="1"/>
+    <ironstone.insights.DatasetClass datasetId="mantle-sales-quotes" version="1" domainOwner="Sales" classEnumId="InsDcOperations"/>
+    <moqui.server.ReadinessProvider providerKey="insights.dataset.mantle-sales-quotes" version="1" ownerApp="Insights"
+            title="Sales quotes index" description="The sales quote dataset's admission and its index's last build"
+            healthGroupEnumId="AdmHgObservability" scopeEnumId="AdmScInstance"
+            serviceName="ironstone.insights.DatasetServices.check#DatasetReadiness" requiredPermission="INSIGHTS_VIEW"
+            fixRoute="insightsDataset" fixId="mantle-sales-quotes" expectedFrequencyMinutes="1440" sequenceNum="71"/>
+    <moqui.server.RefreshOperation refreshKey="insights.dataset.mantle-sales-quotes.index" version="1" ownerApp="Insights"
+            title="Rebuild the sales quotes index" serviceName="ironstone.insights.DatasetServices.refresh#DatasetIndex"
+            sourceKindEnumId="AdmRsIndex" sourceName="mantle-sales-quotes" requiredPermission="INSIGHTS_DATASET_EDIT"
+            providerKey="insights.dataset.mantle-sales-quotes"/>
+    <!-- ===== end of Sales P20 ===== -->
 </entity-facade-xml>
