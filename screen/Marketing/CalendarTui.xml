@@ -31,10 +31,11 @@ along with this software (see the LICENSE.md file). If not, see
                     out-map="agenda" transaction="force-new" ignore-error="true"/>
             <script>ec.message.clearErrors()</script>
         </if>
+        <!-- follow-up 9: a send's link only for who may open SendDetail -->
         <set field="links" from="ec.resource.script('component://mr-boss/service/ironstone/marketing/Marketing.js')"/>
         <set field="agendaRows" from="Array.from(agenda?.items || []).map((item) =&gt; ({when: item.allDay ? item.startDay
                 + (item.endDay &amp;&amp; item.endDay &gt; item.startDay ? ' to ' + item.endDay : '') : item.startText,
-                title: item.title, state: item.stateText || '', itemUrl: links.placeOf(appRoot, item.route, item.recordParameter, item.recordId) || ''}))"/>
+                title: item.title, state: item.stateText || '', itemUrl: links.placeOf(appRoot, item.route, item.recordParameter, item.recordId, marketing.capabilities) || ''}))"/>
         <set field="failedText" from="Array.from(agenda?.failedSources || []).join(', ')"/>
     </actions>
     <widgets>
@@ -47,20 +48,24 @@ along with this software (see the LICENSE.md file). If not, see
         <label text="You read nothing of Marketing's schedule." type="p" style="m-muted" condition="!marketing.capabilities.anyRead"/>
         <label text="The calendar could not be read just now." type="p" style="text-negative" condition="marketing.capabilities.anyRead &amp;&amp; !agenda?.items"/>
         <label text="Could not be read just now: ${failedText}. The rest is shown." type="p" style="text-warning" condition="failedText"/>
-        <form-list name="CampaignAgenda" list="agendaRows" skip-form="true" paginate="false" condition="agendaRows.length">
-            <field name="when"><default-field title="When"><display/></default-field></field>
-            <field name="title">
-                <default-field title="What">
-                    <link url="${itemUrl}" url-type="plain" text="${title}" link-type="anchor" condition="itemUrl"/>
-                    <label text="${title}" condition="!itemUrl"/>
-                </default-field>
-            </field>
-            <field name="state"><default-field title="State"><display/></default-field></field>
-            <columns type="mobile">
-                <column><field-ref name="title"/><field-ref name="when"/></column>
-                <column><field-ref name="state"/></column>
-            </columns>
-        </form-list>
+        <section name="CampaignAgendaSection" condition="agendaRows.length">
+            <widgets>
+                <form-list name="CampaignAgenda" list="agendaRows" skip-form="true" paginate="false">
+                    <field name="when"><default-field title="When"><display/></default-field></field>
+                    <field name="title">
+                        <default-field title="What">
+                            <link url="${itemUrl}" url-type="plain" text="${title}" link-type="anchor" condition="itemUrl"/>
+                            <label text="${title}" condition="!itemUrl"/>
+                        </default-field>
+                    </field>
+                    <field name="state"><default-field title="State"><display/></default-field></field>
+                    <columns type="mobile">
+                        <column><field-ref name="title"/><field-ref name="when"/></column>
+                        <column><field-ref name="state"/></column>
+                    </columns>
+                </form-list>
+            </widgets>
+        </section>
         <label text="Nothing is planned in these four weeks." type="p" style="m-muted"
                 condition="marketing.capabilities.anyRead &amp;&amp; agenda?.items &amp;&amp; !agendaRows.length"/>
     </widgets>

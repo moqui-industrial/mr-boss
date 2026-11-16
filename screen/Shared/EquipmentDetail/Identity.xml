@@ -50,9 +50,12 @@ along with this software (see the LICENSE.md file). If not, see
         <!-- a move asked for (the Move dialog reloads the tab with the destination): its effect, before the move is made -->
         <set field="moveEffect" from="null"/>
         <if condition="found?.canMove &amp;&amp; moveToFacilityId">
-            <service-call name="mantle.product.MaintenanceResourceServices.move#MaintenanceEquipment" out-map="movePreview"
-                    in-map="{assetId:assetId, toFacilityId:moveToFacilityId, toLocationSeqId:(moveToLocationSeqId || null), preview:true}"
-                    transaction="force-new" ignore-error="true"/>
+            <!-- in a transaction of its own, its refusal left for the lines below to read (ignore-error clears it) -->
+            <script>{
+                const probed = ec.service.sync().name('mantle.product.MaintenanceResourceServices.move#MaintenanceEquipment').requireNewTransaction(true)
+                        .parameters({assetId:assetId, toFacilityId:moveToFacilityId, toLocationSeqId:(moveToLocationSeqId || null), preview:true}).call()
+                if (probed != null) movePreview = Object.assign({}, movePreview || {}, probed)
+            }</script>
             <set field="moveRefusal" from="ec.message.hasError() ? ec.message.getErrorsString() : null"/>
             <script>ec.message.clearErrors()</script>
             <set field="moveEffect" from="movePreview?.effect || null"/>
@@ -108,8 +111,8 @@ along with this software (see the LICENSE.md file). If not, see
                                     </default-field>
                                 </field>
                                 <field name="assetName">
-                                    <default-field title="Name">
-                                        <text-line required="true"/>
+                                    <default-field title="Name" required="true">
+                                        <text-line/>
                                     </default-field>
                                 </field>
                                 <field name="classEnumId">
@@ -216,34 +219,41 @@ along with this software (see the LICENSE.md file). If not, see
                             <box-header title="Move ${asset.assetName}"/>
                             <box-body>
                                 <label text="${moveRefusal}" type="p" style="text-negative" condition="moveRefusal"/>
-                                <form-list name="MoveEffect" list="moveRows" skip-form="true" skip-header="true" paginate="false"
-                                        condition="moveRows.length">
-                                    <field name="label"><default-field><display style="m-muted"/></default-field></field>
-                                    <field name="value"><default-field><display/></default-field></field>
-                                </form-list>
-                                <form-single name="MoveEquipment" transition="moveEquipment" map="moveValues"
+                                <section name="MoveEffectSection" condition="moveRows.length">
+                                    <widgets>
+                                        <form-list name="MoveEffect" list="moveRows" skip-form="true" skip-header="true" paginate="false">
+                                            <field name="label"><default-field><display style="m-muted"/></default-field></field>
+                                            <field name="value"><default-field><display/></default-field></field>
+                                        </form-list>
+                                    </widgets>
+                                </section>
+                                <section name="MoveEquipmentSection"
                                         condition="moveEffect &amp;&amp; !moveEffect.organizationChanges">
-                                <field name="assetId">
-                                    <default-field>
-                                        <hidden/>
-                                    </default-field>
-                                </field>
-                                <field name="toFacilityId">
-                                    <default-field>
-                                        <hidden/>
-                                    </default-field>
-                                </field>
-                                <field name="toLocationSeqId">
-                                    <default-field>
-                                        <hidden/>
-                                    </default-field>
-                                </field>
-                                <field name="submitButton">
-                                    <default-field title="">
-                                        <submit text="Move it" confirmation="Move ${asset.assetName} to ${moveEffect?.toFacilityName}?"/>
-                                    </default-field>
-                                </field>
-                                </form-single>
+                                    <widgets>
+                                        <form-single name="MoveEquipment" transition="moveEquipment" map="moveValues">
+                                        <field name="assetId">
+                                            <default-field>
+                                                <hidden/>
+                                            </default-field>
+                                        </field>
+                                        <field name="toFacilityId">
+                                            <default-field>
+                                                <hidden/>
+                                            </default-field>
+                                        </field>
+                                        <field name="toLocationSeqId">
+                                            <default-field>
+                                                <hidden/>
+                                            </default-field>
+                                        </field>
+                                        <field name="submitButton">
+                                            <default-field title="">
+                                                <submit text="Move it" confirmation="Move ${asset.assetName} to ${moveEffect?.toFacilityName}?"/>
+                                            </default-field>
+                                        </field>
+                                        </form-single>
+                                    </widgets>
+                                </section>
                             </box-body>
                         </container-box>
                     </widgets>

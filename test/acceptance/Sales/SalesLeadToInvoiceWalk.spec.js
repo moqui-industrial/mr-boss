@@ -354,6 +354,7 @@ feature("the seller proposes and sends the quote to Dana, records Wingtip's acce
             asService(seller.username, () => invoke("mantle.order.SalesQuoteIssueServices.get#QuoteIssues", {orderId}))
         const issueId = issues().standingIssueId
         if (issueId) system(() => invoke("mantle.order.SalesQuoteIssueServices.attempt#QuoteDeliveries", {issueId}))
+        drain()
         const accepted = asUser(seller.username, () =>
             page(
                 "Orders/OrderDetail/salesRespondQuote",
@@ -395,7 +396,8 @@ feature("the seller proposes and sends the quote to Dana, records Wingtip's acce
         accepted.errors.length == 0
         issues.issues[0].state == "accepted"
         order.statusId == "OrderPlaced"
-        order.orderPurposeEnumId == "OrpSalesOrder"
+        // the accepted quote is the order, placed, its purpose kept (Mantle's SalesAccess: "OrpSalesQuote once placed")
+        order.orderPurposeEnumId == "OrpSalesQuote"
         part.otherPartyOrderId == "WT-P20-" + run
         won.errors.length == 0
         deal.statusId == "SalesOppWon"

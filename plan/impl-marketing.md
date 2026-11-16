@@ -1,3 +1,4 @@
+Nov 15, 2026 — the build complete: P1–P23 and follow-ups 1–9, with the framework fixes (sms-consent, hmac, container-box conditions, the acceptance fixes), each reviewed by a fresh agent and merged; the full suites passing within the budgets and the acceptance suites run once and fixed (Final suites and acceptance under P23). Committed only, nothing pushed.
 Nov 15, 2026 — gate 8 and the build's phases done: P22 (SMS, with the framework's conf-level sms-consent provider and the promotional day limit per number), P23 (the tui and server-static sweeps, the access walk, the PASS phone check, the docs) and follow-ups 5–6, each reviewed by a fresh agent and merged on its focused specs. Next: the full suites, then the acceptance suites once.
 Nov 15, 2026 — gate 7 built: P19–P21 and follow-ups 1–4 (stage M7, Marketing's first release M0–M7), promotions, Customer360 and engagement, attribution, reports and Insights, the campaign calendar with its projected collection, the shell providers and Assist, and a remote PASS checkout's visitor key, each phase reviewed by a fresh agent and merged on its focused specs. Next: P22 (SMS, in review) and follow-up 5, then P23.
 Nov 15, 2026 — gate 6 built: P16–P18 (stage M6), events (registration setup with the PASS Event page, registrations, tickets and
@@ -6631,6 +6632,18 @@ users and the controls), deleted after; no acceptance test was run.
   - the walk leaves ZIZI_SHOP published, as the other Marketing walks do;
   - nothing needs the user's call.
 
+**Final suites and acceptance, Nov 15 (Sales and Marketing together).** After Marketing P23 the release binary was rebuilt and
+`./moq test-apps` and `./moq test-framework` run (logs `.claude/worktrees/wave-logs/sm-final*`). The apps' failures were fixed on
+Marketing follow-ups 7 and 8 (a spec's leftover door grants, the Consent registry's first page, the send walk in the demo profile's quiet
+hours, a tx-commit SECA read at once) and the framework's container-box condition (fix/boxcond, the user's call). The re-run passed all
+4,693 regression features but one order-dependent Manufacturing read, fixed with the acceptance round; every component within its
+budget, mr-boss's client raised to 94 s (the user's agreement). `./moq accept mr-mantle mr-boss mr-pass` ran once (54 failures, most in
+acceptance tests never run before), fixed on acc/sales, acc/mkt and acc/other, with the user's calls built as Sales follow-up 5,
+Marketing follow-up 9 and fix/accfw; the second run left four (none a leak: an id compared across kinds, an unguarded sharedLinks read,
+a spec's leftover holiday, an unordered read), fixed on acc/final and each re-run green. Framework failures left to their owners: the
+OpenSearch archive download in `scripts/moq-test.sh`, webroot's MoquiFind spec (unchanged since Nov 13) and its client budget, and a
+moqui-host edge SMTP test.
+
 ### Follow-up 1 — Ticket capture, cancellation terms, stable entry codes and Retail's Utah tax
 
 The user's four calls of P17's review (§4 Nov 15): a ticket order's payment captured when the order is approved, through Accounting's
@@ -7674,6 +7687,134 @@ failing run's log (`wave-logs/sm-final-apps.log`) and its worker logs (`runtime/
   - the user's calls: the container-box condition (honour it in the framework's four renderers, or lint it and move the 58 boxes to
     sections), and the client budget (about 93 s of 90), as the Built note says.
 
+### Follow-up 8 — The re-run's EventRegistrations failure
+
+The re-run of `./moq test-apps --release --nobuild` after follow-up 7 (`wave-logs/sm-final2-apps.log`) failed one feature: mr-mantle
+EventRegistrations' "a ticket payment's visitor key: its digest kept only where allowed, read again before placement, attributed by
+it" (follow-up 5), its attribution read as `[]` (line 1391), though it passed alone. A fix branch, `mkt/fix8` in mr-mantle and mr-boss
+(the plan only).
+
+**Built Nov 15 (follow-up 8): The attribution read waits for the placement SECA.**
+- Checked first (the code over the plan): the root cause before any change. The suite's worker log (`runtime/tmp/test-workers-49306`,
+  worker 4: AudienceImport, CalendarChanges, CalendarServices, CampaignPromotions, CaseFeedback, DropShip, EdiX12, Eligibility,
+  Engagement and EventRegistrationSetup before EventRegistrations) shows no error for the order and no data a predecessor leaves on
+  the spec's own organizations (every row is MKRG_*): an empty list means no MarketingOutcomeLink at all, not a MobNone decision. The
+  decision is the SECA OrderPlacedRecordAttribution's, `when="tx-commit"`, and the framework runs tx-commit rules on a service worker
+  once the transaction commits (`register_tx_rules` in crates/moqui-core/src/service/call.rs: the outbox row, then
+  `spawn_rules` on the pool), as design §11 and MarketingAttribution.js say (after the placement commits, in a transaction of its
+  own, the retry job for one it missed). The feature read the links at once after the provider's return placed the order, so on a
+  loaded run it read before the worker had decided; the log shows that worker-thread chain for the spec's orders (the approval's
+  invoice on moqui-worker threads) still running after the feature's result was printed. Not a policy, a withdrawal, retention, the
+  attribution window (the event an hour old, its link 30 days) or another worker's data. The code is right; the spec's read was
+  timing-dependent.
+- Built: mr-mantle `test/work/EventRegistrations.spec.js`: the feature reads the order's links in force again until one is there, up
+  to five seconds (the spec's `waitFor`, as its capture and refund reads already do), then asserts as before: exactly one, by the
+  tracking event, the spec's event and campaign. Nothing it proves is weakened.
+- Tests run (release, `--nobuild`, this worktree's runtime): worker 4's mr-mantle predecessors, EventRegistrations, Attribution,
+  ShopCheckout and MarketingRetention in one run: 107 of 107, 26.9 s of feature time; EventRegistrations alone: 17 of 17, the feature
+  0.86 s. The race does not reproduce on an idle machine (the feature passed alone before the fix too). Not run: test-apps,
+  test-framework, acceptance.
+- Finding, numbered by the lead F461:
+  - a spec that reads what a tx-commit SECA writes must wait for it (the service worker runs it after the commit); this one read at
+    once (fixed here, low). The other attribution specs call handle#OrderPlaced directly and are not affected.
+- For the lead:
+  - budget share: none (the wait ends when the decision is there, normally at once);
+  - merge hot spots: mr-mantle `test/work/EventRegistrations.spec.js`; this file;
+  - the user's call: none.
+
+### Framework fix — Container-box conditions (fix/boxcond)
+
+The user's call of Nov 15 (§4, follow-up 7's review). **Built Nov 15.** mr-moqui 8b8747c9c on `fix/boxcond`: `sri.checkCondition`
+(screen/sri/sections.rs check_widget_condition) evaluates a container-box's `condition` as a section's is (the same eval, context and
+failure handling: a security error stops the render, another is logged and shown in the box's place, an `{t:"error"}` node in tui), a
+`conditionGuard` in ScreenSupport.js for qvt, html, text, csv, xml, xlsx and html-print, a `<template v-if>` in qvt-static, the XSD
+attribute and screen/tests/boxes.rs; docs JS-Screen-Scripts.md and JS-Templates-Macros.md, moqui-host.d.ts. mr-boss's conditioned
+boxes (60) read through: none needed a change.
+**Review Nov 15.** Sound; R1 (low): a test of the csv, xml, html-print and xlsx guards (9b9368c16). Findings: a box condition's syntax
+error is caught by lint and at render, not at screen load as a section's; a box with no id is labelled "container-box []".
+
+### Follow-up 9 — A scheduled send linked only for readers of sends
+
+The user's call of Nov 15 (§4, the acceptance run): the calendar, Home's Upcoming and the palette link a send (SendDetail) only for a
+user who may read sends; the events manager sees it unlinked; MarketingCalendarWalk's send steps return to the events manager where
+the walk's story has them, asserting the unlinked item. Branch `mkt/fix9` in mr-mantle and mr-boss.
+
+**Built Nov 15 (follow-up 9).**
+- Checked first (the code over the plan): SendDetail's refusal is the screen's own authorization (the Sends area, which denies the root
+  and grants BOSS_MKT_SENDS: "View not permitted"), not check#Record (any Marketing reader of the organization) or get#Send; Mantle's
+  rows only name a route key (`marketingSend`), so the fix is mr-boss's alone and mr-mantle is unchanged. Before it, Home's Upcoming
+  linked the send for the events manager too (its places came from sharedLinks, given to everyone), as did the Comms card
+  (lookup#Records) and the CampaignDelivery and Customer360 links, though nothing there reaches an events manager today.
+- Built (mr-boss): Marketing.js `capabilities.sendLink` (the Sends area's grant, `sends`, and a reader of sends, `sendRead`: who may open
+  SendDetail); `sharedLinks['Sends/SendDetail']` and `['Sends/CampaignDelivery']` null without it, so Home's Upcoming, ContentDetail's
+  distribution, Customer360's sends, CampaignDetail, DeliveryAnalysis, SurveyDistribution and CampaignDelivery's Open the send show the
+  send unlinked (ContentDetail and Customer360 gained a conditional field, CampaignDelivery a condition); `placeOf` takes the
+  capabilities and links `marketingSend` and `marketingDelivery` only with sendLink (Calendar's events through `placesFor`, CalendarTui
+  with `marketing.capabilities`, Today with the scope's); the send record kind's destination asks sendLink, so recordLink (the palette's
+  get#RecordLink) gives none and the Comms card answers url null (m-record-card shows the title unlinked); the palette's send rows ask
+  sendLink rather than sendRead. Home's Sends cards open Sends only for `can.sends`. Design §3 Calendar's As built line.
+- Tests run (release, `--nobuild`, this worktree's runtime): MarketingShell 4 of 4 (feature 1.6 s; new checks: the events manager's
+  calendar send has no url, their sharedLinks SendDetail null and the author's set, their palette no send, their Comms card visible and
+  unlinked); MarketingAccess, Content, Delivery, Sends, Campaigns, Reports, Surveys, Events, Registrations, Promotions, Automations: 31 of
+  31, 9.0 s; client MarketingSendWalk 1 of 1 (8.5 s); acceptance MarketingCalendarWalk 4 of 4 (7.5 s; re-run as changed: its send steps
+  are the events manager's again, the click on the send staying on the calendar, Home with no SendDetail link, the palette finding the
+  campaign and no send); screen lint: nothing in the touched screens. Not run: test-apps, test-framework, the rest of acceptance.
+- Findings, numbered by the lead F462 to F463 in order:
+  - Calendar.qvue (Commons) keeps the pointer cursor on a read-only item with no url, so the events manager's send looks clickable though
+    a click does nothing (low; left as is, it is Commons' shared component).
+  - the same pattern holds for the other restricted areas' route keys (`marketingApprovals`, `marketingAutomation`): linked by placeOf for
+    anyone, though only their readers receive such rows today (low; not changed).
+- For the lead:
+  - budget share: none (MarketingShell +0.1 s);
+  - merge hot spots: mr-boss service/ironstone/marketing/Marketing.js (scope, sharedContext, placeOf), screen/Marketing/Home.xml,
+    Calendar.xml, CalendarTui.xml, test/Marketing/MarketingShell.spec.js; this file;
+  - the user's call: none.
+
+**Review Nov 15 (follow-up 9).**
+- Checked and sound: `capabilities.sendLink` (the Sends area's grant and sendRead) against SendDetail's admission (Sends.xml's
+  `capabilities.sends`, the area grant and sendsRead, then check#Record, any Marketing reader of the organization): BOSS_MKT_SENDS denies
+  BOSS_MARKETING and gives ALWAYS to the author, approver and dispatcher groups, the administrator and ADMIN pass by the root's ALWAYS,
+  and each of them holds MARKETING_SEND_EDIT, _APPROVE or _DISPATCH, so for every seeded group sendLink is exactly who opens SendDetail
+  (events manager, audience manager, analyst and reader: neither); a custom group with the root grant and no Sends rows inherits the area
+  and gets sendLink with a send permission. The palette's move from sendRead to sendLink hides sends from no seeded user. Every link of a
+  send or delivery honours it: Calendar (placesFor) and CalendarTui (placeOf with marketing.capabilities), Today, Home's places (null
+  entries skipped by `places[route]`), ContentDetail, Customer360, CampaignDetail, DeliveryAnalysis, SurveyDistribution (its
+  createInvitations needs sendEdit, so its `'.'` fallback is not reached), CampaignDelivery's Open the send, recordLink and the Comms card
+  (lookup#Records' links resolve through lookupCard); the screens inside Sends are reached only with the area. Null sharedLinks entries
+  are only compared, passed to conditions or used as a whole url; no read calls a method on one, and the changed reads are in Marketing's
+  own screens, where sharedLinks is always set. The tui sections of the touched screens name no send path. The new spec checks fail on the
+  code before the follow-up (the events manager's send url, sharedLinks entry, palette and card).
+- Fixed:
+  - R1 (low): Commons' Calendar.qvue showed a pointer (and the agenda a clickable row) on a read-only item with no url, where a click does
+    nothing (the events manager's send): `openable(item)` (an event, or an item with a url) sets the cursor and the agenda's clickable.
+    Projects', People's and Manufacturing's items with a url, and every event, are unchanged.
+  - R2 (low): placeOf linked `marketingApprovals` and `marketingAutomation` for anyone; routeCapabilities now asks `approvals` and
+    `automations` (each area's own check), and Home's approvals place asks `can.approvals`. Only those areas' users receive such rows
+    today, so no one saw a broken link; a MarketingShell check (placesFor as the events manager and the author) covers it.
+- Finding, numbered by the lead F464:
+  - a user given the Sends area as a template reader only (MESSAGE_TEMPLATE_VIEW, no send, approve or dispatch permission) could open
+    SendDetail (Sends.xml asks sendsRead, check#Record any Marketing reader) but gets no send link; no seeded group is such a user, and
+    the Sends list's menu already hides sends from them, so SendDetail's admission is the looser of the two (low; not changed).
+- Tests run (release, `--nobuild`, this worktree's runtime): MarketingShell 4 of 4 (3.2 s feature time), MarketingAccess 8 of 8 (4.7 s),
+  Commons Calendar 24 of 24 (1.2 s); client acceptance MarketingCalendarWalk 4 of 4 (7.4 s, re-run for the Calendar.qvue change);
+  screen lint: nothing in the touched screens.
+- For the lead:
+  - budget share: none (MarketingShell about +0.0 s);
+  - merge hot spots: screen/Commons/Calendar.qvue (shared with Projects, People, Manufacturing), service/ironstone/marketing/Marketing.js
+    (routeCapabilities), screen/Marketing/Home.xml, test/Marketing/MarketingShell.spec.js;
+  - the user's call: none.
+
+### Framework fixes from the acceptance run (fix/accfw)
+
+**Built and reviewed Nov 15, merged.** mr-moqui: a path screen's `<actions>` error with its own status answers that status and its
+error page as from `<pre-actions>` (render.rs, sri/sections.rs, web::discard_output; streaming and in-place general errors unchanged);
+moqui-mail captures before the SMTP-host check (a host outside allowed-hosts still refused); `moqui test --serve` gives each client
+spec its own loopback requester address (127.1.0.N) through an X-Moqui-Test-Peer header honoured only on a test server, from a
+loopback peer with a loopback client address, and stripped on every server; /status, /health and /metrics accept 127.0.0.0/8. mr-boss:
+the Sales helper captureSystemMail removed. Review R1 (low): the header needs both the peer and the client address loopback; R2 a
+test that a non-test server drops it; R3 status_allowed simplified. Findings: a non-web makeRender whose path screen's actions throw
+NotFound now fails the render; browser walks still share 127.0.0.1.
+
 ## 4. Decisions
 
 These are made before and during the build. Each one that changes the design is also written into
@@ -7754,6 +7895,9 @@ design-marketing.md or the owner's design.
 | Nov 15, 2026 | The demo's campaign sends get dates relative to the load, as follow-up 3 did for events, so the calendar walk's projected collection holds them on any run day; follow-up 6 | The user's call (P21's review) |
 | Nov 15, 2026 | A container-box's `condition` is honoured by the framework (the XSD and every renderer), so the 58 mr-boss boxes and the base tools' one that rely on it work as written; a framework follow-up (fix/boxcond) before the acceptance run (follow-up 7's review) | The user's call |
 | Nov 15, 2026 | mr-boss's client budget is raised to the measured time of the re-run after the final suites' fixes (about 93 s; MarketingSendWalk 8 s within the approved Marketing estimate) | The user's call |
+| Nov 15, 2026 | Marketing's calendar and Home show a scheduled send to whoever sees them, but link it (SendDetail, the palette) only for a user who may read sends; the events manager sees it unlinked (the acceptance run); follow-up 9 | The user's call |
+| Nov 15, 2026 | Framework fixes from the acceptance run (fix/accfw): a subscreen's NotFound thrown in `<actions>` answers 404 as from `<pre-actions>`; moqui-mail's capture comes before the SMTP-host check; the test runner gives each client spec its own requester address so a rate limit keyed by requester is per spec | The user's call |
+| Nov 15, 2026 | The fix for errors in a path screen's `<actions>` covers every error kind with its own status (BadRequest, Validation, Conflict, Unprocessable, MethodNotAllowed as well as NotFound), matching `<pre-actions>`; General, rollback-only and unavailable errors stay written in place (fix/accfw's review) | The user's call |
 
 ## 5. Open questions
 
@@ -8233,6 +8377,10 @@ day, against the code and the other three plans; F64–F89 by the rest of P0 on 
 | F458 | Follow-up 7 (Review Nov 15): MarketingAccess's holders check was order-dependent on every Marketing spec's spec-local groups, not EventCheckIn's alone (R1, medium, fixed here) | Follow-up 7: as its Review note says |
 | F459 | Follow-up 7 (Review Nov 15): Consent's registry chips were satisfied by the filter's options (R2, low, fixed here) | Follow-up 7: as its Review note says |
 | F460 | Follow-up 7 (Review Nov 15): SendDetail's Delivery fix had no server check (R3, low, fixed here) | Follow-up 7: as its Review note says |
+| F461 | Follow-up 8 (Built Nov 15): a spec that reads what a tx-commit SECA writes must wait for it (the service worker runs it after the commit); this one read at once (fixed here, low). The other attribution specs call handle#OrderPlaced directly and are not affected | Follow-up 8: as its Built note says |
+| F462 | Follow-up 9 (Built Nov 15): Calendar.qvue (Commons) keeps the pointer cursor on a read-only item with no url, so the events manager's send looks clickable though a click does nothing (low; left as is, it is Commons' shared component) | Follow-up 9: as its Built note says |
+| F463 | Follow-up 9 (Built Nov 15): the same pattern holds for the other restricted areas' route keys (`marketingApprovals`, `marketingAutomation`): linked by placeOf for anyone, though only their readers receive such rows today (low; not changed) | Follow-up 9: as its Built note says |
+| F464 | Follow-up 9 (Review Nov 15): a user given the Sends area as a template reader only (MESSAGE_TEMPLATE_VIEW, no send, approve or dispatch permission) could open SendDetail (Sends.xml asks sendsRead, check#Record any Marketing reader) but gets no send link; no seeded group is such a user, and the Sends list's menu already hides sends from them, so SendDetail's admission is the looser of the two (low; not changed) | Follow-up 9: as its Review note says |
 
 ## 7. Later
 

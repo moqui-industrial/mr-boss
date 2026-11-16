@@ -33,7 +33,12 @@ along with this software (see the LICENSE.md file). If not, see
         <set field="loadRefusal" value=""/>
         <set field="report" from="null"/>
         <if condition="marketing.capabilities.reportRead">
-            <service-call name="mantle.marketing.MarketingReportServices.get#DeliveryAnalysis" out-map="report" transaction="force-new" ignore-error="true" in-map="serviceValues"/>
+            <!-- in a transaction of its own, its refusal left for the lines below to read (ignore-error clears it) -->
+            <script>{
+                const probed = ec.service.sync().name('mantle.marketing.MarketingReportServices.get#DeliveryAnalysis').requireNewTransaction(true)
+                        .parameters(serviceValues).call()
+                if (probed != null) report = Object.assign({}, report || {}, probed)
+            }</script>
             <set field="loadRefusal" from="ec.message.hasError() ? ec.message.getErrorsString().replace(/^(Error: )?([A-Z_]+: )/, '') : ''"/>
             <if condition="loadRefusal"><set field="report" from="null"/></if>
             <script>ec.message.clearErrors()</script>
@@ -84,7 +89,7 @@ along with this software (see the LICENSE.md file). If not, see
             <widgets>
                 <label text="${report.fromText} – ${report.thruText}, as of ${report.asOfText}. ${report.basis}" type="p" style="text-caption m-muted"/>
                 <label text="Accepted ${totals.acceptedCount} of ${totals.attemptedCount} handed off · Delivered ${totals.deliveredCount} (${totals.deliveryRateText}; receipts for ${totals.receiptCoverageText}) · Failed ${totals.failedCount} · Uncertain ${totals.uncertainCount} · Opens ${totals.openRateText} · Clicks ${totals.clickRateText} of ${totals.trackedAcceptedCount} tracked"
-                        type="h6"/>
+                        type="h6" condition="totals.attemptedCount"/>
                 <label text="No send was released in this period." type="p" style="m-muted" condition="!sendRows.length"/>
                 <container-box condition="sendRows.length">
                     <box-header title="Delivery by send"/>

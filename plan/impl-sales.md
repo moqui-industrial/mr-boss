@@ -1,3 +1,4 @@
+Nov 15, 2026 — the build complete: P1–P20 and follow-ups 1–5, each reviewed by a fresh agent and merged; the full suites passing within the budgets and the acceptance suites run once and fixed (Final suites and acceptance under P20). Committed only, nothing pushed.
 Nov 14, 2026 — gate 3 built: P14–P20 (stage S3), commercial changes and the handoffs, agreements and customer prices with their
 print, recurring orders, PASS Sales' orders, forecasts and targets, reports with Insights' registrations and the quote dataset, and
 the RFQ acknowledgement, each phase reviewed by a fresh agent and merged on its focused specs, with follow-up 2 (recurring orders'
@@ -5457,6 +5458,18 @@ re-run on the merge before any change: SalesQuoteDataset, SalesPipelineDataset, 
     reference and the seller's name), and Sales' customer agreements gain the print (from its own records for its reader, missing
     otherwise, no cost or linked order).
 
+**Final suites and acceptance, Nov 15 (Sales and Marketing together).** After Marketing P23 the release binary was rebuilt and
+`./moq test-apps` and `./moq test-framework` run (logs `.claude/worktrees/wave-logs/sm-final*`). The apps' failures were fixed on
+Marketing follow-ups 7 and 8 (a spec's leftover door grants, the Consent registry's first page, the send walk in the demo profile's quiet
+hours, a tx-commit SECA read at once) and the framework's container-box condition (fix/boxcond, the user's call). The re-run passed all
+4,693 regression features but one order-dependent Manufacturing read, fixed with the acceptance round; every component within its
+budget, mr-boss's client raised to 94 s (the user's agreement). `./moq accept mr-mantle mr-boss mr-pass` ran once (54 failures, most in
+acceptance tests never run before), fixed on acc/sales, acc/mkt and acc/other, with the user's calls built as Sales follow-up 5,
+Marketing follow-up 9 and fix/accfw; the second run left four (none a leak: an id compared across kinds, an unguarded sharedLinks read,
+a spec's leftover holiday, an unordered read), fixed on acc/final and each re-run green. Framework failures left to their owners: the
+OpenSearch archive download in `scripts/moq-test.sh`, webroot's MoquiFind spec (unchanged since Nov 13) and its client budget, and a
+moqui-host edge SMTP test.
+
 ### Follow-up 1 — a new record's organization default (F111)
 
 **Built Nov 13 (follow-up 1).** mr-mantle and mr-boss on branch `fix/orgdefault` (hashes in the worker's reply); mr-moqui
@@ -5963,6 +5976,156 @@ without conflicts.
     it or raise it is the user's call.
   - Merge hot spots: those of the Built note, plus SmithyMirrors' ids, SalesRecurrence's account lookup and TextFiling's setup.
 
+### Follow-up 5 — A seller's default facility for Sales order parts, and the Opportunities list after a stage change
+
+The user's calls of Nov 15 (§4, the build's acceptance run): a Sales order part gets the seller's default shipping facility (a Sales
+setting per seller organization, changeable on the order), so a seller places an inventory product and Warehouse picks the shipment;
+the demo gives Ziziwork Sales a warehouse; the acceptance tests' workarounds (spec stock, a facility set in setup) are removed where
+the default now covers them. The Opportunities list's Change stage keeps the list's filters. Branch `sal/fix5` in mr-mantle and mr-boss.
+
+**Built Nov 15 (follow-up 5).** mr-mantle and mr-boss on branch `sal/fix5`; mr-moqui unchanged, no Rust built.
+- Checked first (the code over the plan): P9's SalesPolicy and store#SalesPolicy (SalesApprovals.js), SalesDefaults and Sales.js'
+  choices; every path that makes a Sales order part: create#Quote (SalesQuotes.js createQuote: quotes, direct orders through
+  create#SalesOrder, an RFQ's quote, a template's copy through cloneForQuote), clone#Quote, clone#SalesOrder, store#SalesRecurrence's
+  base and create#RecurringOrder's occurrence (both clone#Order, which copies the part's facility), and respond#Quote, which places
+  the quote's own order (no new part). place#Order's reservation (AssetServices reserve#AssetForOrderItem) reads the part's facility,
+  else the store's; with neither it reserves the seller's assets anywhere and cannot make an ad hoc asset. The Opportunities forms'
+  action URL carries none of the list's filters (checked in a render), so after Change stage or the batch the redirect kept only what
+  the form posted: the target stage (and Assign's owner) as filters, every other filter lost.
+- Mantle:
+  - `entity/SalesApprovalEntities.xml`: SalesPolicy.defaultFacilityId (audit-logged, relationship to Facility).
+  - `SalesApprovals.js`: defaultFacilityId among the policy fields (store#SalesPolicy refuses FACILITY_INVALID; get#SalesPolicy's
+    facilityName); `facilityRefusal` (a facility the organization owns, a warehouse, retail store or plant, not closed),
+    `facilityOptions`, `defaultFacilityOf` (none once the facility no longer qualifies) and `applyDefaultFacility(orderId)`: each Sales
+    part (internal seller, customer not internal) with no facility gets its seller's default; a part with one keeps it, a seller with
+    no default changes nothing.
+  - Applied in createQuote, cloneQuote, cloneOrder, before place#Order in place#SalesOrder and respond#Quote (a draft or quote made
+    before the default), and in create#RecurringOrder for a Sales base (OrderServices.xml).
+  - `update#SalesOrderFacility` (SalesOrderServices.xml, SalesOrders.js updateFacility): SALES_ORDER_EDIT on an order the caller may
+    change, a direct draft or placed, approved or held with nothing reserved or shipped (FACILITY_LOCKED: moving a reservation is
+    Warehouse's, borrowed authority), or SALES_QUOTE_EDIT on a quote draft (QUOTE_NOT_DRAFT); the revision named (REVISION_CHANGED);
+    FACILITY_REQUIRED, FACILITY_INVALID; another organization's as missing. get#SalesOrder and get#Quote answer facilityId and
+    facilityName; get#SalesOrder's `can.changeFacility`.
+- BOSS:
+  - SalesDefaults: "Orders ship from" (a server-search drop-down of the organization's facilities) in Publish new defaults and In
+    effect. Sales.js choice `facilities` (configure, orderEdit or quoteEdit, an organization of the scope; Mantle's facilityOptions).
+  - OrderDetail (template/SalesOrderDetail.xml): Overview's Ships from for a quote and an order; More's Change ships from (a quote
+    draft; an order while `can.changeFacility`), over `salesUpdateOrderFacility` (template/SalesOrders.xml, included by
+    Shared/OrderDetail.xml).
+  - Opportunities: the list's filters as JSON (`listFilters`) posted with the row's Change stage and the three batch forms;
+    changeStage and applyBatch (template/SalesOpportunities.xml) put them back in the context after the call (a fixed list of the
+    filter names, null when empty), so the response keeps the list's own filters and not the stage or owner chosen. A form without
+    them (OpportunityDetail's Change stage) goes back as before. Leads' batch (Assign, Close as lost) posts its filters the same
+    way, as its Assign had the owner bug too (the shared transition).
+  - Demo (`BossZSalesDemoData.xml`): Ziziwork Sales Warehouse (BOSS_SAL_WH, Salt Lake City, a pick location, issue over on-hand
+    allowed as Retail's warehouse is) with twelve line upgrade kits (Fabrikam's draft takes two); Ziziwork Sales' SalesPolicy naming
+    it; Retail's policy names ZIRET_WH; the two demo quotes' parts name their facility. No Demo Product One-One stock there (finding
+    1): an order of it reserves at the warehouse with an ad hoc asset.
+  - Acceptance workarounds removed: SalesSpecLib.js `sellerStock()` and its calls in SalesOrderScenarios and SalesAccessWalk;
+    SalesChangeScenarios' `fromWarehouse` (the part set to ZIRET_WH as the system), its picked-change feature now checking the part
+    ships from ZIRET_WH by Retail's default.
+- Specs:
+  - Mantle `test/order/SalesOrderFacility` (new, 3 features, 2.1 s; standalone on SalesQuoteIssueFixtures): the default published,
+    another organization's warehouse and an office refused; a quote and a direct order made, a copy and an older draft placed ship
+    from it, an inventory product with no stock reserving there, a seller without a default leaving its part without one; the
+    change by the editor to the seller's warehouse, refused a reader (PERMISSION_DENIED), another organization's facility, a stale
+    revision, a reserved order (FACILITY_LOCKED) and another organization's quote (RECORD_UNAVAILABLE).
+  - mr-boss: SalesOpportunities "Change stage and the batch move go back to the list with its own filters" (0.16 s; posted as JSON
+    as the qvt client does, failing on the code before the change); SalesSettings "Ships from offers the organization's own
+    warehouses..." (0.28 s: the choice for the administrator, a rep and a reader, the selected value of another organization not
+    admitted, the demo's two defaults); SalesOrders' one OrderDetail render now checks Ships from and no Change ships from for the
+    approver.
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-mantle SalesOrderFacility, SalesQuoteDrafts,
+  SalesQuoteApprovals, SalesOrderApproval, SalesQuoteIssue, SalesQuoteResponse, SalesPortal, SalesQuoteTemplates, SalesRecurrence,
+  SalesOrderChanges, SalesQuoteRequests, StorelessOrderConfirmation, StorelessOrderTax, OrderLifecycle, Subscriptions,
+  ShopSubscriptions, OrderToCashBasicFlow, CalcGridSales, SalesWorkspace, SalesLeadIntake with their dependencies (141 of 141 once
+  AssetReservationMultipleThreads passed, finding 1), SalesAgreements, SalesQuoteDataset, SalesOrganizationScope, SalesOpportunities
+  (14 of 14); mr-pass SalesPortalAccess (4 of 4); mr-boss SalesOpportunities, SalesSettings, SalesOrders, SalesQuotes, SalesAccess,
+  SalesApprovals, SalesRecurrence, SalesOrderChanges, SalesQuoteSend, SalesQuoteTemplates, SalesQuoteRequests, SalesHome,
+  SalesAgreements, MarketingLeads, SalesIntake, SalesAccounts, SalesReports, SalesForecast, SalesQuoteAlert, SalesReportCatalog,
+  CustomerServiceOrders, WarehouseAccess: all pass. Acceptance (changed here, so run): SalesOrderScenarios 3 of 3, SalesAccessWalk 11
+  of 11, SalesChangeScenarios 3 of 3. `moqui lint --screens` (release): 143 flagged sites, the same list as master's runtime, none
+  in a changed screen. Prettier clean on the changed JavaScript. Not run: the client walk (no screen it walks changed), the rest of
+  mr-boss' acceptance suite, ./moq test-apps, test-framework.
+- Inventories and design: usl-inventory's P11 table (update#SalesOrderFacility) and the update#OrderPart row; design-sales §9
+  SalesDefaults, §6 OrderDetail's sales-order context and §3 Opportunities, each with an as-built paragraph.
+- Findings, numbered by the lead F350 to F352 in order:
+  - mr-mantle's AssetReservationMultipleThreads sums every asset of DEMO_1_1 in the database and assumes the demo's total, so demo
+    stock of DEMO_1_1 in another warehouse fails it (it did with fifty at BOSS_SAL_WH); Ziziwork Sales' warehouse holds only its own
+    kits, and the acceptance orders of DEMO_1_1 reserve there with no stock. A spec-own product would free the demo.
+  - Every filter of the Opportunities list was lost after Change stage or a batch, not only replaced by the target stage, since the
+    forms post no list parameters; Leads' Assign set the chosen owner as the list's owner filter. Both fixed here through the shared
+    transitions. Marketing's mount of Leads includes the same transitions and posts no `listFilters` unless it renders Sales' Leads
+    screen, in which case it is fixed too.
+  - The default fills only a part with no facility: a copy keeps its source's facility even if the seller has since closed or sold
+    it, and a store order keeps its store's.
+- For the lead:
+  - Budget share: mr-mantle about 2.1 s (SalesOrderFacility); mr-boss about 0.5 s (two features).
+  - Merge hot spots: mr-mantle `SalesApprovals.js` (policyFields, the module's exports), `SalesOrders.js` (placeOrder, cloneOrder,
+    getOrder, operations), `SalesQuotes.js` (createQuote, getQuote), `SalesQuoteIssues.js` (respondTo, cloneQuote),
+    `OrderServices.xml` (create#RecurringOrder), `SalesApprovalEntities.xml`, `SalesOrderServices.xml`, `SalesApprovalServices.xml`;
+    mr-boss `BossZSalesDemoData.xml` (P7 and P9 blocks), `Sales.js` (a choices block after Marketing P13's), `ContextServices.xml`,
+    `template/SalesOrderDetail.xml`, `template/SalesOrders.xml`, `template/SalesOpportunities.xml`, `Shared/OrderDetail.xml`
+    (transition-includes), `Sales/Settings/SalesDefaults.xml`, `Sales/Pipeline/Opportunities.xml` and `Leads.xml` (Marketing mounts
+    Leads), `SalesSpecLib.js` and the three acceptance specs.
+  - The user's call: the facility kinds a Sales part may ship from are a warehouse, retail store or plant (an office, room or
+    building is refused); and a facility change once the order is reserved is left to Warehouse (FACILITY_LOCKED) rather than Sales
+    moving the reservations.
+
+**Review Nov 15 (follow-up 5).** Fresh review of `sal/fix5` (mr-mantle, mr-boss) against this section, §2, §4's two Nov 15 rows and
+design §3, §6, §9.
+- Checked and sound:
+  - store#SalesPolicy's defaultFacilityId: SALES_CONFIGURE and the organization through the existing policy path, FACILITY_INVALID for
+    another organization's facility, an office or room, or a closed one; audit-logged; a published successor, revisions as before.
+    get#SalesPolicy's facilityName for a configurer only. Sales.js' `facilities` choice: configure, orderEdit or quoteEdit, an
+    organization of the scope (choiceOrganization), a selected value admitted only when it qualifies.
+  - update#SalesOrderFacility: SALES_ORDER_EDIT through requireOrder(edit) (an approver-only reader refused), SALES_QUOTE_EDIT and a
+    draft through requireQuote(edit); another organization's order or quote is RECORD_UNAVAILABLE; the revision checked before the
+    write, and the part update counts a revision (Order EECA); FACILITY_LOCKED on any AssetReservation or ShipmentItemSource row.
+  - Every path that makes a Sales part fills only an empty facility: createQuote (quotes, direct orders, RFQ through
+    create#QuoteFromRequest, templates through cloneForQuote), clone#Quote, clone#SalesOrder, place#SalesOrder and respond#Quote
+    before place#Order, create#RecurringOrder for an OrpRecurringTemplate base only (Shop bases return earlier); a template's own
+    part (no customer) and internal customers are skipped. A store-bound Sales quote keeps its store's inventory facility (create#Order
+    fills it first). Commerce placement, approve#Order and autoApprove#Order are untouched (no call added there).
+  - Opportunities/Leads filters: the redirect stays `url="."`; only a fixed list of the list's filter names is put back, each as a
+    string or null, after the service call (so nothing posted reaches the service); bad JSON is ignored. Nothing a user could not put
+    in the list's own URL.
+  - Demo: BOSS_SAL_WH and twelve upgrade kits disturb no Warehouse, Insights, Products or Accounting valuation spec (all run, below);
+    no spec publishes a first SalesPolicy for ORG_ZIZI_SALES (the specs' policies are of their own organizations), so the new demo row
+    breaks no REVISION_REQUIRED path.
+  - Acceptance workarounds: SalesOrderScenarios and SalesAccessWalk still place Ziziwork Sales' DEMO_1_1 orders (now at BOSS_SAL_WH,
+    issue over on-hand); SalesChangeScenarios' picked change still needs a Warehouse origin and now also proves Retail's default
+    gave it. Not rerun (unchanged by this review).
+- Fixed:
+  - R1 (medium; owner contracts): update#SalesOrderFacility and get#SalesOrder's `can.changeFacility` reached every sales order orderOf
+    covers, so a Sales editor could change the facility of a Commerce store order or another app's placed order (Projects', a
+    replacement) while it was unreserved. Now only Sales' own orders (a direct order, an accepted quote, an occurrence of a Sales
+    recurring base); another is ORDER_NOT_SALES and offers no Change ships from (SalesOrders.js `salesOwned`). SalesOrderFacility
+    checks a placed order with no Sales purpose (fails on the unfixed code: the change succeeded).
+  - R2 (low; spec): "never overrides a set one" was not tested (the copy's facility equalled the default). SalesOrderFacility now
+    places the order changed to the second warehouse and checks it still ships from there.
+  - R3 (low; doc): design §3's follow-up 5 paragraph was inserted between two rows of the Opportunities forms table, splitting it;
+    moved after the table. Design §6's Ships from paragraph names Sales' own orders (R1).
+- Findings, numbered by the lead F353 to F354 in order:
+  - R1 above: a Sales operation over the orders orderOf covers needs its own kind check where the field is another app's to set.
+  - The spec covers create, copy and place; respond#Quote's, clone#Quote's and create#RecurringOrder's fill are reviewed by reading
+    only (each the same applyDefaultFacility call).
+- Tests run (release binary, `--nobuild`, this worktree's runtime): mr-boss every Warehouse, Insights and Products spec with
+  SalesOpportunities, SalesSettings, SalesOrders, SalesQuotes, SalesAccess, MarketingLeads, AccountingValuation and AccountingAccess
+  (432 of 432, 55 specs, 84.2 s feature time); after R1, SalesOrders, SalesRecurrence, SalesOrderChanges, CustomerServiceOrders (10
+  of 10). mr-mantle SalesOrderFacility (3 of 3, 1.3 s after R1, R2), AssetReservationMultipleThreads, AssetReservationMisc,
+  WarehouseReports, WarehouseCounts, WarehouseStockChecks, WarehouseFacilities, Sourcing, SalesOrderApproval, SalesQuoteResponse,
+  SalesRecurrence, SalesQuoteTemplates, SalesOrderChanges, SalesQuoteRequests, SalesPortal with dependencies (132 of 132). Prettier
+  clean. No acceptance spec run (none changed here); no screen changed, no lint.
+- For the lead:
+  - Budget: mr-mantle SalesOrderFacility about 1.3 s (was 2.1 s in the Built note's loaded run); mr-boss unchanged.
+  - Merge hot spots: those of the Built note; SalesOrders.js updateFacility and getOrder's `can` (R1).
+  - The user's calls: the two choices fit the design and need no decision before merge. The kinds (warehouse, retail store, plant)
+    match what Mantle's Maintenance and supply planning treat as stocking sites, and a drop-ship facility is the supplier's so the
+    owner check refuses it. FACILITY_LOCKED keeps Sales from moving Warehouse's reservations (design §6, borrowed authority); in
+    practice an inventory order is reserved when placed, so Ships from is changed before placement and Warehouse moves it after.
+    Worth telling the user as a consequence, not asking.
+
 ## 4. Decisions
 
 These are made before and during the build. Each one that changes the design is also written into design-sales.md or
@@ -6106,6 +6269,8 @@ Paths without a component are mr-boss's; Mantle's start `mr-mantle/`, PASS's `mr
 | F50 | P0 (review): the other two earlier plans. impl-people provides what Sales uses (`find#Employees` and `Shared/Employee360` in its P2, the access-end entry in its P7) and its §7 lists both with the phases here that use them (P2, P6), and the commission input and customer retainers as later. impl-maintenance §7 leaves three links to this plan: the chargeable repair's quote (P8, Customer Service's handoff, F40); customer-equipment maintenance under a service agreement, an open item of design-maintenance §15 that design-sales does not have; and supplier warranty terms as an Agreement "when Sales has adopted the shared agreement states", which is a purchase-direction agreement on statuses Purchasing already seeded (F19) | §1, §7; the question on customer-equipment maintenance is impl-maintenance §5 Q8 (§5 Q11 points to it); both plans' §7 were reconciled with this one |
 | F51 | P0 (review): the plan's spec count and cost were low. It names about twenty-four new Mantle specs, not sixteen, and a Mantle spec of this kind is not "well under a second": Purchasing's seventeen measured 32.5 s and Customer Service's fifteen 34.2 s (mr-mantle test/budget), with 20.3 s and 18.2 s server in mr-boss (test/budget) | §4: the estimate the user approved is the corrected one |
 | F52 | Nov 11 (the user's answer on order approval): every automatic approval goes through `mantle.order.OrderServices.autoApprove#Order` (mr-mantle service/mantle/order/OrderServices.xml:1495-1539), which approves a Placed order whose authorized, delivered or confirmed payments cover its total, with no `check#OrderPreApprove` warning and no earlier approval. Its callers: `authorize#OrderPayments` (service/mantle/account/PaymentServices.xml:1689-1691), run on placement by the SECA `OrderPlacedAuthorizePayments` (service/AccountingPayment.secas.xml:17-20); the SECA `OrderPlacedAutoApprove` (service/OrderReturn.secas.xml:50-59) for a store with no approval delay; the job `autoApprove#OrdersDelayed` (OrderServices.xml:1463-1494); and the credit hold's release (service/mantle/account/Credit.js:305-306). Shop's and Commerce's store orders are approved by this path, and nothing in it reads a seller's policy | P11: the seller's approval setting is checked in `autoApprove#Order`, so all four callers meet it; off by default, so Shop's and Commerce's specs pass unchanged; P9's warnings join those of the check it already refuses on (§4) |
+| Nov 15, 2026 | A Sales order part gets its facility from a seller default: a Sales setting per seller organization, its default shipping facility, used when the part is made and changeable on the order; the demo gives Ziziwork Sales a warehouse (the acceptance run: a seller with no stock could not place an inventory product, and Warehouse could not pick a Sales shipment); follow-up 5 | The user's call |
+| Nov 15, 2026 | The Opportunities list's row and batch Change stage keep the list's own filters after the move, not the target stage as a filter; follow-up 5 | The user's call |
 | F53 | P0 (Nov 13): `find#Employees` (mr-mantle service/mantle/humanres/PeopleServices.xml:143-189; Employees.js:259) reads by People's scope (People.js:287-327) and refuses `PERMISSION_DENIED` a caller with no People read (Employees.js:286); a staff read is `PEOPLE_DIRECTORY_VIEW` or an HR, recruit, develop, case or configure permission (People.js:67). It answers the work identity (name, job title, manager, work email and phone, location), never private contacts or pay, and takes `organizationPartyId`. Employee360 is mounted at `People/Employees/Employee360` and `Commons/People/Employee360` (screen/People/Employees.xml:32; screen/Commons/People.xml:27), and Insights and Maintenance mount it too; `get#Employee360` admits by the same scope, so a Sales user with no People permission sees "not available". People.js's `employee360Apps` (:1643-1669) names Sales as an app with no row, linked by `employee360Link` (:1737-1749). Maintenance gave its planners `PEOPLE_DIRECTORY_VIEW` for a custodian's card (data/BossSetupMaintenanceData.xml:86-100) | P2: `BOSS_SALES_MANAGER` and `BOSS_SALES_ADMIN` get `PEOPLE_DIRECTORY_VIEW` for TeamMembers' lookup and the link; a rep sees a teammate's card only with it. Design §1.1 changed. P2 changed |
 | F54 | P0 (Nov 13): the participant is still `ironstone.admin.LifecycleParticipant` (entity/AdminEntities.xml:140: lookup, transfer and pause services, `resourceParameter`, `requiredPermission`). `request#AccessEnd` (service/ironstone/admin/LifecycleServices.xml:107; Provisioning.js:104-116, to Mantle's `request#AccessEnd`, mr-mantle service/mantle/party/Lifecycle.js:1255) calls no participant: Admin's `find#OwnedResources` and the disable and removal operations do (service/ironstone/admin/Lifecycle.js:89-146, :192-212), as the identity operator, on the contract of framework service/org/moqui/admin/IdentityServices.xml:136-160 (lookup: `userId` to `resourceList`; transfer: `fromUserId`, `toUserId`, `reason` and the resource parameter, to `transferred`). People's row names a Mantle service and an owner-change permission of its own granted to `BOSS_ADMIN_IDENTITY` (data/BossSetupData.xml:5203-5209); Projects' names `ADMIN_IDENTITY_VIEW` over a BOSS service (:4068) | P1 seeds `SALES_OWNER_CHANGE`; P6's participant follows People's row, `SalesWorkspaceServices`' lookup and transfer checking it, granted to `BOSS_ADMIN_IDENTITY`; its usable-when walks Admin's disable. Design §1.1 changed. P1, P6 changed |
 | F55 | P0 (Nov 13): the deny pattern's fifteen rows (data/BossSetupData.xml:461-487, :4093) name `people` and `maintenance` and not `marketing`; the longest is 238 characters, 244 with `sales` and 254 with `marketing` too, so none splits (the comment at :458-459 says so). Maintenance put its setup in a file of its own, data/BossSetupMaintenanceData.xml, "so that its appends and People's do not meet" (:14-17); People's is at BossSetupData.xml:5054-5753, and the demo users end with Maintenance's (data/BossUsersDemoData.xml:1343-1478). The registries are `moqui.server.SettingsEntry`, `ReadinessProvider` and `TransferTarget` and `moqui.security.CapabilityBundle`; the owner routes are Admin.js `mountRoutes` (service/ironstone/admin/Admin.js:404-440); Shared/DataImport has People's and Maintenance's branches (service/ironstone/shared/DataImport.js:51-66, :70-85), and any other root falls through to the catalog branch (:87-99) rather than a refusal; People's and Maintenance's targets name their import permission with the app's own (mr-mantle data/PeopleLifecycleSetupData.xml:43; MaintenanceSettingsData.xml:44) | F25 settled: P1 adds `sales` to each row, no split. Sales' setup is `data/BossSetupSalesData.xml` (loading after BossSetupData), so its appends and Marketing's track do not meet; demo users after Maintenance's. P6's DataImport branch goes before the catalog branch. §1, P1, P6 changed |
@@ -6403,6 +6568,11 @@ Paths without a component are mr-boss's; Mantle's start `mr-mantle/`, PASS's `mr
 | F347 | Follow-up 4 (Built Nov 14): TextFiling (mr-boss) and SalesRecurrence's base feature (mr-mantle) failed in a serial run of their whole component and pass alone: order or timing dependent, not looked into | Follow-up 4: as its Built note says |
 | F348 | Follow-up 4 (Built Nov 14): PayConfiguration (mr-mantle, 10.2 s in a loaded serial run, 7.8 s alone) and AccountingAccess (mr-boss, 9.5 s) are the next nearest the limit; not split (under 12 s) | Follow-up 4: as its Built note says |
 | F349 | Follow-up 4 (Review Nov 14): Two specs used the same spec-local ids (R1), and two read shared demo or list data that other specs change or grow (R2, R3). These pass alone and fail only in a full serial run. A spec-local id prefix, and a lookup by id rather than a first page, keep them apart | Follow-up 4: as its Review note says |
+| F350 | Follow-up 5 (Built Nov 15): mr-mantle's AssetReservationMultipleThreads sums every asset of DEMO_1_1 in the database and assumes the demo's total, so demo stock of DEMO_1_1 in another warehouse fails it (it did with fifty at BOSS_SAL_WH); Ziziwork Sales' warehouse holds only its own kits, and the acceptance orders of DEMO_1_1 reserve there with no stock. A spec-own product would free the demo | Follow-up 5: as its Built note says |
+| F351 | Follow-up 5 (Built Nov 15): Every filter of the Opportunities list was lost after Change stage or a batch, not only replaced by the target stage, since the forms post no list parameters; Leads' Assign set the chosen owner as the list's owner filter. Both fixed here through the shared transitions. Marketing's mount of Leads includes the same transitions and posts no `listFilters` unless it renders Sales' Leads screen, in which case it is fixed too | Follow-up 5: as its Built note says |
+| F352 | Follow-up 5 (Built Nov 15): The default fills only a part with no facility: a copy keeps its source's facility even if the seller has since closed or sold it, and a store order keeps its store's | Follow-up 5: as its Built note says |
+| F353 | Follow-up 5 (Review Nov 15): R1 above: a Sales operation over the orders orderOf covers needs its own kind check where the field is another app's to set | Follow-up 5: as its Review note says |
+| F354 | Follow-up 5 (Review Nov 15): The spec covers create, copy and place; respond#Quote's, clone#Quote's and create#RecurringOrder's fill are reviewed by reading only (each the same applyDefaultFacility call) | Follow-up 5: as its Review note says |
 
 ## 7. Later
 

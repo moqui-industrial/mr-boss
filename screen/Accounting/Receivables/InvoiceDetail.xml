@@ -74,6 +74,8 @@ along with this software (see the LICENSE.md file). If not, see
         </actions>
         <default-response url="${sharedLinks['Receivables/InvoiceDetail']}">
             <parameter name="recordId" from="financeResult.invoiceId"/>
+            <!-- the new credit under invoiceId too, which InvoiceDetail reads first: the context's is the original's -->
+            <parameter name="invoiceId" from="financeResult.invoiceId"/>
             <parameter name="organizationPartyId" from="organizationPartyId"/>
         </default-response>
         <error-response url="."/>
@@ -549,7 +551,7 @@ along with this software (see the LICENSE.md file). If not, see
                                         </field>
                                     </form-single>
                                 </container-dialog>
-                                <link url="/fop${printPath}" text="Download PDF" url-type="plain" target-window="_blank"/>
+                                <link url="/fop/apps${printPath}" text="Download PDF" url-type="plain" target-window="_blank"/>
                                 <link url="downloadFatturaPaXml" text="Download FatturaPA XML (SdI)" link-type="anchor" target-window="_blank" parameter-map="{invoiceId:invoiceId}"/>
                             </button-menu>
                         </container>

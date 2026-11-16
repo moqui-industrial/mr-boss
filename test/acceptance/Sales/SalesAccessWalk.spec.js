@@ -54,7 +54,8 @@ const retailUsers = [
     marketingSales
 ]
 const groupUsers = retailUsers.concat([users.otherRep, users.bothManager, users.admin])
-const refusedText = /RECORD_UNAVAILABLE|ORGANIZATION_DENIED|PERMISSION_DENIED|HOLD_UNAVAILABLE|not available|not authorized/
+const refusedText =
+    /RECORD_UNAVAILABLE|ORGANIZATION_DENIED|PERMISSION_DENIED|ACCESS_DENIED|HOLD_UNAVAILABLE|not available|not authorized/
 const state = {}
 
 // the two sides: the organization, its representative, the account and contact its records are for, and (made in setup) its records,
@@ -513,14 +514,16 @@ feature(
                         if (leaks(s, viewer, text).length || hidden.some(id => text.includes('"' + id + '"')))
                             problems.push(`${viewer}'s palette finds ${s.name}'s ${secret}`)
                     }
-                    // the drop-downs, searched and with the record as the selected value
+                    // the drop-downs, searched and with the record as the selected value; an option's value is checked against the
+                    // ids of the choice's own kind (a party id may equal another side's shipment or order id, as the sequences overlap)
                     for (const [choice, parameters, kind, any] of choices) {
                         if (!kinds.includes(kind)) continue
                         const options = Array.from(
                             ask(viewer, C + "get#Choices", Object.assign({choice}, parameters)).options || []
                         )
+                        const hiddenOfKind = idsOf(s, [kind])
                         const offered = options.filter(
-                            option => any || hidden.includes(option.value) || leaks(s, viewer, option.label).length
+                            option => any || hiddenOfKind.includes(option.value) || leaks(s, viewer, option.label).length
                         )
                         if (offered.length)
                             problems.push(`${viewer}'s ${choice} offers ${s.name}'s ${JSON.stringify(plain(offered))}`)
@@ -942,7 +945,18 @@ feature("finance: no Sales group reads an invoice or a payment, nor sends the in
             if (!sendDirect.error) problems.push(`${user} sends the invoice through Accounting's service`)
         }
         const control = render("john.doe", "Orders/InvoiceDetail", {invoiceId: s.invoiceId})
+        // get#SalesOrder lists invoices for a holder of RECEIVABLE_VIEW or ACCOUNTING_VIEW, which ADMIN is not given: john.doe reads
+        // the order as an Accounting reader for the while
+        const member = {userGroupId: "BOSS_ACCOUNTING_READ", userId: "EX_JOHN_DOE", fromDate: ec.user.nowTimestamp}
+        system(() => ec.service.sync().name("create#moqui.security.UserGroupMember").parameters(member).call())
         const controlOrder = direct("john.doe", SO + "get#SalesOrder", {orderId: s.orderId})
+        system(() =>
+            ec.service
+                .sync()
+                .name("update#moqui.security.UserGroupMember")
+                .parameters(Object.assign({thruDate: ec.user.nowTimestamp}, member))
+                .call()
+        )
         return {
             problems,
             control: opens(control) && !control.output.includes("Invoice not available"),

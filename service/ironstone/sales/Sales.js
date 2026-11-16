@@ -437,6 +437,13 @@ function withSelected(options, selected, admits, label) {
         options.push({value: selected, label: label(selected)})
     return options
 }
+// withSelected for a source whose every option the user may choose: the selected value is added, with its label, when it is one
+// of all the options (read only when it is not on the page).
+function withSelectedOf(options, selected, allOptions) {
+    if (!selected || options.some(option => option.value === selected)) return options
+    const found = allOptions().find(option => option.value === selected)
+    return withSelected(options, selected, () => !!found, () => found.label)
+}
 const choiceSources = {
     // the organizations of the user's sales scope
     organizations: (userScope, term, selected) =>
@@ -1045,13 +1052,17 @@ Object.assign(choiceSources, {
     // a forecast's or target's period: the sales and fiscal periods of the organization, the latest first
     salesPeriods: (userScope, term, selected, p) => {
         const organizationPartyId = choiceOrganization(userScope, p)
-        return organizationPartyId ? forecasts().periodOptions(organizationPartyId, term, choiceLimit) : []
+        if (!organizationPartyId) return []
+        const options = forecasts().periodOptions(organizationPartyId, term, choiceLimit)
+        return withSelectedOf(options, selected, () => forecasts().periodOptions(organizationPartyId, "", 200))
     },
     // whose forecast: the parties whose forecasts the user sees in the organization (SalesAccess.js forecastSees): the organization,
     // its teams and their members for a reader of its whole pipeline, else the user and the teams they manage with their members
     forecastSubjects: (userScope, term, selected, p) => {
         const organizationPartyId = choiceOrganization(userScope, p)
-        return organizationPartyId ? forecasts().subjectOptions(userScope.mantle, organizationPartyId, term, choiceLimit) : []
+        if (!organizationPartyId) return []
+        const options = forecasts().subjectOptions(userScope.mantle, organizationPartyId, term, choiceLimit)
+        return withSelectedOf(options, selected, () => forecasts().subjectOptions(userScope.mantle, organizationPartyId, "", 1000))
     },
     // a target's parent: the forecasts of the organization and period the user sees (store#Target checks the parent again)
     forecastParents: (userScope, term, selected, p) => {
@@ -1139,6 +1150,25 @@ Object.assign(choiceSources, {
     }
 })
 // ===== end of impl-marketing P13 =====
+// ===== impl-sales follow-up 5: the facility a Sales order part ships from =====
+// The warehouses, stores and plants an organization of the scope owns (Mantle's SalesApprovals.js facilityOptions, the same rule as
+// store#SalesPolicy's default and update#SalesOrderFacility), for one who sets the defaults or changes a quote or an order.
+const salesPolicies = () => ec.resource.script("component://mr-mantle/service/mantle/order/SalesApprovals.js")
+Object.assign(choiceSources, {
+    facilities: (userScope, term, selected, p) => {
+        const organizationPartyId = choiceOrganization(userScope, p)
+        const caps = userScope.capabilities
+        if (!organizationPartyId || !(caps.configure || caps.orderEdit || caps.quoteEdit)) return []
+        const options = Array.from(salesPolicies().facilityOptions(organizationPartyId, term, choiceLimit))
+        return withSelected(
+            options,
+            selected,
+            facilityId => !salesPolicies().facilityRefusal(organizationPartyId, facilityId),
+            facilityId => salesPolicies().facilityName(facilityId)
+        )
+    }
+})
+// ===== end of impl-sales follow-up 5 =====
 // The current contacts of an account (PrtContact to it); null (any person of the scope) when it has none.
 function accountContactIds(accountPartyId) {
     const ids = Array.from(

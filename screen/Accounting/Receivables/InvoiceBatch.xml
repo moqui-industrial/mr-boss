@@ -37,16 +37,16 @@ along with this software (see the LICENSE.md file). If not, see
                     in-map="{organizationPartyId:organizationPartyId, invoiceIdList:invoiceIdList,
                         action:batchAction, operationKey:operationKey, sourceVersions:sourceVersions,
                         template:'standard', toAddresses:toAddresses}"/>
-            <iterate list="batchResult.results ?? []" entry="result">
-                <set field="resultText"
-                        from="(result.invoiceId || 'Invoice') + ': ' + (result.message || result.errorMessage || result.error
-                            || result.status || (result.success ? 'Completed' : 'Failed'))"/>
-                <if condition="result.success === false || result.error">
+            <!-- each invoice's alert, a send naming what reached each recipient (ACC-UI-026) -->
+            <set field="batchMessageRows" from="ec.resource.script('component://mr-boss/service/ironstone/accounting/Receivables.js')
+                    .execute('batchMessages', {results: batchResult.results ?? []})"/>
+            <iterate list="batchMessageRows" entry="batchMessage">
+                <if condition="batchMessage.warning">
                     <then>
-                        <message type="warning">${resultText}</message>
+                        <message type="warning">${batchMessage.text}</message>
                     </then>
                     <else>
-                        <message type="success">${resultText}</message>
+                        <message type="success">${batchMessage.text}</message>
                     </else>
                 </if>
             </iterate>
@@ -65,12 +65,22 @@ along with this software (see the LICENSE.md file). If not, see
         </actions>
         <default-response type="none"/>
     </transition>
+    <!-- an invoice the batch printed no PDF for (not selected, failed, another operation's) answers 404 with the reason, not
+        an empty 200 (ACC-UI-038) -->
     <transition name="downloadPrintedInvoice" read-only="true">
         <actions>
-            <service-call name="ironstone.accounting.ReceivableServices.get#InvoiceBatchOutput"
-                    out-map="printed"
-                    in-map="{organizationPartyId:organizationPartyId, invoiceId:downloadInvoiceId, operationKey:operationKey}"/>
-            <script>ec.web.sendResourceResponse(printed.fileLocation, false, printed.fileName)</script>
+            <script><![CDATA[
+                const printed = ec.service.sync().name('ironstone.accounting.ReceivableServices.get#InvoiceBatchOutput')
+                    .parameters({organizationPartyId, invoiceId: downloadInvoiceId, operationKey}).call()
+                if (ec.message.hasError() || !printed?.fileLocation) {
+                    const reason = String(ec.message.getErrorsString() || 'The invoice output is not available').trim()
+                        .replace(/^(Error: )+/, '')
+                    const missing = new Error(reason)
+                    missing.moquiErrorKind = /DENIED|REQUIRED/.test(reason) ? 'Unauthorized' : 'NotFound'
+                    throw missing
+                }
+                ec.web.sendResourceResponse(printed.fileLocation, false, printed.fileName)
+            ]]></script>
         </actions>
         <default-response type="none"/>
     </transition>
@@ -82,6 +92,9 @@ along with this software (see the LICENSE.md file). If not, see
                     out-map="context"/>
         </if>
         <set field="selectionParameters" from="{organizationPartyId:organizationPartyId, invoiceIdList:invoiceIdList}"/>
+        <!-- the export names the reviewed versions as JSON: the screen declares sourceVersions, so a link would otherwise
+            add the context's map as text the export cannot read, and answered an empty file (ACC-UI-025) -->
+        <set field="exportParameters" from="Object.assign({sourceVersions:JSON.stringify(sourceVersions || {})}, selectionParameters)"/>
         <set field="againParameters"
                 from="Object.assign({operationKey:'', sourceVersions:'', toAddresses:'',
                     batchAction:'send'}, selectionParameters)"/>
@@ -107,7 +120,7 @@ along with this software (see the LICENSE.md file). If not, see
                                 link-type="anchor-button"
                                 icon="sym_o_download"
                                 condition="batchCount &gt; 0"
-                                parameter-map="selectionParameters"/>
+                                parameter-map="exportParameters"/>
                     </box-toolbar>
                     <box-body-nopad>
                         <form-list name="InvoiceBatchReview" list="batchRows" skip-form="true" paginate="false">

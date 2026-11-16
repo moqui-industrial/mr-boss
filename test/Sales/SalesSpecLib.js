@@ -389,6 +389,8 @@ const sweepRecords = (made = {}) => ({
     "Orders/ShipmentDetail": {shipmentId: made.shipmentId || ""},
     "Orders/InvoiceDetail": {invoiceId: made.invoiceId || ""},
     "Orders/QuoteSend": {orderId: ids.quotes.wingtip},
+    // Products, hidden from the menu, opens its default Product360, which requires its product
+    Products: {productId: "DEMO_1_1", organizationPartyId: ids.organizationId},
     "Products/Product360": {productId: "DEMO_1_1", organizationPartyId: ids.organizationId},
     "Products/InventoryAvailability": {productId: "DEMO_1_1"},
     "Products/PriceExplain": {orderId: ids.quotes.wingtip, orderItemSeqId: "01"},

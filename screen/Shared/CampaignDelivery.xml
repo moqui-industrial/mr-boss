@@ -52,9 +52,9 @@ along with this software (see the LICENSE.md file). If not, see
         <set field="recipientListPageRangeLow" from="found?.recipientListPageRangeLow"/>
         <set field="recipientListPageRangeHigh" from="found?.recipientListPageRangeHigh"/>
         <set field="unmasked" from="!!found?.unmasked"/>
-        <set field="detailPath" from="sharedLinks['Sends/SendDetail']"/>
-        <set field="recipientPath" from="sharedLinks['Sends/RecipientDetail']"/>
-        <set field="listPath" from="sharedLinks['Sends/Sends']"/>
+        <set field="detailPath" from="(sharedLinks || {})['Sends/SendDetail'] || null"/>
+        <set field="recipientPath" from="(sharedLinks || {})['Sends/RecipientDetail'] || null"/>
+        <set field="listPath" from="(sharedLinks || {})['Sends/Sends'] || null"/>
         <set field="filtered" from="!!(state || skipReasonCode || text)"/>
         <set field="countsText" from="summary.released ? summary.handedOffCount + ' handed off: ' + summary.sentCount + ' sent, ' + summary.inFlightCount + ' in flight, '
                 + summary.failedCount + ' failed, ' + summary.uncertainCount + ' uncertain, ' + summary.suppressedCount + ' suppressed · ' + summary.waitingCount
@@ -69,7 +69,7 @@ along with this software (see the LICENSE.md file). If not, see
                     <box-body>
                         <label text="The delivery of send ${campaignSendId} is not available: the send does not exist, it is not one of your organizations', or you do not read sends."
                                 type="p"/>
-                        <link url="${listPath}" text="Back to sends" link-type="anchor"/>
+                        <link url="${listPath}" text="Back to sends" link-type="anchor" condition="listPath"/>
                     </box-body>
                 </container-box>
             </widgets>
@@ -83,7 +83,7 @@ along with this software (see the LICENSE.md file). If not, see
                     </container>
                     <container style="col-auto row items-center q-gutter-xs">
                         <link url="${detailPath}" text="Open the send" link-type="anchor-button" icon="sym_o_forward_to_inbox"
-                                parameter-map="{campaignSendId:campaignSendId}"/>
+                                parameter-map="{campaignSendId:campaignSendId}" condition="detailPath"/>
                         <link url="/qapps/Admin/Protocols/MailQueue" text="Mail queue" link-type="anchor-button" icon="sym_o_outbox"
                                 condition="ec.user.hasPermission('ADMIN_OPERATION_MANAGE')"/>
                     </container>

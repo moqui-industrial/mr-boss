@@ -141,7 +141,7 @@ along with this software (see the LICENSE.md file). If not, see
                                     </field>
                                     <field name="accountingDate">
                                         <default-field title="Proposed date">
-                                            <display/>
+                                            <display text="${accountingDateText ?? ''}"/>
                                         </default-field>
                                     </field>
                                     <field name="exceptionText">
@@ -334,14 +334,14 @@ along with this software (see the LICENSE.md file). If not, see
                                                     <display/>
                                                 </default-field>
                                             </field>
-                                            <field name="quantity">
+                                            <field name="quantity" align="right">
                                                 <default-field title="Quantity">
-                                                    <display format="#,##0.###" align="right"/>
+                                                    <display format="#,##0.###"/>
                                                 </default-field>
                                             </field>
-                                            <field name="amount">
+                                            <field name="amount" align="right">
                                                 <default-field title="Amount">
-                                                    <display currency-unit-field="previewed.currencyUomId" align="right"/>
+                                                    <display currency-unit-field="previewed.currencyUomId"/>
                                                 </default-field>
                                             </field>
                                             <columns type="mobile">
@@ -369,9 +369,9 @@ along with this software (see the LICENSE.md file). If not, see
                                                     <display/>
                                                 </default-field>
                                             </field>
-                                            <field name="amount">
+                                            <field name="amount" align="right">
                                                 <default-field title="Amount">
-                                                    <display currency-unit-field="previewed.currencyUomId" align="right"/>
+                                                    <display currency-unit-field="previewed.currencyUomId"/>
                                                 </default-field>
                                             </field>
                                             <columns type="mobile">
@@ -398,14 +398,14 @@ along with this software (see the LICENSE.md file). If not, see
                                                     <display/>
                                                 </default-field>
                                             </field>
-                                            <field name="quantity">
+                                            <field name="quantity" align="right">
                                                 <default-field title="Quantity">
-                                                    <display format="#,##0.###" align="right"/>
+                                                    <display format="#,##0.###"/>
                                                 </default-field>
                                             </field>
-                                            <field name="amount">
+                                            <field name="amount" align="right">
                                                 <default-field title="Amount">
-                                                    <display currency-unit-field="previewed.currencyUomId" align="right"/>
+                                                    <display currency-unit-field="previewed.currencyUomId"/>
                                                 </default-field>
                                             </field>
                                             <columns type="mobile">
@@ -434,29 +434,29 @@ along with this software (see the LICENSE.md file). If not, see
                                                     <display text="${productName} · ${roleText}"/>
                                                 </default-field>
                                             </field>
-                                            <field name="quantity">
+                                            <field name="quantity" align="right">
                                                 <default-field title="Quantity">
-                                                    <display format="#,##0.###" align="right"/>
+                                                    <display format="#,##0.###"/>
                                                 </default-field>
                                             </field>
-                                            <field name="sharePercent">
+                                            <field name="sharePercent" align="right">
                                                 <default-field title="Share %">
-                                                    <display align="right"/>
+                                                    <display/>
                                                 </default-field>
                                             </field>
-                                            <field name="share">
+                                            <field name="share" align="right">
                                                 <default-field title="Allocated">
-                                                    <display currency-unit-field="previewed.currencyUomId" align="right"/>
+                                                    <display currency-unit-field="previewed.currencyUomId"/>
                                                 </default-field>
                                             </field>
-                                            <field name="relieved">
+                                            <field name="relieved" align="right">
                                                 <default-field title="Received at">
-                                                    <display currency-unit-field="previewed.currencyUomId" align="right"/>
+                                                    <display currency-unit-field="previewed.currencyUomId"/>
                                                 </default-field>
                                             </field>
-                                            <field name="variance">
+                                            <field name="variance" align="right">
                                                 <default-field title="Variance">
-                                                    <display currency-unit-field="previewed.currencyUomId" align="right"/>
+                                                    <display currency-unit-field="previewed.currencyUomId"/>
                                                 </default-field>
                                             </field>
                                             <columns type="mobile">
@@ -478,7 +478,12 @@ along with this software (see the LICENSE.md file). If not, see
                             <box-header title="Proposed journal entry"/>
                             <box-body-nopad>
                                 <label text="Nothing to post: the work order closes with no journal entry." type="p" style="q-pa-md"
-                                        condition="!previewed.ledgerRows.length"/>
+                                        condition="!previewed.ledgerRows.length &amp;&amp; !closeInfo.closed"/>
+                                <!-- after the close the preview is of an adjustment: none due is not "no journal entry" (ACC-UI-015) -->
+                                <label text="No adjustment to post: the cost close is posted below, and nothing has changed since."
+                                        type="p"
+                                        style="q-pa-md"
+                                        condition="!previewed.ledgerRows.length &amp;&amp; closeInfo.closed"/>
                                 <section name="LedgerList" condition="previewed.ledgerRows.length">
                                     <widgets>
                                         <form-list name="LedgerProposal" list="previewed.ledgerRows" skip-form="true" paginate="false">
@@ -487,14 +492,14 @@ along with this software (see the LICENSE.md file). If not, see
                                                     <display/>
                                                 </default-field>
                                             </field>
-                                            <field name="debit">
+                                            <field name="debit" align="right">
                                                 <default-field title="Debit">
-                                                    <display currency-unit-field="previewed.currencyUomId" align="right"/>
+                                                    <display currency-unit-field="previewed.currencyUomId"/>
                                                 </default-field>
                                             </field>
-                                            <field name="credit">
+                                            <field name="credit" align="right">
                                                 <default-field title="Credit">
-                                                    <display currency-unit-field="previewed.currencyUomId" align="right"/>
+                                                    <display currency-unit-field="previewed.currencyUomId"/>
                                                 </default-field>
                                             </field>
                                             <columns type="mobile">
@@ -532,12 +537,12 @@ along with this software (see the LICENSE.md file). If not, see
                                     </field>
                                     <field name="accountingDate">
                                         <default-field title="Date">
-                                            <display/>
+                                            <display text="${accountingDateText ?? ''}"/>
                                         </default-field>
                                     </field>
-                                    <field name="allocatedAmount" hide="!closeInfo.financialRead">
+                                    <field name="allocatedAmount" align="right" hide="!closeInfo.financialRead">
                                         <default-field title="Amount">
-                                            <display currency-unit-field="amountUomId" align="right"/>
+                                            <display currency-unit-field="amountUomId"/>
                                         </default-field>
                                     </field>
                                     <field name="acctgTransId" hide="!closeInfo.financialRead">

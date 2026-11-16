@@ -188,7 +188,7 @@ along with this software (see the LICENSE.md file). If not, see
                     <form-list name="Lanes" list="laneRows" skip-form="true" paginate="false">
                         <field name="title"><default-field title="Lane"><display/></default-field></field>
                         <field name="description"><default-field title="Description"><display/></default-field></field>
-                        <field name="stepCount"><default-field title="Steps" align="right"><display/></default-field></field>
+                        <field name="stepCount" align="right"><default-field title="Steps"><display/></default-field></field>
                         <field name="actions"><default-field title="">
                             <container-dialog id="EditLane_${laneId}" button-text="Edit" title="Edit lane ${title}" condition="canEdit">
                                 <form-single name="EditLaneForm" transition="storeLane">
@@ -272,29 +272,33 @@ along with this software (see the LICENSE.md file). If not, see
                     <label text="Add a lane first, then its steps." type="p" style="m-muted" condition="!laneRows.length"/>
                 </box-body>
                 <box-body-nopad>
-                    <form-list name="Steps" list="stepRows" skip-form="true" paginate="false" condition="stepRows.length">
-                        <field name="laneTitle"><default-field title="Lane"><display/></default-field></field>
-                        <field name="title"><default-field title="Step"><display/></default-field></field>
-                        <field name="referenceText"><default-field title="Opens and counts"><display/></default-field></field>
-                        <field name="problemText"><default-field title="To fix">
-                            <label text="${problemText}" style="text-negative" condition="problemText"/>
-                        </default-field></field>
-                        <field name="actions"><default-field title="">
-                            <link url="." text="Edit" link-type="anchor" condition="canEdit"
-                                    parameter-map="{definitionId:definitionId, editStepId:stepId, _openDialog:'EditStep'}"/>
-                            <link url="storeStep" link-type="hidden-form" text="Up" condition="canEdit"
-                                    parameter-map="{storeStepId:stepId, move:'up', expectedVersion:expectedVersion}"/>
-                            <link url="storeStep" link-type="hidden-form" text="Down" condition="canEdit"
-                                    parameter-map="{storeStepId:stepId, move:'down', expectedVersion:expectedVersion}"/>
-                            <link url="storeStep" link-type="hidden-form" text="Remove" condition="canEdit"
-                                    confirmation="Remove the step ${title} from ${laneTitle}?"
-                                    parameter-map="{storeStepId:stepId, remove:'true', expectedVersion:expectedVersion}"/>
-                        </default-field></field>
-                        <columns type="mobile">
-                            <column><field-ref name="title"/><field-ref name="laneTitle"/></column>
-                            <column><field-ref name="problemText"/><field-ref name="actions"/></column>
-                        </columns>
-                    </form-list>
+                    <section name="StepsSection" condition="stepRows.length">
+                        <widgets>
+                            <form-list name="Steps" list="stepRows" skip-form="true" paginate="false">
+                                <field name="laneTitle"><default-field title="Lane"><display/></default-field></field>
+                                <field name="title"><default-field title="Step"><display/></default-field></field>
+                                <field name="referenceText"><default-field title="Opens and counts"><display/></default-field></field>
+                                <field name="problemText"><default-field title="To fix">
+                                    <label text="${problemText}" style="text-negative" condition="problemText"/>
+                                </default-field></field>
+                                <field name="actions"><default-field title="">
+                                    <link url="." text="Edit" link-type="anchor" condition="canEdit"
+                                            parameter-map="{definitionId:definitionId, editStepId:stepId, _openDialog:'EditStep'}"/>
+                                    <link url="storeStep" link-type="hidden-form" text="Up" condition="canEdit"
+                                            parameter-map="{storeStepId:stepId, move:'up', expectedVersion:expectedVersion}"/>
+                                    <link url="storeStep" link-type="hidden-form" text="Down" condition="canEdit"
+                                            parameter-map="{storeStepId:stepId, move:'down', expectedVersion:expectedVersion}"/>
+                                    <link url="storeStep" link-type="hidden-form" text="Remove" condition="canEdit"
+                                            confirmation="Remove the step ${title} from ${laneTitle}?"
+                                            parameter-map="{storeStepId:stepId, remove:'true', expectedVersion:expectedVersion}"/>
+                                </default-field></field>
+                                <columns type="mobile">
+                                    <column><field-ref name="title"/><field-ref name="laneTitle"/></column>
+                                    <column><field-ref name="problemText"/><field-ref name="actions"/></column>
+                                </columns>
+                            </form-list>
+                        </widgets>
+                    </section>
                 </box-body-nopad>
             </container-box>
 
@@ -320,7 +324,7 @@ along with this software (see the LICENSE.md file). If not, see
                     <box-header title="Versions"/>
                     <box-body-nopad>
                         <form-list name="MapVersions" list="versionRows" skip-form="true" paginate="false">
-                            <field name="version"><default-field title="Version" align="right"><display text="${version}${current ? ' (current)' : ''}"/></default-field></field>
+                            <field name="version" align="right"><default-field title="Version"><display text="${version}${current ? ' (current)' : ''}"/></default-field></field>
                             <field name="note"><default-field title="Change"><display/></default-field></field>
                             <field name="changedBy"><default-field title="By"><display/></default-field></field>
                             <field name="changedText"><default-field title="When"><display/></default-field></field>
@@ -345,16 +349,20 @@ along with this software (see the LICENSE.md file). If not, see
                         <label text="Nothing in the map's content changed in this version." type="p" style="m-muted" condition="!changeRows.length"/>
                     </box-body>
                     <box-body-nopad>
-                        <form-list name="VersionChanges" list="changeRows" skip-form="true" paginate="false" condition="changeRows.length">
-                            <field name="op"><default-field title="Change"><display/></default-field></field>
-                            <field name="path"><default-field title="Where"><display/></default-field></field>
-                            <field name="oldText"><default-field title="Before"><display/></default-field></field>
-                            <field name="newText"><default-field title="After"><display/></default-field></field>
-                            <columns type="mobile">
-                                <column><field-ref name="op"/><field-ref name="path"/></column>
-                                <column><field-ref name="oldText"/><field-ref name="newText"/></column>
-                            </columns>
-                        </form-list>
+                        <section name="VersionChangesSection" condition="changeRows.length">
+                            <widgets>
+                                <form-list name="VersionChanges" list="changeRows" skip-form="true" paginate="false">
+                                    <field name="op"><default-field title="Change"><display/></default-field></field>
+                                    <field name="path"><default-field title="Where"><display/></default-field></field>
+                                    <field name="oldText"><default-field title="Before"><display/></default-field></field>
+                                    <field name="newText"><default-field title="After"><display/></default-field></field>
+                                    <columns type="mobile">
+                                        <column><field-ref name="op"/><field-ref name="path"/></column>
+                                        <column><field-ref name="oldText"/><field-ref name="newText"/></column>
+                                    </columns>
+                                </form-list>
+                            </widgets>
+                        </section>
                     </box-body-nopad>
                 </container-box>
             </widgets></section>

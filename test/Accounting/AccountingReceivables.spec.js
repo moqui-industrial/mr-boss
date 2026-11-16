@@ -195,6 +195,73 @@ feature("batch review names an unavailable invoice without losing the other invo
     }
 })
 
+// ACC-UI-025: the export answered an empty file when its link carried the reviewed versions as a map's text
+feature("the selected invoices export as CSV whether the reviewed versions come as JSON or as text that is not", {
+    when() {
+        return helper.asUser("finance.ar", () => {
+            const exported = sourceVersions => {
+                const out = ec.screen
+                    .makeTest()
+                    .rootScreen("component://mr-boss/screen/Accounting.xml")
+                    .render(
+                        "Receivables/InvoiceBatch/exportInvoices",
+                        {organizationPartyId: ids.organizationPartyId, invoiceIdList: ids.invoiceId, sourceVersions},
+                        null
+                    )
+                return String(out.output || "")
+            }
+            return {json: exported(JSON.stringify({[ids.invoiceId]: 1})), mapText: exported("[" + ids.invoiceId + ":1]")}
+        })
+    },
+    then({json, mapText}) {
+        json.startsWith('"Invoice","Customer"') && json.includes(ids.invoiceId)
+        mapText.startsWith('"Invoice","Customer"') && mapText.includes(ids.invoiceId)
+    }
+})
+
+// ACC-UI-026: a send with one bad address among good ones says what reached each recipient, not that the invoice failed
+feature("a batch's alert names each recipient's outcome of a send", {
+    when() {
+        const failedOne = {recipient: "bad-address", status: "failed", errorMessage: "Invalid recipient address"}
+        const messages = ec.resource.script("component://mr-boss/service/ironstone/accounting/Receivables.js").execute("batchMessages", {
+            results: [
+                {invoiceId: "A", success: false, result: {recipientResults: [{recipient: "c@example.com", status: "sent"}, failedOne]}},
+                {invoiceId: "B", success: true, result: {recipientResults: [{recipient: "c@example.com", status: "queued"}]}},
+                {invoiceId: "C", success: false, result: {recipientResults: [failedOne]}},
+                {invoiceId: "D", success: false, errorMessage: "STALE_REVISION: Invoice changed"}
+            ]
+        })
+        return {messages}
+    },
+    then({messages}) {
+        messages[0].text == "A: sent to 1 of 2 recipients; bad-address: Invalid recipient address" && messages[0].warning
+        messages[1].text == "B: sent to 1 of 1 recipient" && !messages[1].warning
+        messages[2].text == "C: not sent; bad-address: Invalid recipient address"
+        messages[3].text == "D: STALE_REVISION: Invoice changed" && messages[3].warning
+    }
+})
+
+// ACC-UI-038: a print the batch did not make is refused with its reason (404 over HTTP), not an empty answer
+feature("a batch's print of an invoice it did not print is refused with its reason", {
+    when() {
+        return helper.asUser("finance.ar", () => {
+            const out = ec.screen
+                .makeTest()
+                .rootScreen("component://mr-boss/screen/Accounting.xml")
+                .render(
+                    "Receivables/InvoiceBatch/downloadPrintedInvoice",
+                    {organizationPartyId: ids.organizationPartyId, downloadInvoiceId: ids.invoiceId, operationKey: "batch-not-run"},
+                    null
+                )
+            return {errors: Array.from(out.errorMessages || []).join(" "), output: String(out.output || "")}
+        })
+    },
+    then({errors, output}) {
+        errors.includes("The invoice output is not available")
+        output == ""
+    }
+})
+
 feature("customer context checks the organization even with artifact authorization disabled", {
     when() {
         return helper.asUser(
@@ -294,7 +361,7 @@ feature("an invoice's header colors its status, links its print and leaves the w
         draft.output.includes("m-tonal text-grey-7")
         finalizedColored
         finalized.output.includes("/apps/Accounting/Receivables/InvoicePrint?invoiceId=" + ids.finalizedInvoiceId)
-        finalized.output.includes("/fop/Accounting/Receivables/InvoicePrint?invoiceId=" + ids.finalizedInvoiceId)
+        finalized.output.includes("/fop/apps/Accounting/Receivables/InvoicePrint?invoiceId=" + ids.finalizedInvoiceId)
         !finalized.output.includes("Back to invoices")
         customer.errors == []
         customer.output.includes("Open receivable")
