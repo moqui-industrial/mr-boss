@@ -11,6 +11,7 @@ const ORG = "BOSS_TEST_CT_ORG"
 const SAME = "BOSS_TEST_CT_SAME"
 const OTHER = "BOSS_TEST_CT_OTHER"
 const NOPARTY = "BOSS_TEST_CT_NOPARTY"
+const REQUEST = "BOSS_TEST_CT_REQUEST"
 const CALLS = "org.moqui.call.CallServices."
 const TRANSFERS = "org.moqui.call.CallTransferServices."
 
@@ -181,5 +182,106 @@ feature("a phone call is not transferred to another organization's user; the sam
         other.reasonCode == "notFound"
         same.errors == ""
         same.callTransferId != null
+    },
+})
+
+// the chat-target hook (DC-UI-043): the Comms Chat screen's transitions as a browser calls them, with authorization on. The
+// people search leaves out another organization's user, a direct message to them is refused, and adding them to one's own
+// private room is refused the same way; a user of a shared party is found, messaged and added with the very same calls.
+feature("chat reaches only the users joe.developer may see: search, a direct message and adding to a private room", {
+    when() {
+        const comms = "component://mr-boss/screen/Comms.xml"
+        const chat = (name, parameters, method) => {
+            const str = ec.screen
+                .makeTest()
+                .rootScreen(comms)
+                .render(`Chat/${name}`, parameters || {}, method || null)
+            let json = null
+            try {
+                json = JSON.parse(str.output)
+            } catch (err) {
+                json = null
+            }
+            const errors = [str.errorMessages.join(" | "), json && !Array.isArray(json) && json.errors ? String(json.errors) : ""]
+                .filter(text => text)
+                .join(" | ")
+            ec.message.clearErrors()
+            return {errors, json: json || {}}
+        }
+        ec.user.internalLoginUser("joe.developer")
+        const found = term => {
+            const rows = chat("searchUsers", {term}).json
+            return Array.isArray(rows) ? rows.map(row => row.value) : []
+        }
+        const searchOther = found("Otto")
+        const searchSame = found("Sam")
+        const directOther = chat("createDirect", {userIds: OTHER}, "post")
+        const directSame = chat("createDirect", {userIds: SAME}, "post")
+        const room = chat("createRoom", {roomTypeEnumId: "private", roomName: "Chat target spec room"}, "post")
+        const roomId = room.json.chatRoomId
+        const addOther = chat("addMembers", {chatRoomId: roomId, userIds: OTHER}, "post")
+        const addSame = chat("addMembers", {chatRoomId: roomId, userIds: SAME}, "post")
+        const members = sys(() =>
+            Array.from(ec.entity.find("moqui.chat.ChatRoomMember").condition("chatRoomId", roomId).list())
+                .filter(row => !row.leftDate)
+                .map(row => row.userId)
+        )
+        return {searchOther, searchSame, directOther, directSame, roomId, addOther, addSame, members}
+    },
+    then(v) {
+        !v.searchOther.includes(OTHER)
+        v.searchSame.includes(SAME)
+        v.directOther.errors.includes("not found")
+        v.directSame.errors == ""
+        v.roomId != null
+        v.addOther.errors.includes("not found")
+        v.addSame.errors == ""
+        !v.members.includes(OTHER)
+        v.members.includes(SAME)
+    }
+})
+
+// IronStone's own people search and mention ids (service/ironstone/shared/ChatterServices.xml search#Users, get#UserIdsParties)
+// follow the same chat-target rule (SEC-COM-01, found during the fixes): joe.developer finds the user of a shared party and not
+// another organization's, and a mention of the latter in a note notifies no one, as a forged id of a user that does not exist
+feature("the Chatter people search and a note's mentions leave out a user joe.developer may not reach", {
+    when() {
+        const commons = "component://mr-boss/screen/Commons.xml"
+        const screen = (name, parameters, method) => {
+            const out = ec.screen.makeTest().rootScreen(commons).render("Chatter/" + name, parameters, method || null)
+            ec.message.clearErrors()
+            let json = null
+            try { json = JSON.parse(out.output) } catch (err) { json = null }
+            return { status: out.status, errors: out.errorMessages.join(" | "), json: json || {} }
+        }
+        const mentions = (userId) => sys(() => ec.entity.find("moqui.security.user.NotificationMessageByUser")
+            .condition("userId", userId).condition("topic", "ChatterMention").count())
+        // a request joe.developer reports, so he may write on it
+        sys(() => {
+            if (ec.entity.find("mantle.request.Request").condition("requestId", REQUEST).count() == 0) {
+                call("create#mantle.request.Request", { requestId: REQUEST, requestTypeEnumId: "RqtSupport", statusId: "ReqSubmitted",
+                    requestName: "Call target mentions", filedByPartyId: "ORG_ZIZI_JD", requestDate: ec.user.nowTimestamp })
+                call("create#mantle.request.RequestParty", { requestId: REQUEST, partyId: "ORG_ZIZI_JD", roleTypeId: "Reporter",
+                    fromDate: ec.user.nowTimestamp })
+            }
+        })
+        ec.user.internalLoginUser("joe.developer")
+        try {
+            const found = screen("searchUsers", { term: "Call target", limit: 50 })
+            const before = { same: mentions(SAME), other: mentions(OTHER) }
+            const body = '<p><span data-mention-id="' + SAME + '">@Sam</span> and <span data-mention-id="' + OTHER + '">@Otto</span></p>'
+            const logged = screen("logNote", { recordEntity: "mantle.request.Request", recordId: REQUEST, body, recordUrl: "/qapps/Commons/Requests/RequestDetail?requestId=" + REQUEST }, "post")
+            return { found, logged, same: mentions(SAME) - before.same, other: mentions(OTHER) - before.other }
+        } finally {
+            ec.user.internalLoginUser("john.doe")
+        }
+    },
+    then({ found, logged, same, other }) {
+        found.status == 200
+        Array.isArray(found.json)
+        found.json.some((user) => user.id == SAME) && !found.json.some((user) => user.id == OTHER)
+        logged.status == 200 && logged.errors == ""
+        same == 1
+        other == 0
     },
 })

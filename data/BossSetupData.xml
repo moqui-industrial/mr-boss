@@ -297,28 +297,76 @@ along with this software (see the LICENSE.md file). If not, see
         <artifacts artifactName="mantle\.product\.CatalogCheckServices\..*" nameIsPattern="Y" artifactTypeEnumId="AT_SERVICE" inheritAuthz="Y"/>
         <artifacts artifactName="ironstone.commons.PaletteServices.get#RecordLink" artifactTypeEnumId="AT_SERVICE" inheritAuthz="Y"/>
         <artifacts artifactName="ironstone\.products\..*" nameIsPattern="Y" artifactTypeEnumId="AT_SERVICE" inheritAuthz="Y"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_SERVICES_SYSADMIN" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_PRODUCTS_SERVICES_SYSADMIN" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PRODUCTS_SERVICES_READ" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL"/>
-    <authz artifactAuthzId="BOSS_PRODUCTS_SERVICES_APPADMIN" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/></artifactGroups>
+    <authz artifactAuthzId="BOSS_PRODUCTS_SERVICES_APPADMIN" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+        <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+        <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+    </authz></artifactGroups>
     <artifactGroups artifactGroupId="BOSS_PRODUCTS_PRICES" description="Products Prices capabilities">
         <artifacts artifactName="component://mr-boss/screen/Products/Prices.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
-        <artifacts artifactName="component://mr-boss/screen/Shared/Prices.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/><authz artifactAuthzId="BOSS_PRODUCTS_PRICES_SUPPLIER_READ" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/><authz artifactAuthzId="BOSS_PRODUCTS_PRICES_SUPPLIER_EDIT" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/><authz artifactAuthzId="BOSS_PRODUCTS_PRICES_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_PRICES_PRICE_READ" userGroupId="BOSS_PRODUCTS_PRICE_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_PRICES_PRICE_EDIT" userGroupId="BOSS_PRODUCTS_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_PRICES_COST_READ" userGroupId="BOSS_PRODUCTS_COST_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_PRICES_COST_ESTIMATE" userGroupId="BOSS_PRODUCTS_COST_ESTIMATE" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_PRICES_COST_APPROVE" userGroupId="BOSS_PRODUCTS_COST_APPROVE" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-    <authz artifactAuthzId="BOSS_PRODUCTS_PRICES_APPADMIN" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/><authz artifactAuthzId="BOSS_PRODUCTS_PRICES_FIN_0" userGroupId="BOSS_ACCOUNTING_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/><authz artifactAuthzId="BOSS_PRODUCTS_PRICES_FIN_1" userGroupId="BOSS_ACCOUNTING_GL" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/></artifactGroups>
+        <artifacts artifactName="component://mr-boss/screen/Shared/Prices.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/><authz artifactAuthzId="BOSS_PRODUCTS_PRICES_SUPPLIER_READ" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+    <filters entityFilterSetId="MANTLE_USER_ORG"/>
+    <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+</authz><authz artifactAuthzId="BOSS_PRODUCTS_PRICES_SUPPLIER_EDIT" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+    <filters entityFilterSetId="MANTLE_USER_ORG"/>
+    <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+</authz><authz artifactAuthzId="BOSS_PRODUCTS_PRICES_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_PRODUCTS_PRICES_PRICE_READ" userGroupId="BOSS_PRODUCTS_PRICE_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_PRICES_PRICE_EDIT" userGroupId="BOSS_PRODUCTS_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_PRICES_COST_READ" userGroupId="BOSS_PRODUCTS_COST_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_PRICES_COST_ESTIMATE" userGroupId="BOSS_PRODUCTS_COST_ESTIMATE" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_PRICES_COST_APPROVE" userGroupId="BOSS_PRODUCTS_COST_APPROVE" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+    <authz artifactAuthzId="BOSS_PRODUCTS_PRICES_APPADMIN" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+        <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+        <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+    </authz><authz artifactAuthzId="BOSS_PRODUCTS_PRICES_FIN_0" userGroupId="BOSS_ACCOUNTING_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+    <filters entityFilterSetId="MANTLE_USER_ORG"/>
+    <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+</authz><authz artifactAuthzId="BOSS_PRODUCTS_PRICES_FIN_1" userGroupId="BOSS_ACCOUNTING_GL" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+    <filters entityFilterSetId="MANTLE_USER_ORG"/>
+    <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+</authz></artifactGroups>
     <artifactGroups artifactGroupId="BOSS_PRODUCTS_SUPPLIERPRICES" description="Products SupplierPrices capabilities">
         <artifacts artifactName="component://mr-boss/screen/Products/SupplierPrices.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIERPRICES_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIER_READ" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIER_EDIT" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-    <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIERPRICES_APPADMIN" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/></artifactGroups>
+        <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIER_READ" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIER_EDIT" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+    <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIERPRICES_APPADMIN" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+        <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+        <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+    </authz></artifactGroups>
     <artifactGroups artifactGroupId="BOSS_PRODUCTS_SETTINGS" description="Products Settings capabilities">
         <artifacts artifactName="component://mr-boss/screen/Products/Settings.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PRODUCTS_SETTINGS_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_SETTINGS_ADMIN" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_PRODUCTS_SETTINGS_ADMIN" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
     </artifactGroups>
     <!-- The client filter set (design-projects.md §15 Client access; impl-projects.md F2, P10): what a client contact's finds see,
         from the user context mantle.work.ProjectServices.setup#ClientProjectInfo fills in the Projects root's always-actions (each
@@ -740,46 +788,94 @@ along with this software (see the LICENSE.md file). If not, see
     <artifactGroups artifactGroupId="BOSS_PRODUCTS_NEW">
         <artifacts artifactName="component://mr-boss/screen/Products/Products/NewProduct.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PRODUCTS_NEW_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_EDIT" userGroupId="BOSS_PRODUCTS_CATALOG_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_SYS" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_EDIT" userGroupId="BOSS_PRODUCTS_CATALOG_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_SYS" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
     </artifactGroups>
     <artifactGroups artifactGroupId="BOSS_PRODUCTS_NEW_CATEGORY">
         <artifacts artifactName="component://mr-boss/screen/Products/Categories/NewCategory.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PRODUCTS_NEW_CATEGORY_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_CATEGORY_EDIT" userGroupId="BOSS_PRODUCTS_CATALOG_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_CATEGORY_SYS" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_CATEGORY_EDIT" userGroupId="BOSS_PRODUCTS_CATALOG_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_CATEGORY_SYS" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
     </artifactGroups>
     <artifactGroups artifactGroupId="BOSS_PRODUCTS_NEW_FEATURE">
         <artifacts artifactName="component://mr-boss/screen/Products/Features/NewFeature.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PRODUCTS_NEW_FEATURE_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_FEATURE_EDIT" userGroupId="BOSS_PRODUCTS_CATALOG_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_FEATURE_SYS" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_FEATURE_EDIT" userGroupId="BOSS_PRODUCTS_CATALOG_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_FEATURE_SYS" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
     </artifactGroups>
     <artifactGroups artifactGroupId="BOSS_PRODUCTS_NEW_FEATURE_GROUP">
         <artifacts artifactName="component://mr-boss/screen/Products/Features/FeatureGroups/NewGroup.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PRODUCTS_NEW_FEATURE_GROUP_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_FEATURE_GROUP_EDIT" userGroupId="BOSS_PRODUCTS_CATALOG_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_FEATURE_GROUP_SYS" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_FEATURE_GROUP_EDIT" userGroupId="BOSS_PRODUCTS_CATALOG_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_NEW_FEATURE_GROUP_SYS" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
     </artifactGroups>
     <artifactGroups artifactGroupId="BOSS_PRODUCTS_VARIANTS">
         <artifacts artifactName="component://mr-boss/screen/Products/Products/VariantBuilder.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PRODUCTS_VARIANTS_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_VARIANTS_EDIT" userGroupId="BOSS_PRODUCTS_CATALOG_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_VARIANTS_SYS" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_PRODUCTS_VARIANTS_EDIT" userGroupId="BOSS_PRODUCTS_CATALOG_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_VARIANTS_SYS" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
     </artifactGroups>
     <artifactGroups artifactGroupId="BOSS_PRODUCTS_VARIANTS_TUI">
         <artifacts artifactName="component://mr-boss/screen/Products/Products/VariantBuilderTui.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PRODUCTS_VARIANTS_TUI_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_VARIANTS_TUI_EDIT" userGroupId="BOSS_PRODUCTS_CATALOG_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_VARIANTS_TUI_SYS" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_PRODUCTS_VARIANTS_TUI_EDIT" userGroupId="BOSS_PRODUCTS_CATALOG_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_VARIANTS_TUI_SYS" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
     </artifactGroups>
     <artifactGroups artifactGroupId="BOSS_PRODUCTS_BULK_PRICE">
         <artifacts artifactName="component://mr-boss/screen/Products/Products/BulkPrice.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PRODUCTS_BULK_PRICE_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_BULK_PRICE_EDIT" userGroupId="BOSS_PRODUCTS_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_BULK_PRICE_SUP" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_BULK_PRICE_SYS" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_BULK_PRICE_APPADMIN" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_PRODUCTS_BULK_PRICE_EDIT" userGroupId="BOSS_PRODUCTS_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_BULK_PRICE_SUP" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_BULK_PRICE_SYS" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_BULK_PRICE_APPADMIN" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
     </artifactGroups>
     <moqui.security.user.NotificationTopic topic="ProductPriceChanged" inboxEnumId="NinUpdates" description="Catalog price changes" titleTemplate="Price changed for ${productName}" showAlert="N" persistOnSend="Y" receiveNotifications="Y" emailNotifications="N" isPrivate="Y" typeString="info"/>
     <moqui.security.user.NotificationTopic topic="ProductPriceExpiring" inboxEnumId="NinNotifications" description="Expiring catalog prices" titleTemplate="Price for ${productName} expires ${thruDate}" showAlert="N" persistOnSend="Y" receiveNotifications="Y" emailNotifications="N" isPrivate="Y" typeString="warning"/>
@@ -791,22 +887,52 @@ along with this software (see the LICENSE.md file). If not, see
         <artifacts artifactName="component://mr-boss/screen/Products/Prices/PriceLists.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <artifacts artifactName="component://mr-boss/screen/Products/Prices/PriceExplain.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PRODUCTS_LISTS_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_LISTS_0" userGroupId="BOSS_PRODUCTS_PRICE_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_LISTS_1" userGroupId="BOSS_PRODUCTS_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_LISTS_2" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_LISTS_3" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_LISTS_4" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_LISTS_APPADMIN" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_PRODUCTS_LISTS_0" userGroupId="BOSS_PRODUCTS_PRICE_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_LISTS_1" userGroupId="BOSS_PRODUCTS_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_LISTS_2" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_LISTS_3" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_LISTS_4" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_LISTS_APPADMIN" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
     </artifactGroups>
     <artifactGroups artifactGroupId="BOSS_PRODUCTS_SUPPLIERS" description="Guarded shared supplier offers and supplier records">
         <artifacts artifactName="component://mr-boss/screen/Products/SupplierPrices.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <artifacts artifactName="component://mr-boss/screen/Shared/SupplierPrices.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <artifacts artifactName="component://mr-boss/screen/Shared/Supplier360.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIERS_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIERS_0" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIERS_1" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIERS_2" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIERS_3" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIERS_0" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIERS_1" userGroupId="BOSS_PRODUCTS_SUPPLIER_PRICE_EDIT" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIERS_2" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_SUPPLIERS_3" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
     </artifactGroups>
 
     <artifactGroups artifactGroupId="BOSS_PRODUCTS_COSTS" description="Shared standard estimates">
@@ -817,19 +943,46 @@ along with this software (see the LICENSE.md file). If not, see
         <artifacts artifactName="component://mr-boss/screen/Shared/CostHistory.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <artifacts artifactName="component://mr-boss/screen/Products/Prices/CostHistory.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_0" userGroupId="BOSS_PRODUCTS_COST_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_1" userGroupId="BOSS_PRODUCTS_COST_ESTIMATE" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_2" userGroupId="BOSS_PRODUCTS_COST_APPROVE" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_3" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_4" userGroupId="BOSS_ACCOUNTING_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_5" userGroupId="BOSS_ACCOUNTING_GL" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_6" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_0" userGroupId="BOSS_PRODUCTS_COST_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_1" userGroupId="BOSS_PRODUCTS_COST_ESTIMATE" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_2" userGroupId="BOSS_PRODUCTS_COST_APPROVE" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_3" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_4" userGroupId="BOSS_ACCOUNTING_READ" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_5" userGroupId="BOSS_ACCOUNTING_GL" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_PRODUCTS_COSTS_6" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
     </artifactGroups>
     <artifactGroups artifactGroupId="BOSS_SHARED_REVALUATION" description="Accounting inventory revaluation">
         <artifacts artifactName="component://mr-boss/screen/Shared/InventoryValuation.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_SHARED_REVALUATION_DENY" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_DENY" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_SHARED_REVALUATION_0" userGroupId="BOSS_ACCOUNTING_GL" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
-        <authz artifactAuthzId="BOSS_SHARED_REVALUATION_1" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+        <authz artifactAuthzId="BOSS_SHARED_REVALUATION_0" userGroupId="BOSS_ACCOUNTING_GL" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
+        <authz artifactAuthzId="BOSS_SHARED_REVALUATION_1" userGroupId="ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
     </artifactGroups>
 
     <!-- Shared Mantle permissions; launcher and organization scope remain separate. -->
@@ -2687,13 +2840,13 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundle userGroupId="BOSS_USERS" appName="Commons" description="IronStone BOSS users" scopeDependency="organization" sequenceNum="10"/>
     <moqui.security.CapabilityBundleArtifact userGroupId="BOSS_USERS" artifactGroupId="BOSS_COMMONS" description="Commons launcher" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL" entityFilterSetIds="MANTLE_USER_ORG,MANTLE_PRIVATE_CONTACT"/>
     <moqui.security.CapabilityBundleArtifact userGroupId="BOSS_USERS" artifactGroupId="BOSS_COMMS" description="Comms launcher" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL" entityFilterSetIds="MANTLE_USER_ORG,MANTLE_PRIVATE_CONTACT"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_COMMONS_ADMIN" appName="Commons" description="Commons administrator" scopeDependency="organization" sequenceNum="20"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_COMMONS_ADMIN" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Commons" description="Commons administrator" scopeDependency="organization" sequenceNum="20"/>
     <!-- Comms -->
-    <moqui.security.CapabilityBundle userGroupId="BOSS_COMMS_ADMIN" appName="Comms" description="Comms administrator" scopeDependency="organization" sequenceNum="30"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_COMMS_ADMIN" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Comms" description="Comms administrator" scopeDependency="organization" sequenceNum="30"/>
     <moqui.security.CapabilityBundle userGroupId="BOSS_CONTACT_ADMIN" appName="Comms" description="Contact admins (IronStone): edit and delete directory contacts, review duplicates" scopeDependency="organization" sequenceNum="40"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_CONTACT_ADMIN" userPermissionId="CONTACT_ADMIN" capabilityKindEnumId="CpkEdit"/>
     <!-- Customer Service -->
-    <moqui.security.CapabilityBundle userGroupId="BOSS_CUSTOMER_SERVICE_ADMIN" appName="Customer Service" description="Customer Service administrator" scopeDependency="organization, team" sequenceNum="50"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_CUSTOMER_SERVICE_ADMIN" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Customer Service" description="Customer Service administrator" scopeDependency="organization, team" sequenceNum="50"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_CUSTOMER_SERVICE_ADMIN" userPermissionId="SUPPORT_CASE_EDIT" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_CUSTOMER_SERVICE_ADMIN" userPermissionId="ORDER_CHANGE_REQUEST" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_CUSTOMER_SERVICE_ADMIN" userPermissionId="CUSTOMER_CREDIT_VIEW" capabilityKindEnumId="CpkSensitive"/>
@@ -2736,7 +2889,7 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundle userGroupId="BOSS_CUSTOMER_SERVICE_KNOWLEDGE" appName="Customer Service" description="Service knowledge author" scopeDependency="organization, team" sequenceNum="110"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_CUSTOMER_SERVICE_KNOWLEDGE" userPermissionId="SUPPORT_KNOWLEDGE_EDIT" capabilityKindEnumId="CpkEdit"/>
     <!-- Commerce -->
-    <moqui.security.CapabilityBundle userGroupId="BOSS_COMMERCE_ADMIN" appName="Commerce" description="Commerce administrator" scopeDependency="organization, store" sequenceNum="120"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_COMMERCE_ADMIN" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Commerce" description="Commerce administrator" scopeDependency="organization, store" sequenceNum="120"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_COMMERCE_ADMIN" userPermissionId="COMMERCE_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_COMMERCE_ADMIN" userPermissionId="COMMERCE_STORE_EDIT" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_COMMERCE_ADMIN" userPermissionId="COMMERCE_MERCHANDISE" capabilityKindEnumId="CpkEdit"/>
@@ -2806,7 +2959,7 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundle userGroupId="BOSS_PRODUCTS_COST_APPROVE" appName="Products" description="Standard-cost approver" scopeDependency="organization" sequenceNum="300"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PRODUCTS_COST_APPROVE" userPermissionId="PRODUCT_COST_VIEW" capabilityKindEnumId="CpkSensitive"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PRODUCTS_COST_APPROVE" userPermissionId="PRODUCT_COST_APPROVE" capabilityKindEnumId="CpkSensitive"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_PRODUCTS_ADMIN" appName="Products" description="Catalog administrator" scopeDependency="organization" sequenceNum="310"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_PRODUCTS_ADMIN" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Products" description="Catalog administrator" scopeDependency="organization" sequenceNum="310"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PRODUCTS_ADMIN" userPermissionId="PRODUCT_COST_VIEW" capabilityKindEnumId="CpkSensitive"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PRODUCTS_ADMIN" userPermissionId="PRODUCT_COST_ESTIMATE" capabilityKindEnumId="CpkSensitive"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PRODUCTS_ADMIN" userPermissionId="PRODUCT_COST_APPROVE" capabilityKindEnumId="CpkSensitive"/>
@@ -2818,7 +2971,7 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PRODUCTS_ADMIN" userPermissionId="PRODUCT_CATALOG_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PRODUCTS_ADMIN" userPermissionId="PRODUCT_CATALOG_EDIT" capabilityKindEnumId="CpkEdit"/>
     <!-- Purchasing -->
-    <moqui.security.CapabilityBundle userGroupId="BOSS_PURCHASING_ADMIN" appName="Purchasing" description="Purchasing administrator" scopeDependency="organization" sequenceNum="320"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_PURCHASING_ADMIN" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Purchasing" description="Purchasing administrator" scopeDependency="organization" sequenceNum="320"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PURCHASING_ADMIN" userPermissionId="STOCK_POLICY_PLAN" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PURCHASING_ADMIN" userPermissionId="SUPPLIER_PRICE_VIEW" capabilityKindEnumId="CpkSensitive"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PURCHASING_ADMIN" userPermissionId="PURCHASE_ORDER_EDIT" capabilityKindEnumId="CpkEdit"/>
@@ -2858,7 +3011,7 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PURCHASING_READ" userPermissionId="SUPPLY_PLAN_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PURCHASING_READ" userPermissionId="PRODUCT_CATALOG_VIEW" capabilityKindEnumId="CpkView"/>
     <!-- Warehouse -->
-    <moqui.security.CapabilityBundle userGroupId="BOSS_WAREHOUSE_ADMIN" appName="Warehouse" description="Warehouse administrator" scopeDependency="organization, facility" sequenceNum="390"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_WAREHOUSE_ADMIN" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Warehouse" description="Warehouse administrator" scopeDependency="organization, facility" sequenceNum="390"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="STOCK_POLICY_PLAN" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="STOCK_POLICY_MANAGE" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="PRODUCT_CATALOG_VIEW" capabilityKindEnumId="CpkView"/>
@@ -2942,7 +3095,7 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_MANUFACTURING_METHOD_APPROVE" userPermissionId="METHOD_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_MANUFACTURING_METHOD_APPROVE" userPermissionId="METHOD_APPROVE" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_MANUFACTURING_METHOD_APPROVE" userPermissionId="PRODUCTION_VIEW" capabilityKindEnumId="CpkView"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_MANUFACTURING_ADMIN" appName="Manufacturing" description="Manufacturing administrator" scopeDependency="organization, plant" sequenceNum="630"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_MANUFACTURING_ADMIN" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Manufacturing" description="Manufacturing administrator" scopeDependency="organization, plant" sequenceNum="630"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_MANUFACTURING_ADMIN" userPermissionId="METHOD_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_MANUFACTURING_ADMIN" userPermissionId="METHOD_EDIT" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_MANUFACTURING_ADMIN" userPermissionId="METHOD_APPROVE" capabilityKindEnumId="CpkEdit"/>
@@ -3008,8 +3161,10 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_MANUFACTURING_QUALITY_ADMIN" userPermissionId="METHOD_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_MANUFACTURING_QUALITY_ADMIN" userPermissionId="QUALITY_TEMPLATE_EDIT" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundle userGroupId="BOSS_MANUFACTURING_DISPLAY" appName="Manufacturing" description="Plant display" scopeDependency="organization, plant" sequenceNum="730"/>
-    <!-- Accounting -->
-    <moqui.security.CapabilityBundle userGroupId="BOSS_ACCOUNTING_ADMIN" appName="Accounting" description="Accounting administrator" scopeDependency="organization" sequenceNum="740"/>
+    <!-- Accounting. The administrator works in the organizations its holder works for: ACCOUNTING_ADMIN is bound to them, and
+        every internal organization of the instance takes ACCOUNTING_ALL_ORGANIZATIONS, which ADMIN alone holds and no bundle
+        carries (the user's call of Nov 16, 2026, SEC-BOS-02; as People's and Sales' *_ALL_ORGANIZATIONS widen theirs). -->
+    <moqui.security.CapabilityBundle userGroupId="BOSS_ACCOUNTING_ADMIN" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Accounting" description="Accounting administrator" scopeDependency="organization" sequenceNum="740"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_ADMIN" userPermissionId="ACCOUNTING_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_ADMIN" userPermissionId="ACCOUNTING_GL_POST" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_ADMIN" userPermissionId="PRODUCT_COST_VIEW" capabilityKindEnumId="CpkSensitive"/>
@@ -3032,6 +3187,7 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_ADMIN" userPermissionId="PAYABLE_EDIT" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_ADMIN" userPermissionId="PAYABLE_IMPORT" capabilityKindEnumId="CpkExport"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_ADMIN" userPermissionId="PAYMENT_EDIT" capabilityKindEnumId="CpkEdit"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_ADMIN" userPermissionId="PAYMENT_NUMBER_VIEW" capabilityKindEnumId="CpkSensitive"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_ADMIN" userPermissionId="PAYMENT_RUN_APPROVE" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_ADMIN" userPermissionId="PRODUCTION_COST_POST" capabilityKindEnumId="CpkSensitive"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_ADMIN" userPermissionId="RECEIVABLE_EDIT" capabilityKindEnumId="CpkEdit"/>
@@ -3068,6 +3224,7 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="PAYABLE_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="PAYMENT_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="PAYMENT_EDIT" capabilityKindEnumId="CpkEdit"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="PAYMENT_NUMBER_VIEW" capabilityKindEnumId="CpkSensitive"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="INVOICE_APPROVE" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="INVOICE_HOLD" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_PAYROLL" userPermissionId="PAYMENT_RUN_APPROVE" capabilityKindEnumId="CpkEdit"/>
@@ -3077,6 +3234,7 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_MATCH" userPermissionId="PAYABLE_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundle userGroupId="BOSS_ACCOUNTING_TREASURY" appName="Accounting" description="Treasury: payments and banking" scopeDependency="organization" sequenceNum="810"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_TREASURY" userPermissionId="PAYMENT_EDIT" capabilityKindEnumId="CpkEdit"/>
+    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_TREASURY" userPermissionId="PAYMENT_NUMBER_VIEW" capabilityKindEnumId="CpkSensitive"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_TREASURY" userPermissionId="PAYMENT_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_TREASURY" userPermissionId="BANK_RECONCILE" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ACCOUNTING_TREASURY" userPermissionId="PAYABLE_VIEW" capabilityKindEnumId="CpkView"/>
@@ -3105,9 +3263,9 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PROJECT_MANAGER" userPermissionId="ALLOCATION_APPROVE" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PROJECT_MANAGER" userPermissionId="MILESTONE_APPROVE" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PROJECT_MANAGER" userPermissionId="RECEIVABLE_EDIT" capabilityKindEnumId="CpkEdit"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_PROJECTS_ADMIN" appName="Projects" description="Projects administrator" scopeDependency="organization, project" sequenceNum="860"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_PROJECTS_ADMIN" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Projects" description="Projects administrator" scopeDependency="organization, project" sequenceNum="860"/>
     <!-- Insights -->
-    <moqui.security.CapabilityBundle userGroupId="BOSS_INSIGHTS_ADMIN" appName="Insights" description="Insights administrator" scopeDependency="organization; each source by its own view permission" sequenceNum="870"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_INSIGHTS_ADMIN" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Insights" description="Insights administrator" scopeDependency="organization; each source by its own view permission" sequenceNum="870"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_INSIGHTS_ADMIN" userPermissionId="INSIGHTS_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_INSIGHTS_ADMIN" userPermissionId="INSIGHTS_SETTINGS_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_INSIGHTS_ADMIN" userPermissionId="INSIGHTS_SETTINGS_EDIT" capabilityKindEnumId="CpkEdit"/>
@@ -3129,36 +3287,38 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundle userGroupId="BOSS_INSIGHTS_FLOW" appName="Insights" description="Insights flow editor" scopeDependency="organization; each source by its own view permission" sequenceNum="930"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_INSIGHTS_FLOW" userPermissionId="INSIGHTS_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_INSIGHTS_FLOW" userPermissionId="INSIGHTS_FLOW_EDIT" capabilityKindEnumId="CpkEdit"/>
-    <!-- Admin -->
-    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN" appName="Admin" description="Admin app users (the launcher)" scopeDependency="organization" sequenceNum="940"/>
+    <!-- Admin. Admin's bundles and each app's administrator bundle name delegablePermissionId ADMIN_ACCESS_MANAGE: only an access
+        administrator assigns them or grants from them; an identity operator (ADMIN_IDENTITY_MANAGE, not sealed) proposes an
+        app's other bundles only (SEC-ADM-06; org.moqui.admin Access.js delegable). -->
+    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Admin" description="Admin app users (the launcher)" scopeDependency="organization" sequenceNum="940"/>
     <moqui.security.CapabilityBundleArtifact userGroupId="BOSS_ADMIN" artifactGroupId="BOSS_ADMIN" description="Admin launcher and services" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL" entityFilterSetIds="MANTLE_USER_ORG,MANTLE_PRIVATE_CONTACT"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_READ" appName="Admin" description="Administrative reader" scopeDependency="organization" sequenceNum="950"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_READ" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Admin" description="Administrative reader" scopeDependency="organization" sequenceNum="950"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_READ" userPermissionId="ADMIN_OVERVIEW_VIEW" capabilityKindEnumId="CpkView"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_IDENTITY" appName="Admin" description="Identity operator" scopeDependency="organization" sequenceNum="960"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_IDENTITY" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Admin" description="Identity operator" scopeDependency="organization" sequenceNum="960"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_IDENTITY" userPermissionId="ADMIN_IDENTITY_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_IDENTITY" userPermissionId="ADMIN_IDENTITY_MANAGE" capabilityKindEnumId="CpkEdit"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_ACCESS" appName="Admin" description="Access administrator" scopeDependency="organization" sequenceNum="970"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_ACCESS" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Admin" description="Access administrator" scopeDependency="organization" sequenceNum="970"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_ACCESS" userPermissionId="ADMIN_ACCESS_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_ACCESS" userPermissionId="ADMIN_ACCESS_MANAGE" capabilityKindEnumId="CpkEdit"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_CONFIGURE" appName="Admin" description="Configuration administrator" scopeDependency="organization" sequenceNum="980"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_CONFIGURE" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Admin" description="Configuration administrator" scopeDependency="organization" sequenceNum="980"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_CONFIGURE" userPermissionId="ADMIN_SETTINGS_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_CONFIGURE" userPermissionId="ADMIN_SETTINGS_MANAGE" capabilityKindEnumId="CpkEdit"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_INTEGRATIONS" appName="Admin" description="Integration administrator" scopeDependency="organization" sequenceNum="990"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_INTEGRATIONS" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Admin" description="Integration administrator" scopeDependency="organization" sequenceNum="990"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_INTEGRATIONS" userPermissionId="ADMIN_CONNECTION_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_INTEGRATIONS" userPermissionId="ADMIN_CONNECTION_MANAGE" capabilityKindEnumId="CpkEdit"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_OPERATIONS" appName="Admin" description="Operations operator" scopeDependency="organization" sequenceNum="1000"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_OPERATIONS" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Admin" description="Operations operator" scopeDependency="organization" sequenceNum="1000"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_OPERATIONS" userPermissionId="ADMIN_OPERATION_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_OPERATIONS" userPermissionId="ADMIN_OPERATION_MANAGE" capabilityKindEnumId="CpkEdit"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_DATA" appName="Admin" description="Data operator" scopeDependency="organization" sequenceNum="1010"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_DATA" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Admin" description="Data operator" scopeDependency="organization" sequenceNum="1010"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_DATA" userPermissionId="ADMIN_TRANSFER_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_DATA" userPermissionId="ADMIN_TRANSFER_RUN" capabilityKindEnumId="CpkExport"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_AUDIT" appName="Admin" description="Audit reader" scopeDependency="organization" sequenceNum="1020"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_AUDIT" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Admin" description="Audit reader" scopeDependency="organization" sequenceNum="1020"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_AUDIT" userPermissionId="ADMIN_AUDIT_VIEW" capabilityKindEnumId="CpkView"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_PRIVACY" appName="Admin" description="Privacy administrator" scopeDependency="organization" sequenceNum="1030"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_BACKUP" appName="Admin" description="Backup operator" scopeDependency="organization" sequenceNum="1040"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_PRIVACY" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Admin" description="Privacy administrator" scopeDependency="organization" sequenceNum="1030"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_BACKUP" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Admin" description="Backup operator" scopeDependency="organization" sequenceNum="1040"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_BACKUP" userPermissionId="ADMIN_BACKUP_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_BACKUP" userPermissionId="ADMIN_BACKUP_RUN" capabilityKindEnumId="CpkEdit"/>
-    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_ADMIN" appName="Admin" description="Admin administrator" scopeDependency="organization" sequenceNum="1050"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_ADMIN_ADMIN" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="Admin" description="Admin administrator" scopeDependency="organization" sequenceNum="1050"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_ADMIN" userPermissionId="ADMIN_OVERVIEW_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_ADMIN" userPermissionId="ADMIN_IDENTITY_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_ADMIN_ADMIN" userPermissionId="ADMIN_IDENTITY_MANAGE" capabilityKindEnumId="CpkEdit"/>
@@ -5152,7 +5312,7 @@ along with this software (see the LICENSE.md file). If not, see
         built apps' above): each group with the permissions it carries (view, edit or sensitive: private person data, pay and
         cases) and the root user group's launcher with the root's filter sets; PEOPLE_IMPORT in the HR bundle; PEOPLE_ROSTER_EDIT in
         the manager's and HR's (P14). -->
-    <moqui.security.CapabilityBundle userGroupId="BOSS_PEOPLE_ADMIN" appName="People" description="People administrator" scopeDependency="organization, employment" sequenceNum="1100"/>
+    <moqui.security.CapabilityBundle userGroupId="BOSS_PEOPLE_ADMIN" delegablePermissionId="ADMIN_ACCESS_MANAGE" appName="People" description="People administrator" scopeDependency="organization, employment" sequenceNum="1100"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PEOPLE_ADMIN" userPermissionId="PEOPLE_CONFIGURE" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PEOPLE_ADMIN" userPermissionId="PAYROLL_VIEW" capabilityKindEnumId="CpkSensitive"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_PEOPLE_ADMIN" userPermissionId="PAYROLL_EDIT" capabilityKindEnumId="CpkSensitive"/>
@@ -5248,7 +5408,10 @@ along with this software (see the LICENSE.md file). If not, see
         <artifacts artifactName="component://mr-boss/screen/People/Employees/EmploymentChange.xml" artifactTypeEnumId="AT_XML_SCREEN"
                 inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PPL_EMPLOYMENT_HR" userGroupId="BOSS_PEOPLE_HR" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_EMPLOYMENT_DENY" userGroupId="BOSS_PEOPLE" authzTypeEnumId="AUTHZT_DENY"
                 authzActionEnumId="AUTHZA_ALL"/>
     </artifactGroups>
@@ -5264,7 +5427,10 @@ along with this software (see the LICENSE.md file). If not, see
         <artifacts artifactName="component://mr-boss/screen/People/Employees/(ChecklistTemplates|EmployeeImport)\.xml"
                 artifactTypeEnumId="AT_XML_SCREEN" nameIsPattern="Y" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PPL_HR_AREA_HR" userGroupId="BOSS_PEOPLE_HR" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_HR_AREA_DENY" userGroupId="BOSS_PEOPLE" authzTypeEnumId="AUTHZT_DENY"
                 authzActionEnumId="AUTHZA_ALL"/>
     </artifactGroups>
@@ -5325,7 +5491,10 @@ along with this software (see the LICENSE.md file). If not, see
     <artifactGroups artifactGroupId="BOSS_PPL_TEAM" description="People my team">
         <artifacts artifactName="component://mr-boss/screen/People/MyTeam.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PPL_TEAM_MANAGER" userGroupId="BOSS_PEOPLE_MANAGER" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_TEAM_DENY" userGroupId="BOSS_PEOPLE" authzTypeEnumId="AUTHZT_DENY"
                 authzActionEnumId="AUTHZA_ALL"/>
     </artifactGroups>
@@ -5362,9 +5531,15 @@ along with this software (see the LICENSE.md file). If not, see
         <artifacts artifactName="component://mr-boss/screen/People/Time/(WorkingSchedules|WorkingScheduleDetail|ShiftRoster|ShiftRosterTui|ShiftRosterPrint)\.xml"
                 artifactTypeEnumId="AT_XML_SCREEN" nameIsPattern="Y" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PPL_SCHEDULES_HR" userGroupId="BOSS_PEOPLE_HR" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_SCHEDULES_MANAGER" userGroupId="BOSS_PEOPLE_MANAGER" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_SCHEDULES_DENY" userGroupId="BOSS_PEOPLE" authzTypeEnumId="AUTHZT_DENY"
                 authzActionEnumId="AUTHZA_ALL"/>
         <authz artifactAuthzId="BOSS_PPL_SCHEDULES_SELF" userGroupId="BOSS_PEOPLE_SELF" authzTypeEnumId="AUTHZT_DENY"
@@ -5374,7 +5549,10 @@ along with this software (see the LICENSE.md file). If not, see
         <artifacts artifactName="component://mr-boss/screen/People/Time/HolidayCalendars.xml" artifactTypeEnumId="AT_XML_SCREEN"
                 inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PPL_HOLIDAYS_HR" userGroupId="BOSS_PEOPLE_HR" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_HOLIDAYS_DENY" userGroupId="BOSS_PEOPLE" authzTypeEnumId="AUTHZT_DENY"
                 authzActionEnumId="AUTHZA_ALL"/>
         <authz artifactAuthzId="BOSS_PPL_HOLIDAYS_SELF" userGroupId="BOSS_PEOPLE_SELF" authzTypeEnumId="AUTHZT_DENY"
@@ -5383,9 +5561,15 @@ along with this software (see the LICENSE.md file). If not, see
     <artifactGroups artifactGroupId="BOSS_PPL_PAYROLL" description="People payroll">
         <artifacts artifactName="component://mr-boss/screen/People/Payroll.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PPL_PAYROLL_OPERATOR" userGroupId="BOSS_PEOPLE_PAYROLL" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_PAYROLL_APPROVER" userGroupId="BOSS_PEOPLE_PAYROLL_APPROVE" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_PAYROLL_DENY" userGroupId="BOSS_PEOPLE" authzTypeEnumId="AUTHZT_DENY"
                 authzActionEnumId="AUTHZA_ALL"/>
     </artifactGroups>
@@ -5400,7 +5584,10 @@ along with this software (see the LICENSE.md file). If not, see
         <artifacts artifactName="component://mr-boss/screen/People/Time/(LeavePolicies|LeavePolicyDetail|LeaveAllocations)\.xml"
                 artifactTypeEnumId="AT_XML_SCREEN" nameIsPattern="Y" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PPL_LEAVE_HR" userGroupId="BOSS_PEOPLE_HR" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_LEAVE_DENY" userGroupId="BOSS_PEOPLE" authzTypeEnumId="AUTHZT_DENY"
                 authzActionEnumId="AUTHZA_ALL"/>
         <!-- a self-service employee is not in the root user group; denied here too, so a grant of the Time area to them (their own
@@ -5412,9 +5599,15 @@ along with this software (see the LICENSE.md file). If not, see
         <artifacts artifactName="component://mr-boss/screen/People/Time/LeaveBalances.xml" artifactTypeEnumId="AT_XML_SCREEN"
                 inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PPL_LEAVE_BALANCES_HR" userGroupId="BOSS_PEOPLE_HR" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_LEAVE_BALANCES_MANAGER" userGroupId="BOSS_PEOPLE_MANAGER" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_LEAVE_BALANCES_DENY" userGroupId="BOSS_PEOPLE" authzTypeEnumId="AUTHZT_DENY"
                 authzActionEnumId="AUTHZA_ALL"/>
         <!-- P11's review: the Time area is a self-service employee's by its inheritable ALLOW (BOSS_PPL_TIME, P10), so Leave
@@ -5463,7 +5656,10 @@ along with this software (see the LICENSE.md file). If not, see
         <artifacts artifactName="component://mr-boss/screen/People/Time/TimeImport.xml" artifactTypeEnumId="AT_XML_SCREEN"
                 inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PPL_TIME_IMPORT_HR" userGroupId="BOSS_PEOPLE_HR" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_TIME_IMPORT_DENY" userGroupId="BOSS_PEOPLE" authzTypeEnumId="AUTHZT_DENY"
                 authzActionEnumId="AUTHZA_ALL"/>
         <authz artifactAuthzId="BOSS_PPL_TIME_IMPORT_SELF" userGroupId="BOSS_PEOPLE_SELF" authzTypeEnumId="AUTHZT_DENY"
@@ -5551,11 +5747,20 @@ along with this software (see the LICENSE.md file). If not, see
         <artifacts artifactName="component://mr-boss/screen/People/Development/SkillsMatrix(Tui)?\.xml" artifactTypeEnumId="AT_XML_SCREEN"
                 nameIsPattern="Y" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PPL_SKILLS_DEVELOP" userGroupId="BOSS_PEOPLE_DEVELOP" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_SKILLS_HR" userGroupId="BOSS_PEOPLE_HR" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_SKILLS_MANAGER" userGroupId="BOSS_PEOPLE_MANAGER" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_SKILLS_DENY" userGroupId="BOSS_PEOPLE" authzTypeEnumId="AUTHZT_DENY"
                 authzActionEnumId="AUTHZA_ALL"/>
         <authz artifactAuthzId="BOSS_PPL_SKILLS_SELF" userGroupId="BOSS_PEOPLE_SELF" authzTypeEnumId="AUTHZT_DENY"
@@ -5603,7 +5808,10 @@ along with this software (see the LICENSE.md file). If not, see
         <artifacts artifactName="component://mr-boss/screen/People/Development/AssessmentForms.xml" artifactTypeEnumId="AT_XML_SCREEN"
                 inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PPL_ASSESSMENT_DEVELOP" userGroupId="BOSS_PEOPLE_DEVELOP" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_ASSESSMENT_DENY" userGroupId="BOSS_PEOPLE" authzTypeEnumId="AUTHZT_DENY"
                 authzActionEnumId="AUTHZA_ALL"/>
         <authz artifactAuthzId="BOSS_PPL_ASSESSMENT_SELF" userGroupId="BOSS_PEOPLE_SELF" authzTypeEnumId="AUTHZT_DENY"
@@ -5646,7 +5854,10 @@ along with this software (see the LICENSE.md file). If not, see
         <artifacts artifactName="component://mr-boss/screen/People/Performance/Review(Cycles|Forms)\.xml" artifactTypeEnumId="AT_XML_SCREEN"
                 nameIsPattern="Y" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PPL_REVIEW_ADMIN_DEVELOP" userGroupId="BOSS_PEOPLE_DEVELOP" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_REVIEW_ADMIN_DENY" userGroupId="BOSS_PEOPLE" authzTypeEnumId="AUTHZT_DENY"
                 authzActionEnumId="AUTHZA_ALL"/>
         <authz artifactAuthzId="BOSS_PPL_REVIEW_ADMIN_SELF" userGroupId="BOSS_PEOPLE_SELF" authzTypeEnumId="AUTHZT_DENY"
@@ -5670,11 +5881,20 @@ along with this software (see the LICENSE.md file). If not, see
     <artifactGroups artifactGroupId="BOSS_PPL_HOURS_FOR_PAY" description="People hours for pay">
         <artifacts artifactName="component://mr-boss/screen/People/Time/HoursForPay.xml" artifactTypeEnumId="AT_XML_SCREEN" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PPL_HOURS_PAYROLL" userGroupId="BOSS_PEOPLE_PAYROLL" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_HOURS_APPROVER" userGroupId="BOSS_PEOPLE_PAYROLL_APPROVE" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_HOURS_MANAGER" userGroupId="BOSS_PEOPLE_MANAGER" authzTypeEnumId="AUTHZT_ALWAYS"
-                authzActionEnumId="AUTHZA_ALL"/>
+                authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
         <authz artifactAuthzId="BOSS_PPL_HOURS_DENY" userGroupId="BOSS_PEOPLE" authzTypeEnumId="AUTHZT_DENY"
                 authzActionEnumId="AUTHZA_ALL"/>
         <authz artifactAuthzId="BOSS_PPL_HOURS_SELF" userGroupId="BOSS_PEOPLE_SELF" authzTypeEnumId="AUTHZT_DENY"

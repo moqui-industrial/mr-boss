@@ -90,7 +90,9 @@ along with this software (see the LICENSE.md file). If not, see
                         button-text="Make 1099 data"
                         icon="sym_o_receipt_long"
                         title="Make the year's 1099-MISC data"
-                        condition="canEdit &amp;&amp; isUsaTax">
+                        condition="isUsaTax"
+                        disable-condition="!canEdit"
+                        disable-message="Needs tax statements access, which an administrator can grant.">
                     <label text="One statement for each vendor registered with the IRS whom the organization paid at least
                                 the threshold in the year, from its payments. Vendors that cannot be reported are named."
                             type="p"/>
@@ -128,7 +130,8 @@ along with this software (see the LICENSE.md file). If not, see
                         type="primary"
                         icon="sym_o_add"
                         title="A sales tax statement"
-                        condition="canEdit">
+                        disable-condition="!canEdit"
+                        disable-message="Needs tax statements access, which an administrator can grant.">
                     <form-single name="SalesTaxStatement" transition="createSalesTaxStatement" map="newStatement">
                         <field name="organizationPartyId">
                             <default-field>

@@ -579,7 +579,9 @@ along with this software (see the LICENSE.md file). If not, see
             const partyIds = Array.from(new Set(Object.values(partyOf).filter((id) => id)))
             const visible = cf.makeCondition([cf.makeCondition('privateOwnerUserId', 'equals', null), cf.makeCondition('privateOwnerUserId', 'equals', userId)], 'or')
             const notDisabled = cf.makeCondition('disabled', 'not-equals', 'Y', true)
-            // with authorization on: call#Providers runs this as the Comms app, whose entity filters keep other organizations out
+            // with authorization on: call#Providers runs this as the Comms app, whose entity filters keep other organizations out;
+            // their organizations are the user's, which a call from outside a Comms screen (an XMPP session) has not set up yet
+            if (ec.user.context.filterOrgIds == null && ec.user.userAccount?.partyId) ec.service.sync().name('mantle.party.PartyServices.setup#UserOrganizationInfo').call()
             const seen = new Set(partyIds.length ? Array.from(ec.entity.find('mantle.party.PartyDetail').condition('partyId', 'in', partyIds)
                 .condition(visible).condition(notDisabled).selectField('partyId').list()).map((party) => party.partyId) : [])
             refusedUserIdList = ids.filter((id) => (id in partyOf) && partyOf[id] && !seen.has(partyOf[id]))
@@ -821,7 +823,18 @@ along with this software (see the LICENSE.md file). If not, see
             const ids = ec.service.sync().name('ironstone.comms.ComposeServices.get#Identities').call()
             if (ec.message.hasError()) return
             const identity = Array.from(ids.identityList || []).find((item) => item.value === fromValue)
-            if (!identity || identity.isInternal) { ec.message.addError(ec.l10n.localize('Choose a mail account to send from')); return }
+            if (!identity || identity.isInternal) {
+                // a From of an account the user still reads but may no longer send from (a right lowered while the
+                // composer was open) says so; the draft stays where it is (BasicComms COM-UI-021)
+                const [fromKind, fromId] = String(fromValue || '').split(':')
+                const seen = Array.from(ec.service.sync().name('org.moqui.mail.EmailClientServices.get#UserEmailAccounts').call()?.accountList || [])
+                        .find((account) => fromId && (fromKind === 'account' ? account.emailAccountId === fromId
+                            : Array.from(account.identityList || []).some((item) => item.emailIdentityId === fromId)))
+                if (seen && !seen.isInternal && !seen.canSend) ec.message.addError(ec.resource.expand('You can no longer send from ${name}. Your message is kept; choose another account in From.',
+                        '', {name: seen.accountName || seen.emailAddress}))
+                else ec.message.addError(ec.l10n.localize('Choose a mail account to send from'))
+                return
+            }
             const header = (json) => {
                 if (!json) return ''
                 ec.message.pushErrors()
@@ -839,7 +852,8 @@ along with this software (see the LICENSE.md file). If not, see
             }
             let toText, ccText, bccText
             try { toText = header(toJson); ccText = header(ccJson); bccText = header(bccJson) }
-            catch (err) { ec.message.addError(err && err.message ? err.message : String(err)); return }
+            // a strict refusal keeps its own errors (popErrors brings them back), so the thrown text is not added twice
+            catch (err) { if (!ec.message.hasError()) ec.message.addError(err && err.message ? err.message : String(err)); return }
             const fullBody = String(body || '') + (quoteHtml ? String(quoteHtml) : '')
             const parameters = {emailMessageId: emailMessageId || null, emailAccountId: identity.emailAccountId, emailIdentityId: identity.emailIdentityId,
                 toAddresses: toText, ccAddresses: ccText, bccAddresses: bccText, subject: subject ?? '', body: fullBody, bodyText: bodyText || null,
