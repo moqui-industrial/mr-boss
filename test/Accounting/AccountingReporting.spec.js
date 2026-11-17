@@ -40,7 +40,8 @@ feature("the catalog lists the reports a role may run; quick options open only t
         return {reader: run("finance.read"), ar: run("finance.ar")}
     },
     then({reader, ar}) {
-        reader.reports.length == 15
+        reader.reports.length == 16
+        reader.reports.includes("GeneralJournal")
         reader.reports.includes("SalesAnalysis")
         reader.refused == ""
         ar.reports.join(",") == "Aging"
