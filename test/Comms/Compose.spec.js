@@ -156,6 +156,99 @@ feature("the recipient search never offers another organization's party, by name
     },
 })
 
+// user accounts with an address and no contact mech, so only the account search finds them: one of another organization's
+// party and one of a party every organization shares (_NA_)
+const ACCTORG = "BOSS_TEST_COMPOSE_ACCTORG"
+const ACCTOTHER = "BOSS_TEST_COMPOSE_ACCTOTHER"
+const ACCTSHARED = "BOSS_TEST_COMPOSE_ACCTSHARED"
+// a staff member of the other organization whose party is shared (_NA_): reached through its employer alone (the owner's rule)
+const ACCTSTAFF = "BOSS_TEST_COMPOSE_ACCTSTAFF"
+function makeAccountParties() {
+    sys(() => {
+        store("mantle.party.Party", { partyId: ACCTORG, partyTypeEnumId: "PtyOrganization", ownerPartyId: ACCTORG })
+        store("mantle.party.Organization", { partyId: ACCTORG, organizationName: "Acctreach Other Org" })
+        store("mantle.party.PartyRole", { partyId: ACCTORG, roleTypeId: "OrgInternal" })
+        for (const [partyId, ownerPartyId, firstName, emailAddress] of [[ACCTOTHER, ACCTORG, "Otto", "otto.acctreach@other.example"],
+            [ACCTSHARED, "_NA_", "Sam", "sam.acctreach@shared.example"], [ACCTSTAFF, "_NA_", "Stan", "stan.acctreach@staff.example"]]) {
+            store("mantle.party.Party", { partyId, partyTypeEnumId: "PtyPerson", ownerPartyId })
+            store("mantle.party.Person", { partyId, firstName, lastName: "Acctreach" })
+            if (ec.entity.find("moqui.security.UserAccount").condition("userId", partyId).count() == 0) {
+                const account = ec.entity.makeValue("moqui.security.UserAccount")
+                account.setFields({ userId: partyId, username: partyId.toLowerCase(), userFullName: firstName + " Acctreach", emailAddress, partyId,
+                    disabled: "N" }, true, null, null)
+                account.create()
+            }
+        }
+        if (ec.entity.find("mantle.party.PartyRelationship").condition("fromPartyId", ACCTSTAFF).count() == 0)
+            store("mantle.party.PartyRelationship", { partyRelationshipId: ACCTSTAFF, relationshipTypeEnumId: "PrtEmployee", fromPartyId: ACCTSTAFF,
+                toPartyId: ACCTORG, toRoleTypeId: "OrgInternal", fromDate: new Date(Date.now() - 60000) })
+    })
+}
+function dropAccountParties() {
+    sys(() => {
+        const ids = [ACCTOTHER, ACCTSHARED, ACCTSTAFF]
+        ec.entity.find("mantle.party.PartyRelationship").condition("fromPartyId", ACCTSTAFF).deleteAll()
+        ec.entity.find("mantle.party.PartyRole").condition("partyId", ACCTORG).deleteAll()
+        ec.entity.find("moqui.security.UserAccount").condition("userId", "in", ids).deleteAll()
+        ec.entity.find("mantle.party.Person").condition("partyId", "in", ids).deleteAll()
+        ec.entity.find("mantle.party.Party").condition("partyId", "in", ids).deleteAll()
+        ec.entity.find("mantle.party.Organization").condition("partyId", ACCTORG).deleteAll()
+        ec.entity.find("mantle.party.Party").condition("partyId", ACCTORG).deleteAll()
+    })
+}
+feature("the recipient search offers the address of a user account only when its party is one the user may see (SEC-BOS-99)", {
+    when() {
+        makeAccountParties()
+        login("joe.developer")
+        try {
+            return { found: post("recipients", { term: "Acctreach", mode: "email" }), byAddress: post("recipients", { term: "otto.acctreach", mode: "email" }) }
+        } finally {
+            login("john.doe")
+            dropAccountParties()
+        }
+    },
+    then({ found, byAddress }) {
+        Array.isArray(found.json)
+        found.json.some((option) => option.value == '"Sam Acctreach" <sam.acctreach@shared.example>')
+        !found.json.some((option) => String(option.value).includes("otto.acctreach@other.example"))
+        !found.json.some((option) => String(option.value).includes("stan.acctreach@staff.example"))
+        Array.isArray(byAddress.json)
+        !byAddress.json.some((option) => String(option.value).includes("otto.acctreach@other.example"))
+    },
+})
+
+// joe.developer reaches john.doe, of his organization, and with the same send no party of another organization
+feature("an internal message goes to no party the user may not see, by a party chip or an address chip (SEC-BOS-98)", {
+    when() {
+        makeAccountParties()
+        login("joe.developer")
+        try {
+            const send = (value) => post("send", { fromValue: "internal", toJson: chips([value]), subject: "Reach check", body: "<p>x</p>" })
+            const shared = send("party:EX_JOHN_DOE")
+            const sharedRows = shared.json.communicationEventIdList ? list("mantle.party.communication.CommunicationEventParty",
+                { communicationEventId: shared.json.communicationEventIdList[0] }) : []
+            const forged = send("party:" + ACCTOTHER)
+            const byAddress = send("otto.acctreach@other.example")
+            const staff = send("party:" + ACCTSTAFF)
+            const staffByAddress = send("stan.acctreach@staff.example")
+            const reached = sys(() => ec.entity.find("mantle.party.communication.CommunicationEventParty").condition("partyId", "in", [ACCTOTHER, ACCTSTAFF]).count())
+            return { shared, sharedRows, forged, byAddress, staff, staffByAddress, reached }
+        } finally {
+            login("john.doe")
+            dropAccountParties()
+        }
+    },
+    then({ shared, sharedRows, forged, byAddress, staff, staffByAddress, reached }) {
+        shared.errors == ""
+        sharedRows.some((row) => row.partyId == "EX_JOHN_DOE" && row.roleTypeId == "MessageTo")
+        forged.errors.includes("not found")
+        byAddress.errors.includes("is not someone here")
+        staff.errors.includes("not found")
+        staffByAddress.errors.includes("is not someone here")
+        reached == 0
+    },
+})
+
 feature("a contact group in the recipients expands to its members on send", {
     when() {
         capture.clear()

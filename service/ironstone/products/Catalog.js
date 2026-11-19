@@ -420,28 +420,40 @@ function run(op, parameters) {
             }
         }
         if (p.copyContent === true || p.copyContent === "Y") {
+            // a copied file goes in the new product's own content folder, content_<the new row's id>, where Shop reads a name or
+            // description and serves a download (mantle Content.js owned, SEC-PSS-82): the row is made first, then its file
+            const content = ec.resource.script("component://mr-mantle/service/mantle/product/Content.js"),
+                contentConfig = content.config({}),
+                contentRoot = String(ec.factory.getConfValue("mantle@content-root") || "dbresource://mantle/content").replace(/\/+$/, ""),
+                legacyFolder = "dbresource://ironstone/products/" + p.baseProductId + "/"
             for (const row of list(P + "ProductContent", {productId: p.baseProductId}).filter(current)) {
                 const data = map(row)
                 delete data.productContentId
                 delete data.lastUpdatedStamp
                 data.productId = id
-                if (String(data.contentLocation || "").startsWith("dbresource://")) {
-                    const target =
-                        "dbresource://ironstone/products/" +
-                        id +
-                        "/" +
-                        Math.floor(Math.random() * 1e12) +
-                        "/" +
-                        String(data.contentLocation).split("/").pop()
-                    const stream = ec.resource.getLocationReference(data.contentLocation).openStream()
-                    try {
-                        ec.resource.getLocationReference(target).putStream(stream)
-                    } finally {
-                        if (stream) stream.close()
-                    }
-                    data.contentLocation = target
+                const location = String(data.contentLocation || "")
+                const copied =
+                    location && (content.owned(row, contentConfig) || (location.startsWith(legacyFolder) && !location.split("/").includes("..")))
+                // a download or Shop text whose file is outside the base product's folder is not copied: create#ProductContent
+                // would refuse its location
+                const checked = data.productContentTypeEnumId === "PcntDownload" || content.shopTextTypes.includes(data.productContentTypeEnumId)
+                if (location && !copied && checked) {
+                    warnings.push("Content " + row.productContentId + " is outside its product's folder: add it to the copy separately")
+                    continue
                 }
-                call("create#" + P + "ProductContent", data, true)
+                if (copied) data.contentLocation = null
+                const newId = call("create#" + P + "ProductContent", data, true).productContentId
+                if (!copied) continue
+                const target =
+                    contentRoot + "/product/" + id + "/content_" + newId + "/" + content.safeName(location.split("/").pop())
+                if (!content.owned({productId: id}, contentConfig, target)) throw new Error("A copied file's place is not its product's folder")
+                const stream = ec.resource.getLocationReference(location).openStream()
+                try {
+                    ec.resource.getLocationReference(target).putStream(stream)
+                } finally {
+                    if (stream) stream.close()
+                }
+                call("update#" + P + "ProductContent", {productContentId: newId, contentLocation: target}, true)
             }
         }
         return {productId: id, warnings}

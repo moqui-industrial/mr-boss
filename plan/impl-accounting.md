@@ -992,7 +992,7 @@ design-accounting.md, or into the owner's design.
 | Oct 31, 2026 | P18: the gateway's page is a link on PaymentResult, never a form post or a server redirect to the provider, so `Pass.xml`'s `form-action 'self'` stays as it is for every provider (F53) | Agent's call, for review |
 | Oct 31, 2026 | P18: an app registers in Mantle's `public/PublicApps.js` (name, target type, readiness service), PASS's `service/pass/Apps.js` (root screen, default path), a `Pass.xml` subscreen, its operations in `Schema.js`/`Routes.js` and Mantle's copies, and the runtime's `<public-site>` mounts. A targeted mount (Billing, Supplier: an internal organization) is written only by an operator and kept by a site owner's core save. Recorded in design-forum §13.1 and mr-pass `docs/Deployment.md` for Purchasing P16 and Customer Service's Support app | Agent's call, for review (F371) |
 | Oct 31, 2026 | P18: CX-PORTALS record types and who issues their capabilities: an issued customer invoice (`Invoice`, InvoicePay; `RECEIVABLE_EDIT`) and a purchase order past its draft states (`Order`, BillUpload and OrderAcknowledgement; `PAYABLE_EDIT`), in the record's organization; Purchasing P16 adds its own permission for `send#PurchaseOrder`. A contact is an `ExternalAccessContact` grant (account's party, outside party, organization, app), made by redeeming an `invite#Contact` invitation (`RECEIVABLE_EDIT` for Billing, `PAYABLE_EDIT` for Supplier); it holds only on that organization's site and app, and a CRM `PrtContact` gives no portal access (F379) | Agent's call, for review. The design names the capability record's fields, not the permissions |
-| Oct 31, 2026 | P18: a supplier's bill is one form (number, date, amount, file): the file is staged under `pass_media_root/bills` and scanned at submission, and becomes the incoming draft's content only when clean; Forum's two-step attachment staging needs a signed-in owner, which a link holder is not (F375). A repeat of the request or of the supplier's bill number answers the first `SupplierBillSubmission`; a bill number AP already recorded is a conflict that names nothing internal | Agent's call, for review |
+| Oct 31, 2026 | P18: a supplier's bill is one form (number, date, amount, file): the file is staged under `pass@media-root/bills` and scanned at submission, and becomes the incoming draft's content only when clean; Forum's two-step attachment staging needs a signed-in owner, which a link holder is not (F375). A repeat of the request or of the supplier's bill number answers the first `SupplierBillSubmission`; a bill number AP already recorded is a conflict that names nothing internal | Agent's call, for review |
 | Oct 31, 2026 | P18 (revised after the P18 review, F378): the posting guard's user-organization check is skipped only for the one payment a Billing page is completing: Portal.js names it in the execution context's shared map (`PostingGuard.PORTAL_PAYMENT`) around its gateway calls, and the guard lets through a posting whose payment, or whose application's payment, is that one and is paid to the posting organization. Any other posting by no user or a public account keeps the check | Agent's call, for review. It replaces a blanket exemption of source postings by no user or a public account, which the review found too wide |
 | Oct 31, 2026 | P18 (revised after review): the demo sets ORG_ZIZI_RETAIL's invoice payment gateway through `store#Preferences` on ORG_ZIZI_CORP, whose preferences ORG_ZIZI_RETAIL inherits (a row of ORG_ZIZI_RETAIL's own, as `store#Preferences` on it makes, lacks the corporation's term and real-time summaries, and OrderToCashBasicFlow and OrderProcureToPayBasicFlow then fail on a database with BOSS's demo), keeping the corporation's error journal; it makes its invoice and purchase order through Mantle's services; its fixed link tokens load only with the demo data | The review's call, on the organization that owns the preferences |
 | Oct 31, 2026 | P13: Product360's Accounting context is a branch of `Shared/Product360` by appRoot, on P6's OrderDetail pattern: in the Accounting mount (`Accounting/Records/Product360`) the screen shows a record header and boxes (Summary cards, Costs and history, Source movements, Prices with PRICE_VIEW, GL mappings) and no tab panel, and Products' tabs get an empty `product360Tabs`, since a shared screen's tabs are one list for every mount (F135). `Shared/InventoryValuation` branches the same way: Products' mount keeps the revaluation of an approved estimate, Accounting's adds the valuation report around it (agent's call, for review) | One Product360 with per-app tabs waits for a framework way to choose tabs by mount; a separate Accounting screen would copy the record's header and reads |
@@ -1842,14 +1842,14 @@ because services moved from script modules into XML Actions.
 
 **Verification.** Before the rework, with a Chromium for PDF: `./moq test mr-boss` 1,187 passed, 0 failed, 5 skipped;
 standalone `./moq test mr-mantle` 1,195 passed and 9 failed, all in guard and archive specs since deleted. Without a
-Chromium for PDF (`moqui_chromium_path`; docs/Run-Deploy.md, docs/dev/Client-Testing.md), every PDF spec fails.
+Chromium for PDF (`screen-facade/pdf@chromium-path`; docs/Run-Deploy.md, docs/dev/Client-Testing.md), every PDF spec fails.
 
 Verification after the rework, Oct 30, 2026, with a Chromium for PDF: `./moq test mr-boss` 1,161 passed, 0 failed, 5
 skipped; standalone `./moq test mr-mantle` 991 passed, 1 failed, 1 skipped. The failure is InboxThreads' search
 operators, one of the four failures recorded before this work, which fails only while the UTC date is ahead of the local
 one. `./moq test-client mr-boss --serve` 39 of 40, the failure ProductsFinish's xlsx download, which this host does not
 build; `example` (GallerySmoke) 22 of 22 and mr-marble 41 of 41. `moqui lint --screens`: 125 flagged sites as before,
-none in Accounting. Mail capture (`mail_capture_sends`) is for the client walks only: with it on, InboxThreads and
+none in Accounting. Mail capture (`email-client@capture-sends`) is for the client walks only: with it on, InboxThreads and
 BankOutputFiles fail in the server specs.
 
 ### P6 build — Oct 31, 2026
@@ -1960,7 +1960,7 @@ Verified Oct 31, 2026 (no full suite run):
 - `./moq test mr-boss --spec AccountingPeriodClose,AccountingAccess,AccountingShell,AccountingScreens,`
   `AccountingIsolation,AccountingBanking,AccountingReceivables,AccountingPayables,AppStructure,TuiRender,Billing,`
   `BillingWalk,ClientBilling,MilestoneBillingWalk,TimeWalk,Reports`: 176 passed, 0 failed.
-- `./moq test-client mr-boss --serve --spec AccountingCloseWalk` (with `mail_capture_sends=true`): 1 of 1.
+- `./moq test-client mr-boss --serve --spec AccountingCloseWalk` (with `moqui_conf__email_client__capture_sends=true`): 1 of 1.
 - `moqui lint --screens`: 125 flagged sites as before, none in Accounting.
 
 After merging master (P14): Mantle's AccountingPeriodClose, AccountingProjectCost, the four flow specs,
@@ -2000,7 +2000,7 @@ AccountingReceivables, OrderToCashBasicFlow, InvoicePaymentMisc, OrderProcureToP
 ReturnToResponseBasicFlow, AccountingControls and AccountingBookDates 136 of 136. `./moq test mr-boss` with every
 Accounting spec, AppOrganizationFilters, AppStructure, TuiRender, Billing, BillingWalk, ClientBilling and
 MilestoneBillingWalk: 228 of 228. `./moq test-client mr-boss --serve` with the seven Accounting walks: 9 of 9, the
-receivables walk with `mail_capture_sends=true` as it says (without it its delivery row waits in vain). `moqui lint
+receivables walk with `moqui_conf__email_client__capture_sends=true` as it says (without it its delivery row waits in vain). `moqui lint
 --screens`: 125 flagged sites as before, none in Accounting. The full suites were not run.
 
 Commits: mr-mantle `d9257332`, `8b54ad8b`; mr-boss `2163c8a`, `671b7eb`, `967dd4b` and this record.
@@ -2011,7 +2011,7 @@ and rates guarded with dated nexus rows, masked taxpayer numbers, and the smalle
 mr-mantle AccountingTax (12 features) with TaxStatementServices, the receivables, settlement, payables, bank
 reconciliation, controls, book-day, payroll and the four flow specs (WorkPlanToCash among them): 215 of 215. mr-boss
 every Accounting spec (Payables and Banking among them), AppOrganizationFilters, AppStructure, TuiRender and the four
-Billing specs: 241 of 241 after AccountingShell's menu order. The nine Accounting walks with `mail_capture_sends=true`:
+Billing specs: 241 of 241 after AccountingShell's menu order. The nine Accounting walks with `moqui_conf__email_client__capture_sends=true`:
 13 of 13. `moqui lint --screens`: 125 flagged sites, none in Accounting.
 
 
@@ -2140,13 +2140,13 @@ AccountingApplicationRules, AccountingControls, AccountingPaymentLifecycle, Acco
 AccountingCustomerFinance: 261 passed, 0 failed. mr-boss AccountingPaymentRuns, AccountingAccess, AppStructure, TuiRender,
 AccountingShell, AccountingSettlement, ClientIsolation, AccountingPayables, AccountingMatching, AccountingBanking,
 AccountingScreens, AccountingIsolation, AccountingReceivables, AccountingPayments and the four Billing specs: 215 passed,
-0 failed. Walks with `mail_capture_sends=true` (AccountingPaymentRunsWalk, AccountingSettlementWalk,
+0 failed. Walks with `moqui_conf__email_client__capture_sends=true` (AccountingPaymentRunsWalk, AccountingSettlementWalk,
 AccountingSettingsWalk, AccountingPayablesWalk): 5 of 5. `moqui lint --screens`: 126 flagged sites, the one new one in
 P7's Shared/InvoiceMatch, none in P8's screens.
 
 Second review, Oct 31, 2026 (F188, F189): mr-mantle AccountingPaymentRunControls (10 features), AccountingPaymentRuns,
 AccountingSettlement, BankOutputFiles, BankFileServices and the four flow specs: 123 passed, 0 failed; mr-boss
-AccountingPaymentRuns 6 of 6; AccountingPaymentRunsWalk (`mail_capture_sends=true`) 2 of 2.
+AccountingPaymentRuns 6 of 6; AccountingPaymentRunsWalk (`moqui_conf__email_client__capture_sends=true`) 2 of 2.
 
 ### P17 build — Oct 31, 2026
 
@@ -2382,7 +2382,7 @@ After merging master (P8, P11), Oct 31, 2026: budget actuals leave out a period 
 `025570dc`). mr-mantle AccountingBudgets, BudgetServices, AccountingPayables, AccountingMatching, AccountingPaymentRuns,
 AccountingPeriodClose, the four flow specs and InvoiceOrderApply: 128 passed, 0 failed. mr-boss AccountingBudgets,
 AccountingShell, AccountingAccess, AppStructure, TuiRender, AccountingPayables, AccountingPaymentRuns,
-AccountingPeriodClose, AccountingScreens and ClientIsolation: 152 passed, 0 failed. Walks with `mail_capture_sends=true`
+AccountingPeriodClose, AccountingScreens and ClientIsolation: 152 passed, 0 failed. Walks with `moqui_conf__email_client__capture_sends=true`
 (AccountingBudgetsWalk, AccountingPayablesWalk, AccountingPaymentRunsWalk, AccountingCloseWalk): 7 of 7. Merges:
 mr-mantle `c5b7644b`, mr-boss `c970d1e`.
 
@@ -2397,16 +2397,16 @@ order-dependent case failed once and its 6 later features were skipped (F326, fi
 AccountingBudgets). mr-boss AccountingBudgets,
 AccountingPayables, AccountingShell, AccountingAccess, AppStructure, TuiRender, ClientIsolation and
 AccountingPaymentRuns: 145 passed, 0 failed. AccountingBudgetsWalk and AccountingPayablesWalk
-(`mail_capture_sends=true`): 4 of 4. Master had nothing new to merge.
+(`moqui_conf__email_client__capture_sends=true`): 4 of 4. Master had nothing new to merge.
 
 Second review fixes, Oct 31, 2026 (F327, F328; §7 notes a cancelled line of an open order): mr-mantle AccountingBudgets
 (11 features) and AccountingMatching 25 of 25; BudgetServices, AccountingPayables and the four flow specs passed in the
 same run (AccountingBudgets' revised-line check failed there on an assertion read after the reversal, fixed). mr-boss
-AccountingBudgets and AppStructure 22 of 22; AccountingBudgetsWalk (`mail_capture_sends=true`) 3 of 3. Then master (P17)
+AccountingBudgets and AppStructure 22 of 22; AccountingBudgetsWalk (`moqui_conf__email_client__capture_sends=true`) 3 of 3. Then master (P17)
 was merged (mr-mantle `d954ad2e`, mr-boss `1969261`): mr-mantle AccountingBudgets, BudgetServices, AccountingPayables,
 AccountingMatching, AccountingReturns and the four flow specs 124 of 124; mr-boss AccountingBudgets, AccountingShell,
 AccountingAccess, AppStructure, TuiRender, ClientIsolation and AccountingPayables 141 of 141; AccountingBudgetsWalk,
-AccountingPayablesWalk and AccountingReturnsWalk (`mail_capture_sends=true`) 5 of 5.
+AccountingPayablesWalk and AccountingReturnsWalk (`moqui_conf__email_client__capture_sends=true`) 5 of 5.
 
 ### P16 build — Oct 31, 2026
 
@@ -2501,7 +2501,7 @@ After merging master (P8): mr-mantle AccountingValuation, AccountingPeriodClose,
 and AccountingPaymentRuns 115 passed; mr-boss AccountingValuation, AccountingShell, AccountingAccess, AppStructure,
 TuiRender, ClientIsolation, AccountingPaymentRuns, AccountingPeriodClose, AccountingPayables and AccountingScreens 151
 passed; AccountingValuationWalk, AccountingPaymentRunsWalk, AccountingCloseWalk, AccountingPayablesWalk and
-ProductsCostWalk (`mail_capture_sends=true`) 6 of 6; lint unchanged.
+ProductsCostWalk (`moqui_conf__email_client__capture_sends=true`) 6 of 6; lint unchanged.
 
 Commits: mr-mantle `b75ecb25`, merge `4f161a1e`; mr-boss `f5d18bd`, `ac84737` (docs), merge `bd1bbfb` and this record.
 
@@ -2572,7 +2572,7 @@ Verified Oct 31, 2026, after merging master (P12, P17, P18; no full suite run):
   `AccountingScreens,AccountingReceivables,AccountingPayables,ClientIsolation,AccountingIsolation,Notifications,Billing,`
   `BillingWalk,ClientBilling,MilestoneBillingWalk`: 202 passed, 0 failed.
 - `./moq test-client mr-boss --serve --spec AccountingCollectionsWalk,AccountingReceivablesWalk,AccountingPayablesWalk`
-  with `mail_capture_sends=true`: 4 of 4.
+  with `moqui_conf__email_client__capture_sends=true`: 4 of 4.
 - `moqui lint --screens`: 126 flagged sites, none in Accounting or the new shared tabs.
 
 Commits: mr-mantle `03357dc9`, `9fc6283f`, `b585467d` (docs), merges `08851ead` and `ccf7553c`; mr-boss `01cd74a`,
@@ -2588,7 +2588,7 @@ OrderBulk, AssetReservationMisc, AccountingReceivables, AccountingReturns and Ac
 passed; the 2 failures were WorkPlanToCashBasicFlow's posting-entry order (P11's record), which passed alone and with the
 P10 and flow specs (101 of 101). mr-boss AccountingCollections, AccountingAccess, AppStructure, TuiRender,
 AccountingShell, ClientIsolation, AccountingPayables, Billing, BillingWalk, ClientBilling and MilestoneBillingWalk 178 of
-178; AccountingCollectionsWalk 2 of 2 (`mail_capture_sends=true`). mr-marble SimpleScreensRender with MarbleScreens: 153
+178; AccountingCollectionsWalk 2 of 2 (`moqui_conf__email_client__capture_sends=true`). mr-marble SimpleScreensRender with MarbleScreens: 153
 of 161, the same 8 failures on master; none of its specs renders Invoice/Aging.
 
 P10 second review fixes, Oct 31, 2026 (extending F221 and F226; and the smaller items: the dunning cadence keyed on
@@ -2597,7 +2597,7 @@ item, asset, financial account transaction, payroll adjustment, sales opportunit
 authorized payments counted only on open orders, `CreditOrderPaymentSum`; a preview for a past day reading the open
 portions as of that day). mr-mantle AccountingCredit (9), AccountingCollections (9), AccountingRecurringAging, the
 flow specs, InvoicePaymentMisc, OrderLifecycle and OrderBulk 116 of 116; mr-boss AccountingCollections, AccountingShell,
-AccountingAccess, AppStructure and TuiRender 128 of 128; AccountingCollectionsWalk 2 of 2 (`mail_capture_sends=true`).
+AccountingAccess, AppStructure and TuiRender 128 of 128; AccountingCollectionsWalk 2 of 2 (`moqui_conf__email_client__capture_sends=true`).
 
 ### P19 build — Oct 31, 2026
 
@@ -2719,7 +2719,7 @@ AccountingDelivery, AccountingCustomerFinance, AccountingMatching, AccountingInt
 InvoicePaymentMisc and PayrollServices pass (AccountingDelivery's euro invoice now carries its own rate, since alone it
 found no euro rate to post at); mr-boss AccountingAccess, AccountingShell, AppStructure, TuiRender and
 AccountingPaymentFiles 132 of 132; AccountingCurrencyWalk 1 of 1. Also passing: Billing, BillingWalk, ClientBilling,
-MilestoneBillingWalk 22 of 22; AccountingReceivablesWalk (with `mail_capture_sends=true`), AccountingPaymentsWalk and
+MilestoneBillingWalk 22 of 22; AccountingReceivablesWalk (with `moqui_conf__email_client__capture_sends=true`), AccountingPaymentsWalk and
 AccountingReportsWalk.
 
 P20 review fixes, Oct 31, 2026 (F417–F428; §4, §5): asset costs post at their asset's kept rate, error-journal application
@@ -2790,7 +2790,7 @@ Verified Oct 31, 2026 (runtime without a full suite run; master had nothing new 
 - `./moq test mr-mantle --spec` RecordLinks, RecordNotes, MantleSearch, WorkProjectClients,
   AccountingPaymentNotifications, CrmMiscServices, CommonsToday, AccountingBankReconciliation, PaymentMethodServices and
   AccountingControls (the record and search rules F430 and F431 change): 123 of 123.
-- `./moq test-client mr-boss --serve` (with `mail_capture_sends=true`) AccountingLedgerWalk, AccountingReceivablesWalk,
+- `./moq test-client mr-boss --serve` (with `moqui_conf__email_client__capture_sends=true`) AccountingLedgerWalk, AccountingReceivablesWalk,
   AccountingPaymentsWalk, AccountingPayablesWalk, AccountingBankingWalk, AccountingCloseWalk, AccountingTaxWalk,
   AccountingFixedAssetsWalk and AccountingSetupWalk, over the screens marked server-static and given Print: 13 of 13.
 - `moqui lint --screens`: 126 flagged sites as on master, none new in Accounting.

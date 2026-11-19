@@ -136,6 +136,8 @@ function findRoutes(p) {
     const forumCategories = siteIds.length
         ? Array.from(find("mantle.forum.ForumCategory").condition("siteId", "in", siteIds).limit(300).list())
         : []
+    // the acknowledgement's text blocks: the user's own, and those shared with a service group of the organization the user
+    // is in (its service-wide group or a team's), as Mantle's save#ServiceRoute takes them (SEC-BAP-81)
     const blockFind = find("moqui.basic.email.EmailTextBlock").condition(
         ec.entity.conditionFactory.makeCondition(
             [
@@ -143,12 +145,21 @@ function findRoutes(p) {
                 ec.entity.conditionFactory.makeCondition(
                     "userGroupId",
                     "in",
-                    Array.from(ec.user.getUserGroupIdSet() || []).concat(["_NONE_"])
+                    Array.from(ec.user.getUserGroupIdSet() || [])
+                        .filter(userGroupId => mantleChannels.serviceGroupOf(userGroupId, organizationPartyId))
+                        .concat(["_NONE_"])
                 )
             ],
             "or"
         )
     )
+    // the acknowledgement text options: the blocks the user may name (AddRoute), and on each route's own form also that
+    // route's present block, which Mantle lets that route keep (SEC-BAP-81)
+    const blockOptions = Array.from(blockFind.orderBy("title").limit(100).list()).map(row => ({
+        value: row.emailTextBlockId,
+        label: row.title || row.emailTextBlockId
+    }))
+    for (const route of routes) route.ackTextBlockOptions = withPresentBlock(blockOptions, route.ackTextBlockId)
     return {
         organizationPartyId,
         organizations: config.organizationOptions(userScope),
@@ -179,10 +190,7 @@ function findRoutes(p) {
                       .list()
               ).map(row => ({value: row.emailIdentityId, label: [row.displayName, row.emailAddress].filter(Boolean).join(" · ")}))
             : [],
-        textBlockOptions: Array.from(blockFind.orderBy("title").limit(100).list()).map(row => ({
-            value: row.emailTextBlockId,
-            label: row.title || row.emailTextBlockId
-        })),
+        textBlockOptions: blockOptions,
         siteOptions: sites.map(row => ({value: row.siteId, label: row.name || row.siteId})),
         forumCategoryOptions: forumCategories.map(row => ({
             value: row.contactListId,
@@ -194,6 +202,14 @@ function findRoutes(p) {
                     row.contactListId)
         }))
     }
+}
+
+// A route's own form's acknowledgement text options: the blocks the user may name, and the route's present block when it
+// is not one of them (its value in RouteEdit; Mantle's save#ServiceRoute lets that route, and no other, keep it).
+function withPresentBlock(options, emailTextBlockId) {
+    if (!emailTextBlockId || options.some(option => option.value === emailTextBlockId)) return options
+    const block = one("moqui.basic.email.EmailTextBlock", {emailTextBlockId})
+    return block ? options.concat([{value: emailTextBlockId, label: block.title || emailTextBlockId}]) : options
 }
 
 // ===== find#ChannelSessions: ChannelSessions SessionFind, SessionList =====

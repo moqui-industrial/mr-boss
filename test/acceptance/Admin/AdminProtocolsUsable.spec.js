@@ -107,18 +107,18 @@ feature("ProtocolsHome tells SMTP reception that is off, the web protocols and a
     then(out) {
         const list = out.read.protocolList
         protocol(list, "smtpIn").state == "disabled" && protocol(list, "smtpIn").built == true
-        protocol(list, "smtpIn").reason.includes("smtp_listen_port")
+        protocol(list, "smtpIn").reason.includes("smtp-server@listen-port")
         // the web protocols stand with the web listener: ready on a running server, configured in a run that opened none
         protocol(list, "dav").state == (out.read.serverStarted ? "ready" : "notStarted")
         protocol(list, "wopi").state == "absent" && protocol(list, "speechLocal").state == "absent"
         // call media: absent where the build has none; where it has it, on in every test run (basic-comms' test/MoquiConf.xml
-        // sets rtc_media_port, for its call specs), so configured and not known to run in this run, which opens no listeners
+        // sets media-server@port, for its call specs), so configured and not known to run in this run, which opens no listeners
         protocol(list, "rtc").state ==
             (ec.factory.hasFeature("rtc") ? (out.read.serverStarted ? "ready" : "notStarted") : "absent")
         new Set(["smtpIn", "dav", "wopi"].map(key => protocol(list, key).stateText)).size == 3
         opened(out.home)
         out.home.output.includes("ProtocolReadiness") && out.home.output.includes("Mail reception")
-        out.home.output.includes("smtp_listen_port is not set") && out.home.output.includes("Not in this build")
+        out.home.output.includes("smtp-server@listen-port is not set") && out.home.output.includes("Not in this build")
         out.home.output.includes("Comms/Settings/MailAccounts") && out.home.output.includes("Protocols/MailRelays")
         opened(out.configuration)
         out.configuration.output.includes("EffectiveProtocolSettings") &&

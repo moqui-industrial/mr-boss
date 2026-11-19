@@ -2799,7 +2799,7 @@ consent, the notice naming no comment); no per-agent ranking; leanness.
   CustomerServiceFeedback, CustomerServiceTemplates; all pass. The true remote pair of docs/Deployment.md "Reproducing the
   remote check": the authority (this runtime, `--acceptance --spec ClientFixtures,PortalFixtures,SupplierPortalFixtures,
   SupportFixtures --serve`), a scratch frontend runtime of framework, webroot, tools and mr-pass only (RemoteFixtures passes: no
-  Mantle catalog) with `pass_backend_url` over REST, and RemoteHttp through it: 8 features pass, the Support feature's rating 2,
+  Mantle catalog) with `pass@backend-url` over REST, and RemoteHttp through it: 8 features pass, the Support feature's rating 2,
   its receipt, and a repeat's 5 answering "2 of 5".
 - Left for the lead: (1) the CSAT results tab shows to an agent, who is then told it is not available (F183); a menu item is
   hidden only by artifact authorization, which the shared file cannot carry, so hiding it needs P14's catalogue (the tab
@@ -3320,7 +3320,7 @@ scanner with type, signature and size), BOSS's Invite to support and ServiceDefa
 - Specs run (this runtime; no full suite): acceptance TuiRender (3), CustomerServiceServerStatic (1),
   CustomerServiceAccessWalk (7), CustomerServiceSummaryWalk (2), CustomerServiceOrdersWalk (6), mr-pass SupportIsolation
   (1), all pass; regression mr-mantle AccountingControls (34), SupportAssignment (7), SupportWarranty (4), SupportPortal
-  (8, with `mail_capture_sends=true`, as the wave runs set it), and the §2 compatibility specs with Forum, ForumAccess,
+  (8, with `moqui_conf__email_client__capture_sends=true`, as the wave runs set it), and the §2 compatibility specs with Forum, ForumAccess,
   PublicIdentity, Integrations and SupportAccess (238 features), pass; BOSS CustomerServiceAssignment (4),
   CustomerServiceWarranty (1), CustomerServiceReturns (5), CustomerServiceRelations, pass. `moqui lint --screens`: no
   parse failure, no new flagged site, no Customer Service TUI worklist item.

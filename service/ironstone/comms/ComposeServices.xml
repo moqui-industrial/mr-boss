@@ -374,7 +374,8 @@ along with this software (see the LICENSE.md file). If not, see
     <service verb="search" noun="Recipients">
         <description>The recipients the To, Cc and Bcc chips offer for the term: for email (mode email), the email addresses
             of the parties the user may see (the directory under the Comms app's entity filters, so another organization's
-            parties stay out, and the user's own personal contacts, R7: name or address), the
+            parties stay out, and the user's own personal contacts, R7: name or address), the user accounts of those parties
+            that the chat-target providers do not refuse (SEC-BOS-99), the
             contact groups of the books the user may see (a group chip expands to its members on send), and the
             addresses of the user's recent mail; for an internal message (mode internal), the users (by name or user name)
             and the mailboxes the user may post to. Options {value, label, kind}: value is the address as a header ("Name"
@@ -433,17 +434,41 @@ along with this software (see the LICENSE.md file). If not, see
             const addressParties = Array.from(new Set(byAddress.map((row) => row.partyId).filter((id) => !(id in names))))
             if (addressParties.length) for (const party of ec.entity.find('mantle.party.PartyDetail').condition('partyId', 'in', addressParties).condition(visible)
                     .condition(cf.makeCondition('disabled', 'not-equals', 'Y', true)).list()) names[party.partyId] = nameOf(party)
-            const partyIds = Object.keys(names)
+            // another organization's staff only when the user may see that organization (filter#VisibleParties, SEC-BOS-99)
+            const partyIds = Object.keys(names).length ? Array.from(ec.service.sync().name('mantle.party.PartyServices.filter#VisibleParties')
+                    .parameter('partyIdList', Object.keys(names)).call()?.visiblePartyIdList || []) : []
             if (partyIds.length) for (const row of ec.entity.find('mantle.party.contact.PartyContactMechInfo').condition('partyId', 'in', partyIds)
                     .condition('contactMechTypeEnumId', 'CmtEmailAddress').condition(cf.makeConditionDate('fromDate', 'thruDate', null))
                     .selectField('partyId').selectField('infoString').disableAuthz().list()) {
                 if (optionList.length >= max) break
                 add(row.infoString, names[row.partyId])
             }
-            // users of this system, by name or address
-            if (optionList.length < max) for (const account of ec.entity.find('moqui.security.UserAccount').condition(cf.makeCondition([like('username'), like('userFullName'),
-                    like('emailAddress')], 'or')).condition('emailAddress', 'not-equals', null).condition(cf.makeCondition('disabled', 'not-equals', 'Y', true))
-                    .selectField('emailAddress').selectField('userFullName').limit(max).disableAuthz().list()) add(account.emailAddress, account.userFullName)
+            // users of this system, by name or address: only those whose party the user may see, found in the query (the person's
+            // Party under the Comms app's filters, PersonWithUserAccount with authorization on, a page at a time so a visible colleague
+            // past others is still found), then filter#VisibleParties (another organization's staff) and the chat-target providers
+            // (SEC-BOS-99); an account with no party is no one's to offer
+            if (optionList.length < max) {
+                const pageSize = Math.max(max * 2, 20)
+                for (let pageIndex = 0; pageIndex < 5 && optionList.length < max; pageIndex++) {
+                    const accounts = Array.from(ec.entity.find('mantle.party.PersonWithUserAccount').condition(cf.makeCondition([like('username'), like('userFullName'),
+                            like('emailAddress')], 'or')).condition('emailAddress', 'not-equals', null).condition(visible)
+                            .condition(cf.makeCondition('disabled', 'not-equals', 'Y', true))
+                            .selectField('userId').selectField('partyId').selectField('emailAddress').selectField('userFullName')
+                            .orderBy('username').offset(pageIndex * pageSize).limit(pageSize).list())
+                    if (!accounts.length) break
+                    const seenParties = new Set(Array.from(ec.service.sync().name('mantle.party.PartyServices.filter#VisibleParties')
+                            .parameter('partyIdList', accounts.map((account) => account.partyId)).call()?.visiblePartyIdList || []))
+                    const shown = accounts.filter((account) => seenParties.has(account.partyId))
+                    const checked = shown.length ? ec.service.sync().name('org.moqui.chat.ChatServices.get#RefusedUsers')
+                            .parameters({userIdList: shown.map((account) => account.userId), hook: 'chat-target'}).call() : null
+                    const refused = new Set(checked ? Array.from(checked.refusedUserIdList || []) : shown.map((account) => account.userId))
+                    for (const account of shown) {
+                        if (optionList.length >= max) break
+                        if (!refused.has(account.userId)) add(account.emailAddress, account.userFullName)
+                    }
+                    if (accounts.length < pageSize) break
+                }
+            }
             // the user's recent correspondents: addresses of the latest mail in the accounts the user reaches
             if (optionList.length < max) {
                 const access = ec.service.sync().name('org.moqui.mail.EmailClientServices.get#EmailAccountAccess').requireNewTransaction(true).call()
@@ -678,7 +703,9 @@ along with this software (see the LICENSE.md file). If not, see
             (an address as given; a party:id chip by its primary email address, for a party the user may see; a group:id
             chip by the current members of that contact group who have an email address), for an internal message the
             party ids (party:id; an address chip by the party with it, match#Addresses; a group:id chip by its members)
-            and the mailboxes (list:id). A group the user may not see is not found. A member with no email address is
+            and the mailboxes (list:id). A party a party:id or address chip names is one the user may see under the Comms
+            app's entity filters, and for an internal message one whose users the chat-target providers do not refuse
+            (SEC-BOS-98); any other is not found. A group the user may not see is not found. A member with no email address is
             skipped; a group with none is an error naming it. An entry that cannot be resolved is an error naming it.</description>
         <in-parameters>
             <parameter name="chipList" type="List"/>
@@ -700,6 +727,23 @@ along with this software (see the LICENSE.md file). If not, see
             contactListIdList = []
             const visibleParty = (id) => ec.entity.find('mantle.party.Party').condition('partyId', id).condition(cf.makeCondition([
                 cf.makeCondition('privateOwnerUserId', 'equals', null), cf.makeCondition('privateOwnerUserId', 'equals', ec.user.userId)], 'or')).disableAuthz().count() > 0
+            // a party a chip names (party:id, or an address matched to a party for an internal message) is one the user may reach
+            // (SEC-BOS-98): read with authorization on, so the Comms app's entity filters keep another organization's parties out
+            // as search#Recipients does, not another user's private contact; for an internal message none of its users is one the
+            // chat-target providers refuse (as the people search, ChatterServices.search#Users). Otherwise it is not found.
+            const reachableParty = (id) => {
+                if (!id) return false
+                // another organization's staff too, unless the user may see that organization (filter#VisibleParties)
+                const seen = Array.from(ec.service.sync().name('mantle.party.PartyServices.filter#VisibleParties')
+                    .parameters({partyIdList: [id], includeDisabled: true}).call()?.visiblePartyIdList || []).includes(id)
+                if (!seen || mode !== 'internal') return seen
+                const userIds = Array.from(ec.entity.find('moqui.security.UserAccount').condition('partyId', id).selectField('userId').disableAuthz().list())
+                    .map((account) => account.userId)
+                if (!userIds.length) return true
+                const checked = ec.service.sync().name('org.moqui.chat.ChatServices.get#RefusedUsers').parameters({userIdList: userIds, hook: 'chat-target'}).call()
+                const refused = new Set(checked ? Array.from(checked.refusedUserIdList || []) : userIds)
+                return !userIds.some((userId) => refused.has(userId))
+            }
             const seenAddress = new Set()
             const expandGroup = (groupId, label) => {
                 const group = ec.entity.find('mantle.party.contact.ContactBookGroup').condition('contactBookGroupId', groupId).one()
@@ -717,7 +761,8 @@ along with this software (see the LICENSE.md file). If not, see
                     const id = member.partyId
                     const inBook = ec.entity.find('mantle.party.contact.ContactBookParty').condition('contactBookId', group.contactBookId)
                             .condition('partyId', id).condition(cf.makeConditionDate('fromDate', 'thruDate', null)).count() > 0
-                    if (!inBook || !visibleParty(id)) continue
+                    // an internal message's member as a party chip (SEC-BOS-98); an email's by the book's own privacy rule
+                    if (!inBook || !(mode === 'internal' ? reachableParty(id) : visibleParty(id))) continue
                     if (mode === 'internal') { found.push({partyId: id}); continue }
                     const address = ec.service.sync().name('mantle.party.ContactServices.get#PrimaryEmailAddress').parameter('partyId', id).call()?.emailAddress
                     ec.message.clearErrors()
@@ -754,7 +799,7 @@ along with this software (see the LICENSE.md file). If not, see
                     }
                 } else if (value.startsWith('party:')) {
                     const id = value.substring(6)
-                    if (!visibleParty(id)) { ec.message.addError(ec.resource.expand('Recipient ${name} not found', '', {name: label})); return }
+                    if (!reachableParty(id)) { ec.message.addError(ec.resource.expand('Recipient ${name} not found', '', {name: label})); return }
                     if (mode === 'internal') { if (!partyIdList.includes(id)) partyIdList.push(id) }
                     else {
                         const address = ec.service.sync().name('mantle.party.ContactServices.get#PrimaryEmailAddress').parameter('partyId', id).call()?.emailAddress
@@ -767,7 +812,7 @@ along with this software (see the LICENSE.md file). If not, see
                     const match = /<([^>]+)>/.exec(value)
                     const address = (match ? match[1] : value).trim().toLowerCase()
                     const map = ec.service.sync().name('ironstone.comms.InboxServices.match#Addresses').parameter('addressList', [address]).call().partyMap || {}
-                    if (!map[address]) { ec.message.addError(ec.resource.expand('${name} is not someone here; send email from a mail account', '', {name: label})); return }
+                    if (!map[address] || !reachableParty(map[address].partyId)) { ec.message.addError(ec.resource.expand('${name} is not someone here; send email from a mail account', '', {name: label})); return }
                     if (!partyIdList.includes(map[address].partyId)) partyIdList.push(map[address].partyId)
                 } else {
                     const match = /<([^>]+)>/.exec(value)
