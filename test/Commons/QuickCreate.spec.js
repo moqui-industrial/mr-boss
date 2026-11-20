@@ -280,3 +280,144 @@ feature("an activity on another user's personal contact is refused and makes not
         after == before
     },
 })
+
+// SEC-BOS-113: a request's customer passes raise#Request's party check: another user's personal contact is refused
+feature("a request whose customer is another user's personal contact is refused and makes nothing (SEC-BOS-113)", {
+    allowMessageErrors: true,
+    when() {
+        sys(() => { if (!one("mantle.party.Party", { partyId: "BOSS_TEST_PRIVATE" })) call("create#mantle.party.Party", { partyId: "BOSS_TEST_PRIVATE",
+            partyTypeEnumId: "PtyPerson", privateOwnerUserId: "ORG_ZIZI_JD" }) })
+        const refused = post("createRequest", { requestName: "BOSS_TEST Request for a private contact", customerPartyId: "BOSS_TEST_PRIVATE" })
+        return { refused, made: list("mantle.request.Request", { requestName: "BOSS_TEST Request for a private contact" }).length }
+    },
+    then({ refused, made }) {
+        refused.errors.includes("Customer BOSS_TEST_PRIVATE is not available")
+        made == 0
+    },
+})
+
+// SEC-BOS-113 (review): a task's or an activity's assignee and a request's customer are parties the user may reach
+// (PartyReach.js visibleParties): another top-level organization's staff is refused to joe, though the person's party is shared
+feature("another organization's staff is no assignee or customer for joe's quick create (SEC-BOS-113)", {
+    allowMessageErrors: true,
+    when() {
+        sys(() => {
+            if (one("mantle.party.Party", { partyId: "BOSS_TEST_OTHERCO" })) return
+            call("create#mantle.party.Party", { partyId: "BOSS_TEST_OTHERCO", partyTypeEnumId: "PtyOrganization", ownerPartyId: "BOSS_TEST_OTHERCO" })
+            call("create#mantle.party.Organization", { partyId: "BOSS_TEST_OTHERCO", organizationName: "BOSS_TEST Other Company" })
+            call("create#mantle.party.PartyRole", { partyId: "BOSS_TEST_OTHERCO", roleTypeId: "OrgInternal" })
+            call("create#mantle.party.Party", { partyId: "BOSS_TEST_OTHER_STAFF", partyTypeEnumId: "PtyPerson", ownerPartyId: "_NA_" })
+            call("create#mantle.party.Person", { partyId: "BOSS_TEST_OTHER_STAFF", firstName: "Olga", lastName: "Othercompany" })
+            call("create#mantle.party.PartyRelationship", { relationshipTypeEnumId: "PrtEmployee", fromPartyId: "BOSS_TEST_OTHER_STAFF", fromRoleTypeId: "Employee",
+                toPartyId: "BOSS_TEST_OTHERCO", toRoleTypeId: "OrgEmployer", fromDate: new Date(0) })
+        })
+        login("joe.developer")
+        try {
+            return {
+                task: post("createTask", { workEffortName: "BOSS_TEST Task for another company", assignToPartyId: "BOSS_TEST_OTHER_STAFF" }),
+                request: post("createRequest", { requestName: "BOSS_TEST Request for another company", customerPartyId: "BOSS_TEST_OTHER_STAFF" }),
+                tasks: list("mantle.work.effort.WorkEffort", { workEffortName: "BOSS_TEST Task for another company" }).length,
+                requests: list("mantle.request.Request", { requestName: "BOSS_TEST Request for another company" }).length,
+            }
+        } finally { login("john.doe") }
+    },
+    then({ task, request, tasks, requests }) {
+        task.errors.includes("Party BOSS_TEST_OTHER_STAFF not found")
+        request.errors.includes("Customer BOSS_TEST_OTHER_STAFF is not available")
+        tasks == 0
+        requests == 0
+    },
+})
+
+// SEC-BOS-87: a screen's context record of a registered type takes a quick create by its registration's rule (a store by its
+// organization, a container by its facility, a pay run by People's payroll read); another organization's store and an entity
+// that is no registered record type are refused
+feature("quick create on a registered record type of an app's screen, by its rule; another organization's store and an unregistered type refused (SEC-BOS-87)", {
+    allowMessageErrors: true,
+    when() {
+        const task = (name, recordEntity, recordId) => post("createTask", { workEffortName: name, estimatedCompletionDate: "2026-11-02", recordEntity, recordId })
+        const store = task("Check the store's hours", "mantle.product.store.ProductStore", "POPC_DEFAULT")
+        const container = task("Relabel the tote", "mantle.product.asset.Container", "BOSS_WH_TOTE_E1")
+        const unregistered = task("Not a record", "moqui.basic.Enumeration", "RqtSupport")
+        const joeStore = (() => { login("joe.developer"); try { return task("Joe on the retail store", "mantle.product.store.ProductStore", "POPC_DEFAULT") } finally { login("john.doe") } })()
+        return { store, container, unregistered, joeStore,
+            storeLink: one("mantle.work.effort.WorkEffortRecord", { workEffortId: store.json.workEffortId || "_NA_", recordEntityName: "mantle.product.store.ProductStore", recordId: "POPC_DEFAULT" }),
+            joeTasks: list("mantle.work.effort.WorkEffort", { workEffortName: "Joe on the retail store" }).length }
+    },
+    then({ store, container, unregistered, joeStore, storeLink, joeTasks }) {
+        store.errors == ""
+        storeLink != null
+        container.errors == ""
+        unregistered.status == 500
+        joeStore.status == 500
+        joeTasks == 0
+    },
+})
+
+// SEC-BOS-87 review: a registered type's rule is its owning app's own check, narrower than its organization: a user of Retail who
+// is no Commerce staff gets no store's card and files nothing on it; a survey form is its purpose's readers' (not every Commons
+// user's under the entity filters)
+feature("a Retail user who is no Commerce staff is refused a store's card and quick create; a survey form is its readers' (SEC-BOS-87)", {
+    allowMessageErrors: true,
+    when() {
+        const card = (recordEntity, recordId) => {
+            const str = ec.screen.makeTest().rootScreen(commons).render("Chatter/recordCard", { recordEntity, recordId }, null)
+            let json = null
+            try { json = JSON.parse(str.output) } catch (err) { json = null }
+            ec.message.clearErrors()
+            return { status: str.status, json: json || {}, errors: str.errorMessages.join(" | ") }
+        }
+        const task = (name, recordEntity, recordId) => post("createTask", { workEffortName: name, estimatedCompletionDate: "2026-11-02", recordEntity, recordId })
+        const johnStoreCard = card("mantle.product.store.ProductStore", "POPC_DEFAULT")
+        const johnFormCard = card("moqui.screen.form.DbForm", "BOSS_MKT_FORM_VISIT")
+        login("customerservice.agent")
+        try {
+            return {
+                johnStoreCard,
+                johnFormCard,
+                storeCard: card("mantle.product.store.ProductStore", "POPC_DEFAULT"),
+                storeTask: task("Agent on the retail store", "mantle.product.store.ProductStore", "POPC_DEFAULT"),
+                formCard: card("moqui.screen.form.DbForm", "BOSS_MKT_FORM_VISIT"),
+                formTask: task("Agent on the visit survey", "moqui.screen.form.DbForm", "BOSS_MKT_FORM_VISIT"),
+                agentTasks: list("mantle.work.effort.WorkEffort", { workEffortName: "Agent on the retail store" }).length
+                    + list("mantle.work.effort.WorkEffort", { workEffortName: "Agent on the visit survey" }).length
+            }
+        } finally { login("john.doe") }
+    },
+    then({ johnStoreCard, johnFormCard, storeCard, storeTask, formCard, formTask, agentTasks }) {
+        // a card the user may not see names the id alone, with no type
+        !!johnStoreCard.json.typeLabel && !!johnFormCard.json.typeLabel
+        !storeCard.json.typeLabel && storeCard.json.title == "POPC_DEFAULT"
+        storeTask.status == 500
+        !formCard.json.typeLabel && formCard.json.title == "BOSS_MKT_FORM_VISIT"
+        formTask.status == 500
+        agentTasks == 0
+    },
+})
+
+// a site is its organizations' (the internal organizations its apps mount, its shop's stores'), not public content every user
+// files notes on (SEC-BOS-87 review)
+feature("a site's card and notes are its organizations' users': Retail's shop site for Retail's agent, not Services' (SEC-BOS-87)", {
+    allowMessageErrors: true,
+    when() {
+        const card = (user) => {
+            login(user)
+            try {
+                const str = ec.screen.makeTest().rootScreen(commons).render("Chatter/recordCard", { recordEntity: "mantle.public.PublicSite", recordId: "ZIZI_SHOP" }, null)
+                let json = null
+                try { json = JSON.parse(str.output) } catch (err) { json = null }
+                ec.message.clearErrors()
+                return json || {}
+            } finally { login("john.doe") }
+        }
+        const servicesTask = (() => { login("customerservice.services"); try {
+            return post("createTask", { workEffortName: "Services on Retail's site", estimatedCompletionDate: "2026-11-02", recordEntity: "mantle.public.PublicSite", recordId: "ZIZI_SHOP" })
+        } finally { login("john.doe") } })()
+        return { retail: card("customerservice.agent"), services: card("customerservice.services"), servicesTask }
+    },
+    then({ retail, services, servicesTask }) {
+        !!retail.typeLabel
+        !services.typeLabel
+        servicesTask.status == 500
+    },
+})

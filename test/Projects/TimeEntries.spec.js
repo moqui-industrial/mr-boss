@@ -657,6 +657,63 @@ feature("TimeSettings keeps the policy and the work types offered; MyTime and th
     }
 })
 
+// SEC-BOS-130: the time screens' people (get#TimePeople, which the entry dialog, TimeEntries and MyWeek ask with the person
+// requested) name a person given by id only when the user may view that person's week of the day asked: another user's personal
+// contact (Mary Doe, john.doe's) and another organization's party (Bob Acme, a customer's) are no option for joe, his own party is
+feature("the time screens name a person given by id only when the user may view that person's week (SEC-BOS-130)", {
+    when() {
+        const people = partyId =>
+            as("joe.developer", () =>
+                sys(() => call("ironstone.projects.TimeServices.get#TimePeople", {partyId, date: new Date(at(13, 9))}).personOptions.map(option => option.key))
+            )
+        return {mary: people("BOSS_DEMO_PC_MARY"), customer: people("ORG_ACME_BA"), own: people("ORG_ZIZI_JD")}
+    },
+    then({mary, customer, own}) {
+        !mary.includes("BOSS_DEMO_PC_MARY")
+        !customer.includes("ORG_ACME_BA")
+        own.includes("ORG_ZIZI_JD")
+    }
+})
+
+// SEC-BOS-131: a work type an organization made is its own (its organization on the type): another organization's manager neither
+// sees, renames nor offers it
+feature("another organization's Projects manager neither renames nor offers an organization's own work type (SEC-BOS-131)", {
+    when() {
+        const type = sys(() => ec.entity.find("moqui.basic.Enumeration").condition("enumTypeId", "WorkType").condition("description", "Walk review").one())
+        const other = ["ORG_ZIZI_SERVICES", "ORG_ZIZI_RETAIL"].find(id => id !== type.enumCode)
+        const hadActive = "activeOrgId" in ec.user.context
+        const before = ec.user.context.activeOrgId
+        ec.user.context.activeOrgId = other
+        try {
+            const change = parameters =>
+                sys(() => {
+                    try {
+                        call("ironstone.projects.TimeServices.change#WorkTypes", parameters)
+                    } catch (err) {
+                        /* the error is in the messages */
+                    }
+                    const error = ec.message.hasError() ? ec.message.getErrorsString() : ""
+                    ec.message.clearErrors()
+                    return error
+                })
+            const renamed = change({enumId: type.enumId, change: "rename", label: "Renamed elsewhere"})
+            const offered = change({enumId: type.enumId, change: "offer"})
+            const listed = sys(() => call("ironstone.projects.TimeServices.get#TimeSettings", {})).typeList.some(row => row.enumId === type.enumId)
+            return {type, renamed, offered, listed, after: sys(() => ec.entity.find("moqui.basic.Enumeration").condition("enumId", type.enumId).one())}
+        } finally {
+            if (hadActive) ec.user.context.activeOrgId = before
+            else delete ec.user.context.activeOrgId
+        }
+    },
+    then({type, renamed, offered, listed, after}) {
+        type.enumCode != null
+        renamed.includes("Only your own work types are renamed")
+        offered.includes("is not available")
+        !listed
+        after.description == "Walk review"
+    }
+})
+
 // an employee's pay (Mantle's PAYROLL_VIEW and PAYROLL_EDIT): a Projects manager who is not payroll sees and sets the client rate of
 // joe's time, not his worker rate, which is his pay; john.doe (ADMIN) sees and sets both
 feature(

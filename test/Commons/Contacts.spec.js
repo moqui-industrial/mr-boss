@@ -226,6 +226,76 @@ feature("contact tasks include generic links once and omit tasks the reader cann
     },
 })
 
+// SEC-BOS-112: the requests tab keeps a request only when the request rule lets the reader see it (get#RecordLinkInfo): a
+// request for quote the contact is the customer of is Sales', not every Commons user's; one the reader filed shows
+feature("contact requests omit a request the reader may not see by the request rule (SEC-BOS-112)", {
+    when() {
+        const create = (entity, fields) => call("create#" + entity, fields)
+        const service = "ironstone.commons.ContactServices.get#ContactActivity"
+        const grant = { artifactGroupId: "BOSS_COMMONS", artifactName: service, artifactTypeEnumId: "AT_SERVICE" }
+        const hadGrant = one("moqui.security.ArtifactGroupMember", grant) != null
+        const ids = ["BOSS_TEST_CONTACT_REQ_RFQ", "BOSS_TEST_CONTACT_REQ_OWN"]
+        try {
+            sys(() => {
+                if (!hadGrant) create("moqui.security.ArtifactGroupMember", Object.assign({ inheritAuthz: "Y" }, grant))
+                ids.forEach((requestId, index) => {
+                    create("mantle.request.Request", { requestId, requestName: requestId, statusId: "ReqSubmitted", requestDate: ec.user.nowTimestamp,
+                        requestTypeEnumId: index === 0 ? "RqtQuote" : "RqtSupport" })
+                    create("mantle.request.RequestParty", { requestId, partyId: "ORG_ACME_BA", roleTypeId: "Customer", fromDate: new Date(0) })
+                    create("mantle.request.RequestParty", { requestId, partyId: index === 0 ? "EX_JOHN_DOE" : "ORG_ZIZI_JD", roleTypeId: "Reporter",
+                        fromDate: new Date(0) })
+                })
+            })
+            const out = as("joe.developer", () => call(service, { partyId: "ORG_ACME_BA", tab: "requests" }))
+            return { shown: Array.from(out.requestList || []).map((row) => row.requestId).filter((id) => ids.includes(id)), ids }
+        } finally {
+            sys(() => {
+                for (const entity of ["mantle.request.RequestParty", "mantle.request.Request"]) ec.entity.find(entity).condition("requestId", "in", ids).deleteAll()
+                if (!hadGrant) ec.entity.find("moqui.security.ArtifactGroupMember").condition(grant).deleteAll()
+            })
+        }
+    },
+    then({ shown, ids }) {
+        shown == [ids[1]]
+    },
+})
+
+// SEC-BOS-108 (review): a contact's Calendar tab shows a party's busy times only when the user may reach the party
+// (PartyReach.js visibleParties): another top-level organization's staff, whose person is in the shared directory, shows none
+feature("a contact's calendar tab shows nothing for another organization's staff (SEC-BOS-108)", {
+    when() {
+        const create = (entity, fields) => call("create#" + entity, fields)
+        const service = "ironstone.commons.ContactServices.get#ContactActivity"
+        const grant = { artifactGroupId: "BOSS_COMMONS", artifactName: service, artifactTypeEnumId: "AT_SERVICE" }
+        const hadGrant = one("moqui.security.ArtifactGroupMember", grant) != null
+        const day = 86400000
+        try {
+            sys(() => {
+                if (!hadGrant) create("moqui.security.ArtifactGroupMember", Object.assign({ inheritAuthz: "Y" }, grant))
+                if (one("mantle.party.Party", { partyId: "BOSS_TEST_CAL_OTHERCO" })) return
+                create("mantle.party.Party", { partyId: "BOSS_TEST_CAL_OTHERCO", partyTypeEnumId: "PtyOrganization", ownerPartyId: "BOSS_TEST_CAL_OTHERCO" })
+                create("mantle.party.Organization", { partyId: "BOSS_TEST_CAL_OTHERCO", organizationName: "BOSS_TEST Calendar Other Company" })
+                create("mantle.party.PartyRole", { partyId: "BOSS_TEST_CAL_OTHERCO", roleTypeId: "OrgInternal" })
+                create("mantle.party.Party", { partyId: "BOSS_TEST_CAL_STAFF", partyTypeEnumId: "PtyPerson", ownerPartyId: "_NA_" })
+                create("mantle.party.Person", { partyId: "BOSS_TEST_CAL_STAFF", firstName: "Olaf", lastName: "Othercompany" })
+                create("mantle.party.PartyRelationship", { relationshipTypeEnumId: "PrtEmployee", fromPartyId: "BOSS_TEST_CAL_STAFF", fromRoleTypeId: "Employee",
+                    toPartyId: "BOSS_TEST_CAL_OTHERCO", toRoleTypeId: "OrgEmployer", fromDate: new Date(0) })
+                create("mantle.work.effort.WorkEffort", { workEffortId: "BOSS_TEST_CAL_EVENT", workEffortTypeEnumId: "WetEvent", workEffortName: "BOSS_TEST Olaf's offsite",
+                    statusId: "WeInPlanning", ownerPartyId: "BOSS_TEST_CAL_STAFF", estimatedStartDate: new Date(Date.now() + 2 * day),
+                    estimatedCompletionDate: new Date(Date.now() + 2 * day + 3600000) })
+            })
+            return as("joe.developer", () => ({ other: call(service, { partyId: "BOSS_TEST_CAL_STAFF", tab: "calendar" }).eventList || [],
+                own: call(service, { partyId: "ORG_ZIZI_JD", tab: "calendar" }).eventList || [] }))
+        } finally {
+            sys(() => { if (!hadGrant) ec.entity.find("moqui.security.ArtifactGroupMember").condition(grant).deleteAll() })
+        }
+    },
+    then({ other, own }) {
+        other.length == 0
+        Array.isArray(own)
+    },
+})
+
 feature("a personal contact shows the Private banner with its book; an employee shows the read-only directory card", {
     when() {
         return { mary: detail(MARY), joe: detail("ORG_ZIZI_JD") }
@@ -659,5 +729,78 @@ feature("Print: Mary Doe's contact card and the contact sheet of the find; anoth
         list.output.includes("/apps/Commons/Contacts/List?renderMode=html-print&amp;find=Y&amp;scope=all")
         !stranger.output.includes("mary.doe@example.com")
         stranger.output.includes("This contact is not available")
+    },
+})
+
+feature("a contact admin neither makes nor ends a staff relationship of an internal organization, nor changes the organization; Admin's settings manager does (SEC-BOS-89)", {
+    allowMessageErrors: true,
+    when() {
+        // Joe Developer as a contact admin for the moment
+        sys(() => call("create#moqui.security.UserGroupMember", { userGroupId: "BOSS_CONTACT_ADMIN", userId: "ORG_ZIZI_JD", fromDate: ec.user.nowTimestamp }))
+        try {
+            return as("joe.developer", () => ({
+                staffAdd: post("Contacts/ContactDetail/contactRelationshipAdd", { partyId: "ORG_ACME_BA", otherPartyId: "ORG_ZIZI_SERVICES",
+                    relationshipTypeEnumId: "PrtEmployee", direction: "to" }),
+                staffEnd: post("Contacts/ContactDetail/contactOrganization", { partyId: "ORG_ZIZI_JD", partyRelationshipId: "ORG_ZIZI_JD_EMP", thruNow: "true" }),
+                // the title of an employee of an internal organization, by the organization, and the organization structure
+                staffTitle: post("Contacts/ContactDetail/contactOrganization", { partyId: "ORG_ZIZI_JD", organizationPartyId: "ORG_ZIZI_SERVICES", jobTitle: "Renamed" }),
+                rollup: post("Contacts/ContactDetail/contactRelationshipAdd", { partyId: "ORG_ACME", otherPartyId: "ORG_ZIZI_SERVICES",
+                    relationshipTypeEnumId: "PrtOrgRollup", direction: "to" }),
+                orgUpdate: post("Contacts/ContactDetail/contactUpdate", { partyId: "ORG_ZIZI_SERVICES", organizationName: "Ziziwork Renamed" }),
+                // an ordinary relationship stays the contact admin's
+                friend: post("Contacts/ContactDetail/contactRelationshipAdd", { partyId: "ORG_ACME_BA", otherPartyId: "ORG_ZIZI_JD",
+                    relationshipTypeEnumId: "PrtFriend", direction: "to" }),
+                employment: one("mantle.party.PartyRelationship", { partyRelationshipId: "ORG_ZIZI_JD_EMP" }),
+                madeStaff: current("mantle.party.PartyRelationship", { fromPartyId: "ORG_ACME_BA", toPartyId: "ORG_ZIZI_SERVICES", relationshipTypeEnumId: "PrtEmployee" }).length,
+                name: one("mantle.party.Organization", { partyId: "ORG_ZIZI_SERVICES" }).organizationName
+            }))
+        } finally {
+            sys(() => {
+                ec.entity.find("moqui.security.UserGroupMember").condition({ userGroupId: "BOSS_CONTACT_ADMIN", userId: "ORG_ZIZI_JD" }).deleteAll()
+                ec.entity.find("mantle.party.PartyRelationship").condition({ fromPartyId: "ORG_ACME_BA", toPartyId: "ORG_ZIZI_JD", relationshipTypeEnumId: "PrtFriend" }).deleteAll()
+            })
+        }
+    },
+    then({ staffAdd, staffEnd, staffTitle, rollup, orgUpdate, friend, employment, madeStaff, name }) {
+        staffAdd.errors.includes("made in Admin")
+        staffTitle.errors.includes("changed in Admin")
+        employment.relationshipName != "Renamed"
+        rollup.errors.includes("made in Admin")
+        madeStaff == 0
+        staffEnd.errors.includes("changed in Admin")
+        employment.thruDate == null
+        orgUpdate.errors.includes("You may not change contact ORG_ZIZI_SERVICES")
+        name == "Ziziwork Services"
+        friend.errors == ""
+    },
+})
+
+feature("a settings manager of the organization, not ADMIN, changes an internal organization's record in Commons; of another organization not (SEC-BOS-89)", {
+    allowMessageErrors: true,
+    when() {
+        // Joe Developer (of Ziziwork Services) as a contact admin and a configuration administrator for the moment
+        sys(() => {
+            call("create#moqui.security.UserGroup", { userGroupId: "BOSS_TEST_SETTINGS", description: "Spec settings managers" })
+            call("create#moqui.security.UserGroupPermission", { userGroupId: "BOSS_TEST_SETTINGS", userPermissionId: "ADMIN_SETTINGS_MANAGE", fromDate: 0 })
+            for (const userGroupId of ["BOSS_TEST_SETTINGS", "BOSS_CONTACT_ADMIN"])
+                call("create#moqui.security.UserGroupMember", { userGroupId, userId: "ORG_ZIZI_JD", fromDate: 0 })
+        })
+        try {
+            return as("joe.developer", () => ({
+                own: post("Contacts/ContactDetail/contactUpdate", { partyId: "ORG_ZIZI_SERVICES", organizationName: "Ziziwork Services" }),
+                other: post("Contacts/ContactDetail/contactUpdate", { partyId: "ORG_ZIZI_HR", organizationName: "Ziziwork HR renamed" })
+            }))
+        } finally {
+            sys(() => {
+                ec.entity.find("moqui.security.UserGroupMember").condition("userId", "ORG_ZIZI_JD").condition("userGroupId", "in", ["BOSS_TEST_SETTINGS", "BOSS_CONTACT_ADMIN"]).deleteAll()
+                ec.entity.find("moqui.security.UserGroupPermission").condition("userGroupId", "BOSS_TEST_SETTINGS").deleteAll()
+                ec.entity.find("moqui.security.UserGroup").condition("userGroupId", "BOSS_TEST_SETTINGS").deleteAll()
+            })
+        }
+    },
+    then({ own, other }) {
+        own.errors == ""
+        other.errors != ""
+        one("mantle.party.Organization", { partyId: "ORG_ZIZI_HR" }).organizationName != "Ziziwork HR renamed"
     },
 })

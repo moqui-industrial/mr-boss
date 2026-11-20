@@ -29,6 +29,138 @@ along with this software (see the LICENSE.md file). If not, see
 
     <!-- ========== The record ========== -->
 
+    <service verb="check" noun="AppRecordVisible" allow-remote="false">
+        <description>Whether the user sees a record of an app's own type as a record, its card, notes and panels (the RecordLinkType
+            visibility service of the types data/BossSetupRecordTypesData.xml names it for, SEC-BOS-87): the owning app's own record
+            check with its read capability, which is narrower than the record's organization: Commerce's check#Record of a store
+            (a store-limited staff member's assigned stores only), Marketing's of a segment and a list (audienceRead) and of a
+            content item; a site its organizations' users. Never an error: a record the check refuses, or a failure, is false.</description>
+        <implements service="mantle.party.CommunicationServices.check#RecordTypeVisible"/>
+        <actions><script><![CDATA[
+            recordVisible = false
+            const checks = {
+                'mantle.product.store.ProductStore': ['ironstone.commerce.ContextServices.check#Record', 'Commerce', 'store', null],
+                'mantle.marketing.segment.MarketSegment': ['ironstone.marketing.ContextServices.check#Record', 'Marketing', 'segment', 'audienceRead'],
+                'mantle.marketing.contact.ContactList': ['ironstone.marketing.ContextServices.check#Record', 'Marketing', 'list', 'audienceRead'],
+                'mantle.marketing.campaign.CampaignContent': ['ironstone.marketing.ContextServices.check#Record', 'Marketing', 'content', null]
+            }
+            // a site: its organizations' users (the internal organizations its apps mount and the organizations of the stores its
+            // shop mounts), every one for a system administrator; not public content, whose notes any user could file
+            if (recordEntityName === 'mantle.public.PublicSite') {
+                if (!recordId || !ec.user.userId) return
+                const lib = ec.resource.script('component://mr-mantle/service/mantle/ledger/EntityLib.js')
+                if (lib.access.systemAdmin()) { recordVisible = !!ec.entity.find('mantle.public.PublicSite').condition('siteId', recordId).disableAuthz().one(); return }
+                const organizations = new Set()
+                for (const mount of ec.entity.find('mantle.public.PublicSiteApp').condition('siteId', recordId).disableAuthz().list()) {
+                    if (!mount.targetId) continue
+                    const store = mount.app === 'shop' ? ec.entity.find('mantle.product.store.ProductStore').condition('productStoreId', mount.targetId)
+                            .disableAuthz().one() : null
+                    if (store?.organizationPartyId) organizations.add(store.organizationPartyId)
+                    else organizations.add(mount.targetId)
+                }
+                const info = ec.service.sync().name('mantle.party.PartyServices.get#PartyOrganizationInfo').disableAuthz().call() || {}
+                recordVisible = Array.from(info.userOrgIds || []).some((partyId) => organizations.has(partyId))
+                return
+            }
+            const check = Object.hasOwn(checks, recordEntityName) ? checks[recordEntityName] : null
+            if (!check || !recordId || !ec.user.userId) return
+            ec.message.pushErrors()
+            try {
+                // a probe in its own transaction: the app's refusal must not mark the caller's rollback-only
+                const out = ec.service.sync().name(check[0]).parameters({appRoot: check[1], recordType: check[2], recordId: recordId,
+                    capability: check[3]}).requireNewTransaction(true).call()
+                recordVisible = !ec.message.hasError() && !!out?.recordId
+            } catch (error) {
+                recordVisible = false
+            } finally { ec.message.clearErrors(); ec.message.popErrors() }
+        ]]></script></actions>
+    </service>
+    <service verb="check" noun="MayChangeRecord" allow-remote="false">
+        <description>Whether the user may change what others put on a record through the panels (remove or replace another
+            user's file, take another user's message off it, remove another follower; SEC-BAP-95): the owning app's rule when
+            get#ContentType has one for the record type (its recordRule and catalogCanChange; for managed work changeOthers, its
+            people and maintenance managers); for a request its assignee, a case manager or its project's manager; for a task its
+            owner, assignee or project manager; for an order its enterer, or an editor of its kind (SALES_ORDER_EDIT for a sales part,
+            PURCHASE_ORDER_EDIT for a purchase part) of the part's seller or buyer organization; for a shipment a shipper
+            (SHIPMENT_SHIP) of its from or to party's organization; else a
+            grant the user holds on the record's entity themselves (ec.artifactExecution.isPermittedOwn, never the app root's
+            inherited grant every user of the root has), or a system administrator.</description>
+        <in-parameters>
+            <parameter name="info" type="Map"><description>get#RecordInfo's info; or recordEntityName and recordId</description></parameter>
+            <parameter name="recordEntityName"/>
+            <parameter name="recordId"/>
+            <parameter name="contentType" type="Map"><description>get#ContentType's answer, when the caller has it</description></parameter>
+        </in-parameters>
+        <out-parameters><parameter name="mayChange" type="Boolean"/></out-parameters>
+        <actions><script><![CDATA[
+            mayChange = false
+            const entityName = info?.recordEntityName || recordEntityName
+            const id = info?.recordId || recordId
+            if (!entityName || !id || !ec.user.userId) return
+            let rule = contentType || null
+            if (!rule && info) {
+                ec.message.pushErrors()
+                try {
+                    rule = ec.service.sync().name('ironstone.shared.RecordFilesServices.get#ContentType').parameters({info: info}).call()?.contentType
+                    if (ec.message.hasError()) rule = {recordRule: true, catalogCanChange: false}
+                } catch (error) {
+                    rule = {recordRule: true, catalogCanChange: false}
+                } finally { ec.message.clearErrors(); ec.message.popErrors() }
+            }
+            const lib = ec.resource.script('component://mr-mantle/service/mantle/ledger/EntityLib.js')
+            if (lib.access.systemAdmin()) { mayChange = rule?.catalogCanChange !== false; return }
+            // the owning app's rule (managed work: its people and maintenance managers)
+            if (rule?.changeOthers != null) { mayChange = !!rule.changeOthers && rule.catalogCanChange !== false; return }
+            if (rule?.recordRule) { mayChange = rule.catalogCanChange !== false; return }
+            // the owners and managers of a request, a task, an order and a shipment (the caller found it visible)
+            const partyId = ec.user.userAccount?.partyId || null
+            const current = (entity, conditions) => partyId && ec.entity.find(entity).condition(conditions)
+                    .conditionDate('fromDate', 'thruDate', ec.user.nowTimestamp).disableAuthz().count() > 0
+            const one = (entity, conditions) => ec.entity.find(entity).condition(conditions).disableAuthz().one()
+            const projectManager = (workEffortId) => !!workEffortId && current('mantle.work.effort.WorkEffortParty',
+                    {workEffortId: workEffortId, partyId: partyId, roleTypeId: 'ProjectManager'})
+            if (entityName === 'mantle.request.Request') {
+                const request = one('mantle.request.Request', {requestId: id})
+                mayChange = !!request && (current('mantle.request.RequestParty', {requestId: id, partyId: partyId, roleTypeId: 'Assignee'})
+                        || ec.user.hasPermission('SUPPORT_CASE_MANAGE') || projectManager(request.rootWorkEffortId))
+                if (mayChange) return
+            }
+            if (entityName === 'mantle.work.effort.WorkEffort') {
+                const work = one('mantle.work.effort.WorkEffort', {workEffortId: id})
+                mayChange = !!work && (['Owner', 'Assignee', 'ProjectManager'].some((roleTypeId) =>
+                        current('mantle.work.effort.WorkEffortParty', {workEffortId: id, partyId: partyId, roleTypeId: roleTypeId}))
+                        || projectManager(work.rootWorkEffortId))
+                if (mayChange) return
+            }
+            // the user's own organizations, for an order's or a shipment's manager
+            let userOrgIds = null
+            const ownOrganization = (partyIdOf) => {
+                if (userOrgIds == null) userOrgIds = Array.from(ec.service.sync().name('mantle.party.PartyServices.get#PartyOrganizationInfo')
+                        .disableAuthz().call()?.userOrgIds || [])
+                return !!partyIdOf && userOrgIds.includes(partyIdOf)
+            }
+            const internal = (partyIdOf) => !!partyIdOf && ec.entity.find('mantle.party.PartyRole')
+                    .condition({partyId: partyIdOf, roleTypeId: 'OrgInternal'}).disableAuthz().count() > 0
+            if (entityName === 'mantle.order.OrderHeader') {
+                const order = one('mantle.order.OrderHeader', {orderId: id})
+                // its enterer, or an editor of its kind (a sales part: SALES_ORDER_EDIT; a purchase part: PURCHASE_ORDER_EDIT) whose
+                // organization is that part's seller or buyer
+                const parts = order ? Array.from(ec.entity.find('mantle.order.OrderPart').condition('orderId', id).disableAuthz().list()) : []
+                mayChange = !!order && ((!!partyId && order.enteredByPartyId === partyId) || parts.some((part) =>
+                        (internal(part.vendorPartyId) && ownOrganization(part.vendorPartyId) && ec.user.hasPermission('SALES_ORDER_EDIT'))
+                        || (internal(part.customerPartyId) && ownOrganization(part.customerPartyId) && ec.user.hasPermission('PURCHASE_ORDER_EDIT'))))
+                if (mayChange) return
+            }
+            if (entityName === 'mantle.shipment.Shipment') {
+                // a shipper of one of its parties' organizations
+                const shipment = one('mantle.shipment.Shipment', {shipmentId: id})
+                mayChange = !!shipment && ec.user.hasPermission('SHIPMENT_SHIP')
+                        && (ownOrganization(shipment.fromPartyId) || ownOrganization(shipment.toPartyId))
+                if (mayChange) return
+            }
+            mayChange = ec.artifactExecution.isPermittedOwn(entityName, 'AT_ENTITY', 'update')
+        ]]></script></actions>
+    </service>
     <service verb="get" noun="RecordInfo" allow-remote="false">
         <description>The record of a Chatter or RecordFiles panel, found under the user's filters
             (mantle.party.CommunicationServices.get#RecordLinkInfo with checkOnly, which answers recordVisible without an error):
@@ -338,7 +470,7 @@ along with this software (see the LICENSE.md file). If not, see
                     subject: info.isParty || recordOut.title === String(recordId) ? recordOut.title : `${recordOut.title} (${recordId})`}
                 canMessage = ec.artifactExecution.isPermitted('mantle.party.communication.CommunicationEvent', 'AT_ENTITY', 'create')
                 canSchedule = ec.artifactExecution.isPermitted('mantle.work.effort.WorkEffort', 'AT_ENTITY', 'create')
-                mayUpdate = ec.artifactExecution.isPermitted(entityName, 'AT_ENTITY', 'update')
+                mayUpdate = !!ec.service.sync().name('ironstone.shared.ChatterServices.check#MayChangeRecord').parameters({info: info, recordId: recordId}).call()?.mayChange
 
                 const toMillis = (value) => {
                     if (value == null || value === '') return null
@@ -492,9 +624,10 @@ along with this software (see the LICENSE.md file). If not, see
     </service>
 
     <service verb="clean" noun="Html" allow-remote="false">
-        <description>HTML as an allow-html="safe" parameter keeps it (the framework's ammonia list plus data-mention-id): the body
-            of a message or note before the panel shows it.</description>
-        <in-parameters><parameter name="html" allow-html="safe"/></in-parameters>
+        <description>HTML as an allow-html="app" parameter keeps it (the framework's ammonia list plus data-mention-id, and an image
+            only from this server, SEC-CLI-82: an outside one would tell its host who read it and when): the body of a message,
+            note or email before the panel shows it.</description>
+        <in-parameters><parameter name="html" allow-html="app"/></in-parameters>
         <out-parameters><parameter name="html"/></out-parameters>
         <actions><script>html = html || ''</script></actions>
     </service>
@@ -650,7 +783,9 @@ along with this software (see the LICENSE.md file). If not, see
                 const myPartyId = ec.user.userAccount?.partyId || null
                 // a client contact (impl-projects.md P10b) replies to a message for it, and nothing else: no unlink, no Inbox thread, no chat room
                 const forClient = !!recordOut.isClient
-                const mayUpdate = !forClient && ec.artifactExecution.isPermitted(entityName, 'AT_ENTITY', 'update')
+                // SEC-BAP-95: the owning app's rule, else the user's own grant on the entity
+                const mayUpdate = !forClient && !!ec.service.sync().name('ironstone.shared.ChatterServices.check#MayChangeRecord')
+                        .parameters({info: recordOut.info, recordId: recordId}).call()?.mayChange
                 const canMessage = forClient ? !!ec.service.sync().name('ironstone.client.ClientServices.get#ClientRecordWrites')
                         .parameters({recordEntityName: entityName, recordId: recordId}).call()?.canMessage
                     : ec.artifactExecution.isPermitted('mantle.party.communication.CommunicationEvent', 'AT_ENTITY', 'create')
@@ -797,7 +932,7 @@ along with this software (see the LICENSE.md file). If not, see
         <in-parameters>
             <parameter name="recordEntityName" required="true"/>
             <parameter name="recordId" required="true"/>
-            <parameter name="body" required="true" allow-html="safe"/>
+            <parameter name="body" required="true" allow-html="app"/>
             <parameter name="subject"/>
             <parameter name="parentCommEventId"/>
             <parameter name="recordUrl"/>
@@ -835,7 +970,7 @@ along with this software (see the LICENSE.md file). If not, see
             <parameter name="recordId" required="true"/>
             <parameter name="toUserIds" type="Object"/>
             <parameter name="subject"/>
-            <parameter name="body" required="true" allow-html="safe"/>
+            <parameter name="body" required="true" allow-html="app"/>
             <parameter name="recordUrl"/>
         </in-parameters>
         <out-parameters><parameter name="communicationEventId"/><parameter name="message"/></out-parameters>
@@ -915,7 +1050,7 @@ along with this software (see the LICENSE.md file). If not, see
             <parameter name="recordEntityName" required="true"/>
             <parameter name="recordId" required="true"/>
             <parameter name="parentCommEventId" required="true"/>
-            <parameter name="body" required="true" allow-html="safe"/>
+            <parameter name="body" required="true" allow-html="app"/>
             <parameter name="recordUrl"/>
         </in-parameters>
         <out-parameters><parameter name="communicationEventId"/><parameter name="message"/></out-parameters>
@@ -966,7 +1101,12 @@ along with this software (see the LICENSE.md file). If not, see
                     in-map="{info:recordOut.info, recordId:recordId, communicationEventId:communicationEventId}"/>
             <if condition="ec.message.hasError()"><return/></if>
             <set field="myPartyId" from="ec.user.userAccount?.partyId"/>
-            <if condition="!(myPartyId &amp;&amp; eventOut.commEvent.fromPartyId == myPartyId) &amp;&amp; !ec.artifactExecution.isPermitted(recordOut.info.recordEntityName, 'AT_ENTITY', 'update')">
+            <!-- another user's message stays unless the owning app's rule, or the user's own grant, lets them change the record (SEC-BAP-95) -->
+            <set field="mayChange" from="false"/>
+            <if condition="!(myPartyId &amp;&amp; eventOut.commEvent.fromPartyId == myPartyId)">
+                <service-call name="ironstone.shared.ChatterServices.check#MayChangeRecord" out-map="changeOut" in-map="{info:recordOut.info, recordId:recordId}"/>
+                <set field="mayChange" from="!!changeOut.mayChange"/></if>
+            <if condition="!(myPartyId &amp;&amp; eventOut.commEvent.fromPartyId == myPartyId) &amp;&amp; !mayChange">
                 <return error="true" message="You may not take this message off ${recordOut.typeLabel} ${recordOut.title}"/></if>
             <service-call name="mantle.party.CommunicationServices.unlink#CommunicationEventRecord" out-map="unlinkOut"
                     in-map="{communicationEventId:communicationEventId, recordEntityName:recordOut.info.recordEntityName, recordId:recordId}"/>
@@ -985,7 +1125,7 @@ along with this software (see the LICENSE.md file). If not, see
             <parameter name="recordEntityName" required="true"/>
             <parameter name="recordId" required="true"/>
             <parameter name="communicationEventId" required="true"/>
-            <parameter name="body" required="true" allow-html="safe"/>
+            <parameter name="body" required="true" allow-html="app"/>
             <parameter name="recordUrl"/>
         </in-parameters>
         <out-parameters><parameter name="mentionedUserIds" type="List"/><parameter name="message"/></out-parameters>
@@ -1126,7 +1266,7 @@ along with this software (see the LICENSE.md file). If not, see
             <parameter name="recordEntityName" required="true"/>
             <parameter name="recordId" required="true"/>
             <parameter name="workEffortId" required="true"/>
-            <parameter name="feedback" allow-html="safe"/>
+            <parameter name="feedback" allow-html="app"/>
             <parameter name="nextActivityType"/>
             <parameter name="nextName"/>
             <parameter name="nextDueDate" type="Timestamp"/>
@@ -1268,7 +1408,12 @@ along with this software (see the LICENSE.md file). If not, see
                     in-map="{recordEntityName:recordEntityName, recordId:recordId, requireVisible:true}"/>
             <if condition="ec.message.hasError()"><return/></if>
             <set field="followerUserId" from="userId || ec.user.userId"/>
-            <if condition="followerUserId != ec.user.userId &amp;&amp; !ec.artifactExecution.isPermitted(recordOut.info.recordEntityName, 'AT_ENTITY', 'update')">
+            <!-- another follower is removed only under the owning app's rule, or the user's own grant (SEC-BAP-95) -->
+            <set field="mayChange" from="false"/>
+            <if condition="followerUserId != ec.user.userId">
+                <service-call name="ironstone.shared.ChatterServices.check#MayChangeRecord" out-map="changeOut" in-map="{info:recordOut.info, recordId:recordId}"/>
+                <set field="mayChange" from="!!changeOut.mayChange"/></if>
+            <if condition="followerUserId != ec.user.userId &amp;&amp; !mayChange">
                 <return error="true" message="You may not remove followers of ${recordOut.title}"/></if>
             <service-call name="mantle.party.CommunicationServices.unfollow#Record" in-map="{recordEntityName:recordOut.info.recordEntityName,
                     recordId:recordId, userId:followerUserId}"/>

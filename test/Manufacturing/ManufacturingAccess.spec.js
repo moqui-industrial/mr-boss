@@ -219,7 +219,7 @@ const capabilityUsers = [
     {user: users.resource, granted: ["productionRead", "policyEdit", "methodRead", "methodResources"]},
     {user: users.services, granted: read}
 ]
-feature("each group holds exactly the capabilities of its permissions, the administrator every one in every plant", {
+feature("each group holds exactly the capabilities of its permissions, the administrator every one in its own plants", {
     when() {
         const problems = []
         for (const {user, granted} of capabilityUsers) {
@@ -237,9 +237,11 @@ feature("each group holds exactly the capabilities of its permissions, the admin
         }))
         const missing = productionCapabilities.filter(name => !admin.context.capabilities[name])
         if (missing.length) problems.push(`the administrator lacks ${missing}`)
-        if (admin.context.allPlants !== true) problems.push("the administrator is not in every plant")
-        if (admin.other !== "") problems.push(`the administrator is refused the other organization's run: ${admin.other}`)
-        if (!admin.plants.includes(ids.plantId) || !admin.plants.includes(ids.otherPlantId))
+        // the administrator works in its own organizations' plants: every one is ADMIN's (FACILITY_ALL_ORGANIZATIONS, SEC-BAP-86)
+        if (admin.context.allPlants !== false) problems.push("the administrator is in every plant")
+        if (!admin.other.includes("RECORD_UNAVAILABLE"))
+            problems.push(`the administrator gets the other organization's run: ${admin.other}`)
+        if (!admin.plants.includes(ids.plantId) || admin.plants.includes(ids.otherPlantId))
             problems.push(`the administrator's plants: ${admin.plants}`)
         // the plant display holds no production permission
         const display = asUser(users.display, () => [
@@ -640,5 +642,68 @@ feature("no Mantle REST run path, no Commons or Projects task change of a run's 
     },
     then({problems}) {
         problems.join("\n") == ""
+    }
+})
+
+// the record panels' data, as the chatter and record-files elements ask for it (SEC-BAP-89): Manufacturing's own records of the
+// user's plants are hosts; another organization's run and another app's record (a party, an invoice) are not
+feature("Manufacturing's record panels serve its own records of the user's plants only (SEC-BAP-89)", {
+    when() {
+        const panel = (recordEntity, recordId) => {
+            const out = ec.screen
+                .makeTest()
+                .rootScreen("component://webroot/screen/webroot.xml")
+                .render("apps/Manufacturing/RecordFiles/filesData", {recordEntity, recordId}, "get")
+            ec.message.clearErrors()
+            return Array.from(out.errorMessages || []).join("\n")
+        }
+        // a write through the panels on a routing (a work effort whose first kinds, run and operation, do not fit): a note and
+        // a file, as the routing's editor and as the administrator; a refused kind marks no transaction rollback-only
+        const write = (user, name, parameters) =>
+            asUser(user, () => {
+                const out = ec.screen
+                    .makeTest()
+                    .rootScreen("component://webroot/screen/webroot.xml")
+                    .render(
+                        "apps/Manufacturing/" + name,
+                        Object.assign({recordEntity: "mantle.work.effort.WorkEffort", recordId: ids.routingId}, parameters),
+                        "post"
+                    )
+                ec.message.clearErrors()
+                return Array.from(out.errorMessages || []).join("\n")
+            })
+        const writes = {
+            methodNote: write(users.method, "Chatter/logNote", {body: "<p>Routing note from the method editor</p>"}),
+            adminNote: write(users.admin, "Chatter/logNote", {body: "<p>Routing note from the administrator</p>"}),
+            adminFile: write(users.admin, "RecordFiles/upload", {
+                contentFile: [uploadedFile("routing-note.txt", "Torque values")],
+                description: "Torques"
+            })
+        }
+        writes.notes = system(
+            () =>
+                Array.from(
+                    ec.entity.find("mantle.work.effort.WorkEffortCommEvent").condition("workEffortId", ids.routingId).list()
+                ).length
+        )
+        return Object.assign(
+            {writes},
+            asUser(users.read, () => ({
+                run: panel("mantle.work.effort.WorkEffort", ids.runId),
+                line: panel("mantle.facility.Facility", ids.lineId),
+                equipment: panel("mantle.product.asset.Asset", ids.equipmentId),
+                method: panel("mantle.product.bom.ProductBom", ids.methodId),
+                otherRun: panel("mantle.work.effort.WorkEffort", ids.otherRunId),
+                party: panel("mantle.party.Party", "ORG_ZIZI_RETAIL"),
+                invoice: panel("mantle.account.invoice.Invoice", "100000")
+            }))
+        )
+    },
+    then(r) {
+        r.writes.methodNote == "" && r.writes.adminNote == "" && r.writes.adminFile == "" && r.writes.notes >= 2
+        !r.run.includes("RECORD_PANEL_UNAVAILABLE") && !r.line.includes("RECORD_PANEL_UNAVAILABLE")
+        !r.equipment.includes("RECORD_PANEL_UNAVAILABLE") && !r.method.includes("RECORD_PANEL_UNAVAILABLE")
+        r.otherRun.includes("RECORD_PANEL_UNAVAILABLE")
+        r.party.includes("RECORD_PANEL_UNAVAILABLE") && r.invoice.includes("RECORD_PANEL_UNAVAILABLE")
     }
 })

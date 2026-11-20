@@ -127,15 +127,7 @@ function creditOf(userScope, customerPartyId) {
 }
 
 // ===== Activities (crosscut §3.2 Customer Service row) =====
-// A party of the user's organizations: one of them, or a person with a current relationship to one (an employee, agent
-// or member).
-function ofOrganizations(vendors, partyId) {
-    if (!partyId) return false
-    if (vendors.includes(partyId)) return true
-    return rows("mantle.party.PartyRelationship", {fromPartyId: partyId}).some(
-        row => vendors.includes(row.toPartyId) && lib.active(row)
-    )
-}
+const ofOrganizations = cs.ofOrganizations
 // get#CustomerActivities: the customer's and its contact people's communication events and its activities the user may
 // see, read only, newest first. An event shows when it is on a case the user sees, or it is with the user's organizations
 // (its other party is one of them or of their people) and on no case the user does not see; a shared customer's other
@@ -249,11 +241,17 @@ function customer360(p) {
     const read = orders.moneyRead()
     const openInvoices = invoiceRows.filter(row => !row.paid)
     const heldOrders = orderRows.filter(row => row.statusId === "OrderHold")
-    // SEC-BOS-82: Accounting's read of a party's identifications, masked and never a tax one (SSN, FEIN, FUID)
-    const identifications = Array.from(
-        ec.resource
-            .script("component://mr-mantle/service/mantle/account/CustomerFinance.js")
-            .execute("identifications", {partyId: customerPartyId}).identifications
+    // SEC-BOS-82: Accounting's read of a party's identifications, masked and never a tax one (SSN, FEIN, FUID); shown only to
+    // a holder of Accounting's receivable edit (RECEIVABLE_EDIT), as Accounting's finance details are, never to every agent
+    // who serves the customer (SEC-BAP-98)
+    const identifications = (
+        userScope.capabilities.invoiceCredit
+            ? Array.from(
+                  ec.resource
+                      .script("component://mr-mantle/service/mantle/account/CustomerFinance.js")
+                      .execute("identifications", {partyId: customerPartyId}).identifications
+              )
+            : []
     ).map(row => ({
         typeText: cs.enumText(row.partyIdTypeEnumId),
         value: row.valueText,

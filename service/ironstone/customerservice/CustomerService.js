@@ -79,13 +79,16 @@ function screenGrants(location, authzRows) {
           : grants.filter(row => row.authzTypeEnumId === "AUTHZT_ALLOW")
     return {found: grants.length > 0, allowed}
 }
-// Only a system administrator, or an authorization whose filter sets name MANTLE_ACTIVE_ORG (the administrator group's),
-// reaches every organization (the active one when there is one); any other grant is limited to the user's organizations, so
-// a grant set up without filters fails closed. A Projects client contact (PROJECT_CLIENT) never opens Customer Service.
+// Only a system administrator, or Customer Service's administrator holding SUPPORT_ALL_ORGANIZATIONS (seeded on ADMIN), reaches
+// every organization (the active one when there is one). An authorization whose filter
+// sets name MANTLE_ACTIVE_ORG (the administrator group's) makes the user Customer Service's administrator, in their own
+// organizations as any other user (SEC-BAP-86, as SEC-BOS-02's fix for Accounting): every grant is limited to the user's
+// organizations, so a grant set up without filters fails closed. A Projects client contact (PROJECT_CLIENT) never opens
+// Customer Service.
 function rootGrants() {
-    const none = {read: false, unrestricted: false, authzRows: []}
+    const none = {read: false, unrestricted: false, administrator: false, authzRows: []}
     if (!ec.user.userId || ec.user.hasPermission("PROJECT_CLIENT")) return none
-    if (access.systemAdmin()) return {read: true, unrestricted: true, authzRows: [], systemAdmin: true}
+    if (access.systemAdmin()) return {read: true, unrestricted: true, administrator: true, authzRows: [], systemAdmin: true}
     const groupIds = Array.from(ec.user.getUserGroupIdSet() || [])
     if (!groupIds.length) return none
     const authzRows = screenAuthz(groupIds)
@@ -95,7 +98,9 @@ function rootGrants() {
         rows("moqui.security.ArtifactAuthzFilter", {artifactAuthzId: authzId}).some(
             row => row.entityFilterSetId === "MANTLE_ACTIVE_ORG"
         )
-    return {read: true, unrestricted: root.allowed.some(row => activeOrg(row.artifactAuthzId)), authzRows}
+    const administrator = root.allowed.some(row => activeOrg(row.artifactAuthzId))
+    // every organization only with SUPPORT_ALL_ORGANIZATIONS too (seeded on ADMIN), as Accounting's and Commerce's
+    return {read: true, unrestricted: administrator && access.has("SUPPORT_ALL_ORGANIZATIONS"), administrator, authzRows}
 }
 function areaGrant(grants, area) {
     if (!grants.read) return false
@@ -107,7 +112,7 @@ function areaGrant(grants, area) {
 // The scope of the current user: their service organizations (the vendors of the sales orders and the owners of the
 // customers they may serve; null for every organization), the queues and teams they work (P2 fills them from the queue and
 // team records; until then none), and their capabilities. The owners are filterOrgIds kept to the organizations the user
-// belongs to, as Purchasing; the administrator works in the active organization, or in every one with none active.
+// belongs to, as Purchasing; a system administrator works in the active organization, or in every one with none active.
 function scope() {
     const grants = rootGrants()
     // a user without Customer Service has no organizations here (record links ask this of every user)
@@ -128,6 +133,7 @@ function scope() {
     const base = {
         read: grants.read,
         unrestricted: grants.unrestricted,
+        administrator: grants.administrator,
         organizationPartyIds: memberIds,
         activeOrganizationPartyId: grants.unrestricted
             ? organization.activeOrgId || null
@@ -206,6 +212,15 @@ function partyName(partyId) {
 function vendorIds(userScope) {
     if (userScope.ownerIds) return userScope.ownerIds
     return rows("mantle.party.PartyRole", {roleTypeId: "OrgInternal"}).map(row => row.partyId)
+}
+// A party of the user's organizations (vendorIds): one of them, or a person with a current relationship to one (an
+// employee, agent or member).
+function ofOrganizations(vendors, partyId) {
+    if (!partyId) return false
+    if (vendors.includes(partyId)) return true
+    return rows("mantle.party.PartyRelationship", {fromPartyId: partyId}).some(
+        row => vendors.includes(row.toPartyId) && lib.active(row)
+    )
 }
 
 // ===== customers =====
@@ -1187,6 +1202,7 @@ const operations = {sharedContext, checkRecord, search, choices}
     queueName,
     queueOwner,
     vendorIds,
+    ofOrganizations,
     likeText,
     // whether a kind has its Customer Service screen yet (get#RecordLink leaves a customer to Commons until it has)
     hasScreen: kind => !!recordKinds[kind]?.destination,

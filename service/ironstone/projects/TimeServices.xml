@@ -105,7 +105,8 @@ along with this software (see the LICENSE.md file). If not, see
                 workTypeOptions = Array.from(ec.service.sync().name('mantle.work.TimesheetServices.get#WorkTypes').parameters({partyId: person}).call()?.offeredList || [])
                         .map((type) => ({value: type.enumId, label: type.label}))
                 // the people: mine, the time keepers of the projects I manage and my live reports (get#TimePeople)
-                personOptions = Array.from(ec.service.sync().name('ironstone.projects.TimeServices.get#TimePeople').parameters({partyId: person}).call()?.personOptions || [])
+                personOptions = Array.from(ec.service.sync().name('ironstone.projects.TimeServices.get#TimePeople').parameters({partyId: person,
+                    date: new Date(week.fromDate)}).call()?.personOptions || [])
                         .map((option) => ({value: option.key, label: option.text}))
                 const lastFrom = new Date(week.fromDate - 7 * 86400000)
                 lastWeekItemCount = new Set(Array.from(ec.entity.find('mantle.work.time.TimeEntry').condition('partyId', person)
@@ -694,12 +695,18 @@ along with this software (see the LICENSE.md file). If not, see
         <description>The people the user may log or find time for, as options (key, text): the user first, then for an approver the
             time keepers of the projects they manage (ADMIN every time keeper) and the user's live reports (People P10:
             mantle.work.TimesheetServices.get#LineReports, whose weeks a line manager approves under the line policy), and the
-            person given. Each person's week is checked again where it is read or changed (get#TimesheetAccess).</description>
-        <in-parameters><parameter name="partyId"/></in-parameters>
+            person given when the user may view that person's week of date (get#TimesheetAccess); names as the user's filters show them.
+            Each person's week is checked again where it is read or changed (get#TimesheetAccess).</description>
+        <in-parameters>
+            <parameter name="partyId"/>
+            <parameter name="date" type="Timestamp"><description>The day whose week of partyId is asked (an entry's day, a week's
+                start); now by default</description></parameter>
+        </in-parameters>
         <out-parameters><parameter name="personOptions" type="List"/></out-parameters>
         <actions><script><![CDATA[
             const L = (text) => ec.l10n.localize(text)
             const me = ec.user.userAccount?.partyId || null
+            let ids = []
             const wasDisabled = ec.artifactExecution.disableAuthz()
             try {
                 const vis = ec.service.sync().name('mantle.work.ProjectServices.get#VisibleProjectInfo').call() || {}
@@ -709,13 +716,18 @@ along with this software (see the LICENSE.md file). If not, see
                 if (isAdmin || managed.length) keepers = Array.from(ec.service.sync().name('mantle.work.TimesheetServices.get#TimeKeepers')
                         .parameters(isAdmin ? {} : {projectIds: managed}).call()?.partyIdList || [])
                 const reports = Array.from(ec.service.sync().name('mantle.work.TimesheetServices.get#LineReports').call()?.partyIdList || [])
-                const ids = Array.from(new Set([me].concat(keepers).concat(reports).concat(partyId ? [partyId] : []).filter((id) => id)))
-                const names = {}
-                if (ids.length) for (const party of ec.entity.find('mantle.party.PartyDetail').condition('partyId', 'in', ids).list())
-                    names[party.partyId] = party.organizationName || [party.firstName, party.lastName].filter((part) => part).join(' ') || party.partyId
-                personOptions = ids.map((id) => ({key: id, text: (names[id] || id) + (id === me ? ' (' + L('me') + ')' : '')}))
-                        .sort((a, b) => (a.key === me ? -1 : b.key === me ? 1 : String(a.text).localeCompare(String(b.text))))
+                ids = Array.from(new Set([me].concat(keepers).concat(reports).filter((id) => id)))
             } finally { if (!wasDisabled) ec.artifactExecution.enableAuthz() }
+            // the person given only when the user may view that person's week (get#TimesheetAccess), never any party by its id
+            // (SEC-BOS-130)
+            if (partyId && !ids.includes(partyId) && ec.service.sync().name('mantle.work.TimesheetServices.get#TimesheetAccess')
+                    .parameters({partyId: partyId, date: date ?? ec.user.nowTimestamp}).call()?.canView === true) ids.push(partyId)
+            // the names as the user's own filters show the parties (another user's personal contact is not named)
+            const names = {}
+            if (ids.length) for (const party of ec.entity.find('mantle.party.PartyDetail').condition('partyId', 'in', ids).list())
+                names[party.partyId] = party.organizationName || [party.firstName, party.lastName].filter((part) => part).join(' ') || party.partyId
+            personOptions = ids.map((id) => ({key: id, text: (names[id] || id) + (id === me ? ' (' + L('me') + ')' : '')}))
+                    .sort((a, b) => (a.key === me ? -1 : b.key === me ? 1 : String(a.text).localeCompare(String(b.text))))
         ]]></script></actions>
     </service>
 
@@ -853,7 +865,9 @@ along with this software (see the LICENSE.md file). If not, see
                 if (!row) return
             }
             const person = row ? row.partyId : (partyId || me)
-            const people = ec.service.sync().name('ironstone.projects.TimeServices.get#TimePeople').parameters({partyId: person}).call()?.personOptions || []
+            // the entry's own day decides whether its person may be named (an approver of that week)
+            const people = ec.service.sync().name('ironstone.projects.TimeServices.get#TimePeople').parameters({partyId: person,
+                date: row ? (row.fromDate ?? row.thruDate ?? null) : null}).call()?.personOptions || []
             const types = Array.from(ec.service.sync().name('mantle.work.TimesheetServices.get#WorkTypes').parameters({partyId: person}).call()?.offeredList || [])
                     .map((type) => ({key: type.enumId, text: type.label}))
             if (row?.workTypeEnumId && !types.some((type) => type.key === row.workTypeEnumId)) types.push({key: row.workTypeEnumId, text: row.workTypeLabel || row.workTypeEnumId})
@@ -1257,8 +1271,9 @@ along with this software (see the LICENSE.md file). If not, see
         ]]></script></actions>
     </service>
     <service verb="change" noun="WorkTypes">
-        <description>TimeSettings' work types: offer or stop offering one, move it up or down, or rename one of the organization's
-            own (change rename with label); for the Projects managers.</description>
+        <description>TimeSettings' work types: offer or stop offering one (a shared type or one of the organization's own), move it
+            up or down, or rename one of the organization's own (change rename with label; the one its managers made, its organization
+            on the type, never another organization's); for the Projects managers.</description>
         <in-parameters>
             <parameter name="enumId" required="true"/>
             <parameter name="change" required="true"/>
@@ -1271,15 +1286,17 @@ along with this software (see the LICENSE.md file). If not, see
             if (ec.message.hasError()) return
             const org = ec.service.sync().name('ironstone.projects.ProjectServices.get#SettingsOrganization').call()?.organizationPartyId
             if (!org) { ec.message.addError(L('You belong to no organization, so there is nowhere to keep the setting')); return }
+            // the settings organization's own types and the shared ones (another organization's own is in no list, SEC-BOS-131)
+            const info = ec.service.sync().name('mantle.work.TimesheetServices.get#WorkTypes').parameters({organizationPartyId: org}).call() || {}
+            const listed = Array.from(info.typeList || []).find((row) => row.enumId === enumId)
             if (change === 'rename') {
-                const type = ec.entity.find('moqui.basic.Enumeration').condition('enumId', enumId).one()
-                if (!type || type.enumTypeId !== 'WorkType' || !String(enumId).startsWith('WktpOrg')) { ec.message.addError(L('Only your own work types are renamed')); return }
+                if (!listed?.isOwn) { ec.message.addError(L('Only your own work types are renamed')); return }
                 if (!String(label || '').trim()) { ec.message.addError(L('A work type needs a label')); return }
                 ec.service.sync().name('update#moqui.basic.Enumeration').parameters({enumId: enumId, description: String(label).trim()}).call()
                 if (!ec.message.hasError()) message = L('Work type renamed')
                 return
             }
-            const info = ec.service.sync().name('mantle.work.TimesheetServices.get#WorkTypes').parameters({organizationPartyId: org}).call() || {}
+            if (change === 'offer' && !listed) { ec.message.addError(ec.resource.expand('Work type ${enumId} is not available', '', {enumId})); return }
             const offered = Array.from(info.offeredList || []).map((row) => row.enumId)
             const at = offered.indexOf(enumId)
             if (change === 'offer' && at < 0) offered.push(enumId)
@@ -1307,7 +1324,8 @@ along with this software (see the LICENSE.md file). If not, see
             if (Array.from(info.typeList || []).some((row) => String(row.label).toLowerCase() === name.toLowerCase())) {
                 ec.message.addError(ec.resource.expand('There is a work type ${name} already', '', {name})); return }
             enumId = 'WktpOrg' + ec.entity.sequencedIdPrimary('moqui.basic.Enumeration.WktpOrg', null, null)
-            ec.service.sync().name('create#moqui.basic.Enumeration').parameters({enumId: enumId, enumTypeId: 'WorkType', description: name}).call()
+            // the organization kept on the type (enumCode): its own, which only its managers rename (SEC-BOS-131)
+            ec.service.sync().name('create#moqui.basic.Enumeration').parameters({enumId: enumId, enumTypeId: 'WorkType', enumCode: org, description: name}).call()
             if (ec.message.hasError()) return
             ec.service.sync().name('mantle.work.TimesheetServices.store#WorkTypes').parameters({organizationPartyId: org,
                 offered: Array.from(info.offeredList || []).map((row) => row.enumId).concat([enumId])}).call()

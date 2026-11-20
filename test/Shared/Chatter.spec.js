@@ -178,7 +178,9 @@ feature("Log note with a mention: a Comment on the request, first in the timelin
     when() {
         const mentions = () => list("moqui.security.user.NotificationMessageByUser", { userId: "ORG_ZIZI_JD", topic: "ChatterMention" })
         const before = mentions().length
-        const body = '<p>The rooms are booked, <span data-mention-id="ORG_ZIZI_JD">@Joe Developer</span>.</p><script>alert(1)</script>'
+        // an outside image would tell its host who read the note and when: only this server's stays (SEC-CLI-82, allow-html="app")
+        const body = '<p>The rooms are booked, <span data-mention-id="ORG_ZIZI_JD">@Joe Developer</span>.</p><script>alert(1)</script>' +
+            '<p><img src="https://tracker.example/pixel.png" alt="t"><img src="/rest/s1/static/rooms.png" alt="rooms"></p>'
         const logged = post("logNote", { body, recordUrl: requestUrl })
         const id = logged.json.communicationEventId
         const after = mentions()
@@ -196,6 +198,8 @@ feature("Log note with a mention: a Comment on the request, first in the timelin
         comm.contentType == "text/html"
         comm.body.includes('data-mention-id="ORG_ZIZI_JD"')
         !comm.body.includes("<script")
+        !comm.body.includes("tracker.example")
+        comm.body.includes("/rest/s1/static/rooms.png")
         link != null
         after == before + 1
         notice.linkText == requestUrl
@@ -481,6 +485,77 @@ feature("joe.developer, who sees the request, may neither edit nor delete john.d
         johnDelete.status == 200
         johnDelete.json.deleted
         joeNoteRow == null
+    },
+})
+
+// SEC-BAP-95: a user who sees a record, with no rule of its owning app and no grant of their own on it, takes nobody else's
+// message off it, removes no other follower and removes or replaces no other user's file (the Commons root's inherited grant is
+// every Commons user's)
+feature("joe.developer, who sees the request, takes off no one else's message, follower or file", {
+    allowMessageErrors: true,
+    when() {
+        const johnNote = post("logNote", { body: "<p>John's note to keep.</p>" }, shared).json.communicationEventId
+        post("follow", {}, shared)
+        const files = (name, parameters, method) => {
+            const str = ec.screen.makeTest().rootScreen(commons).render(`RecordFiles/${name}`, Object.assign({}, shared, parameters || {}), method || null)
+            let json = null
+            try { json = JSON.parse(str.output) } catch (err) { json = null }
+            ec.message.clearErrors()
+            return { status: str.status, json: json || {}, errors: Array.from(str.errorMessages || []).join(" | ") }
+        }
+        files("upload", { contentTypeEnumId: "RqCntInternal", contentFile: [uploadedFile("john-keeps.txt", "John's file.")] }, "post")
+        const johnFile = (files("filesData").json.fileList || []).find((file) => file.fileName === "john-keeps.txt") || {}
+        const joe = as("joe.developer", () => ({
+            unlink: post("unlink", { communicationEventId: johnNote }, shared),
+            unfollow: post("unfollow", { userId: "EX_JOHN_DOE" }, shared),
+            listed: (files("filesData").json.fileList || []).find((file) => file.fileName === "john-keeps.txt") || {},
+            remove: files("remove", { contentKey: johnFile.contentKey }, "post")
+        }))
+        return { joe, johnFile, link: one("mantle.request.RequestCommEvent", { requestId: "BOSS_TEST_CHATTER_SHARED", communicationEventId: johnNote }),
+            follower: one("mantle.party.communication.RecordFollower", { recordEntityName: "mantle.request.Request", recordId: "BOSS_TEST_CHATTER_SHARED",
+                userId: "EX_JOHN_DOE" }),
+            fileRows: list("mantle.request.RequestContent", { requestId: "BOSS_TEST_CHATTER_SHARED" }).filter((row) =>
+                String(row.contentLocation || "").endsWith("/john-keeps.txt")).length }
+    },
+    then({ joe, johnFile, link, follower, fileRows }) {
+        johnFile.contentKey != null
+        joe.unlink.status == 500 && link != null
+        joe.unfollow.status == 500 && follower != null
+        !joe.listed.canRemove
+        joe.remove.errors.includes("You may not remove") && fileRows == 1
+    },
+})
+
+// SEC-BAP-95 review: the request's assignee manages what is on it, another user's message included
+feature("joe.developer as the request's assignee takes john.doe's message off it", {
+    allowMessageErrors: true,
+    when() {
+        const johnNote = post("logNote", { body: "<p>John's note for the assignee.</p>" }, shared).json.communicationEventId
+        sys(() => call("create#mantle.request.RequestParty", { requestId: "BOSS_TEST_CHATTER_SHARED", partyId: "ORG_ZIZI_JD", roleTypeId: "Assignee",
+            fromDate: ec.user.nowTimestamp }))
+        const unlink = as("joe.developer", () => post("unlink", { communicationEventId: johnNote }, shared))
+        return { unlink, link: one("mantle.request.RequestCommEvent", { requestId: "BOSS_TEST_CHATTER_SHARED", communicationEventId: johnNote }) }
+    },
+    then({ unlink, link }) {
+        unlink.status == 200
+        link == null
+    },
+})
+
+// SEC-BAP-95 review: an order's manager is an editor of its kind: a buyer (PURCHASE_ORDER_EDIT) takes no one's message off a sale
+feature("a purchasing buyer takes no other user's message off a sales order of their organization", {
+    allowMessageErrors: true,
+    when() {
+        const order = { recordEntity: "mantle.order.OrderHeader", recordId: "BOSS_CS_SO_DELIVERED" }
+        const johnNote = post("logNote", { body: "<p>John's note on the sale.</p>" }, order).json.communicationEventId
+        const seen = as("purchasing.buyer", () => call_("chatterData", order))
+        const unlink = as("purchasing.buyer", () => post("unlink", { communicationEventId: johnNote }, order))
+        return { johnNote, seen, unlink, link: one("mantle.order.OrderCommunicationEvent", { orderId: "BOSS_CS_SO_DELIVERED", communicationEventId: johnNote }) }
+    },
+    then({ johnNote, seen, unlink, link }) {
+        johnNote != null
+        seen.status == 200
+        unlink.status == 500 && link != null
     },
 })
 

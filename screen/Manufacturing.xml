@@ -30,6 +30,16 @@ along with this software (see the LICENSE.md file). If not, see
         <service-call name="mantle.party.PartyServices.setup#UserOrganizationInfo" out-map="context"/>
         <service-call name="ironstone.manufacturing.AccessServices.get#SharedContext" in-map="{appRoot:appRoot}"
                 out-map="manufacturing"/>
+        <!-- the record panels serve Manufacturing's own record hosts of the user's plants only (SEC-BAP-89, as Maintenance's root):
+            this root's inheritable grant would otherwise open the notes and files of any record get#RecordLinkInfo admits (another
+            app's invoices, orders, parties and shipments). check#PanelRecord finds the kind from the record; a panel request with
+            no record (a person search, an avatar) names none. -->
+        <set field="panelName" from="(() => { const names = Array.from(sri.getScreenUrlInfo().fullPathNameList || []).map(String);
+                return names[names.indexOf('Manufacturing') + 1] })()"/>
+        <if condition="(panelName == 'Chatter' || panelName == 'RecordFiles') &amp;&amp; ec.context.recordEntity">
+            <service-call name="ironstone.manufacturing.AccessServices.check#PanelRecord"
+                    in-map="{recordEntity:ec.context.recordEntity, recordId:ec.context.recordId || ''}"/>
+        </if>
         <set field="sharedLinks" from="manufacturing.sharedLinks"/>
     </always-actions>
 

@@ -35,6 +35,10 @@ along with this software (see the LICENSE.md file). If not, see
         </in-parameters>
         <out-parameters><parameter name="workEffortId"/><parameter name="url"/><parameter name="message"/></out-parameters>
         <actions>
+            <!-- the assignee a party the user may reach (Mantle's PartyReach.js visibleParties, as create#Event's attendees,
+                SEC-BOS-113): never another user's personal contact or another top-level organization's staff -->
+            <service-call name="ironstone.commons.QuickCreateServices.check#Assignee" in-map="{partyId:assignToPartyId}"/>
+            <if condition="ec.message.hasError()"><return/></if>
             <service-call name="mantle.work.TaskServices.create#SimpleTask" out-map="context" in-map="{workEffortName:workEffortName,
                     estimatedCompletionDate:estimatedCompletionDate, assignToPartyId:assignToPartyId, priority:priority, description:description,
                     purposeEnumId:purposeEnumId, ownerPartyId:ec.user.userAccount?.partyId}"/>
@@ -44,6 +48,18 @@ along with this software (see the LICENSE.md file). If not, see
             <set field="url" from="linkOut.url"/>
             <set field="message" from="ec.resource.expand('Task created: ${workEffortName}', '', {workEffortName:workEffortName})"/>
         </actions>
+    </service>
+
+    <service verb="check" noun="Assignee" allow-remote="false">
+        <description>An assignee the user may give a task or an activity to: the user's own party, or a party the user may reach
+            (Mantle's PartyReach.js visibleParties under the user's filters, as create#Event's attendees: never another user's
+            personal contact or another top-level organization's staff); "not found" otherwise (SEC-BOS-113).</description>
+        <in-parameters><parameter name="partyId"/></in-parameters>
+        <actions><script><![CDATA[
+            if (!partyId || partyId === ec.user.userAccount?.partyId) return
+            if (!Array.from(ec.resource.script('component://mr-mantle/service/mantle/party/PartyReach.js').visibleParties([partyId]) || []).includes(partyId))
+                ec.message.addError(ec.resource.expand('Party ${partyId} not found', '', {partyId}))
+        ]]></script></actions>
     </service>
 
     <service verb="create" noun="Activity">
@@ -70,6 +86,8 @@ along with this software (see the LICENSE.md file). If not, see
             <if condition="!purposes[activityType]"><return error="true" message="An activity is a call, an email, a to-do or a meeting, not ${activityType}"/></if>
             <!-- the record first, so nothing is made for a record the user may not see -->
             <service-call name="mantle.party.CommunicationServices.get#RecordLinkInfo" in-map="{recordEntityName:recordEntity, recordId:recordId}"/>
+            <if condition="ec.message.hasError()"><return/></if>
+            <service-call name="ironstone.commons.QuickCreateServices.check#Assignee" in-map="{partyId:assignToPartyId}"/>
             <if condition="ec.message.hasError()"><return/></if>
             <if condition="activityType == 'meeting'"><then>
                 <service-call name="mantle.work.CalendarServices.ensure#UserDefaultCalendar" out-map="calendarOut"/>
@@ -99,7 +117,9 @@ along with this software (see the LICENSE.md file). If not, see
         <description>An event from estimatedStartDate to estimatedCompletionDate (an hour by default), or all day on those days,
             in calendarId (the user's default calendar by default), with the user assigned and the attendees invited
             (WorkEffortParty WeptOffered and mantle.work.EventServices.send#EventInvitations; an invitation that fails is
-            logged and the event stays), on the record in context. With attendees it is a meeting (WepMeeting).</description>
+            logged and the event stays), on the record in context. With attendees it is a meeting (WepMeeting). Each attendee is a
+            party the user may reach (SEC-BOS-88: Mantle's PartyReach.js visibleParties, the rule add#Attendees' finds keep and
+            the staff reach rule): any other is "not found" and nothing is made.</description>
         <in-parameters>
             <parameter name="workEffortName" required="true"/>
             <parameter name="estimatedStartDate" type="Timestamp" required="true"/>
@@ -131,6 +151,11 @@ along with this software (see the LICENSE.md file). If not, see
                 const myPartyId = ec.user.userAccount?.partyId
                 attendees = Array.from(new Set((Array.isArray(attendeePartyIds) ? attendeePartyIds : (attendeePartyIds ? String(attendeePartyIds).split(',') : []))
                         .map((id) => String(id).trim()).filter((id) => id && id !== myPartyId)))
+                // only a party the user may reach (SEC-BOS-88): never another's personal contact, a party out of the user's filters
+                // or another top-level organization's staff
+                const reachable = new Set(ec.resource.script('component://mr-mantle/service/mantle/party/PartyReach.js').visibleParties(attendees))
+                const unknown = attendees.find((id) => !reachable.has(id))
+                if (unknown) { ec.message.addError(ec.resource.expand('Party ${partyId} not found', '', {partyId: unknown})); return }
                 const startMillis = Number(String(estimatedStartDate))
                 eventFields = {workEffortName: workEffortName, description: description, calendarId: calendarId, assignToPartyId: myPartyId,
                     purposeEnumId: attendees.length ? 'WepMeeting' : null}
@@ -144,6 +169,7 @@ along with this software (see the LICENSE.md file). If not, see
                             estimatedCompletionDate : new Date(startMillis + 3600000)
                 }
             ]]></script>
+            <if condition="ec.message.hasError()"><return/></if>
             <service-call name="mantle.work.EventServices.create#Event" out-map="context" in-map="eventFields"/>
             <if condition="ec.message.hasError()"><return/></if>
             <iterate list="attendees" entry="attendeePartyId">
@@ -183,7 +209,7 @@ along with this software (see the LICENSE.md file). If not, see
             (a new name when a page has it already).</description>
         <in-parameters>
             <parameter name="title"/>
-            <parameter name="noteText" required="true" allow-html="safe"/>
+            <parameter name="noteText" required="true" allow-html="app"/>
             <parameter name="contentType"><description>text/html for the rich text of a note on a record (the default there),
                 text/markdown otherwise</description></parameter>
             <parameter name="recordEntity"/>
@@ -306,8 +332,8 @@ along with this software (see the LICENSE.md file). If not, see
     </service>
 
     <service verb="create" noun="Request">
-        <description>A request filed by the user and submitted (mantle.request.RequestServices.create#Request), with its
-            customer (the party in context by default); on the record in context through link#RequestRecord (a work effort
+        <description>A request filed by the user and submitted (ironstone.commons.RequestServices.raise#Request, which refuses a
+            customer the user may not see or another user's personal contact), with its customer (the party in context by default); on the record in context through link#RequestRecord (a work effort
             through RequestWorkEffort, a wiki page through WikiPageRequest, any other record through RequestRecord).</description>
         <in-parameters>
             <parameter name="requestName" required="true"/>
@@ -327,10 +353,12 @@ along with this software (see the LICENSE.md file). If not, see
                 <if condition="ec.message.hasError()"><return/></if>
                 <if condition="!customerPartyId &amp;&amp; recordInfo.isParty"><set field="customerPartyId" from="recordId"/></if>
             </if>
-            <service-call name="mantle.request.RequestServices.create#Request" out-map="context" in-map="{requestName:requestName,
-                    requestTypeEnumId:requestTypeEnumId, priority:priority, customerPartyId:customerPartyId, description:description,
-                    statusId:'ReqSubmitted'}"/>
+            <!-- raise#Request's own checks, its customer among them: a party the user may see, never another user's personal
+                contact (SEC-BOS-113) -->
+            <service-call name="ironstone.commons.RequestServices.raise#Request" out-map="raised" in-map="{requestName:requestName,
+                    requestTypeEnumId:requestTypeEnumId, priority:priority, customerPartyId:customerPartyId, description:description}"/>
             <if condition="ec.message.hasError()"><return/></if>
+            <set field="requestId" from="raised.requestId"/>
             <if condition="recordEntity &amp;&amp; recordId">
                 <service-call name="mantle.request.RequestServices.link#RequestRecord" in-map="{requestId:requestId,
                         recordEntityName:recordEntity, recordId:recordId}"/>

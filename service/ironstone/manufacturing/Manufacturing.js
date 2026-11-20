@@ -49,7 +49,7 @@ const capabilityPermissions = {
 // ===== scope =====
 // The user's authorizations on the Manufacturing root, read directly so disabled or inherited artifact authorization cannot
 // widen them: whether they may open Manufacturing and whether they work in every plant. Only a system administrator, or an
-// authorization whose filter sets name MANTLE_ACTIVE_ORG and have no Facility filter (the admin group's), reaches every
+// authorization whose filter sets name MANTLE_ACTIVE_ORG and have no Facility filter, held with FACILITY_ALL_ORGANIZATIONS, reaches every
 // plant; any other grant is limited to the user's organizations (MANTLE_USER_ORG's ownerPartyId in filterOrgIds), so a
 // grant set up without filters fails closed. As Warehouse.js's rootGrants.
 function rootGrants() {
@@ -85,7 +85,12 @@ function rootGrants() {
                 .count() === 0
         )
     }
-    return {read: true, unrestricted: allowed.some(row => everyPlant(row.artifactAuthzId))}
+    // every plant only with FACILITY_ALL_ORGANIZATIONS too (Mantle's every-organization facility permission,
+    // ADMIN's alone), as Commerce's COMMERCE_ALL_ORGANIZATIONS; else the user's own organizations (SEC-BAP-86)
+    return {
+        read: true,
+        unrestricted: allowed.some(row => everyPlant(row.artifactAuthzId)) && access.has("FACILITY_ALL_ORGANIZATIONS")
+    }
 }
 
 // The scope of the current user: their organizations (the owners of the runs, methods, routings and facilities they may work
@@ -1471,7 +1476,37 @@ Object.assign(choiceSources, {
     }
 })
 
-const operations = {sharedContext, selectPlant, checkRecord, search, choices}
+// check#PanelRecord (SEC-BAP-89): the record a Chatter or RecordFiles panel under the Manufacturing root names, refused unless it is
+// a Manufacturing host of the user's plants: a work effort a run, an operation or a routing; a BOM a method; a work center, an
+// asset or a facility (a facility first as itself, else as its work center). The kind is found from the record, each tried as
+// recordOf checks it, in this script, so a kind that does not fit marks no transaction rollback-only.
+const panelHosts = {
+    "mantle.work.effort.WorkEffort": ["run", "operation", "routing"],
+    "mantle.product.bom.ProductBom": ["method"],
+    "mantle.work.production.WorkCenter": ["workCenter"],
+    "mantle.product.asset.Asset": ["asset"],
+    "mantle.facility.Facility": ["facility", "workCenter"]
+}
+function panelRecord(p) {
+    let entityName = String(p.recordEntity || "")
+    try {
+        entityName = ec.entity.makeValue(entityName).getEntityName()
+    } catch (error) {
+        entityName = ""
+    }
+    if (!Object.hasOwn(panelHosts, entityName))
+        denied("RECORD_PANEL_UNAVAILABLE", "Notes and files of this record are kept in the app that owns it")
+    const userScope = required()
+    for (const kind of panelHosts[entityName]) {
+        try {
+            return {recordType: kind, recordId: recordOf(userScope, kind, p.recordId).recordId}
+        } catch (error) {
+            // not this kind, or not the user's: the next kind
+        }
+    }
+    denied("RECORD_PANEL_UNAVAILABLE", "Notes and files of this record are not available")
+}
+const operations = {sharedContext, selectPlant, checkRecord, panelRecord, search, choices}
 ;({
     recordLink,
     // the scope for a phase's own module and the shared mounts' Manufacturing branch: the user's scope, the same refusing a

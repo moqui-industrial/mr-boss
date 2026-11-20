@@ -65,6 +65,10 @@ spec({
                 if (invoice && invoice.statusId !== "InvoiceCancelled") call("update#mantle.account.invoice.Invoice", { invoiceId: invoice.invoiceId, statusId: "InvoiceCancelled" })
             }
             for (const rate of ec.entity.find("mantle.humanres.rate.RateAmount").condition("workEffortId", PROJECT).list()) { rate.thruDate = rate.fromDate; rate.update() }
+            // the SEC-BOS-101 feature's rates of no project: the shared, the other organization's and the one joe added
+            const noProject = [made.rateShared, made.rateOther].filter(Boolean)
+            for (const rate of ec.entity.find("mantle.humanres.rate.RateAmount").condition("workEffortId", null).condition("ratePurposeEnumId", "RaprClient").list())
+                if (noProject.includes(rate.rateAmountId) || (rate.organizationPartyId === "ORG_ZIZI_SERVICES" && dec(rate.rateAmount) === "222.22")) rate.delete()
             const project = ec.entity.find("mantle.work.effort.WorkEffort").condition("workEffortId", PROJECT).one()
             if (project) { project.statusId = "WeCancelled"; project.update() }
             const setting = ec.entity.find("mantle.party.PartySetting").condition({ partyId: "ORG_ZIZI_SERVICES", partySettingTypeId: "ProjBillingDefaults" }).one()
@@ -213,7 +217,8 @@ feature("a rate edited (amount and thru) and ended; ended rates are listed on as
         const edited = post("Billing/Rates/saveRate", { rateAmountId: rate.rateAmountId, fromDate: "2027-07-01", thruDate: "2027-12-31", rateAmount: "125.50" })
         const afterEdit = one("mantle.humanres.rate.RateAmount", { rateAmountId: rate.rateAmountId })
         const ended = post("Billing/Rates/endRate", { rateAmountId: rate.rateAmountId })
-        const list = render("apps/Projects/Billing/Rates", { rootWorkEffortId: PROJECT })
+        // Which rate names the asked person under the user's filters: Joe's personal contact is not named (SEC-BOS-130)
+        const list = render("apps/Projects/Billing/Rates", { rootWorkEffortId: PROJECT, whichPartyId: "BOSS_DEMO_PC_SAM" })
         const withEnded = render("apps/Projects/Billing/Rates", {rootWorkEffortId: PROJECT, showEnded: "Y", purpose: "RaprClient",
             rateTypeEnumId: "RatpStandard", effectiveOn: "2027-07-10"})
         return { edited, afterEdit, ended, list, withEnded, endedRate: one("mantle.humanres.rate.RateAmount", { rateAmountId: rate.rateAmountId }) }
@@ -225,6 +230,8 @@ feature("a rate edited (amount and thru) and ended; ended rates are listed on as
         ended.errors == ""
         Number(String(endedRate.thruDate)) <= NOW
         !list.output.includes("125.50")
+        list.output.includes("Which rate")
+        !list.output.includes("Sam Secret")
         withEnded.output.includes("125.50")
         withEnded.output.includes("Ended")
         const reset = clearFindTarget(withEnded.output)
@@ -414,4 +421,39 @@ feature("a narrow project billing editor sends only a linked visible invoice wit
         message.attachmentNames.join() == "Invoice-" + invoiceId + ".pdf"
         issuedCount == 1 && pdfSize > 100
     }
+})
+
+// SEC-BOS-101: a rate of no project is an organization's, or shared by every organization; a Projects manager of one organization
+// (joe.developer, of Ziziwork Services, made one for the moment) lists only those of their own and the shared ones, adds one for their
+// own organization, and neither changes a shared one nor ends another organization's
+feature("a Projects manager's rates of no project are their organization's; a shared one is an administrator's and another's not theirs (SEC-BOS-101)", {
+    when() {
+        const rate = (rateAmount, organizationPartyId) => sys(() => call("create#mantle.humanres.rate.RateAmount", { ratePurposeEnumId: "RaprClient",
+            rateTypeEnumId: "RatpStandard", timePeriodUomId: "TF_hr", rateCurrencyUomId: "USD", rateAmount, organizationPartyId, fromDate: at(1, 0) }).rateAmountId)
+        made.rateShared = rate(333.33, null)
+        made.rateOther = rate(444.44, "ORG_ZIZI_HR")
+        sys(() => call("create#moqui.security.UserGroupMember", { userGroupId: "BOSS_PROJECT_MANAGER", userId: "ORG_ZIZI_JD", fromDate: 0 }))
+        try {
+            return as("joe.developer", () => {
+                const editShared = post("Billing/Rates/saveRate", { rateAmountId: made.rateShared, rateAmount: "1" })
+                const endOther = post("Billing/Rates/endRate", { rateAmountId: made.rateOther })
+                const created = post("Billing/Rates/saveRate", { ratePurposeEnumId: "RaprClient", newRateTypeEnumId: "RatpStandard", rateAmount: "222.22",
+                    fromDate: "2027-07-01" })
+                const rows = sys(() => Array.from(call("ironstone.projects.BillingServices.find#RateRows", { ratePurposeEnumId: "RaprClient" }).rowList || []))
+                return { editShared, endOther, created, rows }
+            })
+        } finally {
+            sys(() => ec.entity.find("moqui.security.UserGroupMember").condition({ userGroupId: "BOSS_PROJECT_MANAGER", userId: "ORG_ZIZI_JD" }).deleteAll())
+        }
+    },
+    then({ editShared, endOther, created, rows }) {
+        editShared.errors.includes("shared by every organization")
+        dec(one("mantle.humanres.rate.RateAmount", { rateAmountId: made.rateShared }).rateAmount) == "333.33"
+        endOther.errors.includes("is not available")
+        one("mantle.humanres.rate.RateAmount", { rateAmountId: made.rateOther }).thruDate == null
+        created.errors == ""
+        rows.some((row) => row.rateAmountId === made.rateShared && row.canChange === false && row.projectName === "Any project, every organization")
+        !rows.some((row) => row.rateAmountId === made.rateOther)
+        rows.some((row) => row.organizationPartyId === "ORG_ZIZI_SERVICES" && row.amountValue === "222.22" && row.canChange)
+    },
 })

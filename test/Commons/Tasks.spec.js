@@ -304,6 +304,63 @@ feature("the bulk actions take each selected task on its own: complete, reassign
     },
 })
 
+// SEC-BOS-110: a task goes into a project, or out of one, only for a member of the project (or a Projects manager of one they see):
+// joe sees a General project of his organization he is not on, and may neither add a task to it nor take one out of it
+feature("a task goes into or out of a project only for a member of it: a General project joe is not on is refused (SEC-BOS-110)", {
+    allowMessageErrors: true,
+    when() {
+        sys(() => {
+            call("create#mantle.work.effort.WorkEffort", { workEffortId: "BOSS_TEST_GEN_PRJ", workEffortTypeEnumId: "WetProject", workEffortName: "BOSS_TEST General project",
+                statusId: "WeInProgress", visibilityEnumId: "WevGeneral", ownerPartyId: "ORG_ZIZI_SERVICES" })
+            call("create#mantle.work.effort.WorkEffort", { workEffortId: "BOSS_TEST_GEN_TASK", workEffortTypeEnumId: "WetTask", workEffortName: "BOSS_TEST General task",
+                statusId: "WeInPlanning", rootWorkEffortId: "BOSS_TEST_GEN_PRJ", parentWorkEffortId: "BOSS_TEST_GEN_PRJ", ownerPartyId: "ORG_ZIZI_JD" })
+            call("create#mantle.work.effort.WorkEffortParty", { workEffortId: "BOSS_TEST_GEN_TASK", partyId: "ORG_ZIZI_JD", roleTypeId: "Assignee",
+                statusId: "WeptAssigned", fromDate: new Date(0) })
+            // a task tree whose root is a task, no project: its sub-task needs no project rule
+            call("create#mantle.work.effort.WorkEffort", { workEffortId: "BOSS_TEST_TREE_TOP", workEffortTypeEnumId: "WetTask", workEffortName: "BOSS_TEST Tree top",
+                statusId: "WeInPlanning", ownerPartyId: "ORG_ZIZI_JD" })
+            call("create#mantle.work.effort.WorkEffort", { workEffortId: "BOSS_TEST_TREE_CHILD", workEffortTypeEnumId: "WetTask", workEffortName: "BOSS_TEST Tree child",
+                statusId: "WeInPlanning", rootWorkEffortId: "BOSS_TEST_TREE_TOP", parentWorkEffortId: "BOSS_TEST_TREE_TOP", ownerPartyId: "ORG_ZIZI_JD" })
+        })
+        const refusal = (run) => {
+            let thrown = ""
+            try { run() } catch (err) { thrown = String(err && err.message ? err.message : err) }
+            const error = ec.message.getErrorsString() + thrown
+            ec.message.clearErrors()
+            return error
+        }
+        return as("joe.developer", () => ({
+            added: post("Tasks/List/quickAdd", { workEffortName: "BOSS_TEST Into a general project", list: "all", rootWorkEffortId: "BOSS_TEST_GEN_PRJ" }),
+            out: sys(() => call("ironstone.commons.TaskServices.bulk#Tasks", { action: "moveToProject", workEffortIds: "BOSS_TEST_GEN_TASK", rootWorkEffortId: null })),
+            // Projects' bulk move checks the item's own project too, and a sub-task goes into the parent's project only for a member
+            projectsOut: sys(() => call("ironstone.projects.WorkItemServices.bulk#WorkItems", { action: "moveToProject", workEffortIds: "BOSS_TEST_GEN_TASK",
+                value: "BOSS_DEMO_PROJECT" })),
+            subTask: refusal(() => sys(() => call("ironstone.commons.TaskServices.add#SubTask", { workEffortId: "BOSS_TEST_GEN_TASK", workEffortName: "BOSS_TEST Sub-task" }))),
+            treeSubTask: refusal(() => sys(() => call("ironstone.commons.TaskServices.add#SubTask", { workEffortId: "BOSS_TEST_TREE_CHILD", workEffortName: "BOSS_TEST Tree sub-task" }))),
+            projects: sys(() => call("ironstone.commons.TaskServices.get#ProjectOptions", {})),
+            made: all("mantle.work.effort.WorkEffort", { workEffortName: "BOSS_TEST Into a general project" }).length,
+            subTasks: all("mantle.work.effort.WorkEffort", { workEffortName: "BOSS_TEST Sub-task" }).length,
+            task: one("mantle.work.effort.WorkEffort", { workEffortId: "BOSS_TEST_GEN_TASK" }),
+        }))
+    },
+    then({ added, out, projectsOut, subTask, treeSubTask, projects, made, subTasks, task }) {
+        treeSubTask == ""
+        one("mantle.work.effort.WorkEffort", { workEffortName: "BOSS_TEST Tree sub-task" })?.rootWorkEffortId == "BOSS_TEST_TREE_TOP"
+        added.errors.includes("You may not add tasks to or take them out of project BOSS_TEST General project")
+        out.failedCount == 1
+        out.failures[0].reason.includes("You may not add tasks to or take them out of project BOSS_TEST General project")
+        projectsOut.failedCount == 1
+        projectsOut.failures[0].reason.includes("You may not add tasks to or take them out of project BOSS_TEST General project")
+        subTask.includes("You may not add tasks to or take them out of project BOSS_TEST General project")
+        made == 0
+        subTasks == 0
+        task.rootWorkEffortId == "BOSS_TEST_GEN_PRJ"
+        !projects.projectList.map((option) => option.key).includes("BOSS_TEST_GEN_PRJ")
+        // the find still filters by it
+        projects.findProjectList.map((option) => option.key).includes("BOSS_TEST_GEN_PRJ")
+    },
+})
+
 feature("the row actions: the done check completes a task and opens it again; Add to Today makes it due today", {
     when() {
         const doneOnce = post("Tasks/List/toggleDone", { workEffortId: made.landlord, keep: keep({ list: "today" }) })

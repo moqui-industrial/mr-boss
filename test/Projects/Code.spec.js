@@ -301,17 +301,23 @@ feature("Code settings: the repository defaults and conventions saved by a manag
             const out = ec.service.sync().name("ironstone.projects.CodeServices.store#RepositoryDefaults").parameters({ storage: "local" }).call()
             const errors = ec.message.getErrorsString(); ec.message.clearErrors(); return errors
         }))
-        const granted = post("Settings/Code/setSsh", { userGroupId: "BOSS_PROJECT_CLIENT", grant: "Y" })
-        const holds = sys(() => ec.entity.find("moqui.security.UserGroupPermission").condition({ userGroupId: "BOSS_PROJECT_CLIENT", userPermissionId: "SSH_GIT" })
+        const sshHolds = (userGroupId) => sys(() => ec.entity.find("moqui.security.UserGroupPermission").condition({ userGroupId, userPermissionId: "SSH_GIT" })
                 .condition(ec.entity.conditionFactory.makeConditionDate("fromDate", "thruDate", null)).count())
-        const revoked = post("Settings/Code/setSsh", { userGroupId: "BOSS_PROJECT_CLIENT", grant: "N" })
+        const revoked = post("Settings/Code/setSsh", { userGroupId: "BOSS_PROJECT_TEAM", grant: "N" })
+        const revokedHolds = sshHolds("BOSS_PROJECT_TEAM")
+        const granted = post("Settings/Code/setSsh", { userGroupId: "BOSS_PROJECT_TEAM", grant: "Y" })
+        const holds = sshHolds("BOSS_PROJECT_TEAM")
         const adminRefused = post("Settings/Code/setSsh", { userGroupId: "ADMIN", grant: "N" })
+        // SEC-BOS-132: the client group and another app's group are not a Projects manager's to grant
+        const clientRefused = post("Settings/Code/setSsh", { userGroupId: "BOSS_PROJECT_CLIENT", grant: "Y" })
+        const otherRefused = post("Settings/Code/setSsh", { userGroupId: "BOSS_ACCOUNTING_ADMIN", grant: "Y" })
+        const otherHolds = sshHolds("BOSS_ACCOUNTING_ADMIN")
         const defaults = sys(() => call("mantle.work.GitServices.get#RepositoryDefaults", { organizationPartyId: "ORG_ZIZI_SERVICES" }).defaults)
-        return { page, saved, conventions, badPattern, teamRefused, granted, holds, revoked, adminRefused, defaults,
+        return { page, saved, conventions, badPattern, teamRefused, granted, holds, revoked, revokedHolds, adminRefused, clientRefused, otherRefused, otherHolds, defaults,
             after: sys(() => ec.entity.find("moqui.security.UserGroupPermission").condition({ userGroupId: "BOSS_PROJECT_CLIENT", userPermissionId: "SSH_GIT" })
                 .condition(ec.entity.conditionFactory.makeConditionDate("fromDate", "thruDate", null)).count()) }
     },
-    then({ page, saved, conventions, badPattern, teamRefused, granted, holds, revoked, adminRefused, defaults, after }) {
+    then({ page, saved, conventions, badPattern, teamRefused, granted, holds, revoked, revokedHolds, adminRefused, clientRefused, otherRefused, otherHolds, defaults, after }) {
         page.status == 200
         !page.broken
         page.output.includes("Repository defaults")
@@ -325,11 +331,45 @@ feature("Code settings: the repository defaults and conventions saved by a manag
         conventions.errors == ""
         badPattern.errors.includes("names the work item")
         teamRefused.includes("Only project managers")
+        revoked.errors == ""
+        revokedHolds == 0
         granted.errors == ""
         holds == 1
-        revoked.errors == ""
         after == 0
         adminRefused.errors.includes("does not change here")
+        clientRefused.errors.includes("does not change here")
+        otherRefused.errors.includes("does not change here")
+        otherHolds == 0
+    },
+})
+
+// SEC-BOS-132 (review): a group's SSH access is every organization's, so with more than one top-level internal organization (the
+// demo has several) a Projects manager who is no administrator of every project changes none, and the rows say where it changes
+feature("with several organizations a Projects manager who is not ADMIN changes no group's SSH access (SEC-BOS-132)", {
+    allowMessageErrors: true,
+    when() {
+        sys(() => {
+            if (ec.entity.find("moqui.security.UserAccount").condition("username", "code.manager").count()) return
+            const partyId = call("mantle.party.PartyServices.create#Person", { firstName: "Cody", lastName: "Manager" }).partyId
+            call("create#mantle.party.PartyRelationship", { relationshipTypeEnumId: "PrtEmployee", fromPartyId: partyId, fromRoleTypeId: "Employee",
+                toPartyId: "ORG_ZIZI_SERVICES", toRoleTypeId: "OrgEmployer", fromDate: new Date(0) })
+            const userId = call("mantle.party.PartyServices.create#PartyUserAccount", { partyId, emailAddress: "code.manager@example.com", username: "code.manager",
+                newPassword: "moqui1!!", newPasswordVerify: "moqui1!!" }).userId
+            for (const userGroupId of ["BOSS_USERS", "BOSS_PROJECT_MANAGER"]) call("create#moqui.security.UserGroupMember", { userGroupId, userId, fromDate: new Date(0) })
+        })
+        login("code.manager", "moqui1!!")
+        try {
+            const settings = sys(() => call("ironstone.projects.CodeServices.get#CodeSettings", {}))
+            const revoke = post("Settings/Code/setSsh", { userGroupId: "BOSS_PROJECT_TEAM", grant: "N" })
+            return { settings, revoke, holds: sys(() => ec.entity.find("moqui.security.UserGroupPermission").condition({ userGroupId: "BOSS_PROJECT_TEAM",
+                userPermissionId: "SSH_GIT" }).condition(ec.entity.conditionFactory.makeConditionDate("fromDate", "thruDate", null)).count()) }
+        } finally { login("john.doe") }
+    },
+    then({ settings, revoke, holds }) {
+        settings.sharedByOrganizations == true
+        !settings.groupList.some((group) => group.changeable)
+        revoke.errors.includes("does not change here")
+        holds == 1
     },
 })
 
@@ -381,5 +421,32 @@ feature("ProjectCode: IRON's repositories, open merge request, recent commits an
         byNumber.some((row) => row.title.startsWith("!1 ") && row.url.includes("MergeRequestDetail"))
         rawText.includes("# IronStone Projects")
         !rawBobText.includes("Acme customer portal")
+    },
+})
+
+// SEC-BOS-90 (Projects' mirror settings, an administrator's): a new URL needs the access token again, else the stored one is
+// cleared (the connections' endpoint-change rule), and a URL with a user and password in it is refused
+feature("a mirror's new URL clears its stored token unless given again, and a URL with a password in it is refused (SEC-BOS-90)", {
+    allowMessageErrors: true,
+    when() {
+        sys(() => call("store#moqui.resource.GitRepository", { repositoryId: "bt-mirror", description: "Spec mirror", branch: "main", repositoryKind: "remote",
+            remoteUrl: "https://git.example.com/team/docs.git", username: "bot", accessToken: "spec-secret-token", fetchIntervalMinutes: 60 }))
+        const repo = () => sys(() => ec.entity.find("moqui.resource.GitRepository").condition("repositoryId", "bt-mirror").one())
+        const withPassword = post("Code/RepositoryDetail/Settings/saveMirror", { repositoryId: "bt-mirror", remoteUrl: "https://bot:pw@git.example.org/docs.git", username: "bot" })
+        const same = post("Code/RepositoryDetail/Settings/saveMirror", { repositoryId: "bt-mirror", remoteUrl: "https://git.example.com/team/docs.git", username: "bot",
+            fetchIntervalMinutes: "30" })
+        const kept = repo().accessToken
+        const moved = post("Code/RepositoryDetail/Settings/saveMirror", { repositoryId: "bt-mirror", remoteUrl: "https://git.example.org/docs.git", username: "bot" })
+        const after = repo()
+        sys(() => ec.entity.find("moqui.resource.GitRepository").condition("repositoryId", "bt-mirror").deleteAll())
+        return { withPassword, same, kept, moved, after }
+    },
+    then({ withPassword, same, kept, moved, after }) {
+        withPassword.errors.includes("has no user or password in it")
+        same.errors == ""
+        kept == "spec-secret-token"
+        moved.errors == ""
+        after.remoteUrl == "https://git.example.org/docs.git"
+        after.accessToken == null
     },
 })

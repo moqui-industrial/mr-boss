@@ -101,7 +101,13 @@ function run(op, parameters) {
                   : "Effective"
         return out
     }
+    // the most products whose price rows the list with no product chosen resolves (boss@price-list-product-limit, SEC-BAP-109)
+    // (a value that is no whole number above zero is taken as 100); at most five times as many products, and 100 more, are
+    // read for them
     function findPrices(p) {
+        const configuredLimit = Math.floor(Number(ec.factory.getConfValue("boss@price-list-product-limit")))
+        const productLimit = Number.isFinite(configuredLimit) && configuredLimit > 0 ? configuredLimit : 100
+        const examineLimit = productLimit * 5 + 100
         const context = access(),
             capabilities = context.capabilities
         // A mounting app's context leaves out the rows its capabilities withhold (Commerce, Customer Service: supplier prices
@@ -116,14 +122,44 @@ function run(op, parameters) {
         if (!capabilities.priceRead && !capabilities.supplierPriceRead && !capabilities.costRead)
             throw new Error("Price read authority is required")
         if (p.productId) product(p.productId)
-        // the products with price rows, read as one distinct column, then only those the user may read
-        const productIds = p.productId
-            ? [p.productId]
-            : local.visibleProductIds(
-                  Array.from(find(E, {}).selectField("productId").distinct(true).list()).map(price => price.productId)
-              )
+        // the products with price rows matching the filters the database can apply, read as one distinct column in product
+        // order, then only those the user may read, and at most productLimit of them: the list with no product resolves a
+        // bounded number of products' rows, not every price row of the catalog (SEC-BAP-109)
+        let productIds = p.productId ? [p.productId] : []
+        let productsLimited = false
+        if (!p.productId) {
+            const cf = ec.entity.conditionFactory
+            let query = find(E, {}).selectField("productId").distinct(true).orderBy("productId")
+            for (const field of ["priceUomId", "pricePurposeEnumId", "vendorPartyId", "customerPartyId", "productStoreId", "agreementId", "priceTypeEnumId"])
+                if (p[field]) query = query.condition(field, p[field])
+            if (p.organizationPartyId)
+                query = query.condition(
+                    cf.makeCondition(
+                        [cf.makeCondition("vendorPartyId", "equals", p.organizationPartyId), cf.makeCondition("customerPartyId", "equals", p.organizationPartyId)],
+                        "or"
+                    )
+                )
+            const batchSize = 500
+            for (let offset = 0; productIds.length <= examineLimit; offset += batchSize) {
+                const batch = Array.from(query.offset(offset).limit(batchSize).list()).map(price => price.productId)
+                productIds.push(...local.visibleProductIds(batch))
+                if (batch.length < batchSize) break
+            }
+            if (productIds.length > examineLimit) {
+                productIds = productIds.slice(0, examineLimit)
+                productsLimited = true
+            }
+        }
         const matching = []
+        // the limit counts the products whose rows are shown (after the dates, direction and the app's withheld rows), read
+        // until productLimit of them have shown a row, or examineLimit products were read (SEC-BAP-109 review)
+        let shownProducts = 0
         for (const productId of productIds) {
+            if (!p.productId && shownProducts >= productLimit) {
+                productsLimited = true
+                break
+            }
+            const before = matching.length
             ec.message.pushErrors()
             try {
                 const found = call(M + "find#ProductPrices", {
@@ -156,6 +192,7 @@ function run(op, parameters) {
                 ec.message.clearErrors()
                 ec.message.popErrors()
             }
+            if (matching.length > before) shownProducts++
         }
         matching.sort(
             (a, b) =>
@@ -169,7 +206,8 @@ function run(op, parameters) {
             priceRows: shown.rows.map(display),
             priceRowsCount: shown.count,
             pageIndex: shown.pageIndex,
-            pageSize: shown.pageSize
+            pageSize: shown.pageSize,
+            productsLimited
         }
     }
     function store(p) {

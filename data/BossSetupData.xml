@@ -301,7 +301,11 @@ along with this software (see the LICENSE.md file). If not, see
             <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
             <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
         </authz>
-        <authz artifactAuthzId="BOSS_PRODUCTS_SERVICES_READ" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL"/>
+        <!-- the services' own frame takes this record's filter sets (SEC-BOS-104), so it carries the root's -->
+        <authz artifactAuthzId="BOSS_PRODUCTS_SERVICES_READ" userGroupId="BOSS_PRODUCTS" authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/>
+            <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
+        </authz>
     <authz artifactAuthzId="BOSS_PRODUCTS_SERVICES_APPADMIN" userGroupId="BOSS_PRODUCTS_ADMIN" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
         <filters entityFilterSetId="MANTLE_ACTIVE_ORG"/>
         <filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/>
@@ -382,10 +386,12 @@ along with this software (see the LICENSE.md file). If not, see
         <!-- the people and organizations on a client project (not on its items) -->
         <filters entityFilterId="BOSS_PROJECT_CLIENT_WEP" entityName="mantle.work.effort.WorkEffortParty"
                 filterMap="({workEffortId: ec.user.context.clientProjectIds || ['_NA_']})"/>
-        <!-- a request the user filed, or one of a client project filed by a contact of the user's organization -->
+        <!-- a request the user filed, or one of a client project filed by a contact of the user's organization; never a public form's
+            request whose typed address is not confirmed (senderVerified N, SEC-BOS-103), which is staff's alone -->
         <filters entityFilterId="BOSS_PROJECT_CLIENT_REQ" entityName="mantle.request.Request"
-                filterMap="({_join: 'or', _list: [{filedByPartyId: (ec.user.userAccount &amp;&amp; ec.user.userAccount.partyId) || '_NA_'},
-                    {rootWorkEffortId: ec.user.context.clientProjectIds || ['_NA_'], filedByPartyId: ec.user.context.clientContactPartyIds || ['_NA_']}]})"/>
+                filterMap="({_join: 'and', _list: [{_join: 'or', _list: [{filedByPartyId: (ec.user.userAccount &amp;&amp; ec.user.userAccount.partyId) || '_NA_'},
+                    {rootWorkEffortId: ec.user.context.clientProjectIds || ['_NA_'], filedByPartyId: ec.user.context.clientContactPartyIds || ['_NA_']}]},
+                    {_join: 'or', _list: [{senderVerified: null}, {senderVerified: 'Y'}]}]})"/>
         <!-- a message from or to the user or its organization, or a status update posted for the client; never a note -->
         <filters entityFilterId="BOSS_PROJECT_CLIENT_CE" entityName="mantle.party.communication.CommunicationEvent"
                 filterMap="({_join: 'or', _list: [{fromPartyId: ec.user.context.clientPartyIds || ['_NA_']},
@@ -1079,9 +1085,8 @@ along with this software (see the LICENSE.md file). If not, see
             fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="SHIPPING_CARRIER_EDIT"
             fromDate="0"/>
-    <!-- the administrator works in every organization's facilities (impl-warehouse §4), in Mantle's guards too (F75) -->
-    <moqui.security.UserGroupPermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="FACILITY_ALL_ORGANIZATIONS"
-            fromDate="0"/>
+    <!-- the administrator works in its own organizations' facilities; every organization's is ADMIN's alone
+        (FACILITY_ALL_ORGANIZATIONS, MantleSetupData.xml; the owner's call of Nov 19, 2026, SEC-BAP-86) -->
     <moqui.security.UserGroupPermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="STOCK_RECEIVE" fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="STOCK_ISSUE" fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="STOCK_MOVE" fromDate="0"/>
@@ -1172,8 +1177,8 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.UserGroupPermission userGroupId="BOSS_MANUFACTURING_ADMIN" userPermissionId="QUALITY_DISPOSE" fromDate="0"/>
     <moqui.security.UserGroupPermission userGroupId="BOSS_MANUFACTURING_ADMIN" userPermissionId="QUALITY_TEMPLATE_EDIT"
             fromDate="0"/>
-    <moqui.security.UserGroupPermission userGroupId="BOSS_MANUFACTURING_ADMIN" userPermissionId="FACILITY_ALL_ORGANIZATIONS"
-            fromDate="0"/>
+    <!-- the administrator works in its own organizations' plants; every organization's is ADMIN's alone (FACILITY_ALL_ORGANIZATIONS;
+        the owner's call of Nov 19, 2026, SEC-BAP-86) -->
     <!-- Warehouse areas for their capability groups only (impl-warehouse P1); the others are open to every Warehouse user,
         and each service still checks its own permission and facility. Entity filters come from the record that
         authorizes the screen, so each ALWAYS row carries the root's filter sets (P1 review F59). Picking holds the move
@@ -2626,6 +2631,19 @@ along with this software (see the LICENSE.md file). If not, see
         <authz artifactAuthzId="BOSS_INS_SHARE_DISPLAY_AUTHOR" userGroupId="BOSS_INSIGHTS_AUTHOR"
                 authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL"/>
     </artifactGroups>
+    <!-- Adding fields to a document's readers (the steward): the engine widens a document only for a group whose own grant holds
+        that group's widen artifact (org.moqui.report.widen.<userGroupId>, SEC-TLS-92), never by its share grant. The steward
+        holds the four Insights groups' alone, so it adds fields to the documents only Insights groups read (MantleInventoryAsset,
+        MantleSalesOrderItem, MantleSalesOrderPart); a document an app's group also reads stays closed to it, by the owner's
+        decision, and is widened by that app's administrator. -->
+    <artifactGroups artifactGroupId="BOSS_INS_DATASET_WIDEN" description="Insights: adding fields to the documents the Insights groups read">
+        <artifacts artifactName="org.moqui.report.widen.BOSS_INSIGHTS_READ" artifactTypeEnumId="AT_SERVICE"/>
+        <artifacts artifactName="org.moqui.report.widen.BOSS_INSIGHTS_AUTHOR" artifactTypeEnumId="AT_SERVICE"/>
+        <artifacts artifactName="org.moqui.report.widen.BOSS_INSIGHTS_DISTRIBUTE" artifactTypeEnumId="AT_SERVICE"/>
+        <artifacts artifactName="org.moqui.report.widen.BOSS_INSIGHTS_FLOW" artifactTypeEnumId="AT_SERVICE"/>
+        <authz artifactAuthzId="BOSS_INS_DATASET_WIDEN_DATA" userGroupId="BOSS_INSIGHTS_DATA"
+                authzTypeEnumId="AUTHZT_ALLOW" authzActionEnumId="AUTHZA_ALL"/>
+    </artifactGroups>
     <!-- Saving a dataset definition (the steward): the engine's own check (definitions.rs, org.moqui.report.dataset update), which
         reads no dataset; P3 guards index#BusinessDataset by the dataset's update artifact. -->
     <artifactGroups artifactGroupId="BOSS_INS_DATASET_EDIT" description="Insights: saving business dataset definitions">
@@ -3021,7 +3039,6 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="STOCK_POLICY_MANAGE" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="PRODUCT_CATALOG_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="SHIPPING_CARRIER_EDIT" capabilityKindEnumId="CpkEdit"/>
-    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="FACILITY_ALL_ORGANIZATIONS" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="STOCK_RECEIVE" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="STOCK_ISSUE" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_WAREHOUSE_ADMIN" userPermissionId="STOCK_MOVE" capabilityKindEnumId="CpkEdit"/>
@@ -3120,7 +3137,6 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_MANUFACTURING_ADMIN" userPermissionId="QUALITY_VERIFY" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_MANUFACTURING_ADMIN" userPermissionId="QUALITY_DISPOSE" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_MANUFACTURING_ADMIN" userPermissionId="QUALITY_TEMPLATE_EDIT" capabilityKindEnumId="CpkEdit"/>
-    <moqui.security.CapabilityBundlePermission userGroupId="BOSS_MANUFACTURING_ADMIN" userPermissionId="FACILITY_ALL_ORGANIZATIONS" capabilityKindEnumId="CpkEdit"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_MANUFACTURING_ADMIN" userPermissionId="PRODUCT_CATALOG_VIEW" capabilityKindEnumId="CpkView"/>
     <moqui.security.CapabilityBundle userGroupId="BOSS_MANUFACTURING_COST" appName="Manufacturing" description="Production cost estimator" scopeDependency="organization, plant" sequenceNum="640"/>
     <moqui.security.CapabilityBundlePermission userGroupId="BOSS_MANUFACTURING_COST" userPermissionId="METHOD_VIEW" capabilityKindEnumId="CpkView"/>
@@ -4685,10 +4701,11 @@ along with this software (see the LICENSE.md file). If not, see
         (BOSS_INS_REPORT_TOOLS). -->
     <!-- The business-alert topic (design §8.1): private, in Notifications, where someone is expected to act; its message is
         the rule and series ids, the state and the recipient's own permitted value, sent to one user at a time. The engine's
-        ReportAlert topic (Updates) stays Tools' technical alerts'. -->
+        ReportAlert topic (Updates) stays Tools' technical alerts'. reportAlertTopic="Y" marks it a topic a business rule may
+        send to (SEC-TLS-106): without it a rule is refused at save (ALERT_TOPIC_UNAVAILABLE) and in-app recipients skipped. -->
     <moqui.security.user.NotificationTopic topic="InsightsBusinessAlert" inboxEnumId="NinNotifications" description="Business alerts"
             linkTemplate="/qapps/Insights/Alerts/AlertDetail?definitionId=${ruleId}" showAlert="Y" persistOnSend="Y"
-            receiveNotifications="Y" emailNotifications="N" isPrivate="Y" typeString="warning"/>
+            receiveNotifications="Y" emailNotifications="N" isPrivate="Y" typeString="warning" reportAlertTopic="Y"/>
     <!-- The message of an alert sent to a recipient's own account address: the state, the series and a link to AlertDetail -->
     <moqui.basic.email.EmailTemplate emailTemplateId="BOSS_INSIGHTS_ALERT" description="Insights business alert" emailServerId="SYSTEM"
             emailTypeEnumId="EMT_SCREEN_RENDER" bodyScreenLocation="component://mr-boss/template/InsightsAlertEmail.xml"
@@ -4757,7 +4774,8 @@ along with this software (see the LICENSE.md file). If not, see
         <artifacts artifactName="ironstone.insights.FlowMapServices.restore#Map" artifactTypeEnumId="AT_SERVICE" inheritAuthz="Y"/>
         <artifacts artifactName="ironstone.insights.FlowMapServices.delete#Map" artifactTypeEnumId="AT_SERVICE" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_INS_REPORT_FLOW_FLOW" userGroupId="BOSS_INSIGHTS_FLOW"
-                authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+                authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL">
+            <filters entityFilterSetId="MANTLE_USER_ORG"/><filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/></authz>
     </artifactGroups>
     <!-- The flow targets (ironstone.insights.FlowTarget): the built apps' worklist routes a map's step may open, each with the
         parameters it takes (owner contracts, each in its owner's design; a registration grants nothing, the link is answered
@@ -5444,7 +5462,7 @@ along with this software (see the LICENSE.md file). If not, see
                 nameIsPattern="Y" inheritAuthz="Y"/>
         <authz artifactAuthzId="BOSS_PPL_ACCESS_REQUEST_ALL" userGroupId="ALL_USERS" authzTypeEnumId="AUTHZT_ALLOW"
                 authzActionEnumId="AUTHZA_ALL">
-            <filters entityFilterSetId="MANTLE_USER_ORG"/></authz>
+            <filters entityFilterSetId="MANTLE_USER_ORG"/><filters entityFilterSetId="MANTLE_PRIVATE_CONTACT"/></authz>
     </artifactGroups>
     <!-- impl-people P8 (design-people §1.1, §3 SelfService; F28): a self-service employee opens their own self-service without the
         People launcher, as every BOSS user opens Admin's settings index: a non-inheritable ALLOW on the shared self-service screen

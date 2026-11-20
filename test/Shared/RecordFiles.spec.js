@@ -158,6 +158,34 @@ feature("download answers the file; inline only for a picture or a PDF", {
     },
 })
 
+feature("a product's file is downloaded only from its own content folder or as a component's image (SEC-BAP-138)", {
+    when() {
+        const product = { recordEntity: "mantle.product.Product", recordId: "RF_SPEC_PRODUCT" }
+        sys(() => {
+            if (!list("mantle.product.Product", { productId: "RF_SPEC_PRODUCT" }).length)
+                call("create#mantle.product.Product", { productId: "RF_SPEC_PRODUCT", productName: "Record files spec product", productTypeEnumId: "PtAsset" })
+            for (const [productContentId, contentLocation] of [["RF_SPEC_CONF", "component://mr-mantle/MoquiConf.xml"],
+                    ["RF_SPEC_IMAGE", "component://mr-marble/screen/ssstatic/images/Sales.png"]])
+                if (!list("mantle.product.ProductContent", { productContentId }).length)
+                    call("create#mantle.product.ProductContent", { productContentId, productId: "RF_SPEC_PRODUCT", productContentTypeEnumId: "PcntImageSmall",
+                        contentLocation })
+        })
+        const download = (productContentId) => {
+            const out = ec.screen.makeTest().rootScreen(commons).render("RecordFiles/download",
+                Object.assign({ contentKey: JSON.stringify({ productContentId }) }, product), null)
+            const errors = Array.from(out.errorMessages || []).join(" | ")
+            ec.message.clearErrors()
+            return { status: out.status, errors, output: String(out.output || "") }
+        }
+        return { conf: download("RF_SPEC_CONF"), image: download("RF_SPEC_IMAGE") }
+    },
+    allowMessageErrors: true,
+    then({ conf, image }) {
+        !conf.output.includes("moqui-conf") && conf.status != 200
+        image.status == 200 && image.errors == ""
+    },
+})
+
 feature("remove takes the file's row and the file away", {
     when() {
         const row = list("mantle.request.RequestContent", { requestId: "BOSS_DEMO_REQUEST" }).find((item) => String(item.contentLocation || "").endsWith("/room-rules.txt"))
@@ -174,19 +202,26 @@ feature("remove takes the file's row and the file away", {
     },
 })
 
-feature("a record type without a content entity takes no file, with a clear error", {
+feature("a record type without a content entity takes no file, with a clear error; an entity that is no record type shows none (SEC-BOS-87)", {
     allowMessageErrors: true,
     when() {
-        const record = { recordEntity: "moqui.basic.Enumeration", recordId: "RqtSupport" }
+        const record = { recordEntity: "moqui.security.UserGroup", recordId: "ADMIN" }
+        const notRecord = { recordEntity: "moqui.basic.Enumeration", recordId: "RqtSupport" }
         return { data: call_("filesData", record),
-            refused: call_("upload", Object.assign({ contentFile: uploadedFile("x.txt", "x") }, record), "post") }
+            refused: call_("upload", Object.assign({ contentFile: uploadedFile("x.txt", "x") }, record), "post"),
+            notRecord: call_("filesData", notRecord),
+            notRecordUpload: call_("upload", Object.assign({ contentFile: uploadedFile("x.txt", "x") }, notRecord), "post") }
     },
-    then({ data, refused }) {
+    then({ data, refused, notRecord, notRecordUpload }) {
         data.status == 200
         data.json.visible
         !data.json.hasContent
         refused.status == 500
         refused.json.errors.includes("has no files: its record type has no content entity")
+        notRecord.status == 200
+        !notRecord.json.visible
+        notRecordUpload.status == 500
+        notRecordUpload.json.errors.includes("is not a record type")
     },
 })
 

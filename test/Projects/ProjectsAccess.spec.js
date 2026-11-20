@@ -362,6 +362,13 @@ feature("internal users are unchanged by client access: Commons and Comms as und
 
 feature("the client's own project: its lists, timeline and services hold its project, shared items and requests, nothing internal or of another client", {
     when() {
+        // a public form's request matched to sheldon by a typed address, not confirmed: staff's alone (SEC-BOS-103)
+        sys(() => {
+            if (ec.entity.find("mantle.request.Request").condition("requestId", "BOSS_TEST_PREQ_FORM").count()) return
+            call("create#mantle.request.Request", { requestId: "BOSS_TEST_PREQ_FORM", requestName: "ZQW unverified form request", requestTypeEnumId: "RqtSupport",
+                statusId: "ReqSubmitted", rootWorkEffortId: "ACME", filedByPartyId: "ORG_ACME_SA", senderVerified: "N", requestDate: ec.user.nowTimestamp })
+            call("create#mantle.request.RequestParty", { requestId: "BOSS_TEST_PREQ_FORM", partyId: "ORG_ACME_SA", roleTypeId: "Reporter", fromDate: new Date(0) })
+        })
         const sheldon = as(SHELDON, () => {
             // a record as Chatter finds it (get#RecordLinkInfo under the client's authorization)
             const seen = (entityName, id) => hit("Projects/Chatter/chatterData", { recordEntity: entityName, recordId: id }).json?.visible === true
@@ -377,6 +384,7 @@ feature("the client's own project: its lists, timeline and services hold its pro
                 records: { acme: seen("mantle.work.effort.WorkEffort", "ACME"), acme1: seen("mantle.work.effort.WorkEffort", "ACME-1"),
                     acme3: seen("mantle.work.effort.WorkEffort", "ACME-3"), milestone: seen("mantle.work.effort.WorkEffort", "ACME-MS-1"),
                     request1: seen("mantle.request.Request", "BOSS_DEMO_PREQ_ACME1"), request2: seen("mantle.request.Request", "BOSS_DEMO_PREQ_ACME2"),
+                    formRequest: seen("mantle.request.Request", "BOSS_TEST_PREQ_FORM"),
                     note: seen("mantle.party.communication.CommunicationEvent", made.notes[0]),
                     message: seen("mantle.party.communication.CommunicationEvent", "BOSS_DEMO_ACME_MSG1"),
                     demoNote: seen("mantle.party.communication.CommunicationEvent", "BOSS_DEMO_ACME_NOTE1"),
@@ -417,7 +425,8 @@ feature("the client's own project: its lists, timeline and services hold its pro
         gob.workItems.output.includes("Frozen banana menu page")
         !gob.workItems.output.includes("Price the stand")
         leaksOf(gob.projects.output + gob.workItems.output, BLUTH_SECRETS) == []
-        sheldon.records == { acme: true, acme1: true, acme3: false, milestone: true, request1: true, request2: true, note: false, message: true,
+        !sheldon.requests.output.includes("ZQW unverified form request")
+        sheldon.records == { acme: true, acme1: true, acme3: false, milestone: true, request1: true, request2: true, formRequest: false, note: false, message: true,
             demoNote: false, update: true, internalUpdate: false, party: false, rate: false }
         sheldon.direct.vis.isClient == true
         sheldon.direct.vis.allProjects == false
@@ -1164,5 +1173,37 @@ feature("shared repositories: a client reads its project's, read only and withou
             for (const row of made.shareBefore || []) ec.service.sync().name("create#mantle.work.effort.WorkEffortSetting").parameters(row).call()
         })
         settle()
+    },
+})
+
+feature("a client approver downloads from a milestone only the estimate a live approval request to them names, never another file on it (SEC-BOS-96)", {
+    when() {
+        const file = (suffix, text) => {
+            const location = "dbresource://test/projects-milestone-" + suffix + ".txt"
+            sys(() => ec.resource.getLocationReference(location).putText(text))
+            return sys(() => ec.service.sync().name("create#mantle.work.effort.WorkEffortContent").parameters({ workEffortId: "ACME-MS-1",
+                contentLocation: location, contentTypeEnumId: "WectDesign", contentDate: ec.user.nowTimestamp }).call().workEffortContentId)
+        }
+        const estimate = file("estimate", "ZQX-ESTIMATE the figures to approve")
+        const internal = file("internal", "ZQX-MILESTONE-INTERNAL our margin notes")
+        // the estimate asked of Sheldon; the internal file named by a cancelled request to him, and by one to another approver
+        const cancelled = file("cancelled", "ZQX-MILESTONE-CANCELLED withdrawn")
+        const approval = (id, approverPartyId, statusId, workEffortContentId) => sys(() => ec.service.sync().name("create#mantle.work.effort.WorkEffortApproval")
+            .parameters({ workEffortApprovalId: id, workEffortId: "ACME-MS-1", approverPartyId, statusId, workEffortContentId, requestedDate: ec.user.nowTimestamp }).call())
+        approval("BOSS_TEST_EST_AP", SHELDON_ID, "WeaRequested", estimate)
+        approval("BOSS_TEST_EST_AP2", SHELDON_ID, "WeaCancelled", cancelled)
+        approval("BOSS_TEST_EST_AP3", JOHN_ID, "WeaRequested", internal)
+        try {
+            const get = (workEffortContentId) => hit("Projects/Projects/MilestoneDetail/estimateFile", { workEffortId: "ACME-MS-1", workEffortContentId })
+            return as(SHELDON, () => ({ named: get(estimate), other: get(internal), withdrawn: get(cancelled) }))
+        } finally {
+            sys(() => ec.entity.find("mantle.work.effort.WorkEffortApproval").condition("workEffortApprovalId", "in", ["BOSS_TEST_EST_AP", "BOSS_TEST_EST_AP2", "BOSS_TEST_EST_AP3"]).deleteAll())
+        }
+    },
+    then({ named, other, withdrawn }) {
+        named.output.includes("ZQX-ESTIMATE")
+        !other.output.includes("ZQX-MILESTONE-INTERNAL")
+        other.output.includes("The file is not available")
+        !withdrawn.output.includes("ZQX-MILESTONE-CANCELLED")
     },
 })
